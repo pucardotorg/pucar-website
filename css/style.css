@@ -237,47 +237,70 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
    js/script.js toggling .is-visible -- see startBubbles()/stopBubbles()/
    showSpeechBubble(). Positioned relative to .litigant-stage, anchored
    near the head (the figure's head sits roughly in the upper half of the
-   viewBox, just left of centre), with a small triangular tail pointing
-   down toward it. */
+   viewBox, just left of centre), with a small tail pointing down toward it.
+
+   Hand-drawn/Excalidraw-style treatment: the visible shape (fill, ink
+   border, shadow) lives entirely on ::before, a separate layer behind the
+   text, with an irregular (not equal-cornered) border-radius for a
+   slightly lumpy "drawn by hand" outline, a couple of degrees of rotation,
+   and the #speechWobble SVG filter (feTurbulence + feDisplacementMap,
+   defined once in index.html right after <body>) applied ONLY to that
+   layer. Keeping the filter off .speech-bubble itself means the turbulence
+   distorts the sketchy outline/fill but never the text sitting on top of
+   it -- if the filter were on the element with the text, the type would
+   wobble and blur along with the border, which reads as broken rendering
+   rather than a hand-drawn effect. */
 .speech-bubble{
   position:absolute;
   top:4%;
   left:52%;
   z-index:6;
   max-width:180px;
-  padding:9px 13px;
-  background:var(--paper);
+  padding:10px 14px;
   color:var(--ink);
-  font-family:var(--font-body);
-  font-size:.76rem;
-  font-weight:600;
-  line-height:1.35;
+  font-family:'Comic Relief', var(--font-body);
+  font-size:.8rem;
+  font-weight:400;
+  line-height:1.4;
   text-align:left;
-  border-radius:14px;
-  border:1px solid var(--line);
-  box-shadow:0 10px 22px rgba(36,30,26,.16);
   opacity:0;
-  transform:translate(-28%, 6px) scale(.9);
+  transform:translate(-28%, 6px) scale(.9) rotate(-1deg);
   transform-origin:22% 100%;
   transition:opacity .3s ease, transform .3s ease;
   pointer-events:none;
   will-change:opacity, transform;
 }
+.speech-bubble::before{
+  content:"";
+  position:absolute;
+  inset:-3px;
+  z-index:-1;
+  background:var(--paper);
+  border:1.6px solid var(--ink);
+  /* four differently-weighted corners -- a perfect 14px radius all round
+     reads as machine-drawn; uneven ones read as a hand-sketched balloon */
+  border-radius:255px 15px 225px 20px / 20px 220px 18px 255px;
+  box-shadow:0 10px 20px rgba(36,30,26,.16);
+  transform:rotate(1deg);
+  filter:url(#speechWobble);
+}
 .speech-bubble::after{
   content:"";
   position:absolute;
-  left:24%;
-  bottom:-7px;
-  width:14px;
-  height:14px;
+  left:22%;
+  bottom:-8px;
+  width:15px;
+  height:15px;
   background:var(--paper);
-  border-right:1px solid var(--line);
-  border-bottom:1px solid var(--line);
-  transform:rotate(45deg);
+  border-right:1.6px solid var(--ink);
+  border-bottom:1.6px solid var(--ink);
+  border-radius:0 0 4px 0;
+  transform:rotate(50deg) skew(-6deg, -3deg);
+  filter:url(#speechWobble);
 }
 .speech-bubble.is-visible{
   opacity:1;
-  transform:translate(-28%, 0) scale(1);
+  transform:translate(-28%, 0) scale(1) rotate(-1deg);
 }
 /* on dark pinned beats (5, 7) the paper bubble still reads fine since it's
    never shown mid-scroll anyway (bubbles only appear while idle, i.e. not

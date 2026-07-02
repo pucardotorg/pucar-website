@@ -233,9 +233,28 @@ properties, never `fill`, `stroke`, or `color`.
   same `.is-idle` trigger condition, per the brief ("only if they stay in
   one place for 10 seconds will the speech bubbles come back"). The
   bubble's CSS lives in style.css right above `.path` — it's `aria-hidden`
-  (decorative flavour text) and positioned with a small CSS-triangle tail
+  (decorative flavour text) and positioned with a small tail
   (`.speech-bubble::after`) pointing down toward the figure's head, which
   sits in the upper half of the SVG's viewBox.
+- **Hand-drawn ("Excalidraw") bubble styling:** the bubble's font is
+  `'Comic Relief'` (Google Fonts, linked in `index.html`'s existing
+  Fraunces/Source Sans 3 `<link>` — one more `family=` param, no separate
+  request). The wobbly-outline look is an SVG filter, not a CSS trick:
+  `index.html` defines `<filter id="speechWobble">` right after `<body>`
+  (zero-size, `aria-hidden`, renders nothing itself) using
+  `feTurbulence` → `feDisplacementMap` to push the shape's pixels around
+  slightly, and `.speech-bubble::before`/`::after` in style.css reference
+  it via `filter:url(#speechWobble)`. **The filter is deliberately kept
+  off `.speech-bubble` itself** — the fill, ink border, shadow, and
+  irregular (unequal-corner) `border-radius` all live on `::before`, a
+  separate layer behind the actual text, with `::after` as a small
+  matching-style tail. If the turbulence filter were applied to the
+  element containing the text, the text would wobble/blur along with the
+  border, which reads as broken rendering rather than a hand-drawn effect
+  — keeping the filter scoped to the empty decorative pseudo-elements
+  gets the sketchy outline without touching the type. Both bubble and
+  shape carry a slight independent `rotate()` too, on top of the
+  turbulence, for extra "drawn free-hand" wonkiness.
 - **Occasional "dread" head-shake:** `showSpeechBubble()` calls
   `maybeShakeHead()` every time a bubble appears, which only actually
   triggers `DREAD_CHANCE = 0.25` of the time (~1 in 4 bubbles) — deliberately

@@ -7,13 +7,27 @@
 <meta name="description" content="A storytelling walkthrough of the litigant's experience in India's justice system, and how PUCAR is working to change it." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Sans+3:wght@400;500;600;700&family=Comic+Relief&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" />
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png" />
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png" />
 <link rel="apple-touch-icon" href="/assets/favicon-apple-touch.png" />
 </head>
 <body>
+
+<!-- Hand-drawn/"Excalidraw" wobble filter, used by .speech-bubble's ::before
+     and ::after in css/style.css (filter:url(#speechWobble)). Zero-size and
+     aria-hidden -- this SVG renders nothing itself, it only defines a
+     filter primitive other elements reference. feTurbulence generates
+     noise, feDisplacementMap uses that noise to push each pixel of the
+     bubble shape around slightly, which is what turns a perfectly smooth
+     border-radius outline into a wobbly, sketched-by-hand one. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <filter id="speechWobble" x="-20%" y="-20%" width="140%" height="140%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.05 0.09" numOctaves="2" seed="4" result="wobbleNoise" />
+    <feDisplacementMap in="SourceGraphic" in2="wobbleNoise" scale="3.2" xChannelSelector="R" yChannelSelector="G" />
+  </filter>
+</svg>
 
 <header class="site-header">
   <a class="logo" href="#top">
