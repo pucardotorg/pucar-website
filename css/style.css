@@ -815,6 +815,46 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   color:var(--paper);
   padding: clamp(64px,9vw,110px) clamp(20px,5vw,72px);
 }
+/* ---- entrance transition -----------------------------------------
+   Heading, filters, count line, and job cards all start invisible and
+   rise/fade in the first time #collaborate is actually seen -- whether
+   that's a normal scroll arrival or an instant cleanJumpTo() landing
+   (js/script.js, IntersectionObserver-driven; see comment there). Gated
+   behind .js-reveal, which JS only adds when it can also guarantee the
+   reveal -- if JS fails or IntersectionObserver isn't supported, none of
+   this applies and everything just renders visible immediately.
+
+   Uses `animation` rather than `transition` deliberately: .collab-card
+   already owns a `transition` shorthand for its hover state (transform/
+   background/border-color/opacity, .25s). A second selector declaring
+   `transition` for the same elements would replace that whole shorthand
+   for as long as it matched, permanently slowing the hover feedback.
+   `animation` doesn't have that collision -- it drives opacity/translate
+   only while running, then gets out of the way (`forwards` fill keeps
+   the end state), leaving the plain hover transition untouched. */
+.collaborate.js-reveal .collab-head,
+.collaborate.js-reveal .collab-filters,
+.collaborate.js-reveal .collab-count,
+.collaborate.js-reveal .collab-grid .collab-card{
+  opacity:0;
+}
+.collaborate.js-reveal.is-in .collab-head{
+  animation:collabRiseIn .7s cubic-bezier(.16,.8,.3,1) forwards;
+}
+.collaborate.js-reveal.is-in .collab-filters,
+.collaborate.js-reveal.is-in .collab-count{
+  animation:collabRiseIn .7s cubic-bezier(.16,.8,.3,1) .1s forwards;
+}
+.collaborate.js-reveal.is-in .collab-grid .collab-card{
+  animation:collabRiseIn .6s cubic-bezier(.16,.8,.3,1) forwards;
+  /* --i is set per-card by JS (capped) so cards cascade in left-to-right,
+     top-to-bottom instead of all popping at once. */
+  animation-delay:calc(.16s + var(--i, 0) * .06s);
+}
+@keyframes collabRiseIn{
+  from{ opacity:0; translate:0 26px; }
+  to  { opacity:1; translate:0 0; }
+}
 .collab-head{ max-width:640px; margin-bottom:40px; }
 .collab-head .beat-eyebrow{ color:var(--gold); }
 .collab-title-main{
@@ -1378,6 +1418,17 @@ body.modal-open{ overflow:hidden; }
   .litigant .fig, .litigant .leg-front, .litigant .leg-back,
   .litigant .arm-left, .litigant .arm-right, .litigant .head,
   .ground-dots, .path, .shadow, .scroll-cue{ animation:none !important; }
+  /* Collaborate entrance: skip the animation but keep the .js-reveal
+     opacity:0 rule from ever winning -- just show everything at rest
+     rather than leaving it stuck invisible with nothing to trigger it. */
+  .collaborate.js-reveal .collab-head,
+  .collaborate.js-reveal .collab-filters,
+  .collaborate.js-reveal .collab-count,
+  .collaborate.js-reveal .collab-grid .collab-card{ opacity:1; }
+  .collaborate.js-reveal.is-in .collab-head,
+  .collaborate.js-reveal.is-in .collab-filters,
+  .collaborate.js-reveal.is-in .collab-count,
+  .collaborate.js-reveal.is-in .collab-grid .collab-card{ animation:none !important; }
 }
 
 /* ---------------- mobile ---------------- */

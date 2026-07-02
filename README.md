@@ -772,7 +772,56 @@ the only place.
   the posted-by link fall through to real navigation. No JS → cards are
   plain links to the static pages.
 
-### 6.6 Decap CMS — admin/
+### 6.6 Entrance transition (js/script.js + CSS)
+
+The whole section — heading, filters, count line, job cards — fades/rises in
+the first time `#collaborate` is actually seen, via a single
+`IntersectionObserver` in `js/script.js` (`threshold: 0.15`) watching the
+section element. It fires once (`unobserve` after the first hit) and covers
+both ways a visitor can arrive: scrolling down into the section normally, or
+landing there in one step via `cleanJumpTo()` (§4 above) — the jump still
+ends with the section intersecting the viewport, it just gets there without
+the intermediate scroll frames, so no special-casing was needed between the
+two paths.
+
+- **Progressive enhancement, not a hard dependency**: elements only get
+  `opacity:0` while `.js-reveal` is present on `#collaborate`, and JS only
+  adds `.js-reveal` in the same code path that also sets up the observer to
+  remove it again (`.is-in`). A browser without `IntersectionObserver`
+  support (or JS failing) never adds `.js-reveal` at all, so everything just
+  renders visible immediately — there's no path where content can get stuck
+  invisible with nothing left to reveal it.
+- **`animation`, not `transition`, for the reveal**: `.collab-card` already
+  owns a `transition` shorthand for its hover state (transform/background/
+  border-color/opacity, `.25s`). A second rule declaring `transition` on the
+  same elements would replace that whole shorthand for as long as the
+  selector matched (shorthands don't merge per-property — whichever
+  declaration wins by specificity wins wholly), which would have
+  permanently slowed hover feedback after the entrance ran once. Using
+  `@keyframes collabRiseIn` with `animation` avoids the collision:  it drives
+  opacity/translate only while running, `forwards` fill keeps the end state,
+  and once it finishes the element's own `transition` rule is untouched —
+  same cascade behaviour already documented for the litigant's walk-in
+  (§4 above).
+- **Staggered cards**: each `.collab-card` gets a `--i` custom property set
+  by JS at page load (its index, capped at 10 so a long job list doesn't
+  push the last few cards' delay out to something sluggish);
+  `animation-delay: calc(.16s + var(--i) * .06s)` cascades them in
+  left-to-right, top-to-bottom instead of popping all at once. Heading
+  animates first, filters/count follow at a fixed `.1s`, then cards cascade
+  after that.
+- **One-time reveal, deliberately not repeatable**: unlike the litigant's
+  "running in late" entrance (§4), which is meant to replay as a fun beat
+  every time you arrive at beat 0, this is a page-content reveal — scrolling
+  away and back shouldn't re-trigger it, so the observer unobserves itself
+  on the first intersection rather than toggling the class on/off.
+- **`prefers-reduced-motion`**: extends the existing reduced-motion block —
+  `.js-reveal` elements render at `opacity:1` outright and the `.is-in`
+  animations are disabled, so reduced-motion visitors see the section fully
+  rendered with no entrance movement at all, rather than the animation
+  simply running faster.
+
+### 6.7 Decap CMS — admin/
 
 `/admin/` loads Decap 3 from unpkg; `admin/config.yml` defines both
 collections (jobs incl. relation widgets to contributors; format json).

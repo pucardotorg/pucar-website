@@ -397,6 +397,41 @@
   window.addEventListener("scroll", requestTick, { passive: true });
   window.addEventListener("resize", requestTick);
 
+  // ---------------- Collaborate entrance transition ---------------------
+  // Heading, filters, and job cards fade/rise in the first time the
+  // section is actually seen. One IntersectionObserver covers both ways
+  // a visitor can arrive: scrolling down into it naturally, or landing
+  // there instantly via cleanJumpTo() above -- the jump still ends with
+  // the section intersecting the viewport, it just gets there in one
+  // step instead of many scroll frames, so no special-casing needed here.
+  // Reveals once then unobserves: this is a "welcome to the section"
+  // moment, not a repeatable gag like the litigant's entrance, so
+  // scrolling away and back should not replay it.
+  var collaborateSection = document.getElementById("collaborate");
+  if (collaborateSection && "IntersectionObserver" in window) {
+    // Only commit to hiding things via .js-reveal once we can also
+    // guarantee an observer exists to reveal them again -- otherwise a
+    // browser without IntersectionObserver support would leave everything
+    // permanently invisible with nothing left to trigger the reveal.
+    collaborateSection.classList.add("js-reveal");
+    Array.prototype.slice.call(collaborateSection.querySelectorAll(".collab-card")).forEach(function (card, i) {
+      // Cap the stagger index so a long job list doesn't push the last
+      // few cards' entrance delay out to something that reads as sluggish.
+      card.style.setProperty("--i", Math.min(i, 10));
+    });
+    var collabRevealObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          collaborateSection.classList.add("is-in");
+          collabRevealObserver.unobserve(collaborateSection);
+        });
+      },
+      { threshold: 0.15 }
+    );
+    collabRevealObserver.observe(collaborateSection);
+  }
+
   // resetIdle is bound directly to the real "scroll" event (not folded into
   // the rAF-throttled onScrollFrame above) so idle/bubble state reacts to
   // "the page has started scrolling" precisely, and isn't tied to whichever
