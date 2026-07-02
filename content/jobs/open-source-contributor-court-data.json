@@ -1,0 +1,12 @@
+{
+  "title": "Open-Source Contributor — Court Data Dashboards",
+  "date": "2026-06-20",
+  "type": "Volunteer",
+  "summary": "Help build open dashboards that make court performance legible — pendency, disposal rates, hearing patterns — on top of public judicial data.",
+  "commitment": "Flexible · ongoing",
+  "location": "Remote",
+  "tags": ["Engineering", "Data"],
+  "apply_url": "mailto:collaborate@pucar.org?subject=Open-Source%20Contributor%20—%20Court%20Data",
+  "published": true,
+  "body": "## About the role\n\nMeasuring court performance is one of PUCAR's core initiatives. The tooling is open source, and we welcome contributors who can take issues end-to-end.\n\n[placeholder description — refine with the actual scope before publishing]\n\n## What you'll do\n\n- Pick up issues on the public repos (data pipelines, visualisation, docs)\n- Help design metrics that reflect the litigant's experience, not just throughput\n- Review contributions from other volunteers\n\n## Who this suits\n\n- Comfortable with Python or JavaScript and messy public data\n- Experience with open-source workflows (issues, PRs, reviews)\n- Interest in justice-system data; domain experts especially welcome\n\n## How it works\n\nStart from the GitHub org, introduce yourself, and pick a `good-first-issue`. Regular contributors are invited into the initiative's working group."
+}

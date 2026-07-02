@@ -1,0 +1,38 @@
+# Decap CMS — edits commit straight to the git repo; Netlify rebuilds on push.
+backend:
+  name: github
+  repo: CHANGE_ME/pucar-website   # TODO: set to your GitHub owner/repo
+  branch: main
+  # Uses Netlify's OAuth provider: in the Netlify UI, add a GitHub OAuth app
+  # under Site configuration → Access & security → OAuth (see README).
+
+# Uncomment to edit locally without auth: run `npx decap-server` alongside
+# your static server, then open /admin/.
+# local_backend: true
+
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
+
+collections:
+  - name: "jobs"
+    label: "Collaborate roles"
+    label_singular: "role"
+    folder: "content/jobs"
+    create: true
+    format: "json"
+    extension: "json"
+    slug: "{{slug}}"          # filename becomes the URL: /collaborate/<slug>/
+    identifier_field: title
+    editor:
+      preview: false
+    fields:
+      - { name: "title", label: "Title", widget: "string" }
+      - { name: "date", label: "Posted on", widget: "datetime", date_format: "YYYY-MM-DD", format: "YYYY-MM-DD", time_format: false }
+      - { name: "type", label: "Type", widget: "select", options: ["Volunteer", "Fellowship", "Internship", "Full-time", "Partnership"], default: "Volunteer" }
+      - { name: "summary", label: "Card summary", widget: "text", hint: "1–2 sentences shown on the card and in search results." }
+      - { name: "commitment", label: "Commitment", widget: "string", required: false, hint: "e.g. 6–8 hrs/week · 3 months" }
+      - { name: "location", label: "Location", widget: "string", required: false, hint: "e.g. Remote (India)" }
+      - { name: "tags", label: "Tags", widget: "list", required: false, field: { name: "tag", label: "Tag", widget: "string" } }
+      - { name: "apply_url", label: "Apply link", widget: "string", hint: "mailto: or form URL" }
+      - { name: "published", label: "Published", widget: "boolean", default: true }
+      - { name: "body", label: "Full description", widget: "markdown" }

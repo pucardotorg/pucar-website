@@ -1,0 +1,9 @@
+[build]
+  publish = "."
+  command = "node scripts/build-jobs.js"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"

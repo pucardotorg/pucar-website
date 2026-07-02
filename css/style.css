@@ -1,0 +1,718 @@
+/* =========================================================
+   PUCAR — The Litigant's Journey
+   Palette + aesthetic borrowed from pucar.org (warm, paper,
+   editorial), storytelling scroll mechanic inspired by
+   only8.org (fixed subject, scrolling world, stat beats).
+   ========================================================= */
+
+:root{
+  /* colour: warm paper base + ink + a court-blue and a human terracotta */
+  --cream:        #F6F1E6;
+  --cream-deep:   #ECE2CE;
+  --paper:        #FBF8F2;
+  --ink:          #241E1A;
+  --ink-soft:     #55493F;
+  --muted:        #8A7E6E;
+  --navy:         #22304A;
+  --navy-deep:    #182238;
+  --terracotta:   #C1552C;
+  --terracotta-soft:#E8CBB8;
+  --gold:         #C98A2E;
+  --line:         rgba(36,30,26,0.12);
+
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --pin-pad: clamp(20px, 5vw, 72px);
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  background:var(--cream);
+  color:var(--ink);
+  font-family:var(--font-body);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+a{ color:inherit; }
+
+h1,h2,h3{
+  font-family:var(--font-display);
+  margin:0;
+  line-height:1.05;
+  font-weight:500;
+}
+
+p{ margin:0; }
+
+sup{ font-size:.55em; opacity:.6; font-style:italic; }
+
+/* ---------------- header ---------------- */
+.site-header{
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:50;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 18px clamp(20px,4vw,48px);
+  pointer-events:none;
+}
+.site-header .logo{
+  pointer-events:auto;
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:1.15rem;
+  letter-spacing:.04em;
+  text-decoration:none;
+  color:var(--ink);
+  background:rgba(251,248,242,.7);
+  backdrop-filter:blur(6px);
+  padding:6px 14px;
+  border-radius:999px;
+  border:1px solid var(--line);
+}
+.site-nav{
+  pointer-events:auto;
+  display:flex;
+  gap:6px;
+  background:rgba(251,248,242,.7);
+  backdrop-filter:blur(6px);
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:6px;
+}
+.site-nav a{
+  text-decoration:none;
+  font-size:.82rem;
+  font-weight:500;
+  color:var(--ink-soft);
+  padding:8px 14px;
+  border-radius:999px;
+  transition:background .2s ease, color .2s ease;
+}
+.site-nav a:hover{ background:var(--navy); color:var(--paper); }
+
+@media (max-width: 640px){
+  .site-nav{ display:none; }
+}
+
+/* ---------------- story / sticky pin ---------------- */
+.story{
+  position:relative;
+  height:calc(var(--beats) * 100vh);
+}
+
+.pin{
+  position:sticky;
+  top:0;
+  height:100vh;
+  width:100%;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  align-items:center;
+  background: var(--cream);
+  transition: background-color .8s ease;
+}
+
+/* per-beat backdrop tint */
+.pin[data-beat="0"]{ background:var(--cream); }
+.pin[data-beat="1"]{ background:var(--cream-deep); }
+.pin[data-beat="2"]{ background:var(--paper); }
+.pin[data-beat="3"]{ background:var(--cream-deep); }
+.pin[data-beat="4"]{ background:#EADAD0; }
+.pin[data-beat="5"]{ background:var(--navy); color:var(--paper); }
+.pin[data-beat="6"]{ background:var(--cream); }
+.pin[data-beat="7"]{ background:var(--navy-deep); color:var(--paper); }
+
+.pin[data-beat="5"] .beat-body,
+.pin[data-beat="7"] .beat-body{ color:rgba(251,248,242,.78); }
+.pin[data-beat="5"] .beat-eyebrow,
+.pin[data-beat="7"] .beat-eyebrow{ color:var(--gold); }
+
+/* ---------------- ground layer ---------------- */
+.ground{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  opacity:.55;
+  pointer-events:none;
+}
+/* top-down world: an ambient dotted floor that scrolls downward, so the
+   litigant (walking "up") reads as moving forward. The literal path line
+   lives inside .litigant-stage so it tracks the figure side→centre. */
+.ground-line{ display:none; }
+.ground-dots{
+  position:absolute;
+  inset:-50% 0;
+  background-image:
+    radial-gradient(var(--ink) 1.5px, transparent 1.6px);
+  background-size: 64px 64px;
+  opacity:.07;
+  animation: groundScroll 1.1s linear infinite;
+  animation-play-state:paused;
+}
+.pin.is-walking .ground-dots{ animation-play-state:running; }
+/* she walks down → the world recedes upward */
+@keyframes groundScroll{
+  from{ transform:translateY(0); }
+  to{ transform:translateY(-46px); }
+}
+
+/* ---------------- decorative motifs ---------------- */
+.motifs{ position:absolute; inset:0; z-index:1; pointer-events:none; }
+.motif{
+  position:absolute;
+  width:clamp(60px,9vw,110px);
+  color:var(--ink);
+  opacity:0;
+  transform:scale(.85) rotate(-6deg);
+  transition:opacity .9s ease, transform .9s ease;
+}
+.motif svg{ width:100%; height:100%; display:block; }
+.motif-files{ top:10%; left:6%; }
+.motif-clock{ bottom:12%; left:8%; }
+.motif-scale{ top:12%; right:6%; color:var(--paper); }
+.motif-spark{ bottom:14%; right:8%; color:var(--gold); }
+
+.pin[data-beat="2"] .motif-files,
+.pin[data-beat="1"] .motif-files{ opacity:1; transform:scale(1) rotate(0deg); }
+.pin[data-beat="3"] .motif-clock{ opacity:1; transform:scale(1) rotate(0deg); }
+.pin[data-beat="5"] .motif-scale{ opacity:1; transform:scale(1) rotate(0deg); }
+.pin[data-beat="7"] .motif-spark{ opacity:1; transform:scale(1) rotate(0deg); }
+
+/* ---------------- litigant stage ---------------- */
+.litigant-stage{
+  position:relative;
+  z-index:5;
+  grid-column:1;
+  justify-self:center;
+  align-self:center;
+  width:clamp(230px, 30vw, 380px);
+  /* starts in the left column; slides to viewport centre after beat 2 */
+  transform:translateX(0);
+  transition:transform .9s cubic-bezier(.45,.05,.2,1);
+}
+/* beats 0–1: on the side | beats 2–7: centred (col1 centre is ~25vw from
+   viewport centre, so nudge right by ~25vw) */
+.pin[data-beat="2"] .litigant-stage,
+.pin[data-beat="3"] .litigant-stage,
+.pin[data-beat="4"] .litigant-stage,
+.pin[data-beat="5"] .litigant-stage,
+.pin[data-beat="6"] .litigant-stage,
+.pin[data-beat="7"] .litigant-stage{ transform:translateX(25vw); }
+
+/* scrolling "path" behind the figure, follows it side→centre */
+.path{
+  position:absolute;
+  left:50%; top:50%;
+  width:70px; height:200vh;
+  margin-top:-100vh;   /* centred on the stage → always spans the viewport */
+  margin-left:-35px;
+  z-index:-1;
+  background-image:repeating-linear-gradient(
+    to bottom, var(--ink) 0 20px, transparent 20px 46px);
+  background-size:6px 46px;
+  background-position:center;
+  background-repeat:repeat-y;
+  opacity:.10;
+  animation: pathScroll 1.1s linear infinite;
+  animation-play-state:paused;
+}
+.pin.is-walking .path{ animation-play-state:running; }
+/* she walks down the screen, so the path recedes upward */
+@keyframes pathScroll{ from{ background-position-y:0; } to{ background-position-y:-46px; } }
+
+.shadow{
+  position:absolute;
+  left:50%;
+  bottom:6%;
+  width:70%;
+  height:14%;
+  background:radial-gradient(ellipse at center, rgba(0,0,0,.28), transparent 70%);
+  transform:translateX(-50%);
+  filter:blur(2px);
+  animation: shadowPulse 1.1s ease-in-out infinite;
+  animation-play-state:paused;
+}
+.pin.is-walking .shadow{ animation-play-state:running; }
+@keyframes shadowPulse{
+  0%,100%{ opacity:.55; transform:translateX(-50%) scaleX(1); }
+  50%{ opacity:.4; transform:translateX(-50%) scaleX(.9); }
+}
+
+.litigant{
+  display:block;
+  width:100%;
+  height:auto;
+  overflow:visible;
+}
+
+/* ---- litigant illustration (uploaded asset; carries its own fills) ----
+   Only layout + the walk animation live here. The figure is a top-down
+   flat illustration (viewBox 90 140 620 530): dark bun, purple coat, pink
+   bag, grey skirt. Animatable groups: .leg-front (the drawn right leg),
+   .leg-back (a clone shifted -57px = the left leg), .arm-left/.arm-right
+   (the two forearms + hands), all inside .fig.                            */
+.litigant .fig,
+.litigant .leg-front,
+.litigant .leg-back,
+.litigant .arm-left,
+.litigant .arm-right,
+.litigant .head{
+  will-change: transform;
+  transform-box: view-box;   /* px origins below resolve in viewBox units */
+}
+
+/* ---- walk cycle -----------------------------------------------------------
+   Top-down stride: each leg lengthens (foot reaching down-screen) then
+   foreshortens back under the skirt, in opposite phase. The whole body
+   swells/settles (scale) twice per stride — the bob — with a faint
+   weight-shift rock. Arms counter-sway a touch. Pivots are in the asset's
+   user units: hips sit hidden under the skirt hem (y≈508), body centre
+   ≈(400,430). Paused at rest; runs only while the page is scrolling
+   (.pin.is-walking, set by js/script.js and cleared ~180ms after the last
+   scroll event).                                                          */
+.litigant .fig      { animation: figWalk  1s ease-in-out infinite paused; transform-origin:400px 430px; }
+.litigant .leg-front{ animation: legFront 1s ease-in-out infinite paused; transform-origin:455px 508px; }
+.litigant .leg-back { animation: legBack  1s ease-in-out infinite paused; transform-origin:363px 508px; }
+.litigant .arm-left { animation: armLeft  1s ease-in-out infinite paused; transform-origin:150px 430px; }
+.litigant .arm-right{ animation: armRight 1s ease-in-out infinite paused; transform-origin:592px 330px; }
+
+.pin.is-walking .litigant .fig,
+.pin.is-walking .litigant .leg-front,
+.pin.is-walking .litigant .leg-back,
+.pin.is-walking .litigant .arm-left,
+.pin.is-walking .litigant .arm-right{ animation-play-state:running; }
+
+/* body: subtle expand/contract (bob) on each step + faint rock */
+@keyframes figWalk{
+  0%,100%{ transform:scale(1)     rotate(-.7deg); }
+  25%    { transform:scale(1.016) rotate(0deg);   }
+  50%    { transform:scale(1)     rotate(.7deg);  }
+  75%    { transform:scale(1.016) rotate(0deg);   }
+}
+/* legs: extend down-screen ↔ foreshorten under the body, opposite phase */
+@keyframes legFront{
+  0%,100%{ transform:scaleY(1.02); }
+  50%    { transform:scaleY(.62);  }
+}
+@keyframes legBack{
+  0%,100%{ transform:scaleY(.62);  }
+  50%    { transform:scaleY(1.02); }
+}
+/* arms: gentle counter-sway from the elbows */
+@keyframes armLeft{
+  0%,100%{ transform:rotate(2.4deg);  }
+  50%    { transform:rotate(-2.4deg); }
+}
+@keyframes armRight{
+  0%,100%{ transform:rotate(-2.4deg); }
+  50%    { transform:rotate(2.4deg);  }
+}
+
+/* ---- idle look-around ------------------------------------------------------
+   After 10s without scrolling js/script.js adds .is-idle to the pin: the two
+   .head groups (face skin + hair/bun, split to preserve z-order) turn to
+   glance left, then right — "what's going on?" — then rest, repeating
+   every cycle. Cleared the moment scrolling resumes.                      */
+.litigant .head{ transform-origin:379px 372px; }
+.pin.is-idle .litigant .head{ animation: headLook 5.5s ease-in-out infinite; }
+@keyframes headLook{
+  0%,14%  { transform:rotate(0deg);   }
+  24%,38% { transform:rotate(-16deg); }  /* glance left, hold */
+  48%     { transform:rotate(0deg);   }
+  58%,72% { transform:rotate(16deg);  }  /* glance right, hold */
+  82%,100%{ transform:rotate(0deg);   }
+}
+
+/* ---------------- text beats ---------------- */
+.beats{
+  position:relative;
+  grid-column:2;
+  z-index:6;
+  height:100%;
+  padding: 0 var(--pin-pad) 0 clamp(8px,2vw,24px);
+  display:flex;
+  align-items:center;
+}
+.beat{
+  position:absolute;
+  max-width: 480px;
+  opacity:0;
+  transform:translateY(24px);
+  transition: opacity .6s ease, transform .6s ease;
+  pointer-events:none;
+}
+.beat.is-active{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+
+.beat-eyebrow{
+  display:block;
+  font-size:.78rem;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:var(--terracotta);
+  margin-bottom:14px;
+}
+.beat-title{
+  font-size:clamp(1.9rem, 3.6vw, 3rem);
+  margin-bottom:18px;
+}
+.beat-stat{
+  font-size:clamp(3rem, 8vw, 6.4rem);
+  margin-bottom:10px;
+  color:var(--terracotta);
+  font-weight:600;
+}
+.pin[data-beat="4"] .beat-stat{ color:#9C3B17; }
+.beat-body{
+  font-size:1.05rem;
+  line-height:1.6;
+  color:var(--ink-soft);
+  max-width:44ch;
+}
+.placeholder-tag{
+  display:inline-block;
+  margin-top:8px;
+  font-size:.72rem;
+  font-style:italic;
+  color:var(--muted);
+  border-top:1px dashed var(--line);
+  padding-top:6px;
+}
+.scroll-cue{
+  margin-top:32px;
+  font-size:.85rem;
+  font-weight:500;
+  color:var(--muted);
+  animation: cueBounce 1.6s ease-in-out infinite;
+}
+@keyframes cueBounce{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(6px); }
+}
+
+.value-chips{
+  list-style:none;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  padding:0;
+  margin:22px 0 0;
+}
+.value-chips li{
+  padding:9px 16px;
+  border-radius:999px;
+  border:1px solid rgba(251,248,242,.35);
+  font-size:.85rem;
+  font-weight:500;
+}
+
+.initiative-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:20px;
+  max-width:520px;
+}
+.initiative-card{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  padding:16px;
+  border-radius:14px;
+  background:rgba(36,30,26,.04);
+  border:1px solid var(--line);
+  text-decoration:none;
+  color:var(--ink);
+  transition:background .2s ease, transform .2s ease;
+}
+.initiative-card:hover{ background:rgba(36,30,26,.08); transform:translateY(-2px); }
+.initiative-num{ font-family:var(--font-display); font-size:1.1rem; color:var(--terracotta); }
+.initiative-name{ font-weight:600; font-size:.95rem; line-height:1.3; }
+.initiative-link{ font-size:.78rem; color:var(--muted); margin-top:auto; }
+
+.cta-row{ display:flex; gap:14px; margin-top:28px; flex-wrap:wrap; }
+.btn{
+  display:inline-flex;
+  align-items:center;
+  padding:13px 24px;
+  border-radius:999px;
+  font-weight:600;
+  font-size:.92rem;
+  text-decoration:none;
+  transition:background .2s ease, color .2s ease, border-color .2s ease;
+}
+.btn-primary{ background:var(--terracotta); color:var(--paper); }
+.btn-primary:hover{ background:#a8471f; }
+.btn-ghost{ border:1px solid rgba(251,248,242,.4); color:var(--paper); }
+.btn-ghost:hover{ background:rgba(251,248,242,.12); }
+
+/* ---------------- progress rail ---------------- */
+.progress-rail{
+  position:absolute;
+  right:20px;
+  bottom:28px;
+  z-index:10;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:inherit;
+}
+.progress-track{
+  width:120px;
+  height:3px;
+  background:rgba(36,30,26,.15);
+  border-radius:3px;
+  overflow:hidden;
+}
+.pin[data-beat="5"] .progress-track,
+.pin[data-beat="7"] .progress-track{ background:rgba(251,248,242,.25); }
+.progress-fill{
+  height:100%;
+  width:0%;
+  background:var(--terracotta);
+  transition:width .15s linear;
+}
+.progress-count{
+  font-size:.75rem;
+  font-variant-numeric:tabular-nums;
+  color:var(--muted);
+  min-width:34px;
+}
+
+/* ---------------- collaborate ---------------- */
+.collaborate{
+  background:var(--navy);
+  color:var(--paper);
+  padding: clamp(64px,9vw,110px) clamp(20px,5vw,72px);
+}
+.collab-head{ max-width:640px; margin-bottom:40px; }
+.collab-head .beat-eyebrow{ color:var(--gold); }
+.collab-title-main{
+  font-size:clamp(2rem,4.5vw,3.4rem);
+  margin-bottom:16px;
+}
+.collab-sub{
+  color:rgba(251,248,242,.72);
+  line-height:1.6;
+  font-size:1.02rem;
+}
+.collab-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(290px, 1fr));
+  gap:18px;
+}
+.collab-card{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  padding:26px 24px 22px;
+  border-radius:22px;
+  background:rgba(251,248,242,.06);
+  border:1px solid rgba(251,248,242,.14);
+  text-decoration:none;
+  color:var(--paper);
+  transition:transform .25s ease, background .25s ease, border-color .25s ease;
+}
+.collab-card:hover{
+  transform:translateY(-4px);
+  background:rgba(251,248,242,.1);
+  border-color:rgba(251,248,242,.28);
+}
+.collab-type{
+  font-size:.72rem;
+  font-weight:600;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--gold);
+}
+.collab-title{
+  font-family:var(--font-display);
+  font-size:1.35rem;
+  line-height:1.15;
+}
+.collab-summary{
+  font-size:.92rem;
+  line-height:1.55;
+  color:rgba(251,248,242,.72);
+}
+.collab-chips, .job-chips{
+  list-style:none;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:0;
+  margin:2px 0 0;
+}
+.collab-chips li{
+  padding:6px 12px;
+  border-radius:999px;
+  background:rgba(251,248,242,.1);
+  border:1px solid rgba(251,248,242,.16);
+  font-size:.75rem;
+  font-weight:500;
+  color:rgba(251,248,242,.85);
+}
+.collab-btn{
+  margin-top:auto;
+  padding:12px 20px;
+  border-radius:999px;
+  background:var(--paper);
+  color:var(--ink);
+  font-weight:600;
+  font-size:.9rem;
+  text-align:center;
+  transition:background .2s ease;
+}
+.collab-card:hover .collab-btn{ background:#fff; }
+.collab-empty{ color:rgba(251,248,242,.65); }
+
+/* ---------------- job modal ---------------- */
+body.modal-open{ overflow:hidden; }
+.job-modal{ position:fixed; inset:0; z-index:100; }
+.job-modal-backdrop{
+  position:absolute; inset:0;
+  background:rgba(24,34,56,.55);
+  backdrop-filter:blur(4px);
+}
+.job-modal-panel{
+  position:relative;
+  margin:6vh auto;
+  max-width:680px;
+  max-height:88vh;
+  overflow-y:auto;
+  background:var(--paper);
+  color:var(--ink);
+  border-radius:22px;
+  padding:clamp(26px,4vw,44px);
+  box-shadow:0 30px 80px rgba(0,0,0,.35);
+}
+.job-modal-close{
+  position:absolute;
+  top:16px; right:18px;
+  width:38px; height:38px;
+  border-radius:50%;
+  border:1px solid var(--line);
+  background:var(--cream);
+  font-size:1.2rem;
+  line-height:1;
+  cursor:pointer;
+  color:var(--ink-soft);
+}
+.job-modal-close:hover{ background:var(--cream-deep); }
+
+/* ---------------- job page + shared job styles ---------------- */
+.job-main{
+  max-width:720px;
+  margin:0 auto;
+  padding:130px clamp(20px,5vw,40px) 90px;
+}
+.job-title{
+  font-size:clamp(1.7rem,3.6vw,2.6rem);
+  margin:6px 0 14px;
+}
+.job-summary{
+  font-size:1.08rem;
+  line-height:1.6;
+  color:var(--ink-soft);
+  margin-bottom:16px;
+}
+.job-chips li{
+  padding:6px 12px;
+  border-radius:999px;
+  background:rgba(36,30,26,.05);
+  border:1px solid var(--line);
+  font-size:.75rem;
+  font-weight:500;
+  color:var(--ink-soft);
+}
+.job-body{ margin-top:22px; }
+.job-body h2,.job-body h3,.job-body h4{
+  margin:26px 0 10px;
+  font-size:1.25rem;
+}
+.job-body p,.job-body li{
+  line-height:1.65;
+  color:var(--ink-soft);
+  font-size:.98rem;
+}
+.job-body ul,.job-body ol{ padding-left:22px; margin:10px 0; }
+.job-body a{ color:var(--terracotta); }
+.job-page{ background:var(--cream); }
+.job-page .cta-row{ margin-top:34px; }
+.btn-outline{
+  border:1px solid var(--line);
+  color:var(--ink);
+}
+.btn-outline:hover{ background:rgba(36,30,26,.06); }
+
+/* ---------------- footer ---------------- */
+.site-footer{
+  background:var(--navy-deep);
+  color:rgba(251,248,242,.8);
+  padding:64px clamp(20px,5vw,72px) 32px;
+}
+.footer-top{ max-width:640px; }
+.footer-top .logo{ font-family:var(--font-display); font-size:1.3rem; color:var(--paper); }
+.footer-top p{ margin-top:14px; font-size:.92rem; line-height:1.6; color:rgba(251,248,242,.6); }
+.footer-links{ display:flex; gap:22px; flex-wrap:wrap; margin:32px 0; }
+.footer-links a{ text-decoration:none; font-size:.85rem; color:rgba(251,248,242,.75); }
+.footer-links a:hover{ color:var(--gold); }
+.footer-copy{ font-size:.75rem; color:rgba(251,248,242,.4); border-top:1px solid rgba(251,248,242,.12); padding-top:20px; }
+
+/* ---------------- reduced motion ---------------- */
+@media (prefers-reduced-motion: reduce){
+  .litigant .fig, .litigant .leg-front, .litigant .leg-back,
+  .litigant .arm-left, .litigant .arm-right, .litigant .head,
+  .ground-dots, .path, .shadow, .scroll-cue{ animation:none !important; }
+}
+
+/* ---------------- mobile ---------------- */
+@media (max-width: 860px){
+  .pin{
+    grid-template-columns:1fr;
+    grid-template-rows: auto 1fr;
+    padding-top: 90px;
+  }
+  .litigant-stage{
+    grid-column:1;
+    width:clamp(110px,30vw,150px);
+    align-self:start;
+    margin-top:4px;
+  }
+  /* single column on mobile: keep the litigant put, no side→centre slide */
+  .pin[data-beat] .litigant-stage{ transform:none !important; }
+  .beats{
+    grid-column:1;
+    align-items:flex-start;
+    padding: 24px clamp(20px,6vw,32px) 100px;
+  }
+  .beat{
+    position:absolute;
+    max-width:none;
+  }
+  .beat-title{ font-size:clamp(1.6rem,6vw,2.2rem); }
+  .beat-stat{ font-size:clamp(2.6rem,14vw,4rem); }
+  .initiative-grid{ grid-template-columns:1fr; }
+  .progress-rail{ right:16px; bottom:16px; }
+  .progress-track{ width:70px; }
+}
+
+@media (max-width: 480px){
+  .beat-body{ font-size:.95rem; }
+  .motif{ width:70px; }
+}
