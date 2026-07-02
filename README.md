@@ -113,8 +113,19 @@ the `translate(-92 0)` in both index.html and assets/litigant-source.svg.
 Supporting layers: `.ground-dots` (dotted floor scrolling upward),
 `.path` (dashed line inside `.litigant-stage`, `height:200vh` centred on the
 stage so it spans any viewport), `.shadow` (pulsing ellipse). The stage sits
-in grid column 1 and slides to viewport centre (`translateX(25vw)`) from
-beat 2 onward; disabled on mobile (≤860px, single column).
+in grid column 1 and slides to viewport centre from beat 2 onward, now via
+`transform: translate(25vw, -9vh)` (desktop only; disabled on mobile ≤860px,
+single column) — the `-9vh` lift was added because the text used to sit
+vertically centred in grid-column 2, which put it right where she now
+stands once centred. From beat 2 on (desktop, `min-width: 861px`), `.beats`
+itself switches to `grid-column: 1 / -1; align-items: flex-end;
+justify-content: flex-start;` — spanning the full row and pinning to the
+bottom-left — so it stays clear of her raised, centred position instead of
+overlapping it. Grid items are allowed to overlap in CSS Grid; this relies
+on spatial separation (her up top, text at the bottom-left) rather than
+z-index to avoid collision, so if either the lift or the text's
+bottom-padding (`9vh`) changes, sanity-check they still clear each other at
+common viewport heights.
 
 `prefers-reduced-motion` disables every figure/layer animation.
 

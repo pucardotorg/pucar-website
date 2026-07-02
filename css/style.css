@@ -229,13 +229,16 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   transition:transform .9s cubic-bezier(.45,.05,.2,1);
 }
 /* beats 0–1: on the side | beats 2–7: centred (col1 centre is ~25vw from
-   viewport centre, so nudge right by ~25vw) */
+   viewport centre, so nudge right by ~25vw) and lifted up a bit (-9vh) to
+   leave clear room underneath for the text, which relocates to the bottom
+   left for these beats -- see the .beats override below -- instead of
+   sitting mid-height in column 2, where it used to collide with her. */
 .pin[data-beat="2"] .litigant-stage,
 .pin[data-beat="3"] .litigant-stage,
 .pin[data-beat="4"] .litigant-stage,
 .pin[data-beat="5"] .litigant-stage,
 .pin[data-beat="6"] .litigant-stage,
-.pin[data-beat="7"] .litigant-stage{ transform:translateX(25vw); }
+.pin[data-beat="7"] .litigant-stage{ transform:translate(25vw, -9vh); }
 
 /* scrolling "path" behind the figure, follows it side→centre */
 .path{
@@ -370,6 +373,25 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   padding: 0 var(--pin-pad) 0 clamp(8px,2vw,24px);
   display:flex;
   align-items:center;
+}
+/* once she's centred (beats 2-7, desktop only -- mobile stays single-column
+   and untouched), reading text mid-column-2 put it right where she now
+   stands. Spanning the full row and pinning to the bottom-left instead
+   keeps it clear of her and gives the stat/title room to breathe under her
+   raised position above. `.beat`'s own absolute children inherit this via
+   the flex container's static-position rules, same mechanism as before. */
+@media (min-width: 861px){
+  .pin[data-beat="2"] .beats,
+  .pin[data-beat="3"] .beats,
+  .pin[data-beat="4"] .beats,
+  .pin[data-beat="5"] .beats,
+  .pin[data-beat="6"] .beats,
+  .pin[data-beat="7"] .beats{
+    grid-column: 1 / -1;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 0 var(--pin-pad) 9vh clamp(28px, 6vw, 72px);
+  }
 }
 .beat{
   position:absolute;
