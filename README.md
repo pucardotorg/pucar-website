@@ -195,7 +195,52 @@ the only place.
   difficulty selects; deadline-range select (due within 7/14/30/90 days,
   computed client-side against `data-deadline`); tag chips (toggle,
   AND-combined). Category options and tag chips are derived from the cards
-  present. Active filters show a result count + clear button.
+  present — dynamically, at page load, from every open card's
+  `data-category`/`data-tags` — never hardcoded. (Cards only exist for jobs
+  with `status: Open`; a completed/assigned job like the sample one attached
+  to Rohan's contributor page correctly never reaches the board or its tag
+  list — that's the board rule in §4.4, not a bug.) Active filters show a
+  result count + clear button.
+- **`.collab-card[hidden]{ display:none; }`**: `.collab-card` sets
+  `display:flex` for layout, and since author stylesheets always beat the
+  browser's default `[hidden]{display:none}` rule regardless of selector
+  specificity, that default silently loses unless it's re-declared explicitly
+  for the hidden state. Without this line, toggling `.hidden` in JS computes
+  the right filter state but nothing visually disappears. Same fix applied to
+  `.collab-filters`. Any future `[hidden]`-toggled element needs the same
+  treatment if it also has an unconditional `display` rule.
+- **Tag row never shares a line with the dropdowns**: `.collab-tagbar` has
+  `flex-basis:100%` inside `#collabFilters`, forcing it onto its own row.
+  Without this, the tag chips lived in the same wrapping flex row as the four
+  dropdown pills — so picking a shorter option (e.g. "Paid" instead of "All
+  streams") changed that pill's rendered width, which reflowed the shared row
+  and could visibly shift a tag chip from a wrapped second line up onto the
+  first. Keeping tags on a dedicated row means their wrapping depends only on
+  their own content, never on sibling dropdown state.
+- **Filter changes animate instead of jumping** (`apply()`): rather than just
+  flipping `hidden` on every card, it does a small FLIP (First-Last-Invert-
+  Play): measures every visible card's rect, applies the new match state,
+  pins newly-filtered-out cards with inline `position:absolute` at their old
+  rect (`.card-exit` class fades/shrinks them in place — see CSS) while the
+  grid reflows immediately under them, gives newly-matching cards a fade/
+  scale-in at their real slot, and inverse-transforms cards that were already
+  visible so they slide from their old position into the new one instead of
+  snapping. Exiting cards are only actually `hidden` after the ~260ms fade
+  (`EXIT_MS`), guarded by checking they still have `.card-exit` in case a
+  fast second filter change re-matched them first. `.collab-grid` needs
+  `position:relative` as the containing block for that absolute pin.
+  `prefers-reduced-motion` skips all of this for a plain instant toggle.
+- **Deadline/closes row is pinned to the card bottom** (CSS only, `.collab-
+  meta{ margin-top:auto }`): cards are a flex column, and `.collab-foot`
+  (posted-by + View button) already used `margin-top:auto` to sit at the
+  very bottom regardless of card height. `.collab-meta` (the deadline +
+  "Closes in N days" line) sat in normal flow just above it, so its vertical
+  position depended on how much summary/chip content preceded it — a card
+  with fewer tags showed its deadline higher up than a taller card in the
+  same grid row. Giving `.collab-meta` the `margin-top:auto` instead (and
+  removing it from `.collab-foot` — only one flex item along a given axis
+  should claim the free space, or it splits between them) pins the meta+foot
+  pair together at the bottom as a fixed-position group.
 - **Chip rows clamp to one line**: individual chips are CSS-ellipsised at
   170px max-width (full text via native `title` tooltip — the build emits
   `title` attrs, and chips sit at z-index 2 above the card's cover link so

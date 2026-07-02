@@ -270,13 +270,115 @@
     return true;
   }
 
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var EXIT_MS = 260;
+
+  /* Filtering used to just flip `hidden` on every card, which is an instant
+     jump: matching cards pop into existence and everything else snaps into
+     the gap left behind. This instead:
+       - measures every visible card's on-screen position before anything changes
+       - cards leaving the result set get pinned with position:absolute at that
+         exact spot (via FLIP) and fade/shrink out in place, so the grid
+         reflows immediately underneath them without waiting on the animation
+       - cards staying visible get an inverse transform to their old spot,
+         then released so they visibly slide into their new slot (also FLIP)
+       - newly-matching cards are simply faded/scaled in at their real slot
+     `prefers-reduced-motion` skips all of this and falls back to instant. */
   function apply() {
-    var shown = 0;
+    if (reduceMotion) {
+      var shownRM = 0;
+      cards.forEach(function (c) {
+        var ok = matches(c);
+        c.hidden = !ok;
+        if (ok) shownRM++;
+      });
+      reportCount(shownRM);
+      clampAllChips();
+      return;
+    }
+
+    var gridRect = grid.getBoundingClientRect();
+    var firstRects = new Map();
+    cards.forEach(function (c) {
+      if (!c.hidden) firstRects.set(c, c.getBoundingClientRect());
+    });
+
+    var shown = 0, entering = [], exiting = [];
     cards.forEach(function (c) {
       var ok = matches(c);
-      c.hidden = !ok;
-      if (ok) shown++;
+      if (ok) {
+        shown++;
+        if (c.hidden) { c.hidden = false; entering.push(c); }
+        c.classList.remove("card-exit");
+      } else if (!c.hidden) {
+        exiting.push(c);
+      }
     });
+
+    // pin exiting cards to their current spot so the grid can reflow under them now
+    exiting.forEach(function (c) {
+      var r = firstRects.get(c);
+      if (!r) return;
+      c.style.position = "absolute";
+      c.style.left = (r.left - gridRect.left) + "px";
+      c.style.top = (r.top - gridRect.top) + "px";
+      c.style.width = r.width + "px";
+      c.classList.add("card-exit");
+    });
+
+    // measure everyone else's *new* slot now that exiting cards are out of flow
+    var lastRects = new Map();
+    cards.forEach(function (c) {
+      if (c.hidden || exiting.indexOf(c) !== -1) return;
+      lastRects.set(c, c.getBoundingClientRect());
+    });
+
+    // FLIP: cards present before and after get inverse-transformed to their
+    // old spot (no transition), so the next paint can transition them back to 0
+    cards.forEach(function (c) {
+      if (entering.indexOf(c) !== -1 || exiting.indexOf(c) !== -1) return;
+      var first = firstRects.get(c), last = lastRects.get(c);
+      if (!first || !last) return;
+      var dx = first.left - last.left, dy = first.top - last.top;
+      if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) return;
+      c.style.transition = "none";
+      c.style.transform = "translate(" + dx + "px," + dy + "px)";
+    });
+    // entering cards start faded/scaled down at their real (already correct) slot
+    entering.forEach(function (c) {
+      c.style.transition = "none";
+      c.style.opacity = "0";
+      c.style.transform = "scale(.95)";
+    });
+
+    void grid.offsetHeight; // flush the "from" styles above before releasing them
+
+    requestAnimationFrame(function () {
+      cards.forEach(function (c) {
+        if (exiting.indexOf(c) !== -1) return;
+        c.style.transition = "";
+        c.style.transform = "";
+        c.style.opacity = "";
+      });
+    });
+
+    exiting.forEach(function (c) {
+      setTimeout(function () {
+        if (!c.classList.contains("card-exit")) return; // re-matched before this fired
+        c.hidden = true;
+        c.classList.remove("card-exit");
+        c.style.position = "";
+        c.style.left = "";
+        c.style.top = "";
+        c.style.width = "";
+      }, EXIT_MS);
+    });
+
+    reportCount(shown);
+    clampAllChips(); // newly-revealed cards need their chip rows measured
+  }
+
+  function reportCount(shown) {
     var active = state.stream || state.category || state.difficulty || state.deadline || state.tags.length;
     clearBtn.hidden = !active;
     countEl.hidden = !active;
@@ -284,7 +386,6 @@
       ? (shown === 0 ? "Nothing matches those filters — try widening them."
         : shown + (shown === 1 ? " piece" : " pieces") + " of work match")
       : "";
-    clampAllChips(); // newly-revealed cards need their chip rows measured
   }
   apply();
 

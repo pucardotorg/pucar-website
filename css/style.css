@@ -515,6 +515,7 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
   display:grid;
   grid-template-columns:repeat(auto-fill, minmax(290px, 1fr));
   gap:18px;
+  position:relative; /* containing block for the exit-transition's absolute positioning, see collaborate.js */
 }
 .collab-card{
   position:relative;
@@ -526,7 +527,7 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
   background:rgba(251,248,242,.06);
   border:1px solid rgba(251,248,242,.14);
   color:var(--paper);
-  transition:transform .25s ease, background .25s ease, border-color .25s ease;
+  transition:transform .25s ease, background .25s ease, border-color .25s ease, opacity .25s ease;
 }
 .collab-card:hover{
   transform:translateY(-4px);
@@ -539,6 +540,16 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
    rule (author styles always beat UA styles, regardless of specificity).
    Without this, cards never actually disappear — this is the fix. */
 .collab-card[hidden]{ display:none; }
+/* filter transition (see collaborate.js applyFilters): a card leaving the
+   result set gets this class while it fades/shrinks in place (pinned via
+   inline position:absolute at its last on-screen spot) before being hidden;
+   cards staying visible get a FLIP transform to slide smoothly into their
+   new grid slot instead of snapping there. */
+.collab-card.card-exit{
+  opacity:0;
+  transform:scale(.95);
+  pointer-events:none;
+}
 /* whole card is clickable via a stretched cover link; the posted-by link
    sits above it */
 .collab-cover{ position:absolute; inset:0; z-index:1; border-radius:22px; }
@@ -592,10 +603,14 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
   gap:6px 16px;
   font-size:.78rem;
   color:rgba(251,248,242,.65);
+  /* pin deadline/closes to the bottom of the card as a group with .collab-foot,
+     rather than letting it sit wherever the chips/summary above happen to end
+     -- otherwise shorter cards (fewer tags, shorter summary) show it higher up
+     than taller cards in the same row, which reads as it "jumping around". */
+  margin-top:auto;
 }
 .collab-closes.is-urgent{ color:#F0A28A; font-weight:600; }
 .collab-foot{
-  margin-top:auto;
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -790,7 +805,13 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
   border-radius:50%;
   background:var(--terracotta);
 }
-.collab-tagbar{ display:flex; flex-wrap:wrap; gap:8px; }
+/* flex-basis:100% forces the tag row onto its own line, independent of the
+   dropdown row above it -- otherwise picking a shorter option (e.g. "Paid"
+   instead of "All streams") changes that dd-btn's width, which reflows
+   however many tag chips shared its row and can visibly shift chips from
+   one wrapped line to another. Keeping tags on a dedicated row makes their
+   own wrapping depend only on their own content, never on the dropdowns. */
+.collab-tagbar{ display:flex; flex-wrap:wrap; gap:8px; flex-basis:100%; }
 .collab-tag{
   padding:9px 14px;
   border-radius:999px;
