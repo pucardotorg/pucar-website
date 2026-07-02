@@ -96,6 +96,12 @@ body:has(.pin[data-beat="5"]) .site-header .logo-light,
 body:has(.pin[data-beat="7"]) .site-header .logo-light{ opacity:0; }
 body:has(.pin[data-beat="5"]) .site-header .logo-dark,
 body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
+/* both the light and dark marks come in two lengths: full wordmark (+
+   tagline) on desktop, PUCAR-only below 640px (same breakpoint .site-nav
+   collapses at). Which length shows is independent of the opacity toggle
+   above, which only decides whether the light *or* dark colourway shows. */
+.site-header .logo-light-short,
+.site-header .logo-dark-short{ display:none; }
 .site-nav{
   pointer-events:auto;
   display:flex;
@@ -119,6 +125,10 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
 
 @media (max-width: 640px){
   .site-nav{ display:none; }
+  .site-header .logo-light-long,
+  .site-header .logo-dark-long{ display:none; }
+  .site-header .logo-light-short{ display:block; }
+  .site-header .logo-dark-short{ display:block; } /* only actually shown if the dark-bg opacity rule above is also active */
 }
 
 /* ---------------- story / sticky pin ---------------- */
@@ -1037,6 +1047,11 @@ body.modal-open{ overflow:hidden; }
 }
 .footer-top{ max-width:640px; }
 .footer-top .logo{ display:block; height:22px; width:auto; margin-bottom:2px; }
+.footer-top .logo-short{ display:none; }
+@media (max-width: 640px){
+  .footer-top .logo-long{ display:none; }
+  .footer-top .logo-short{ display:block; }
+}
 .footer-top p{ margin-top:14px; font-size:.92rem; line-height:1.6; color:rgba(251,248,242,.6); }
 .footer-links{ display:flex; gap:22px; flex-wrap:wrap; margin:32px 0; }
 .footer-links a{ text-decoration:none; font-size:.85rem; color:rgba(251,248,242,.75); }

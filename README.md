@@ -118,36 +118,52 @@ beat 2 onward; disabled on mobile (≤860px, single column).
 
 `prefers-reduced-motion` disables every figure/layer animation.
 
-### 3.x Logo assets and the header swap
+### 3.x Logo assets, the header swap, and favicon
 
-Real PUCAR marks live in `assets/`:
-- `logo-pucar-green.avif` — short green wordmark, for light backgrounds.
-- `logo-pucar-white-short.png` — white "PUCAR" only, cropped (via PIL, off
-  the alpha channel's gap between the wordmark and the tagline) from the
-  full white asset below, for dark backgrounds.
-- `logo-pucar-white.avif` — full white wordmark + tagline ("Public
-  Collective for Avoidance and Resolution of Disputes"), used in the footer
-  on every page (`.footer-top .logo`, capped at 22px tall).
+Real PUCAR marks live in `assets/` (uploaded directly by Varun into the
+project folder, not through chat — pasted chat images never arrive as
+readable files here, only actual attachments/uploads do):
+- `pucar-normal-expanded.png` — full green wordmark + tagline, for light
+  backgrounds, desktop.
+- `logo-pucar-green.avif` — green "PUCAR" only (no tagline), for light
+  backgrounds, mobile.
+- `pucar-white-expanded.avif` — full white wordmark + tagline, for dark
+  backgrounds, desktop. Also the footer logo everywhere (footer is always
+  navy) at `.footer-top .logo-long`, capped at 22px tall.
+- `pucar-white-short.png` — white "PUCAR" only, cropped via PIL off the full
+  white asset's alpha channel (found the gap between the wordmark and the
+  tagline programmatically rather than eyeballing pixel coordinates), for
+  dark backgrounds, mobile. Also `.footer-top .logo-short` below 640px.
+- `pucar-favicon-dp.png` — 500×500 green "P" mark, source for the generated
+  `favicon-32.png` / `favicon-16.png` / `favicon-apple-touch.png`.
 
-The header logo (`.site-header .logo`) has no pill/background anymore — it
-sits directly over whatever's scrolled underneath the fixed header, so on
-the homepage it needs to track the story's background. Both variants are
-in the DOM stacked on top of each other (`.logo-light` / `.logo-dark`);
-`body:has(.pin[data-beat="5"])` / `[data-beat="7"]` (the two dark story
-beats) flips their opacity, transitioning over .6s to match `.pin`'s own
-background-color transition. `:has()` means this needs no JS. Job/
-contributor pages never match those selectors (their background is cream
-throughout), so they correctly just show `.logo-light` by default.
+The header logo (`.site-header .logo`) has no pill/background — it sits
+directly over whatever's scrolled underneath the fixed header. Four `<img>`s
+sit stacked in the DOM (`.logo-light-long`, `.logo-light-short`,
+`.logo-dark-long`, `.logo-dark-short`), and two independent, orthogonal CSS
+mechanisms decide which one shows:
+- **Colour** (light vs dark mark): `body:has(.pin[data-beat="5"])` /
+  `[data-beat="7"]` (the two dark story beats) toggles `.logo-light` opacity
+  to 0 and `.logo-dark` to 1, transitioning over .6s to match `.pin`'s own
+  background-color transition. Pure CSS, no JS. Job/contributor pages never
+  match those selectors (their background is cream throughout), so they
+  always stay on the light colourway.
+- **Length** (long vs short): a `@media (max-width: 640px)` query (the same
+  breakpoint `.site-nav` collapses at) hides the `-long` variants and shows
+  the `-short` ones, independent of which colourway is active. Same pattern
+  in the footer, just without the colour axis since it's always dark there.
 
-**Known gap:** `logo-pucar-green.avif` is the short mark; there isn't yet a
-"real" full green wordmark (mark + tagline, for light backgrounds) to match
-the white one used in the footer — Varun mentioned sharing one but it hasn't
-come through as an actual file yet (pasted chat images don't always attach
-as files the agent can read — worth re-attaching via the file picker if it
-still doesn't show up under `uploads/`). Same for a favicon: a square green
-"P" mark was shared but also never arrived as a file, so no favicon has
-been wired up (`<link rel="icon">` is not yet in `pageShell()` or
-`index.html`) — needs the actual asset first.
+If any of these five files are ever regenerated, keep the pipeline in mind:
+ImageMagick's AVIF decoder on this box silently drops the alpha channel
+(reports `Type: TrueColor`, not `TrueColorMatte`) — use `pillow-heif` +
+Pillow instead (`register_heif_opener()`) if you need to inspect or
+recompose any `.avif` here.
+
+Favicon links (`<link rel="icon">` ×2 + `apple-touch-icon`) are in both
+`index.html`'s `<head>` and the `pageShell()` template in
+`scripts/build-jobs.js`, plus manually patched into the already-generated
+`/collaborate/*/` and `/contributors/*/` pages (build script still can't run
+cleanly in this sandbox — see §4.4).
 
 ## 4. Collaborate board
 

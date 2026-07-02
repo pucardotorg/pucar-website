@@ -139,12 +139,22 @@ function pageShell(opts) {
 '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />\n' +
 '<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />\n' +
 '<link rel="stylesheet" href="/css/style.css" />\n' +
+'<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png" />\n' +
+'<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png" />\n' +
+'<link rel="apple-touch-icon" href="/assets/favicon-apple-touch.png" />\n' +
 (opts.jsonLd ? '<script type="application/ld+json">' + JSON.stringify(opts.jsonLd) + "</script>\n" : "") +
 '</head>\n<body class="job-page">\n' +
-'<header class="site-header">\n  <a class="logo" href="/"><img src="/assets/logo-pucar-green.avif" alt="PUCAR" width="401" height="100" /></a>\n' +
+'<header class="site-header">\n  <a class="logo" href="/">\n' +
+'    <img class="logo-light logo-light-long" src="/assets/pucar-normal-expanded.png" alt="PUCAR — Public Collective for Avoidance and Resolution of Disputes" width="777" height="93" />\n' +
+'    <img class="logo-light logo-light-short" src="/assets/logo-pucar-green.avif" alt="PUCAR" width="401" height="100" />\n' +
+'    <img class="logo-dark logo-dark-long" src="/assets/pucar-white-expanded.avif" alt="PUCAR — Public Collective for Avoidance and Resolution of Disputes" width="835" height="100" />\n' +
+'    <img class="logo-dark logo-dark-short" src="/assets/pucar-white-short.png" alt="PUCAR" width="379" height="87" />\n' +
+'  </a>\n' +
 '  <nav class="site-nav"><a href="' + opts.backHref + '">' + opts.backLabel + "</a></nav>\n</header>\n" +
 '<main class="job-main">\n' + opts.main + "\n</main>\n" +
-'<footer class="site-footer">\n  <div class="footer-top"><img class="logo" src="/assets/logo-pucar-white.avif" alt="PUCAR — Public Collective for Avoidance and Resolution of Disputes" width="835" height="100" />\n' +
+'<footer class="site-footer">\n  <div class="footer-top">' +
+'<img class="logo logo-long" src="/assets/pucar-white-expanded.avif" alt="PUCAR — Public Collective for Avoidance and Resolution of Disputes" width="835" height="100" />' +
+'<img class="logo logo-short" src="/assets/pucar-white-short.png" alt="PUCAR" width="379" height="87" />\n' +
 "    <p>PUCAR is an unregistered non-profit public mission facilitating a collective of individuals and organizations to contribute their experience and expertise to advance new ideas and approaches in dispute resolution systems.</p>\n" +
 '  </div>\n  <p class="footer-copy">© 2026 PUCAR.</p>\n</footer>\n</body>\n</html>\n';
 }
