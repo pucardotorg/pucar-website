@@ -107,6 +107,7 @@
   var tagbar = document.getElementById("collabTagbar");
   var clearBtn = document.getElementById("collabClear");
   var countEl = document.getElementById("collabCount");
+  var emptyEl = document.getElementById("collabEmpty");
   var state = { stream: "", category: "", difficulty: "", deadline: "", tags: [] };
 
   /* custom dropdowns: replace native <select> UI (OS-styled) with a styled
@@ -386,6 +387,17 @@
       ? (shown === 0 ? "Nothing matches those filters — try widening them."
         : shown + (shown === 1 ? " piece" : " pieces") + " of work match")
       : "";
+    // keep a placeholder occupying the grid when a filter zeroes out every
+    // card, so the board doesn't suddenly collapse to nothing underneath it
+    if (emptyEl) {
+      if (active && shown === 0) {
+        emptyEl.hidden = false;
+        requestAnimationFrame(function () { emptyEl.classList.add("is-visible"); });
+      } else {
+        emptyEl.classList.remove("is-visible");
+        emptyEl.hidden = true;
+      }
+    }
   }
   apply();
 

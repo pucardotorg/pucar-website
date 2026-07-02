@@ -153,6 +153,15 @@ mechanisms decide which one shows:
   the `-short` ones, independent of which colourway is active. Same pattern
   in the footer, just without the colour axis since it's always dark there.
 
+**Specificity gotcha, already hit once:** the toggle selectors for length
+must be `.site-header .logo img.logo-light-short` (2 classes + `img`), not
+just `.site-header .logo-light-short` (2 classes, no `img`) — the base rule
+`.site-header .logo img{ display:block }` is itself 2 classes + `img`, so a
+toggle selector without `img` loses the specificity fight and `display:none`
+never applies, showing both lengths stacked side by side at once. If you add
+a fifth logo variant or touch this again, keep the `img` in every toggle
+selector that needs to beat that base rule.
+
 If any of these five files are ever regenerated, keep the pipeline in mind:
 ImageMagick's AVIF decoder on this box silently drops the alpha channel
 (reports `Type: TrueColor`, not `TrueColorMatte`) — use `pillow-heif` +
@@ -277,6 +286,17 @@ the only place.
   fast second filter change re-matched them first. `.collab-grid` needs
   `position:relative` as the containing block for that absolute pin.
   `prefers-reduced-motion` skips all of this for a plain instant toggle.
+- **Empty-filter placeholder** (`#collabEmpty`, `.collab-filter-empty` —
+  deliberately *not* named `.collab-empty`, which is a different, unrelated
+  element: the `<p class="collab-empty">` `build-jobs.js` writes between
+  `COLLAB:START/END` when there are zero *open jobs at all*, a data
+  condition, vs. this being a *filter* condition): a permanent, normally-
+  `hidden` dashed-border card sitting just after `COLLAB:END` in the grid
+  (outside the markers, so the build script never touches it). `reportCount()`
+  shows it whenever a filter is active and `shown === 0`, so the grid keeps
+  occupying a full row's height instead of collapsing to nothing when a
+  filter combination matches no cards. Spans the full grid row via
+  `grid-column: 1 / -1`.
 - **Deadline/closes row is pinned to the card bottom** (CSS only, `.collab-
   meta{ margin-top:auto }`): cards are a flex column, and `.collab-foot`
   (posted-by + View button) already used `margin-top:auto` to sit at the

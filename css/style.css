@@ -100,8 +100,8 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
    tagline) on desktop, PUCAR-only below 640px (same breakpoint .site-nav
    collapses at). Which length shows is independent of the opacity toggle
    above, which only decides whether the light *or* dark colourway shows. */
-.site-header .logo-light-short,
-.site-header .logo-dark-short{ display:none; }
+.site-header .logo img.logo-light-short,
+.site-header .logo img.logo-dark-short{ display:none; } /* needs the `img` to out-specify ".logo img{display:block}" above */
 .site-nav{
   pointer-events:auto;
   display:flex;
@@ -125,10 +125,10 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
 
 @media (max-width: 640px){
   .site-nav{ display:none; }
-  .site-header .logo-light-long,
-  .site-header .logo-dark-long{ display:none; }
-  .site-header .logo-light-short{ display:block; }
-  .site-header .logo-dark-short{ display:block; } /* only actually shown if the dark-bg opacity rule above is also active */
+  .site-header .logo img.logo-light-long,
+  .site-header .logo img.logo-dark-long{ display:none; }
+  .site-header .logo img.logo-light-short{ display:block; }
+  .site-header .logo img.logo-dark-short{ display:block; } /* only actually shown if the dark-bg opacity rule above is also active */
 }
 
 /* ---------------- story / sticky pin ---------------- */
@@ -577,6 +577,27 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   transform:scale(.95);
   pointer-events:none;
 }
+/* placeholder that fills the grid when a filter combination matches
+   nothing, so the board doesn't suddenly collapse to zero height when
+   every card hides -- occupies a full grid cell like a real card would. */
+.collab-filter-empty{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  min-height:220px;
+  padding:24px;
+  border-radius:22px;
+  border:1px dashed rgba(251,248,242,.3);
+  color:rgba(251,248,242,.55);
+  font-size:.95rem;
+  line-height:1.5;
+  grid-column: 1 / -1; /* span the full row so it doesn't just sit in one card-width column */
+  opacity:0;
+  transition:opacity .25s ease;
+}
+.collab-filter-empty.is-visible{ opacity:1; }
+.collab-filter-empty[hidden]{ display:none; } /* same author-vs-UA precedence note as .collab-card[hidden] above */
 /* whole card is clickable via a stretched cover link; the posted-by link
    sits above it */
 .collab-cover{ position:absolute; inset:0; z-index:1; border-radius:22px; }
