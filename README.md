@@ -346,10 +346,9 @@ needed no special accommodation for it beyond generous top padding.
   - **She's invisible until she "arrives," not just off-screen.** Revised
     after the first pass read as "doesn't seem to walk in" — a small
     horizontal slide on an already-opaque figure just wasn't a legible
-    entrance. `.litigant-stage{ opacity:0; }` is now the default state —
-    she's not present at all, ever, until something reveals her.
-    `.pin.is-revealed` is the *only* thing that ever does that: a plain,
-    permanent `opacity:1` rule that, once added, is never removed again.
+    entrance. `.litigant-stage{ opacity:0; }` is the default state —
+    she's not present at all until something reveals her.
+    `.pin.is-revealed` is the only thing that ever does that.
     `.pin.is-entrance` layers `@keyframes lateWalkIn` on top of that reveal
     while it's active — she fades in and drops down from 220px off-screen
     at the top, landing (with a slight overshoot past the resting line,
@@ -358,6 +357,24 @@ needed no special accommodation for it beyond generous top padding.
     restarting the keyframes from their `0%` (`opacity:0`) — so she
     genuinely vanishes and walks back in from the top *every* time, not
     just the first.
+  - **`.is-revealed` is no longer permanent — she ceases to exist at the
+    intro hero.** (Jul 2026 revision, explicit instruction: "the litigant
+    should be invisible or non-existent if I'm on the first section", and
+    the walk-in "should happen not just on the first load".) A
+    scroll-position check in `onScrollFrame` — not a beat-transition check,
+    because `currentBeat` sits at 0 both at the hero AND at the story's
+    opening beat, so `setActiveBeat` can never see a hero→story crossing —
+    now drives her existence: while `story.rect.top > 50vh` (the hero owns
+    the screen), `derevealLitigant()` strips `.is-revealed`, cancels any
+    in-flight entrance, and releases the scroll lock (so scrolling up
+    mid-run-in can't strand the page locked). When the story pins
+    (`rect.top <= 1`) and she isn't revealed: `beatFloat < 0.5` →
+    `playLateEntrance()` (the run-in, replaying on *every* hero→story
+    entry); otherwise → `revealLitigantPlainly()` (fast fling / jump landed
+    mid-story, nothing to hang a run-in on). Verified with a jsdom
+    simulation: invisible at load, entrance on entering the story, gone
+    again back at the hero, entrance replays on re-entry, plain reveal on
+    a hero→mid-story fling.
   - **Why the opacity/drop-in targets `.litigant-stage` and the vertical
     motion uses `translate`, not `transform`:** `.litigant-stage`'s
     `transform` is exclusively owned by `updateLitigantPosition()`,

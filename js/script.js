@@ -157,12 +157,26 @@
   // Fallback for the one case playLateEntrance doesn't cover: if the
   // user's first real scroll is fast/far enough to skip beat 0 entirely
   // (landing straight on, say, beat 2), she'd otherwise stay at opacity:0
-  // -- invisible -- for the rest of the visit, since nothing else ever
-  // adds .is-revealed. This just reveals her plainly (a quick CSS
-  // transition, no walk-in theatrics -- there's no "arriving at beat 0"
-  // moment to tie a run-in to here) so she's never permanently invisible.
+  // -- invisible -- since nothing else adds .is-revealed. This just
+  // reveals her plainly (a quick CSS transition, no walk-in theatrics --
+  // there's no "arriving at beat 0" moment to tie a run-in to here).
   function revealLitigantPlainly() {
     pin.classList.add("is-revealed");
+  }
+
+  // The reverse of the reveal: while the intro hero (the section ABOVE the
+  // story) owns the screen, she must not exist at all -- so the next trip
+  // down into the story gets a fresh walk-in every time, not just on first
+  // load. Removing .is-revealed drops .litigant-stage back to opacity:0;
+  // any in-flight entrance is cancelled and its scroll lock released so
+  // a fast scroll up mid-run-in can't strand the page locked.
+  function derevealLitigant() {
+    if (!pin.classList.contains("is-revealed")) return;
+    clearTimeout(entranceLockTimer);
+    clearTimeout(entranceBubbleTimer);
+    document.body.classList.remove("scroll-locked");
+    pin.classList.remove("is-revealed", "is-entrance", "is-running");
+    if (speechEl) speechEl.classList.remove("is-visible");
   }
 
   // ---- continuous side->centre position (see updateLitigantPosition) ----
@@ -332,6 +346,24 @@
     // never a fixed-duration animation firing at one scroll pixel.
     targetCenterT = smoothstep(clamp(beatFloat - 1, 0, 1));
     requestCenterTick();
+
+    // ---- section-based existence -------------------------------------
+    // While the intro hero owns the screen (story still mostly below the
+    // fold), she doesn't exist. The moment the story actually pins
+    // (rect.top reaches 0), she walks in from the top -- every time the
+    // story is entered from the hero, not just on first load. This is
+    // scroll-position-driven rather than beat-transition-driven because
+    // currentBeat sits at 0 both at the hero AND at the story's first
+    // beat, so setActiveBeat alone can never see a hero->story crossing.
+    if (rect.top > viewportH * 0.5) {
+      derevealLitigant(); // hero is the current section: she's gone
+    } else if (rect.top <= 1 && !pin.classList.contains("is-revealed") && !isJumpingToSection) {
+      if (beatFloat < 0.5) {
+        playLateEntrance();       // arrived at the story's opening: run in
+      } else {
+        revealLitigantPlainly();  // landed mid-story (fast fling / jump)
+      }
+    }
 
     if (progressFill) progressFill.style.width = (progress * 100).toFixed(1) + "%";
 
