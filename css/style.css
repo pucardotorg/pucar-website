@@ -649,6 +649,41 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
   font-size:.75rem;
   font-weight:500;
   color:rgba(251,248,242,.85);
+  /* single chips never blow up the row: ellipsise, full text on hover (title) */
+  max-width:170px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  position:relative;      /* lift above .collab-cover so title tooltips work */
+  z-index:2;
+}
+/* chip rows are clamped to one line by js/collaborate.js: overflowing chips
+   hide behind a +N toggle */
+.collab-chips li.chip-overflow{ display:none; }
+.collab-chips.is-expanded li.chip-overflow{ display:block; }
+.collab-chips li.chip-toggle-li{
+  padding:0;
+  background:none;
+  border:none;
+  overflow:visible;
+  max-width:none;
+}
+.chip-toggle{
+  padding:6px 11px;
+  border-radius:999px;
+  border:1px dashed rgba(251,248,242,.4);
+  background:transparent;
+  color:var(--gold);
+  font:600 .75rem var(--font-body);
+  cursor:pointer;
+  transition:border-color .2s ease, background .2s ease;
+}
+.chip-toggle:hover{ border-color:var(--gold); }
+.collab-chips.is-expanded .chip-toggle{
+  background:var(--gold);
+  border-style:solid;
+  border-color:var(--gold);
+  color:var(--ink);
 }
 .collab-btn{
   margin-top:auto;

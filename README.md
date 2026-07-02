@@ -196,6 +196,14 @@ the only place.
   computed client-side against `data-deadline`); tag chips (toggle,
   AND-combined). Category options and tag chips are derived from the cards
   present. Active filters show a result count + clear button.
+- **Chip rows clamp to one line**: individual chips are CSS-ellipsised at
+  170px max-width (full text via native `title` tooltip — the build emits
+  `title` attrs, and chips sit at z-index 2 above the card's cover link so
+  hover reaches them). `clampChips()` then measures the row: any chip that
+  wrapped to a second line is hidden behind a dashed "+N" pill; clicking it
+  expands the row (pill becomes gold "×"), clicking again collapses.
+  Re-measured on (debounced) resize and after every filter change, since
+  hidden cards can't be measured.
 - **Custom dropdowns**: the native `<select>`s are kept as the hidden source
   of truth (options still populated there; `change` events still drive the
   filter state) but their UI is replaced by `enhanceSelect()` with a styled

@@ -41,6 +41,66 @@
     }
   });
 
+  /* ---------------- chip rows: clamp to one line ---------------- */
+  /* Long chips are ellipsised by CSS (full text via title tooltip). If the
+     row still wraps, overflowing chips are hidden behind a "+N" toggle that
+     expands/collapses them. Re-computed on resize. */
+
+  function clampChips(ul) {
+    ul.classList.remove("is-expanded");
+    var oldToggle = ul.querySelector(".chip-toggle-li");
+    if (oldToggle) oldToggle.remove();
+    var items = Array.prototype.slice.call(ul.querySelectorAll("li"));
+    if (!items.length) return;
+    items.forEach(function (li) { li.classList.remove("chip-overflow"); });
+
+    var top = items[0].offsetTop;
+    var overflow = items.filter(function (li) { return li.offsetTop > top; });
+    if (!overflow.length) return;
+    overflow.forEach(function (li) { li.classList.add("chip-overflow"); });
+
+    var li = document.createElement("li");
+    li.className = "chip-toggle-li";
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "chip-toggle";
+    b.setAttribute("aria-expanded", "false");
+    b.setAttribute("aria-label", "Show all tags");
+    li.appendChild(b);
+    ul.appendChild(li);
+
+    // if the "+N" pill itself wraps, hide more chips until it fits
+    var visible = items.filter(function (i) { return overflow.indexOf(i) === -1; });
+    while (li.offsetTop > top && visible.length > 1) {
+      var last = visible.pop();
+      last.classList.add("chip-overflow");
+      overflow.unshift(last);
+    }
+    b.textContent = "+" + overflow.length;
+
+    b.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var on = ul.classList.toggle("is-expanded");
+      b.setAttribute("aria-expanded", String(on));
+      b.textContent = on ? "×" : "+" + overflow.length;
+      b.setAttribute("aria-label", on ? "Show fewer tags" : "Show all tags");
+    });
+  }
+
+  function clampAllChips() {
+    cards.forEach(function (c) {
+      if (c.hidden) return;
+      var ul = c.querySelector(".collab-chips");
+      if (ul) clampChips(ul);
+    });
+  }
+  clampAllChips();
+  var chipResizeT;
+  window.addEventListener("resize", function () {
+    clearTimeout(chipResizeT);
+    chipResizeT = setTimeout(clampAllChips, 150);
+  });
+
   /* ---------------- filters ---------------- */
 
   var bar = document.getElementById("collabFilters");
@@ -224,6 +284,7 @@
       ? (shown === 0 ? "Nothing matches those filters — try widening them."
         : shown + (shown === 1 ? " piece" : " pieces") + " of work match")
       : "";
+    clampAllChips(); // newly-revealed cards need their chip rows measured
   }
   apply();
 

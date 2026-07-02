@@ -176,8 +176,9 @@ function postedByHtml(job, cls) {
 }
 
 function chipsHtml(job) {
+  /* title attr = native tooltip when a long chip is ellipsised by CSS */
   return [job.commitment, job.location].concat(job.tags).filter(Boolean)
-    .map(function (c) { return "<li>" + esc(c) + "</li>"; }).join("");
+    .map(function (c) { return '<li title="' + esc(c) + '">' + esc(c) + "</li>"; }).join("");
 }
 
 function jobPage(job) {
