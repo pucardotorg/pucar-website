@@ -254,6 +254,57 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
      once scrolling stops, instead of relying on a CSS transition. */
 }
 
+/* ---------------- idle speech bubbles ----------------
+   Purely decorative flavour text (aria-hidden). Shown/hidden by
+   js/script.js toggling .is-visible -- see startBubbles()/stopBubbles()/
+   showSpeechBubble(). Positioned relative to .litigant-stage, anchored
+   near the head (the figure's head sits roughly in the upper half of the
+   viewBox, just left of centre), with a small triangular tail pointing
+   down toward it. */
+.speech-bubble{
+  position:absolute;
+  top:4%;
+  left:52%;
+  z-index:6;
+  max-width:180px;
+  padding:9px 13px;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:.76rem;
+  font-weight:600;
+  line-height:1.35;
+  text-align:left;
+  border-radius:14px;
+  border:1px solid var(--line);
+  box-shadow:0 10px 22px rgba(36,30,26,.16);
+  opacity:0;
+  transform:translate(-28%, 6px) scale(.9);
+  transform-origin:22% 100%;
+  transition:opacity .3s ease, transform .3s ease;
+  pointer-events:none;
+  will-change:opacity, transform;
+}
+.speech-bubble::after{
+  content:"";
+  position:absolute;
+  left:24%;
+  bottom:-7px;
+  width:14px;
+  height:14px;
+  background:var(--paper);
+  border-right:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  transform:rotate(45deg);
+}
+.speech-bubble.is-visible{
+  opacity:1;
+  transform:translate(-28%, 0) scale(1);
+}
+/* on dark pinned beats (5, 7) the paper bubble still reads fine since it's
+   never shown mid-scroll anyway (bubbles only appear while idle, i.e. not
+   actively progressing through beats) -- no per-beat override needed. */
+
 /* scrolling "path" behind the figure, follows it side→centre */
 .path{
   position:absolute;

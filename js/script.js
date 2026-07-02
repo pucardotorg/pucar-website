@@ -18,6 +18,61 @@
   var idleTimeout = null;
   var IDLE_DELAY = 10000; // ms without scrolling before she looks around
 
+  // ---- idle speech bubbles ------------------------------------------------
+  // Flavour text shown only while she's "idle" (looking around -- i.e. the
+  // page has just loaded, or scrolling has stopped for IDLE_DELAY ms).
+  // Tied 1:1 to the same .is-idle state resetIdle() manages below: the
+  // instant a real scroll event fires, bubbles stop immediately (stopBubbles,
+  // called from resetIdle); they only resume after another IDLE_DELAY ms of
+  // stillness (startBubbles, called when the idle timeout fires). On first
+  // page load she's idle from the very first frame (see "initial state" at
+  // the bottom) rather than waiting out the usual 10s, so bubbles begin
+  // right away too.
+  var SPEECH_LINES = [
+    "Oh my god, I'm late to court!",
+    "I hope the judge doesn't push the hearing again...",
+    "I need to be back home to give mom her medicines by 4pm."
+  ];
+  var speechEl = document.getElementById("litigantSpeech");
+  var speechShowTimer = null;
+  var speechHideTimer = null;
+  var SPEECH_VISIBLE_MS = 3400;
+
+  function randomDelay(minMs, maxMs) {
+    return minMs + Math.random() * (maxMs - minMs);
+  }
+
+  function showSpeechBubble() {
+    if (!speechEl) return;
+    var line = SPEECH_LINES[Math.floor(Math.random() * SPEECH_LINES.length)];
+    speechEl.textContent = line;
+    speechEl.classList.add("is-visible");
+    clearTimeout(speechHideTimer);
+    speechHideTimer = setTimeout(function () {
+      speechEl.classList.remove("is-visible");
+    }, SPEECH_VISIBLE_MS);
+  }
+
+  function scheduleSpeechBubble() {
+    clearTimeout(speechShowTimer);
+    speechShowTimer = setTimeout(function () {
+      showSpeechBubble();
+      scheduleSpeechBubble();
+    }, randomDelay(5000, 10000)); // random gap, every 5-10s
+  }
+
+  function startBubbles() {
+    scheduleSpeechBubble();
+  }
+
+  function stopBubbles() {
+    clearTimeout(speechShowTimer);
+    clearTimeout(speechHideTimer);
+    speechShowTimer = null;
+    speechHideTimer = null;
+    if (speechEl) speechEl.classList.remove("is-visible");
+  }
+
   // ---- continuous side->centre position (see updateLitigantPosition) ----
   var MOBILE_BREAKPOINT = 860; // matches the CSS media query that disables this entirely
   var targetCenterT = 0;   // 0 = side (beats 0-1), 1 = centred (beats 2-7)
@@ -59,9 +114,11 @@
 
   function resetIdle() {
     pin.classList.remove("is-idle");
+    stopBubbles();
     clearTimeout(idleTimeout);
     idleTimeout = setTimeout(function () {
       pin.classList.add("is-idle");
+      startBubbles();
     }, IDLE_DELAY);
   }
 
@@ -162,8 +219,6 @@
     walkTimeout = setTimeout(function () {
       setWalking(false);
     }, 180);
-
-    resetIdle();
   }
 
   function requestTick() {
@@ -176,7 +231,19 @@
   window.addEventListener("scroll", requestTick, { passive: true });
   window.addEventListener("resize", requestTick);
 
+  // resetIdle is bound directly to the real "scroll" event (not folded into
+  // the rAF-throttled onScrollFrame above) so idle/bubble state reacts to
+  // "the page has started scrolling" precisely, and isn't tied to whichever
+  // frame onScrollFrame happens to run on.
+  window.addEventListener("scroll", resetIdle, { passive: true });
+
   // initial state
   setActiveBeat(0);
   onScrollFrame();
+
+  // she looks around and speech bubbles start immediately on page load --
+  // not after the usual 10s idle wait, which only applies once scrolling
+  // has actually happened at least once (see resetIdle above).
+  pin.classList.add("is-idle");
+  startBubbles();
 })();

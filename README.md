@@ -160,10 +160,35 @@ properties, never `fill`, `stroke`, or `color`.
   ground/path/shadow layers are `animation-play-state: paused` by default
   and `running` only under `.pin.is-walking` — so the whole scene freezes
   mid-pose the moment scrolling stops.
-- **Idle state:** `resetIdle()` (also in script.js) removes `.is-idle` and
-  re-arms a 10 s timer (`IDLE_DELAY = 10000`) on every scroll frame; when it
-  fires, the pin gets `.is-idle` and the litigant's head looks around (see
-  below). Any scroll clears it instantly.
+- **Idle state:** `resetIdle()` (js/script.js) is bound directly to the real
+  `window` `"scroll"` event (not folded into the rAF-throttled
+  `onScrollFrame`, so it fires on the actual scroll signal, not once per
+  animation frame). On scroll it removes `.is-idle` from `#pin` and re-arms
+  a 10 s timer (`IDLE_DELAY = 10000`); when the timer fires with no further
+  scrolling, `#pin` gets `.is-idle` back and the litigant's head looks
+  around (`headLook`, see §4 below). **On first page load she starts idle
+  immediately** — `pin.classList.add("is-idle")` runs once at the bottom of
+  the IIFE, outside the normal 10 s wait, so she's already looking around
+  and the speech bubbles below start right when the page opens, not 10 s
+  into it. The very first real scroll cancels that initial idle state the
+  same way any later one does.
+- **Idle speech bubbles:** while `.is-idle` is active, `startBubbles()`
+  (js/script.js) schedules a random line from `SPEECH_LINES` to appear
+  every 5–10 s (`randomDelay(5000, 10000)`, re-rolled after each line),
+  shown for `SPEECH_VISIBLE_MS = 3400` ms via `.is-visible` on
+  `#litigantSpeech` (the `.speech-bubble` div inside `.litigant-stage`,
+  right before the inline SVG in `index.html`). `stopBubbles()` — called
+  from the same `resetIdle()` that removes `.is-idle` — clears both the
+  "next bubble" timer and the "hide this bubble" timer and force-hides
+  whatever's showing, so scrolling kills a mid-display bubble instantly,
+  not just future ones. Bubble scheduling/hiding is entirely decoupled
+  from the walk/idle head animation itself — it just happens to share the
+  same `.is-idle` trigger condition, per the brief ("only if they stay in
+  one place for 10 seconds will the speech bubbles come back"). The
+  bubble's CSS lives in style.css right above `.path` — it's `aria-hidden`
+  (decorative flavour text) and positioned with a small CSS-triangle tail
+  (`.speech-bubble::after`) pointing down toward the figure's head, which
+  sits in the upper half of the SVG's viewBox.
 
 ## 4. The litigant figure (SVG anatomy + animations)
 
