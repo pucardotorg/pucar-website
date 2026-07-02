@@ -67,17 +67,19 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
 }
 .site-header .logo{
   pointer-events:auto;
-  font-family:var(--font-display);
-  font-weight:600;
-  font-size:1.15rem;
-  letter-spacing:.04em;
+  display:inline-flex;
+  align-items:center;
   text-decoration:none;
-  color:var(--ink);
   background:rgba(251,248,242,.7);
   backdrop-filter:blur(6px);
-  padding:6px 14px;
+  padding:8px 16px;
   border-radius:999px;
   border:1px solid var(--line);
+}
+.site-header .logo img{
+  display:block;
+  height:16px;   /* kept small and deliberate -- it's a nav pill, not a hero mark */
+  width:auto;
 }
 .site-nav{
   pointer-events:auto;
@@ -1019,7 +1021,7 @@ body.modal-open{ overflow:hidden; }
   padding:64px clamp(20px,5vw,72px) 32px;
 }
 .footer-top{ max-width:640px; }
-.footer-top .logo{ font-family:var(--font-display); font-size:1.3rem; color:var(--paper); }
+.footer-top .logo{ display:block; height:22px; width:auto; margin-bottom:2px; }
 .footer-top p{ margin-top:14px; font-size:.92rem; line-height:1.6; color:rgba(251,248,242,.6); }
 .footer-links{ display:flex; gap:22px; flex-wrap:wrap; margin:32px 0; }
 .footer-links a{ text-decoration:none; font-size:.85rem; color:rgba(251,248,242,.75); }

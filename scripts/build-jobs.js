@@ -141,10 +141,10 @@ function pageShell(opts) {
 '<link rel="stylesheet" href="/css/style.css" />\n' +
 (opts.jsonLd ? '<script type="application/ld+json">' + JSON.stringify(opts.jsonLd) + "</script>\n" : "") +
 '</head>\n<body class="job-page">\n' +
-'<header class="site-header">\n  <a class="logo" href="/">PUCAR</a>\n' +
+'<header class="site-header">\n  <a class="logo" href="/"><img src="/assets/logo-pucar-green.avif" alt="PUCAR" width="401" height="100" /></a>\n' +
 '  <nav class="site-nav"><a href="' + opts.backHref + '">' + opts.backLabel + "</a></nav>\n</header>\n" +
 '<main class="job-main">\n' + opts.main + "\n</main>\n" +
-'<footer class="site-footer">\n  <div class="footer-top"><span class="logo">PUCAR</span>\n' +
+'<footer class="site-footer">\n  <div class="footer-top"><img class="logo" src="/assets/logo-pucar-white.avif" alt="PUCAR — Public Collective for Avoidance and Resolution of Disputes" width="835" height="100" />\n' +
 "    <p>PUCAR is an unregistered non-profit public mission facilitating a collective of individuals and organizations to contribute their experience and expertise to advance new ideas and approaches in dispute resolution systems.</p>\n" +
 '  </div>\n  <p class="footer-copy">© 2026 PUCAR.</p>\n</footer>\n</body>\n</html>\n';
 }
