@@ -591,16 +591,26 @@ body.modal-open{ overflow:hidden; }
 }
 .job-modal-panel{
   position:relative;
-  margin:6vh auto;
-  max-width:680px;
-  max-height:88vh;
+  margin:3.5vh auto;
+  width:min(860px, calc(100vw - 32px));
+  max-height:93vh;
   overflow-y:auto;
   background:var(--paper);
   color:var(--ink);
   border-radius:22px;
-  padding:clamp(26px,4vw,44px);
+  padding:clamp(28px,4.5vw,56px);
   box-shadow:0 30px 80px rgba(0,0,0,.35);
+  /* slim, unobtrusive scrollbar */
+  scrollbar-width:thin;                                  /* Firefox */
+  scrollbar-color:rgba(36,30,26,.22) transparent;
 }
+.job-modal-panel::-webkit-scrollbar{ width:6px; }        /* Chrome/Safari */
+.job-modal-panel::-webkit-scrollbar-track{ background:transparent; margin:22px 0; }
+.job-modal-panel::-webkit-scrollbar-thumb{
+  background:rgba(36,30,26,.18);
+  border-radius:99px;
+}
+.job-modal-panel::-webkit-scrollbar-thumb:hover{ background:rgba(36,30,26,.32); }
 .job-modal-close{
   position:absolute;
   top:16px; right:18px;
