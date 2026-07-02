@@ -49,6 +49,93 @@
   var countEl = document.getElementById("collabCount");
   var state = { stream: "", category: "", difficulty: "", deadline: "", tags: [] };
 
+  /* custom dropdowns: replace native <select> UI (OS-styled) with a styled
+     button + listbox that matches the site. The hidden select stays the
+     source of truth so the change handler below keeps working. */
+  function closeAllDropdowns() {
+    document.querySelectorAll(".dd-menu").forEach(function (m) { m.hidden = true; });
+    document.querySelectorAll(".dd-btn").forEach(function (b) { b.setAttribute("aria-expanded", "false"); });
+  }
+  document.addEventListener("click", function (e) {
+    if (!(e.target.closest && e.target.closest(".dd"))) closeAllDropdowns();
+  });
+
+  function enhanceSelect(sel) {
+    var dd = document.createElement("div");
+    dd.className = "dd";
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "dd-btn";
+    btn.setAttribute("aria-haspopup", "listbox");
+    btn.setAttribute("aria-expanded", "false");
+    if (sel.getAttribute("aria-label")) btn.setAttribute("aria-label", sel.getAttribute("aria-label"));
+    var menu = document.createElement("ul");
+    menu.className = "dd-menu";
+    menu.setAttribute("role", "listbox");
+    menu.hidden = true;
+
+    function render() {
+      var cur = sel.options[sel.selectedIndex];
+      btn.textContent = cur ? cur.text : "";
+      btn.classList.toggle("is-set", !!sel.value);
+      menu.innerHTML = "";
+      Array.prototype.forEach.call(sel.options, function (o, i) {
+        var li = document.createElement("li");
+        li.setAttribute("role", "option");
+        li.tabIndex = -1;
+        li.textContent = o.text;
+        li.setAttribute("data-i", i);
+        if (i === sel.selectedIndex) li.setAttribute("aria-selected", "true");
+        menu.appendChild(li);
+      });
+    }
+    sel.__ddRender = render;
+
+    function open() {
+      closeAllDropdowns();
+      menu.hidden = false;
+      btn.setAttribute("aria-expanded", "true");
+    }
+    function close() {
+      menu.hidden = true;
+      btn.setAttribute("aria-expanded", "false");
+    }
+    function pick(li) {
+      sel.selectedIndex = parseInt(li.getAttribute("data-i"), 10);
+      sel.dispatchEvent(new Event("change", { bubbles: true }));
+      render();
+      close();
+      btn.focus();
+    }
+
+    btn.addEventListener("click", function () { menu.hidden ? open() : close(); });
+    btn.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        open();
+        var first = menu.querySelector('[aria-selected="true"]') || menu.firstChild;
+        if (first) first.focus();
+      }
+    });
+    menu.addEventListener("click", function (e) {
+      var li = e.target.closest ? e.target.closest("li[role=option]") : null;
+      if (li) pick(li);
+    });
+    menu.addEventListener("keydown", function (e) {
+      var li = e.target;
+      if (e.key === "Escape") { close(); btn.focus(); }
+      else if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(li); }
+      else if (e.key === "ArrowDown" && li.nextSibling) { e.preventDefault(); li.nextSibling.focus(); }
+      else if (e.key === "ArrowUp" && li.previousSibling) { e.preventDefault(); li.previousSibling.focus(); }
+    });
+
+    dd.appendChild(btn);
+    dd.appendChild(menu);
+    sel.style.display = "none";
+    sel.parentNode.insertBefore(dd, sel.nextSibling);
+    render();
+  }
+
   if (bar && cards.length) {
     // populate category options + tag chips from the cards present
     var cats = {}, tags = {};
@@ -72,6 +159,7 @@
       b.setAttribute("aria-pressed", "false");
       tagbar.appendChild(b);
     });
+    bar.querySelectorAll("select").forEach(enhanceSelect);
     bar.hidden = false;
 
     bar.addEventListener("change", function (e) {
@@ -92,7 +180,10 @@
     });
     clearBtn.addEventListener("click", function () {
       state = { stream: "", category: "", difficulty: "", deadline: "", tags: [] };
-      bar.querySelectorAll("select").forEach(function (s) { s.value = ""; });
+      bar.querySelectorAll("select").forEach(function (s) {
+        s.value = "";
+        if (s.__ddRender) s.__ddRender();
+      });
       tagbar.querySelectorAll(".collab-tag").forEach(function (b) {
         b.classList.remove("is-on");
         b.setAttribute("aria-pressed", "false");

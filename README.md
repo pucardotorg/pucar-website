@@ -196,6 +196,15 @@ the only place.
   computed client-side against `data-deadline`); tag chips (toggle,
   AND-combined). Category options and tag chips are derived from the cards
   present. Active filters show a result count + clear button.
+- **Custom dropdowns**: the native `<select>`s are kept as the hidden source
+  of truth (options still populated there; `change` events still drive the
+  filter state) but their UI is replaced by `enhanceSelect()` with a styled
+  `.dd` button + `.dd-menu` listbox (paper panel, terracotta selected-dot,
+  gold "active" state on the trigger) so open menus match the site instead
+  of the OS. Keyboard: ArrowUp/Down to open and move, Enter/Space to pick,
+  Escape to close; outside click closes. The clear button re-renders them
+  via `select.__ddRender()`. If you add a new select filter, no extra work —
+  every select inside `#collabFilters` is enhanced automatically.
 - **Modal** (`#jobModal`): clicking a card's cover link opens it (populated
   from jobs.json — badges, deadline/closes, chips, posted-by, body) and
   `history.pushState`s the job's real URL. Back button / Escape / backdrop /

@@ -673,19 +673,81 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
   gap:10px;
   margin:0 0 14px;
 }
-.collab-filters select{
-  appearance:none;
-  -webkit-appearance:none;
-  padding:10px 34px 10px 16px;
+/* native selects are hidden by JS and replaced with .dd custom dropdowns
+   so the open menu matches the site instead of the OS */
+.dd{ position:relative; }
+.dd-btn{
+  position:relative;
+  padding:10px 38px 10px 16px;
   border-radius:999px;
   border:1px solid rgba(251,248,242,.25);
-  background:rgba(251,248,242,.08) url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23F6F1E6' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+  background:rgba(251,248,242,.08);
   color:var(--paper);
   font:500 .84rem var(--font-body);
   cursor:pointer;
+  transition:border-color .2s ease, background .2s ease, color .2s ease;
 }
-.collab-filters select:hover{ border-color:rgba(251,248,242,.45); }
-.collab-filters select option{ color:var(--ink); background:var(--paper); }
+.dd-btn::after{           /* chevron */
+  content:"";
+  position:absolute;
+  right:16px; top:50%;
+  width:7px; height:7px;
+  margin-top:-5px;
+  border-right:1.6px solid currentColor;
+  border-bottom:1.6px solid currentColor;
+  transform:rotate(45deg);
+  transition:transform .2s ease, margin-top .2s ease;
+}
+.dd-btn[aria-expanded="true"]::after{ transform:rotate(225deg); margin-top:-1px; }
+.dd-btn:hover{ border-color:rgba(251,248,242,.5); }
+.dd-btn.is-set{            /* a filter is active */
+  background:var(--gold);
+  border-color:var(--gold);
+  color:var(--ink);
+  font-weight:600;
+}
+.dd-menu{
+  position:absolute;
+  top:calc(100% + 8px);
+  left:0;
+  z-index:30;
+  min-width:100%;
+  width:max-content;
+  margin:0;
+  padding:6px;
+  list-style:none;
+  background:var(--paper);
+  color:var(--ink);
+  border:1px solid var(--line);
+  border-radius:16px;
+  box-shadow:0 18px 44px rgba(0,0,0,.35);
+}
+.dd-menu li{
+  position:relative;
+  padding:9px 16px 9px 32px;
+  border-radius:10px;
+  font-size:.86rem;
+  font-weight:500;
+  color:var(--ink-soft);
+  white-space:nowrap;
+  cursor:pointer;
+}
+.dd-menu li:hover,
+.dd-menu li:focus{
+  background:var(--cream-deep);
+  color:var(--ink);
+  outline:none;
+}
+.dd-menu li[aria-selected="true"]{ color:var(--ink); font-weight:600; }
+.dd-menu li[aria-selected="true"]::before{   /* terracotta dot marker */
+  content:"";
+  position:absolute;
+  left:14px; top:50%;
+  width:7px; height:7px;
+  transform:translateY(-50%);
+  border-radius:50%;
+  background:var(--terracotta);
+}
 .collab-tagbar{ display:flex; flex-wrap:wrap; gap:8px; }
 .collab-tag{
   padding:9px 14px;
