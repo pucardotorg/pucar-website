@@ -58,9 +58,9 @@ Brand colours, given directly by the client (not sampled from anywhere):
 
 | Variable | Hex | Role |
 |---|---|---|
-| `--green` | `#30CF8C` | Dominant accent. Also the exact colour of the logo mark (`assets/pucar-normal-expanded.png`, sampled and confirmed pixel-identical). Primary CTAs, links, stat numbers, active filter states. |
-| `--pink` | `#DA6EAA` | Secondary accent. Eyebrow labels, tag/chip highlights, footer link hover. |
-| `--forest` | `#123726` | Dark background. Replaces the old navy-blue dark background (beat 5, nav hover). |
+| `--green` | `#30CF8C` | Dominant accent — **dark backgrounds only**, see rule below. Also the exact colour of the logo mark (`assets/pucar-normal-expanded.png`, sampled and confirmed pixel-identical). |
+| `--pink` | `#DA6EAA` | Secondary accent. Eyebrow labels, tag/chip highlights, footer link hover. No light/dark restriction. |
+| `--forest` | `#123726` | Dark background *and* the light-background stand-in for `--green` (see rule below). Also replaces the old navy-blue dark background (beat 5, nav hover). |
 | `--forest-deep` | `#0B2417` | Darkest background. Replaces the old navy-deep (beat 7, footer). |
 | `--green-soft` | `#CCEBDE` | Pale tint of `--green` (~86% lightness, same hue/lower saturation). Available for soft backgrounds; not currently used anywhere but kept for consistency. |
 | `--pink-soft` | `#F1D0E2` | Pale tint of `--pink`. Used as beat 4's background tint. |
@@ -70,6 +70,31 @@ from the brand hexes by converting to HSL and dropping lightness (for the
 dark backgrounds) or raising it (for the soft tints), keeping hue and
 roughly the same saturation — so everything reads as "the same colour,
 darker/lighter," not an unrelated palette bolted on.
+
+**Rule: the bright `--green` (`#30CF8C`) only ever sits on a dark
+background — explicit client instruction.** It fails contrast on every
+light surface in this palette (1.8:1 on `--cream`, WCAG needs 4.5:1 for
+text), which is exactly why it read as illegible on the beat 0 eyebrow
+before this fix. Wherever the codebase used to reach for
+`--terracotta`/`--green` on a light background, it now uses `--forest`
+(the same hue, just dark — 11–12:1 contrast on `--cream`/`--paper`)
+instead:
+- `.beat-eyebrow`, `.beat-stat` (base rule, i.e. beats 0–3 and 6) — `--forest`.
+  Beats 5 & 7 sit on `--navy`/`--navy-deep` (dark), so `.beat-stat` there
+  is explicitly overridden back to bright `--green` — this is the one
+  spot in the story where the literal brand green is meant to appear.
+  Beat 4 keeps its own dark-pink override (`#7C1D52` on `--pink-soft`).
+- `.initiative-num` (beat 6, light) — `--forest`.
+- `.job-body a`, the `.dd-menu` selected-item dot marker — both sit on
+  light surfaces (`--paper`) — `--forest`.
+- `.progress-fill` (the scroll-progress rail) — `--forest` by default
+  since the rail is fixed and overlays whichever beat background is
+  currently showing, most of which are light; overridden to bright
+  `--green` specifically on beats 5 & 7 the same way `.beat-stat` is.
+- `.btn-primary` — see "Buttons" below, it's the one case that needed a
+  *contextual* override rather than a flat swap, since the same class is
+  reused on both a dark background (beat 7 CTA) and light ones (job
+  modal/page).
 
 Cream/paper/ink neutrals (`--cream`, `--cream-deep`, `--paper`, `--ink`,
 `--ink-soft`, `--muted`) are unchanged from the original build — the client
@@ -130,15 +155,29 @@ properties, never `fill`, `stroke`, or `color`.
 
 ### Buttons & interactive states
 
-- `.btn-primary` — `background: var(--terracotta)` → now `--green`,
-  hover state hardcoded to `#239565` (a darkened `--green`, same HSL hue,
-  ~72% of the original lightness — kept as a literal rather than a new
-  variable since it's a single one-off hover state, not reused elsewhere).
+- `.btn-primary` is reused in two different lighting contexts, so it
+  can't take a single flat colour the way most other rules could:
+  - Base rule: `background: var(--green)`, `color: var(--ink)` (not
+    `--paper` — white text on bright green is only 1.9:1 contrast, dark
+    ink on the same green is 8.2:1). This is what renders for its one
+    dark-background use, the beat 7 CTA ("Get in touch"). Hover lightens
+    to `#51D79E` (keeps ink at ~9:1 on hover too — darkening instead would
+    have *dropped* the ink contrast, since ink and a darker green converge
+    tonally; lightening moves them apart).
+  - `.job-page .btn-primary` / `.job-modal-panel .btn-primary` — both of
+    those wrapper contexts are light backgrounds (`--cream`/`--paper`), so
+    this override swaps to `background: var(--forest)`, `color: var(--paper)`
+    (light text now, since the background itself is dark) — 12.4:1
+    contrast. Hover darkens further to `#184A33`, a lighter tint of
+    `--forest` (still reads as "hover state," 9.6:1 with `--paper`).
 - `.btn-ghost` — unaffected (uses `rgba(251,248,242,...)`, not a brand var).
 - Filter chips / tag toggles (`.chip-toggle`, active/hover states) —
-  `var(--gold)` → resolves to `--pink` now.
+  `var(--gold)` → resolves to `--pink` now. Pink has no light/dark
+  restriction (2.7:1 on cream — still not print-quality, but it's used at
+  chip/label sizes with weight, not body copy, and wasn't part of the
+  client's dark-bg-only instruction, which named green specifically).
 - Beat eyebrows (`.beat-eyebrow` on beats 5 & 7, `.collab-head
-  .beat-eyebrow`) — `var(--gold)` → `--pink`.
+  .beat-eyebrow`) — `var(--gold)` → `--pink`, unaffected by the green rule.
 
 ---
 
@@ -147,9 +186,17 @@ properties, never `fill`, `stroke`, or `color`.
 - `#story` is `height: calc(var(--beats) * 100vh)` with `--beats:8` set
   inline; `.pin` inside is `position:sticky` and holds the whole viewport.
 - `js/script.js` maps scroll progress through `#story` to the nearest beat
-  (0–7), sets `data-beat` on `#pin` (drives background tints, motif
-  visibility, per-beat CSS), toggles `.is-active` on `.beat` articles, runs
-  the count-up stat animation once per stat, and fills the progress rail.
+  (0–7), sets `data-beat` on `#pin` (drives background tints, per-beat
+  CSS), toggles `.is-active` on `.beat` articles, runs the count-up stat
+  animation once per stat, and fills the progress rail.
+- **No decorative motifs.** The story used to have a `.motifs` layer —
+  four floating SVG icons (files/clock/scale/spark) that faded in behind
+  specific beats. Removed entirely (markup in `index.html`, all
+  `.motif*` rules and the `@media (max-width:480px) .motif` rule in
+  `style.css`) — they visually overlapped the beat text and added no
+  informational value. If a future pass wants ambient decoration again,
+  don't resurrect this exact approach; position anything decorative well
+  clear of `.beats`' text box instead of layered behind/near it.
 - Beats 0–7: intro → pendency stat → narrative → 10-yr wait → undertrials
   (pink-tinted) → PUCAR turn (dark forest-green) → initiatives grid → CTA
   (darkest forest-green). All stats are marked `[placeholder — verify]` in

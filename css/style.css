@@ -211,28 +211,6 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   to{ transform:translateY(-46px); }
 }
 
-/* ---------------- decorative motifs ---------------- */
-.motifs{ position:absolute; inset:0; z-index:1; pointer-events:none; }
-.motif{
-  position:absolute;
-  width:clamp(60px,9vw,110px);
-  color:var(--ink);
-  opacity:0;
-  transform:scale(.85) rotate(-6deg);
-  transition:opacity .9s ease, transform .9s ease;
-}
-.motif svg{ width:100%; height:100%; display:block; }
-.motif-files{ top:10%; left:6%; }
-.motif-clock{ bottom:12%; left:8%; }
-.motif-scale{ top:12%; right:6%; color:var(--paper); }
-.motif-spark{ bottom:14%; right:8%; color:var(--gold); }
-
-.pin[data-beat="2"] .motif-files,
-.pin[data-beat="1"] .motif-files{ opacity:1; transform:scale(1) rotate(0deg); }
-.pin[data-beat="3"] .motif-clock{ opacity:1; transform:scale(1) rotate(0deg); }
-.pin[data-beat="5"] .motif-scale{ opacity:1; transform:scale(1) rotate(0deg); }
-.pin[data-beat="7"] .motif-spark{ opacity:1; transform:scale(1) rotate(0deg); }
-
 /* ---------------- litigant stage ---------------- */
 .litigant-stage{
   position:relative;
@@ -478,7 +456,7 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   font-weight:600;
   text-transform:uppercase;
   letter-spacing:.12em;
-  color:var(--terracotta);
+  color:var(--forest); /* dark-green, NOT --green -- bright green fails contrast on light beat backgrounds (0-4,6); see beat 5/7 override below for the dark-bg case */
   margin-bottom:14px;
 }
 .beat-title{
@@ -488,9 +466,15 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
 .beat-stat{
   font-size:clamp(3rem, 8vw, 6.4rem);
   margin-bottom:10px;
-  color:var(--terracotta);
+  color:var(--forest); /* same reasoning as .beat-eyebrow above */
   font-weight:600;
 }
+/* Beats 5 & 7 sit on dark (--navy/--forest) backgrounds, so the bright
+   --green accent is legible there and gets reinstated explicitly --
+   this is the one place in the story where the literal brand green is
+   meant to show up, per "only use it on a dark bg". */
+.pin[data-beat="5"] .beat-stat,
+.pin[data-beat="7"] .beat-stat{ color:var(--green); }
 .pin[data-beat="4"] .beat-stat{ color:#7C1D52; } /* dark pink, legible on --pink-soft */
 .beat-body{
   font-size:1.05rem;
@@ -555,7 +539,7 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   transition:background .2s ease, transform .2s ease;
 }
 .initiative-card:hover{ background:rgba(36,30,26,.08); transform:translateY(-2px); }
-.initiative-num{ font-family:var(--font-display); font-size:1.1rem; color:var(--terracotta); }
+.initiative-num{ font-family:var(--font-display); font-size:1.1rem; color:var(--forest); } /* dark-green -- sits on beat 6's light bg, so not the bright --green */
 .initiative-name{ font-weight:600; font-size:.95rem; line-height:1.3; }
 .initiative-link{ font-size:.78rem; color:var(--muted); margin-top:auto; }
 
@@ -570,8 +554,19 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   text-decoration:none;
   transition:background .2s ease, color .2s ease, border-color .2s ease;
 }
-.btn-primary{ background:var(--terracotta); color:var(--paper); }
-.btn-primary:hover{ background:#239565; } /* darker shade of --green */
+/* .btn-primary defaults to the bright --green -- correct as-is for its one
+   use on a dark background (the beat 7 CTA, "Get in touch"). Everywhere
+   else it's reused on a light surface (job modal, job page), it's
+   overridden below to the dark --forest shade instead, per "only use
+   [bright green] on a dark bg". Text is --ink, not --paper -- white-on-
+   bright-green only hits a 1.9:1 contrast ratio (fails WCAG badly);
+   dark ink on the same green hits 8.2:1. */
+.btn-primary{ background:var(--green); color:var(--ink); }
+.btn-primary:hover{ background:#51D79E; } /* lighter shade of --green, keeps ink legible on hover too (~9:1) */
+.job-page .btn-primary,
+.job-modal-panel .btn-primary{ background:var(--forest); color:var(--paper); } /* dark bg here, so light text -- paper on forest is 12.4:1 */
+.job-page .btn-primary:hover,
+.job-modal-panel .btn-primary:hover{ background:#184A33; } /* lighter shade of --forest, for hover */
 .btn-ghost{ border:1px solid rgba(251,248,242,.4); color:var(--paper); }
 .btn-ghost:hover{ background:rgba(251,248,242,.12); }
 
@@ -598,9 +593,13 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
 .progress-fill{
   height:100%;
   width:0%;
-  background:var(--terracotta);
-  transition:width .15s linear;
+  background:var(--forest); /* dark-green default -- rail sits over light beat backgrounds most of the time */
+  transition:width .15s linear, background-color .3s ease;
 }
+/* rail is fixed inside .pin, so it overlays beats 5/7's dark background too --
+   bright --green is legible there, so it's swapped back in for those beats. */
+.pin[data-beat="5"] .progress-fill,
+.pin[data-beat="7"] .progress-fill{ background:var(--green); }
 .progress-count{
   font-size:.75rem;
   font-variant-numeric:tabular-nums;
@@ -931,14 +930,14 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   outline:none;
 }
 .dd-menu li[aria-selected="true"]{ color:var(--ink); font-weight:600; }
-.dd-menu li[aria-selected="true"]::before{   /* terracotta dot marker */
+.dd-menu li[aria-selected="true"]::before{   /* dark-green dot marker -- dd-menu bg is light (--paper) */
   content:"";
   position:absolute;
   left:14px; top:50%;
   width:7px; height:7px;
   transform:translateY(-50%);
   border-radius:50%;
-  background:var(--terracotta);
+  background:var(--forest);
 }
 /* flex-basis:100% forces the tag row onto its own line, independent of the
    dropdown row above it -- otherwise picking a shorter option (e.g. "Paid"
@@ -1138,7 +1137,7 @@ body.modal-open{ overflow:hidden; }
   font-size:.98rem;
 }
 .job-body ul,.job-body ol{ padding-left:22px; margin:10px 0; }
-.job-body a{ color:var(--terracotta); }
+.job-body a{ color:var(--forest); } /* dark-green -- job page/modal are both light-bg surfaces */
 .job-page{ background:var(--cream); }
 .job-page .cta-row{ margin-top:34px; }
 .btn-outline{
@@ -1206,5 +1205,4 @@ body.modal-open{ overflow:hidden; }
 
 @media (max-width: 480px){
   .beat-body{ font-size:.95rem; }
-  .motif{ width:70px; }
 }
