@@ -106,8 +106,18 @@
   // beat 0 later and she runs in again. Locks scroll (body.scroll-locked,
   // same overflow:hidden trick the job modal uses) for ENTRANCE_LOCK_MS so
   // the run-in and line have a moment to land instead of being scrolled
-  // past instantly, then hands control back. See @keyframes lateRunIn and
-  // .pin.is-running/.is-entrance in style.css for the visual side.
+  // past instantly, then hands control back.
+  //
+  // She's invisible (opacity:0) by default -- see .litigant-stage in
+  // style.css -- and .pin.is-revealed is the ONLY thing that ever makes her
+  // visible again (a plain, permanent opacity:1 rule, never removed once
+  // added). .pin.is-entrance layers @keyframes lateWalkIn on top of that
+  // while it's active: she fades in and drops down from off-screen at the
+  // top, so the very first time she appears at all, it reads as "walking
+  // into frame," not "just there." Every later beat-0 arrival re-adds
+  // .is-entrance, which restarts that keyframe animation from its 0%
+  // (opacity:0) -- so she briefly vanishes and walks back in again each
+  // time, which is intentional/consistent with the "every time" replay.
   var LATE_LINE = "OMG! I'm so late to get to court!";
   var ENTRANCE_LOCK_MS = 1700;
   var ENTRANCE_BUBBLE_DELAY_MS = 480; // let the run-in read for a beat before she "speaks"
@@ -115,6 +125,11 @@
   var entranceBubbleTimer = null;
 
   function playLateEntrance() {
+    // Never fire mid-jump -- see cleanJumpTo() below. Without this guard, a
+    // "skip to Collaborate" jump that happens to pass through (or land
+    // exactly on) beat 0 could try to lock scroll while a separate,
+    // deliberate programmatic scroll is already in flight, fighting it.
+    if (isJumpingToSection) return;
     // This scripted line takes priority over -- and interrupts -- whatever
     // the ordinary idle-bubble cycle was doing.
     stopBubbles();
@@ -122,7 +137,7 @@
     clearTimeout(entranceBubbleTimer);
 
     document.body.classList.add("scroll-locked");
-    pin.classList.add("is-entrance", "is-running", "is-walking");
+    pin.classList.add("is-revealed", "is-entrance", "is-running", "is-walking");
 
     entranceBubbleTimer = setTimeout(function () {
       if (!speechEl) return;
@@ -137,6 +152,17 @@
       setWalking(false); // stop cleanly, "on the spot" -- ordinary scroll-driven walking resumes on the next real scroll
       if (speechEl) speechEl.classList.remove("is-visible");
     }, ENTRANCE_LOCK_MS);
+  }
+
+  // Fallback for the one case playLateEntrance doesn't cover: if the
+  // user's first real scroll is fast/far enough to skip beat 0 entirely
+  // (landing straight on, say, beat 2), she'd otherwise stay at opacity:0
+  // -- invisible -- for the rest of the visit, since nothing else ever
+  // adds .is-revealed. This just reveals her plainly (a quick CSS
+  // transition, no walk-in theatrics -- there's no "arriving at beat 0"
+  // moment to tie a run-in to here) so she's never permanently invisible.
+  function revealLitigantPlainly() {
+    pin.classList.add("is-revealed");
   }
 
   // ---- continuous side->centre position (see updateLitigantPosition) ----
@@ -251,8 +277,14 @@
     // intro hero above, or scrolling back up into it from beat 1 -- replays
     // the run-in. hasScrolledOnce excludes only the one synthetic call this
     // function gets at page load, before any real scrolling has happened.
-    if (index === 0 && hasScrolledOnce) {
-      playLateEntrance();
+    if (hasScrolledOnce) {
+      if (index === 0) {
+        playLateEntrance();
+      } else if (!pin.classList.contains("is-revealed")) {
+        // First real scroll skipped beat 0 entirely (fast fling landed
+        // straight on a later beat) -- see revealLitigantPlainly() above.
+        revealLitigantPlainly();
+      }
     }
   }
 
@@ -316,6 +348,46 @@
       requestAnimationFrame(onScrollFrame);
     }
   }
+
+  // ---- clean jump past the story (e.g. "Collaborate") ---------------------
+  // html has `scroll-behavior: smooth` globally, so a plain anchor link to
+  // a section that comes AFTER the 8-screen-tall .story would natively
+  // smooth-scroll straight through it -- dragging the visible page through
+  // every beat's background colour, litigant walk-cycle, and count-up stat
+  // animation in well under a second, which just looks like a fast, broken
+  // flicker. It could also let a fast scroll pass through beat 0 while
+  // .story is mid-transit, which -- pre this fix -- could trigger
+  // playLateEntrance() and try to lock scroll while the browser's own
+  // scroll animation toward Collaborate is still running, fighting it.
+  //
+  // Fixed by intercepting clicks on any link that jumps to "#collaborate"
+  // (there are two: the intro hero's button, and the nav link) and doing an
+  // instant, non-smooth scrollIntoView instead -- this bypasses the
+  // story's scroll range in one jump rather than animating through it, so
+  // there's no intermediate frame where the beats are visibly flashing by.
+  // isJumpingToSection also blocks playLateEntrance for the (now much
+  // smaller, but not impossible) window while that jump is in flight.
+  var isJumpingToSection = false;
+
+  function cleanJumpTo(targetId) {
+    var target = document.getElementById(targetId);
+    if (!target) return;
+    isJumpingToSection = true;
+    target.scrollIntoView({ behavior: "auto", block: "start" });
+    // Give the browser a moment to actually land and fire whatever
+    // scroll/resize events result from the jump before re-arming normal
+    // scroll-driven behaviour.
+    setTimeout(function () {
+      isJumpingToSection = false;
+    }, 300);
+  }
+
+  Array.prototype.slice.call(document.querySelectorAll('a[href="#collaborate"]')).forEach(function (link) {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      cleanJumpTo("collaborate");
+    });
+  });
 
   window.addEventListener("scroll", requestTick, { passive: true });
   window.addEventListener("resize", requestTick);

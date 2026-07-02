@@ -529,20 +529,38 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
 .pin.is-running .litigant .arm-left,
 .pin.is-running .litigant .arm-right{ animation-duration:.4s; }
 
-/* The slide-in itself targets .litigant (the <svg>), not .litigant-stage --
-   .litigant-stage's transform is exclusively owned by updateLitigantPosition()
-   in js/script.js, rewritten inline every animation frame to drive the
+/* She's invisible by default -- not present at all until she "arrives."
+   .pin.is-revealed (added once, by js/script.js, and never removed again)
+   is the only thing that ever makes her visible; .pin.is-entrance layers
+   the walk-in animation on top of that reveal, and only while it's active.
+
+   This targets .litigant-stage's OPACITY, not its transform -- .litigant-
+   stage's `transform` is exclusively owned by updateLitigantPosition() in
+   js/script.js, rewritten inline every animation frame to drive the
    scroll-linked side->centre motion, so a CSS animation/transition on THAT
-   element would just get stomped every frame (same reasoning as the mobile
-   safety-net comment further down). .litigant has no other transform use,
-   so it's free to carry this one-off slide independently: she runs in from
-   just off to the side and skids slightly past her mark before settling
-   back, landing exactly where .litigant-stage already has her positioned. */
-.pin.is-entrance .litigant{ animation: lateRunIn .62s cubic-bezier(.22,.9,.32,1) both; }
-@keyframes lateRunIn{
-  0%   { transform:translateX(-140px); }
-  62%  { transform:translateX(8px);    }  /* slight overshoot -- reads as skidding to a stop */
-  100% { transform:translateX(0);      }
+   property would just get stomped every frame (same reasoning as the
+   mobile safety-net comment further down). The vertical drop-in below uses
+   the independent `translate` CSS property instead of `transform` for
+   exactly the same reason -- `translate` and `transform` compose together
+   rather than overriding each other, so this can move her vertically
+   without disturbing the JS-driven horizontal position at all. */
+.litigant-stage{ opacity:0; }
+.pin.is-revealed .litigant-stage{
+  opacity:1;
+  transition:opacity .4s ease; /* only actually visible for the fallback reveal below -- an active .is-entrance animation overrides this while it's running */
+}
+/* Fallback: if the very first real scroll skips beat 0 entirely (see
+   revealLitigantPlainly() in js/script.js), .is-revealed alone reveals her
+   with the plain fade above -- no walk-in, since there's no "arriving at
+   beat 0" moment to hang one on. */
+.pin.is-entrance .litigant-stage{
+  animation: lateWalkIn .75s cubic-bezier(.22,.9,.32,1);
+}
+@keyframes lateWalkIn{
+  0%   { opacity:0; translate:0 -220px; }
+  35%  { opacity:1; translate:0 -40px;  }  /* fully visible well before she's finished landing */
+  70%  { translate:0 14px;              }  /* slight overshoot -- reads as skidding to a stop */
+  100% { translate:0 0;                 }
 }
 
 /* ---- idle look-around ------------------------------------------------------

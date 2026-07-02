@@ -343,14 +343,44 @@ needed no special accommodation for it beyond generous top padding.
   cleanly "on the spot," and the bubble hides; ordinary scroll-driven
   walking and idle bubbles resume exactly as before on the next real
   scroll.
-  - **Why `.litigant` and not `.litigant-stage`:** `.litigant-stage`'s
+  - **She's invisible until she "arrives," not just off-screen.** Revised
+    after the first pass read as "doesn't seem to walk in" — a small
+    horizontal slide on an already-opaque figure just wasn't a legible
+    entrance. `.litigant-stage{ opacity:0; }` is now the default state —
+    she's not present at all, ever, until something reveals her.
+    `.pin.is-revealed` is the *only* thing that ever does that: a plain,
+    permanent `opacity:1` rule that, once added, is never removed again.
+    `.pin.is-entrance` layers `@keyframes lateWalkIn` on top of that reveal
+    while it's active — she fades in and drops down from 220px off-screen
+    at the top, landing (with a slight overshoot past the resting line,
+    read as skidding to a stop) exactly where `.litigant-stage` already
+    has her positioned. Every later beat-0 arrival re-adds `.is-entrance`,
+    restarting the keyframes from their `0%` (`opacity:0`) — so she
+    genuinely vanishes and walks back in from the top *every* time, not
+    just the first.
+  - **Why the opacity/drop-in targets `.litigant-stage` and the vertical
+    motion uses `translate`, not `transform`:** `.litigant-stage`'s
     `transform` is exclusively owned by `updateLitigantPosition()`,
     rewritten inline every animation frame to drive the scroll-linked
-    side→centre motion (see below) — a CSS animation on that element would
-    just get overwritten the next frame. `.litigant` has no other
-    transform use, so the one-off slide lives there instead, and composes
-    fine visually since it's nested inside `.litigant-stage`'s
-    already-correct resting position for beat 0/1.
+    side→centre motion — a CSS animation/transition on that property would
+    just get overwritten the next frame (same reasoning as the mobile
+    safety-net comment further down). The independent `translate` CSS
+    property doesn't have this problem: per spec it composes with
+    `transform` rather than overriding it (final position = the
+    independent `translate`/`rotate`/`scale` properties combined with the
+    `transform` property's own function list), so `@keyframes lateWalkIn`
+    can drive her vertical drop-in via `translate` while
+    `updateLitigantPosition()`'s inline `transform` keeps driving her
+    horizontal beat-based position, with zero conflict between the two.
+  - **Fallback for a case the walk-in can't cover:** if the user's very
+    first real scroll is fast/far enough to skip beat 0 entirely (landing
+    straight on, say, beat 3), nothing would ever add `.is-revealed` and
+    she'd stay invisible for the rest of the visit. `setActiveBeat` in
+    js/script.js checks for exactly this — first real scroll, index isn't
+    0, `.is-revealed` isn't already set — and calls
+    `revealLitigantPlainly()`, a plain CSS-transition fade-in with no
+    walk-in theatrics (there's no "arriving at beat 0" moment to hang one
+    on in that case).
   - **`hasScrolledOnce` guard, and a page-load gotcha it had to work
     around:** the entrance must not play before the user has scrolled
     even once (she shouldn't be "late" before anyone's left the intro
@@ -374,11 +404,55 @@ needed no special accommodation for it beyond generous top padding.
     present; `playLateEntrance()`'s own end-of-lock `setWalking(false)`
     call still works because it removes `.is-entrance` on the line right
     before calling it.
-  - Verified end-to-end with a jsdom simulation: no entrance on page load,
-    fires on the actual first scroll into beat 0, `.is-walking` confirmed
-    still present at t+300ms (would have been false with the walkTimeout
-    bug), everything cleaned up by t+1800ms, and re-fires on scrolling
-    back up into beat 0 later.
+  - Verified end-to-end with a jsdom simulation: `.is-revealed` absent at
+    page load (invisible), no entrance fires before any scrolling, the
+    actual first scroll into beat 0 both reveals her and fires the
+    walk-in, `.is-walking` confirmed still present at t+300ms (would have
+    been false with the walkTimeout bug), everything cleaned up by
+    t+1800ms, `.is-revealed` still present afterward (permanent), the
+    fallback (`revealLitigantPlainly()`) fires instead when the first
+    scroll skips beat 0 and lands on a later beat directly, and the
+    walk-in re-fires on scrolling back up into beat 0 later.
+
+- **Clean jump past the story ("Collaborate"):** `<html>` has
+  `scroll-behavior: smooth` globally, so a plain anchor link to a section
+  that comes *after* the 8-screen-tall `.story` — namely `#collaborate` —
+  used to make the browser natively smooth-scroll straight through the
+  entire story to get there. Since every beat's background colour, the
+  litigant's walk-cycle, and the count-up stat animations are all driven
+  by live scroll position, that fast native scroll dragged the visible
+  page through every beat in well under a second: a flickery, "fast-
+  forwarded" flash rather than a clean jump. It also carried a real (not
+  just cosmetic) risk — if that fast scroll happened to pass through beat
+  0 while still in flight, it could trigger `playLateEntrance()`, which
+  tries to lock scroll (`overflow:hidden`) while the browser's *own*
+  scroll-to-`#collaborate` animation is still running, fighting it and
+  potentially stranding the user mid-story instead of landing on
+  Collaborate at all.
+  - Fixed in js/script.js: every `a[href="#collaborate"]` (there are two —
+    the intro hero's button and the nav link) gets a click handler that
+    calls `preventDefault()` and does `cleanJumpTo("collaborate")` instead,
+    which calls `scrollIntoView({ behavior: "auto", block: "start" })` —
+    explicitly passing `behavior` overrides the element's CSS
+    `scroll-behavior: smooth` for that one programmatic call, so it jumps
+    in one step rather than animating through the story's scroll range at
+    all. No intermediate frame ever renders mid-story, so there's nothing
+    to flicker.
+  - `isJumpingToSection` is set `true` for 300ms around that jump (long
+    enough for the jump and any resulting scroll/resize events to settle)
+    and checked at the top of `playLateEntrance()`, which now bails out
+    immediately if it's set — closing off the scroll-lock-fighting-a-jump
+    risk entirely, not just making it rarer.
+  - Scoped deliberately to only the two `#collaborate` links. The nav bar
+    also has `#initiatives` and `#cta` (`Get in touch`), which point *into*
+    the story (beats 6 and 7) rather than past it — clicking those from the
+    top would cause the same flash-through for the beats before them, but
+    that's arguably more defensible since those sections *are* part of the
+    story. Left as native smooth-scroll for now; revisit if that turns out
+    to feel just as wrong.
+  - Verified with a jsdom simulation: clicking either `#collaborate` link
+    calls `preventDefault()` and `scrollIntoView({behavior:"auto",
+    block:"start"})` (not the default smooth behaviour).
 - **Occasional "dread" head-shake:** `showSpeechBubble()` calls
   `maybeShakeHead()` every time a bubble appears, which only actually
   triggers `DREAD_CHANCE = 0.25` of the time (~1 in 4 bubbles) — deliberately
