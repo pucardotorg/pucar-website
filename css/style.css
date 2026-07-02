@@ -148,6 +148,77 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   .site-header .logo img.logo-dark-short{ display:block; } /* only actually shown if the dark-bg opacity rule above is also active */
 }
 
+/* ---------------- intro hero (before the scrolly story) ----------------
+   A plain, static (non-sticky, non-scroll-driven) full-height section that
+   introduces PUCAR the organisation, separate from the litigant's
+   narrative that begins at beat 0 of .story below. .site-header is
+   position:fixed with a transparent background, so it overlays this
+   section the same way it already overlays .pin -- no extra top padding
+   needed here beyond what already clears the logo comfortably. */
+.intro-hero{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--cream);
+  padding: clamp(96px,14vh,140px) clamp(20px,5vw,72px) clamp(48px,8vh,96px);
+}
+.intro-hero-inner{
+  max-width:720px;
+  text-align:center;
+}
+.intro-eyebrow{
+  display:block;
+  font-size:.78rem;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  color:var(--forest); /* dark-green -- this section is a light bg, see design-system rule in README */
+  margin-bottom:18px;
+}
+.intro-tagline{
+  font-family:var(--font-display);
+  font-weight:500;
+  font-size:clamp(1.9rem, 4.2vw, 3.1rem);
+  line-height:1.18;
+  margin:0 0 22px;
+}
+.intro-hook{
+  font-size:clamp(1.05rem, 1.6vw, 1.28rem);
+  line-height:1.5;
+  color:var(--ink-soft);
+  max-width:56ch;
+  margin:0 auto 14px;
+}
+.intro-skip{
+  font-size:.92rem;
+  line-height:1.5;
+  color:var(--ink-soft); /* --muted only hits 3.5:1 on --cream, fails AA at this size; --ink-soft is 7.7:1 */
+  font-style:italic;
+  margin:0 auto 32px;
+}
+/* .intro-hero prefix bumps specificity above the plain .cta-row rule
+   (defined later in this file) so margin-top:0 actually wins -- .intro-skip
+   above already carries its own bottom margin, so .cta-row's usual 28px
+   would just double up the gap before the buttons. */
+.intro-hero .intro-actions{
+  justify-content:center;
+  margin-top:0;
+}
+/* .btn-primary defaults to styling meant for a dark background (see the
+   design-system section of README) -- this section is light, so it's
+   folded into the same light-bg override as .job-page/.job-modal-panel
+   below (search "job-page .btn-primary" in this file). .btn-ghost has no
+   such shared override yet, so it gets its own light-bg variant here. */
+.intro-hero .btn-ghost{ border:1px solid rgba(36,30,26,.32); color:var(--ink); }
+.intro-hero .btn-ghost:hover{ background:rgba(36,30,26,.06); }
+
+@media (max-width: 640px){
+  .intro-hero{ padding-top: clamp(84px,16vh,120px); }
+  .intro-actions{ flex-direction:column; align-items:stretch; }
+  .intro-actions .btn{ text-align:center; justify-content:center; }
+}
+
 /* ---------------- story / sticky pin ---------------- */
 .story{
   position:relative;
@@ -607,9 +678,11 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
 .btn-primary{ background:var(--green); color:var(--ink); }
 .btn-primary:hover{ background:#51D79E; } /* lighter shade of --green, keeps ink legible on hover too (~9:1) */
 .job-page .btn-primary,
-.job-modal-panel .btn-primary{ background:var(--forest); color:var(--paper); } /* dark bg here, so light text -- paper on forest is 12.4:1 */
+.job-modal-panel .btn-primary,
+.intro-hero .btn-primary{ background:var(--forest); color:var(--paper); } /* dark bg here, so light text -- paper on forest is 12.4:1 */
 .job-page .btn-primary:hover,
-.job-modal-panel .btn-primary:hover{ background:#184A33; } /* lighter shade of --forest, for hover */
+.job-modal-panel .btn-primary:hover,
+.intro-hero .btn-primary:hover{ background:#184A33; } /* lighter shade of --forest, for hover */
 .btn-ghost{ border:1px solid rgba(251,248,242,.4); color:var(--paper); }
 .btn-ghost:hover{ background:rgba(251,248,242,.12); }
 

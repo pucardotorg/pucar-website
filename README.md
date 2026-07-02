@@ -132,7 +132,7 @@ purpose — they're semantic status colours, not brand accents):
 
 **The litigant SVG is explicitly untouched.** It's an inline illustration
 that carries its own `fill`/`stroke` values baked into the markup (dark
-bun, purple coat, pink bag, grey skirt — see §4 below) — none of its
+bun, purple coat, pink bag, grey skirt — see §5 below) — none of its
 colour ever passes through a CSS variable, so the palette rebrand couldn't
 have touched it even by accident. Verified by grepping `css/style.css` for
 `.litigant` rules: every one only sets `transform`/`animation`/layout
@@ -150,7 +150,7 @@ properties, never `fill`, `stroke`, or `color`.
 - No other font-family declarations exist anywhere in the codebase — both
   variables are referenced everywhere text is styled, so this was a
   two-line change (the `<link>` href and the `--font-body` value) plus
-  regenerating/patching the already-built static pages (see §6, the
+  regenerating/patching the already-built static pages (see §7, the
   `build-jobs.js` EPERM caveat — pages were hand-patched, not rebuilt).
 
 ### Buttons & interactive states
@@ -181,7 +181,62 @@ properties, never `fill`, `stroke`, or `color`.
 
 ---
 
-## 3. The story (scrollytelling)
+## 3. Intro hero (before the story starts)
+
+`<section class="intro-hero" id="intro">`, the first thing in `<main>`,
+directly above `#story`. This is deliberately **not** part of the
+scrollytelling mechanism below — no `data-beat`, no sticky positioning, no
+`js/script.js` involvement at all. It's a plain static full-height section
+that introduces PUCAR the organisation before the litigant's narrative
+begins, per explicit instruction: "The first section of the website should
+just talk about PUCAR."
+
+Structure (`.intro-hero-inner`, all centred, `max-width:720px`):
+- `.intro-eyebrow` — "PUCAR", small caps, `--forest` (light bg, see §2's
+  green rule).
+- `.intro-tagline` — **the page's only `<h1>`**: "PUCAR is a non-profit
+  public mission to transform the dispute resolution experience of every
+  person." Beat 0's heading (`#story`'s opening beat, "Every case is a
+  person.") was demoted from `<h1>` to `<h2>` when this was added, since a
+  page should really only have one `<h1>` and this mission statement is
+  the more fundamental one — beat 0 is the opening line of the *narrative*,
+  this is the opening line of the *organisation*.
+- `.intro-hook` — "Find out what happens when you design courts by putting
+  citizens at the centre." (secondary line, `--ink-soft`).
+- `.intro-skip` — "Skip the story. Find out how you can collaborate."
+  (italic, `--ink-soft` — *not* `--muted`, which only hits 3.5:1 contrast
+  on `--cream` and fails AA at this text size; `--ink-soft` is 7.7:1).
+- `.intro-actions` (`class="intro-actions cta-row"`, reusing the same
+  `.cta-row`/`.btn` classes as beat 7's CTA) — two buttons:
+  - `<a class="btn btn-primary" href="#story">Tell me more</a>` — jumps to
+    the scrollytelling story.
+  - `<a class="btn btn-ghost" href="#collaborate">Collaborate</a>` — jumps
+    straight past the story to the collaborate board.
+
+Both buttons needed light-background overrides, same reasoning as §2's
+button section: `.btn-primary`/`.btn-ghost` default to styling meant for a
+dark backdrop (they're normally used on beat 7's `--navy-deep`), but
+`.intro-hero`'s background is `--cream` (light). `.intro-hero .btn-primary`
+is folded into the same shared override as `.job-page`/`.job-modal-panel`
+(background `--forest`, text `--paper`); `.btn-ghost` didn't have an
+existing light-bg variant anywhere else, so `.intro-hero .btn-ghost` gets
+its own (`border:1px solid rgba(36,30,26,.32)`, `color:var(--ink)`).
+
+One cascade gotcha worth flagging: `.intro-actions` sets `margin-top:0`
+(the `.intro-skip` line above it already carries its own bottom margin, so
+`.cta-row`'s usual `margin-top:28px` would double up the gap) — but
+`.cta-row` is declared *later* in the stylesheet than a plain `.intro-actions`
+rule would be, and both are single-class selectors of equal specificity, so
+source order would let `.cta-row` win and silently undo the override. Fixed
+by scoping the rule to `.intro-hero .intro-actions` (two classes = higher
+specificity), which reliably wins regardless of where either rule sits in
+the file.
+
+`.site-header` is `position:fixed` with a transparent background (see §2
+if that's news), so it already overlays `.pin` the same way — `.intro-hero`
+needed no special accommodation for it beyond generous top padding.
+
+## 4. The story (scrollytelling)
 
 - `#story` is `height: calc(var(--beats) * 100vh)` with `--beats:8` set
   inline; `.pin` inside is `position:sticky` and holds the whole viewport.
@@ -213,7 +268,7 @@ properties, never `fill`, `stroke`, or `color`.
   animation frame). On scroll it removes `.is-idle` from `#pin` and re-arms
   a 10 s timer (`IDLE_DELAY = 10000`); when the timer fires with no further
   scrolling, `#pin` gets `.is-idle` back and the litigant's head looks
-  around (`headLook`, see §4 below). **On first page load she starts idle
+  around (`headLook`, see §5 below). **On first page load she starts idle
   immediately** — `pin.classList.add("is-idle")` runs once at the bottom of
   the IIFE, outside the normal 10 s wait, so she's already looking around
   and the speech bubbles below start right when the page opens, not 10 s
@@ -272,7 +327,7 @@ properties, never `fill`, `stroke`, or `color`.
   timer and force-removes `.is-dreading`, so a scroll mid-shake cancels it
   immediately, same as it does the bubble itself.
 
-## 4. The litigant figure (SVG anatomy + animations)
+## 5. The litigant figure (SVG anatomy + animations)
 
 The figure is a user-supplied top-down flat illustration (Canva export,
 810×810), embedded inline in `index.html` as `svg.litigant`
@@ -388,11 +443,11 @@ Favicon links (`<link rel="icon">` ×2 + `apple-touch-icon`) are in both
 `index.html`'s `<head>` and the `pageShell()` template in
 `scripts/build-jobs.js`, plus manually patched into the already-generated
 `/collaborate/*/` and `/contributors/*/` pages (build script still can't run
-cleanly in this sandbox — see §4.4).
+cleanly in this sandbox — see §6.4).
 
-## 5. Collaborate board
+## 6. Collaborate board
 
-### 4.1 Why it's built this way (decision log)
+### 6.1 Why it's built this way (decision log)
 
 Requirement: job cards on the homepage opening a modal, where each job has a
 **crawlable deeplink** (link-preview bots and most crawlers don't run JS), on
@@ -402,7 +457,7 @@ plain JSON+build (chosen as the base), Decap CMS on top (chosen: user wanted
 an editing UI). Everything is pre-rendered static HTML; the modal is pure
 progressive enhancement over real pages.
 
-### 4.2 Content model — content/jobs/*.json
+### 6.2 Content model — content/jobs/*.json
 
 Filename = slug = URL (`/collaborate/<slug>/`). Fields:
 
@@ -428,13 +483,13 @@ contributor pages. Client-side JS additionally hides cards whose expiry
 passed since the last deploy and rewrites "Closes <date>" to
 "Closes in N days" (`.is-urgent` styling at ≤5 days).
 
-### 4.3 Content model — content/contributors/*.json
+### 6.3 Content model — content/contributors/*.json
 
 Filename = slug = URL (`/contributors/<slug>/`). Fields: `name`, `role`,
 `photo` (optional; empty → initials avatar, background hue hashed from the
 name), `email`, `links[]` ({label,url}), `published`, `body` (bio markdown).
 
-### 4.4 The build script — scripts/build-jobs.js
+### 6.4 The build script — scripts/build-jobs.js
 
 Run by Netlify (`netlify.toml` command) and locally. Zero deps. It:
 1. Loads both content folders (skips `published:false`), joins jobs ↔
@@ -461,7 +516,7 @@ bold/italic/links/inline code, paragraphs). HTML in bodies is escaped. If
 richer markdown is ever needed, swap `mdToHtml` for a real parser — that's
 the only place.
 
-### 4.5 Client behaviour — js/collaborate.js
+### 6.5 Client behaviour — js/collaborate.js
 
 - **Filters** (`#collabFilters`, hidden until JS runs): stream, category,
   difficulty selects; deadline-range select (due within 7/14/30/90 days,
@@ -471,7 +526,7 @@ the only place.
   `data-category`/`data-tags` — never hardcoded. (Cards only exist for jobs
   with `status: Open`; a completed/assigned job like the sample one attached
   to Rohan's contributor page correctly never reaches the board or its tag
-  list — that's the board rule in §4.4, not a bug.) Active filters show a
+  list — that's the board rule in §6.4, not a bug.) Active filters show a
   result count + clear button.
 - **`.collab-card[hidden]{ display:none; }`**: `.collab-card` sets
   `display:flex` for layout, and since author stylesheets always beat the
@@ -548,7 +603,7 @@ the only place.
   the posted-by link fall through to real navigation. No JS → cards are
   plain links to the static pages.
 
-### 4.6 Decap CMS — admin/
+### 6.6 Decap CMS — admin/
 
 `/admin/` loads Decap 3 from unpkg; `admin/config.yml` defines both
 collections (jobs incl. relation widgets to contributors; format json).
@@ -566,7 +621,7 @@ and run `npx decap-server` next to the static server.
 
 ---
 
-## 6. Deployment & git state
+## 7. Deployment & git state
 
 - Remote: `https://github.com/pucardotorg/pucar-website` (remote `origin`
   configured; repo identity user "Varun" <varun@agami.in>).
@@ -580,7 +635,7 @@ and run `npx decap-server` next to the static server.
   no commits for weeks won't drop expired cards server-side — the client
   hides them anyway; a scheduled/manual redeploy also refreshes it.
 
-## 7. Known placeholders / TODO before launch
+## 8. Known placeholders / TODO before launch
 
 - All story stats (5.5 Cr pending, 10+ yr, 75% undertrials) are
   approximations marked `[placeholder — verify]` — check NJDG / Prison
@@ -590,11 +645,11 @@ and run `npx decap-server` next to the static server.
 - All 5 work items and contributors "Aditi Rao" and "Rohan Mehta" are sample
   content marked `[placeholder]`; "Varun H" bio is placeholder. Add real
   photos via Decap (media goes to `assets/uploads/`).
-- Decap OAuth setup (section 4.6) not yet done.
+- Decap OAuth setup (section 6.6) not yet done.
 - Sample job dates are relative to July 2026; re-check expiry behaviour when
   updating.
 
-## 8. Conventions for future changes
+## 9. Conventions for future changes
 
 - Never hand-edit `collaborate/`, `contributors/`, `sitemap.xml`, or the
   card region of `index.html` — change `content/` or the build script and
