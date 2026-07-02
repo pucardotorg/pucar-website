@@ -137,7 +137,7 @@ function pageShell(opts) {
 '<meta property="og:url" content="' + SITE + opts.url + '" />\n' +
 '<link rel="preconnect" href="https://fonts.googleapis.com" />\n' +
 '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />\n' +
-'<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />\n' +
+'<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />\n' +
 '<link rel="stylesheet" href="/css/style.css" />\n' +
 '<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png" />\n' +
 '<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png" />\n' +

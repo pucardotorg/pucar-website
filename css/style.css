@@ -6,22 +6,39 @@
    ========================================================= */
 
 :root{
-  /* colour: warm paper base + ink + a court-blue and a human terracotta */
+  /* colour: PUCAR brand — warm paper base + ink, dominant accent
+     green #30CF8C (also the logo mark colour) with a dark-green
+     ink used for deep/pinned backgrounds instead of navy, and a
+     secondary pink accent #DA6EAA for highlights/labels.
+     Old variable names (--navy, --terracotta, --gold) are kept as
+     aliases pointing at the new brand colours so every existing
+     rule that referenced them repaints correctly with no renames
+     needed at each call site. */
   --cream:        #F6F1E6;
   --cream-deep:   #ECE2CE;
   --paper:        #FBF8F2;
   --ink:          #241E1A;
   --ink-soft:     #55493F;
   --muted:        #8A7E6E;
-  --navy:         #22304A;
-  --navy-deep:    #182238;
-  --terracotta:   #C1552C;
-  --terracotta-soft:#E8CBB8;
-  --gold:         #C98A2E;
+
+  --green:        #30CF8C; /* dominant accent — matches the logo mark */
+  --green-soft:   #CCEBDE; /* pale tint of --green */
+  --pink:         #DA6EAA; /* secondary accent */
+  --pink-soft:    #F1D0E2; /* pale tint of --pink */
+  --forest:       #123726; /* dark-green background, replaces old navy */
+  --forest-deep:  #0B2417; /* darkest-green background, replaces old navy-deep */
+
+  /* aliases: keep pre-existing rules working unchanged */
+  --navy:         var(--forest);
+  --navy-deep:    var(--forest-deep);
+  --terracotta:   var(--green);
+  --terracotta-soft: var(--green-soft);
+  --gold:         var(--pink);
+
   --line:         rgba(36,30,26,0.12);
 
   --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   --pin-pad: clamp(20px, 5vw, 72px);
 }
@@ -155,7 +172,7 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
 .pin[data-beat="1"]{ background:var(--cream-deep); }
 .pin[data-beat="2"]{ background:var(--paper); }
 .pin[data-beat="3"]{ background:var(--cream-deep); }
-.pin[data-beat="4"]{ background:#EADAD0; }
+.pin[data-beat="4"]{ background:var(--pink-soft); }
 .pin[data-beat="5"]{ background:var(--navy); color:var(--paper); }
 .pin[data-beat="6"]{ background:var(--cream); }
 .pin[data-beat="7"]{ background:var(--navy-deep); color:var(--paper); }
@@ -423,7 +440,7 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   color:var(--terracotta);
   font-weight:600;
 }
-.pin[data-beat="4"] .beat-stat{ color:#9C3B17; }
+.pin[data-beat="4"] .beat-stat{ color:#7C1D52; } /* dark pink, legible on --pink-soft */
 .beat-body{
   font-size:1.05rem;
   line-height:1.6;
@@ -503,7 +520,7 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   transition:background .2s ease, color .2s ease, border-color .2s ease;
 }
 .btn-primary{ background:var(--terracotta); color:var(--paper); }
-.btn-primary:hover{ background:#a8471f; }
+.btn-primary:hover{ background:#239565; } /* darker shade of --green */
 .btn-ghost{ border:1px solid rgba(251,248,242,.4); color:var(--paper); }
 .btn-ghost:hover{ background:rgba(251,248,242,.12); }
 

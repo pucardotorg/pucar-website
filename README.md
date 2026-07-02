@@ -46,7 +46,103 @@ No install step, ever.
 
 ---
 
-## 2. The story (scrollytelling)
+## 2. Design system: colour, type, buttons
+
+All of this lives in `css/style.css`'s `:root` block (lines ~8–35). Every
+other rule in the stylesheet reads colour through a `var(--name)` — there
+are exactly two hardcoded hex exceptions, both called out below with why.
+
+### Colour
+
+Brand colours, given directly by the client (not sampled from anywhere):
+
+| Variable | Hex | Role |
+|---|---|---|
+| `--green` | `#30CF8C` | Dominant accent. Also the exact colour of the logo mark (`assets/pucar-normal-expanded.png`, sampled and confirmed pixel-identical). Primary CTAs, links, stat numbers, active filter states. |
+| `--pink` | `#DA6EAA` | Secondary accent. Eyebrow labels, tag/chip highlights, footer link hover. |
+| `--forest` | `#123726` | Dark background. Replaces the old navy-blue dark background (beat 5, nav hover). |
+| `--forest-deep` | `#0B2417` | Darkest background. Replaces the old navy-deep (beat 7, footer). |
+| `--green-soft` | `#CCEBDE` | Pale tint of `--green` (~86% lightness, same hue/lower saturation). Available for soft backgrounds; not currently used anywhere but kept for consistency. |
+| `--pink-soft` | `#F1D0E2` | Pale tint of `--pink`. Used as beat 4's background tint. |
+
+`--forest`/`--forest-deep` and `--green-soft`/`--pink-soft` were derived
+from the brand hexes by converting to HSL and dropping lightness (for the
+dark backgrounds) or raising it (for the soft tints), keeping hue and
+roughly the same saturation — so everything reads as "the same colour,
+darker/lighter," not an unrelated palette bolted on.
+
+Cream/paper/ink neutrals (`--cream`, `--cream-deep`, `--paper`, `--ink`,
+`--ink-soft`, `--muted`) are unchanged from the original build — the client
+only asked to change the accent/background colours, not the warm paper
+base or body text colour.
+
+**Migration mechanism — read this before renaming anything:** the codebase
+was originally written against `--navy`, `--navy-deep`, `--terracotta`,
+`--terracotta-soft`, and `--gold`. Rather than rename every call site (high
+risk of missing one across `index.html`, `style.css`, and five generated
+job/contributor pages), those five variables are kept as **aliases**:
+
+```css
+--navy:         var(--forest);
+--navy-deep:    var(--forest-deep);
+--terracotta:   var(--green);
+--terracotta-soft: var(--green-soft);
+--gold:         var(--pink);
+```
+
+So `var(--terracotta)` and `var(--navy)` still work everywhere in the
+stylesheet and now resolve to the new brand colours automatically. If you
+add new CSS, prefer the real names (`--green`, `--pink`, `--forest`) —
+the aliases exist for backward compatibility, not as the preferred API.
+
+**The two hardcoded hex exceptions** (not run through a variable, on
+purpose — they're semantic status colours, not brand accents):
+- `.diff-low` / `.diff-moderate` / `.diff-high` (collaborate board
+  difficulty badges) use an independent green/amber/red traffic-light
+  system (`#3F7D4E` / `#C98A2E` / `#B0402F`). `#C98A2E` happens to equal
+  the *old* `--gold` value, but changing it to `--pink` would break the
+  intuitive amber-for-"moderate" convention, so it was left as a literal.
+- `.collab-closes.is-urgent` (`#F0A28A` / `#B0402F`) is a red/orange
+  urgency warning, unrelated to brand identity.
+
+**The litigant SVG is explicitly untouched.** It's an inline illustration
+that carries its own `fill`/`stroke` values baked into the markup (dark
+bun, purple coat, pink bag, grey skirt — see §4 below) — none of its
+colour ever passes through a CSS variable, so the palette rebrand couldn't
+have touched it even by accident. Verified by grepping `css/style.css` for
+`.litigant` rules: every one only sets `transform`/`animation`/layout
+properties, never `fill`, `stroke`, or `color`.
+
+### Type
+
+- `--font-display: 'Fraunces', ...` (serif) — **unchanged**, per explicit
+  instruction to leave serif alone.
+- `--font-body: 'Source Sans 3', -apple-system, ...` (sans-serif) —
+  changed from Inter. Loaded via the same Google Fonts `<link>` pattern
+  already in place (`index.html` head, and the `pageShell()` template in
+  `scripts/build-jobs.js` so every generated collaborate/contributor page
+  matches): `family=Source+Sans+3:wght@400;500;600;700`.
+- No other font-family declarations exist anywhere in the codebase — both
+  variables are referenced everywhere text is styled, so this was a
+  two-line change (the `<link>` href and the `--font-body` value) plus
+  regenerating/patching the already-built static pages (see §6, the
+  `build-jobs.js` EPERM caveat — pages were hand-patched, not rebuilt).
+
+### Buttons & interactive states
+
+- `.btn-primary` — `background: var(--terracotta)` → now `--green`,
+  hover state hardcoded to `#239565` (a darkened `--green`, same HSL hue,
+  ~72% of the original lightness — kept as a literal rather than a new
+  variable since it's a single one-off hover state, not reused elsewhere).
+- `.btn-ghost` — unaffected (uses `rgba(251,248,242,...)`, not a brand var).
+- Filter chips / tag toggles (`.chip-toggle`, active/hover states) —
+  `var(--gold)` → resolves to `--pink` now.
+- Beat eyebrows (`.beat-eyebrow` on beats 5 & 7, `.collab-head
+  .beat-eyebrow`) — `var(--gold)` → `--pink`.
+
+---
+
+## 3. The story (scrollytelling)
 
 - `#story` is `height: calc(var(--beats) * 100vh)` with `--beats:8` set
   inline; `.pin` inside is `position:sticky` and holds the whole viewport.
@@ -54,9 +150,11 @@ No install step, ever.
   (0–7), sets `data-beat` on `#pin` (drives background tints, motif
   visibility, per-beat CSS), toggles `.is-active` on `.beat` articles, runs
   the count-up stat animation once per stat, and fills the progress rail.
-- Beats 0–7: intro → pendency stat → narrative → 10-yr wait → undertrials →
-  PUCAR turn (navy) → initiatives grid → CTA (navy-deep). All stats are
-  marked `[placeholder — verify]` in the markup.
+- Beats 0–7: intro → pendency stat → narrative → 10-yr wait → undertrials
+  (pink-tinted) → PUCAR turn (dark forest-green) → initiatives grid → CTA
+  (darkest forest-green). All stats are marked `[placeholder — verify]` in
+  the markup. See [§2 Design system](#2-design-system-colour-type-buttons)
+  for what `--forest`/`--forest-deep`/`--pink-soft` actually resolve to.
 - **Walk state:** on every scroll frame the pin gets `.is-walking`; a 180 ms
   timeout removes it after scrolling stops. All walk animations and the
   ground/path/shadow layers are `animation-play-state: paused` by default
@@ -67,7 +165,7 @@ No install step, ever.
   fires, the pin gets `.is-idle` and the litigant's head looks around (see
   below). Any scroll clears it instantly.
 
-## 3. The litigant figure (SVG anatomy + animations)
+## 4. The litigant figure (SVG anatomy + animations)
 
 The figure is a user-supplied top-down flat illustration (Canva export,
 810×810), embedded inline in `index.html` as `svg.litigant`
@@ -185,7 +283,7 @@ Favicon links (`<link rel="icon">` ×2 + `apple-touch-icon`) are in both
 `/collaborate/*/` and `/contributors/*/` pages (build script still can't run
 cleanly in this sandbox — see §4.4).
 
-## 4. Collaborate board
+## 5. Collaborate board
 
 ### 4.1 Why it's built this way (decision log)
 
@@ -361,7 +459,7 @@ and run `npx decap-server` next to the static server.
 
 ---
 
-## 5. Deployment & git state
+## 6. Deployment & git state
 
 - Remote: `https://github.com/pucardotorg/pucar-website` (remote `origin`
   configured; repo identity user "Varun" <varun@agami.in>).
@@ -375,7 +473,7 @@ and run `npx decap-server` next to the static server.
   no commits for weeks won't drop expired cards server-side — the client
   hides them anyway; a scheduled/manual redeploy also refreshes it.
 
-## 6. Known placeholders / TODO before launch
+## 7. Known placeholders / TODO before launch
 
 - All story stats (5.5 Cr pending, 10+ yr, 75% undertrials) are
   approximations marked `[placeholder — verify]` — check NJDG / Prison
@@ -389,7 +487,7 @@ and run `npx decap-server` next to the static server.
 - Sample job dates are relative to July 2026; re-check expiry behaviour when
   updating.
 
-## 7. Conventions for future changes
+## 8. Conventions for future changes
 
 - Never hand-edit `collaborate/`, `contributors/`, `sitemap.xml`, or the
   card region of `index.html` — change `content/` or the build script and
