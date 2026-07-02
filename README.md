@@ -324,25 +324,33 @@ needed no special accommodation for it beyond generous top padding.
   oscillates a few degrees around whatever that base tilt is, with
   uneven, non-sinusoidal keyframe spacing so it reads as an unsteady hand
   holding a sign rather than a mechanical wobble.
-- **"Running in late" entrance:** every time the active beat becomes 0
-  (`setActiveBeat(0)`, whether arriving from the intro hero for the first
-  time or scrolling back up into it later — it replays every time, not
-  just once), `playLateEntrance()` locks scroll for
-  `ENTRANCE_LOCK_MS = 1700` ms (`body.scroll-locked{ overflow:hidden; }`,
-  the same trick the job modal uses) and plays a scripted moment: `.pin`
-  gets `.is-entrance` + `.is-running` + `.is-walking`, `.litigant` (the
-  `<svg>` itself, not `.litigant-stage`) runs `@keyframes lateRunIn` —
-  sliding in from 140px off to the side and slightly overshooting before
-  settling, like skidding to a stop — and `.is-running` speeds up the
-  existing `figWalk`/`legFront`/`legBack`/`armLeft`/`armRight` keyframes
-  (just their `animation-duration`, down to .4s) for a hurried gait. About
-  half a second in, the speech bubble shows a fixed line — "OMG! I'm so
-  late to get to court!" — overriding whatever the idle-bubble cycle was
-  doing (`stopBubbles()` is called first). When the lock timer ends,
-  `.is-entrance`/`.is-running` come off, `setWalking(false)` stops her
-  cleanly "on the spot," and the bubble hides; ordinary scroll-driven
-  walking and idle bubbles resume exactly as before on the next real
-  scroll.
+- **"Running in late" entrance:** plays on every entry into the story from
+  the hero (the section-existence check in `onScrollFrame`) and on every
+  genuine beat transition back to 0 — it replays every time, not just once.
+  `playLateEntrance()` adds `.is-revealed` + `.is-entrance` + `.is-running`
+  + `.is-walking` to `.pin`: `.litigant-stage` runs `@keyframes lateWalkIn`
+  (a single smooth descent from `-70vh`, see below) while `.is-running`
+  speeds up the existing `figWalk`/`legFront`/`legBack`/`armLeft`/
+  `armRight` keyframes (just their `animation-duration`, down to .4s) for
+  a hurried gait. About half a second in, the speech bubble shows a fixed
+  line — "OMG! I'm so late to get to court!" — overriding whatever the
+  idle-bubble cycle was doing (`stopBubbles()` is called first). After
+  `ENTRANCE_MS = 1600` ms, `.is-entrance`/`.is-running` come off,
+  `setWalking(false)` stops her cleanly, and the bubble hides.
+  - **No scroll lock, and exactly two keyframes — this fixed a "super
+    jerky" walk-in (Jul 2026).** Two independent causes: (1) the old
+    version locked scroll (`overflow:hidden`) for 1.7s, which slammed the
+    page to a dead stop mid-scroll-gesture — the page itself jerked, not
+    just the figure. The entrance now plays *around* the user's scrolling
+    and never interrupts it (`body.scroll-locked` is gone from CSS and
+    JS). (2) the old `lateWalkIn` had four keyframe stops
+    (`-70vh → -16vh → +3vh overshoot → 0`), and CSS easing applies **per
+    keyframe segment**, so she decelerated into and re-accelerated out of
+    every intermediate stop — three visible hitches. It's now a single
+    `0% → 100%` segment (`-70vh → 0`, 1.15s, one decelerating bezier) —
+    one continuous descent. The opacity fade is gone too: she starts fully
+    opaque but clipped above the pin's `overflow:hidden` edge, so she
+    appears by walking into frame rather than fading.
   - **She's invisible until she "arrives," not just off-screen.** Revised
     after the first pass read as "doesn't seem to walk in" — a small
     horizontal slide on an already-opaque figure just wasn't a legible
@@ -365,9 +373,8 @@ needed no special accommodation for it beyond generous top padding.
     because `currentBeat` sits at 0 both at the hero AND at the story's
     opening beat, so `setActiveBeat` can never see a hero→story crossing —
     now drives her existence: while `story.rect.top > 50vh` (the hero owns
-    the screen), `derevealLitigant()` strips `.is-revealed`, cancels any
-    in-flight entrance, and releases the scroll lock (so scrolling up
-    mid-run-in can't strand the page locked). When the story pins
+    the screen), `derevealLitigant()` strips `.is-revealed` and cancels any
+    in-flight entrance (timers, classes, bubble). When the story pins
     (`rect.top <= 1`) and she isn't revealed: `beatFloat < 0.5` →
     `playLateEntrance()` (the run-in, replaying on *every* hero→story
     entry); otherwise → `revealLitigantPlainly()` (fast fling / jump landed
@@ -432,9 +439,9 @@ needed no special accommodation for it beyond generous top padding.
     `walkTimeout` (armed by `onScrollFrame` on every real scroll frame,
     including the one that triggers the entrance) would call
     `setWalking(false)` and strip `.is-walking` at 180 ms — long before
-    the ~1.7s lock ends — freezing her mid-stride for the rest of the
+    the ~1.6s entrance ends — freezing her mid-stride for the rest of the
     entrance. `setWalking(false)` now no-ops while `.is-entrance` is
-    present; `playLateEntrance()`'s own end-of-lock `setWalking(false)`
+    present; `playLateEntrance()`'s own end-of-entrance `setWalking(false)`
     call still works because it removes `.is-entrance` on the line right
     before calling it.
   - Verified end-to-end with a jsdom simulation: `.is-revealed` absent at
@@ -455,13 +462,12 @@ needed no special accommodation for it beyond generous top padding.
   litigant's walk-cycle, and the count-up stat animations are all driven
   by live scroll position, that fast native scroll dragged the visible
   page through every beat in well under a second: a flickery, "fast-
-  forwarded" flash rather than a clean jump. It also carried a real (not
-  just cosmetic) risk — if that fast scroll happened to pass through beat
-  0 while still in flight, it could trigger `playLateEntrance()`, which
-  tries to lock scroll (`overflow:hidden`) while the browser's *own*
-  scroll-to-`#collaborate` animation is still running, fighting it and
-  potentially stranding the user mid-story instead of landing on
-  Collaborate at all.
+  forwarded" flash rather than a clean jump. It could also trigger
+  `playLateEntrance()` if the fast scroll passed through beat 0 mid-flight
+  — run-in theatrics on a section the user is deliberately skipping past.
+  (This used to be worse: the entrance once locked scroll, which could
+  fight the browser's own scroll animation; the lock is gone now but the
+  guard is still right.)
   - Fixed in js/script.js: every `a[href="#collaborate"]` (there are two —
     the intro hero's button and the nav link) gets a click handler that
     calls `preventDefault()` and does `cleanJumpTo("collaborate")` instead,

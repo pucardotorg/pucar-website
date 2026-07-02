@@ -101,12 +101,10 @@
   }
 
   // ---- "running in late" entrance -----------------------------------------
-  // Plays every time the active beat becomes 0 (see the hook in
-  // setActiveBeat below), not just the first time -- scroll back up into
-  // beat 0 later and she runs in again. Locks scroll (body.scroll-locked,
-  // same overflow:hidden trick the job modal uses) for ENTRANCE_LOCK_MS so
-  // the run-in and line have a moment to land instead of being scrolled
-  // past instantly, then hands control back.
+  // Plays every time the story is entered from the intro hero (see the
+  // section-based existence check in onScrollFrame) and on every genuine
+  // beat transition back to 0 (see the hook in setActiveBeat below) --
+  // not just the first time.
   //
   // She's invisible (opacity:0) by default -- see .litigant-stage in
   // style.css -- and .pin.is-revealed is the ONLY thing that ever makes her
@@ -119,24 +117,29 @@
   // (opacity:0) -- so she briefly vanishes and walks back in again each
   // time, which is intentional/consistent with the "every time" replay.
   var LATE_LINE = "OMG! I'm so late to get to court!";
-  var ENTRANCE_LOCK_MS = 1700;
+  // No scroll lock any more -- the old overflow:hidden lock slammed the
+  // page to a dead stop mid-scroll-gesture, which read as the page itself
+  // jerking (half of the "super jerky" complaint; the other half was the
+  // multi-stop keyframes, see lateWalkIn in style.css). The entrance now
+  // plays *around* the user's scrolling instead of fighting it: she walks
+  // in over ~1.15s, the bubble shows, and normal scroll behaviour is
+  // never interrupted.
+  var ENTRANCE_MS = 1600;             // is-entrance/is-running lifetime (walk-in is 1.15s)
   var ENTRANCE_BUBBLE_DELAY_MS = 480; // let the run-in read for a beat before she "speaks"
-  var entranceLockTimer = null;
+  var entranceEndTimer = null;
   var entranceBubbleTimer = null;
 
   function playLateEntrance() {
-    // Never fire mid-jump -- see cleanJumpTo() below. Without this guard, a
-    // "skip to Collaborate" jump that happens to pass through (or land
-    // exactly on) beat 0 could try to lock scroll while a separate,
-    // deliberate programmatic scroll is already in flight, fighting it.
+    // Never fire mid-jump -- see cleanJumpTo() below: a "skip to
+    // Collaborate" jump that passes through (or lands exactly on) beat 0
+    // shouldn't trigger run-in theatrics on a section the user is leaving.
     if (isJumpingToSection) return;
     // This scripted line takes priority over -- and interrupts -- whatever
     // the ordinary idle-bubble cycle was doing.
     stopBubbles();
-    clearTimeout(entranceLockTimer);
+    clearTimeout(entranceEndTimer);
     clearTimeout(entranceBubbleTimer);
 
-    document.body.classList.add("scroll-locked");
     pin.classList.add("is-revealed", "is-entrance", "is-running", "is-walking");
 
     entranceBubbleTimer = setTimeout(function () {
@@ -146,12 +149,11 @@
       speechEl.classList.add("is-visible");
     }, ENTRANCE_BUBBLE_DELAY_MS);
 
-    entranceLockTimer = setTimeout(function () {
-      document.body.classList.remove("scroll-locked");
+    entranceEndTimer = setTimeout(function () {
       pin.classList.remove("is-entrance", "is-running");
       setWalking(false); // stop cleanly, "on the spot" -- ordinary scroll-driven walking resumes on the next real scroll
       if (speechEl) speechEl.classList.remove("is-visible");
-    }, ENTRANCE_LOCK_MS);
+    }, ENTRANCE_MS);
   }
 
   // Fallback for the one case playLateEntrance doesn't cover: if the
@@ -172,9 +174,8 @@
   // a fast scroll up mid-run-in can't strand the page locked.
   function derevealLitigant() {
     if (!pin.classList.contains("is-revealed")) return;
-    clearTimeout(entranceLockTimer);
+    clearTimeout(entranceEndTimer);
     clearTimeout(entranceBubbleTimer);
-    document.body.classList.remove("scroll-locked");
     pin.classList.remove("is-revealed", "is-entrance", "is-running");
     if (speechEl) speechEl.classList.remove("is-visible");
   }

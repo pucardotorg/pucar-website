@@ -554,7 +554,7 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
    with the plain fade above -- no walk-in, since there's no "arriving at
    beat 0" moment to hang one on. */
 .pin.is-entrance .litigant-stage{
-  animation: lateWalkIn .95s cubic-bezier(.22,.9,.32,1);
+  animation: lateWalkIn 1.15s cubic-bezier(.3,.55,.25,1) both;
 }
 /* -70vh, not a fixed pixel offset: .litigant-stage sits align-self:center
    inside .pin, which is exactly 100vh tall with overflow:hidden -- so her
@@ -564,12 +564,20 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
    visibly left the frame -- it just read as a small in-place nudge, not a
    walk-in. -70vh guarantees she starts at roughly 50vh - 70vh = -20vh
    from the pin's top, i.e. genuinely above and clipped out of the visible
-   area, regardless of viewport height. */
+   area, regardless of viewport height.
+
+   EXACTLY TWO KEYFRAMES, on purpose (this fixed the "super jerky" walk-in):
+   CSS easing applies PER KEYFRAME SEGMENT, so the earlier 4-stop version
+   (-70vh -> -16vh -> +3vh overshoot -> 0) decelerated into and
+   re-accelerated out of every intermediate stop -- three visible hitches.
+   A single 0%->100% segment gives one continuous, smoothly decelerating
+   descent. No opacity fade either: she starts fully opaque but clipped
+   above the pin's overflow:hidden edge, so she appears by *walking into
+   frame*, which is the point (opacity:1 at 0% also overrides the .4s
+   fallback-reveal transition that would otherwise run underneath). */
 @keyframes lateWalkIn{
-  0%   { opacity:0; translate:0 -70vh; }
-  40%  { opacity:1; translate:0 -16vh; }  /* now crossing into frame, and fully visible */
-  75%  { translate:0 3vh;              }  /* slight overshoot -- reads as skidding to a stop */
-  100% { translate:0 0;                }
+  0%   { opacity:1; translate:0 -70vh; }
+  100% { opacity:1; translate:0 0;     }
 }
 
 /* ---- idle look-around ------------------------------------------------------
@@ -1303,7 +1311,6 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
    page in place for the ~1.7s "running in late" entrance -- see
    playLateEntrance() in js/script.js, triggered every time the active
    beat becomes 0. */
-body.scroll-locked{ overflow:hidden; }
 
 /* ---------------- job modal ---------------- */
 body.modal-open{ overflow:hidden; }
