@@ -67,20 +67,35 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
 }
 .site-header .logo{
   pointer-events:auto;
+  position:relative;
   display:inline-flex;
   align-items:center;
   text-decoration:none;
-  background:rgba(251,248,242,.7);
-  backdrop-filter:blur(6px);
-  padding:8px 16px;
-  border-radius:999px;
-  border:1px solid var(--line);
 }
 .site-header .logo img{
   display:block;
-  height:16px;   /* kept small and deliberate -- it's a nav pill, not a hero mark */
+  height:18px;   /* kept small and deliberate -- a nav mark, not a hero logo */
   width:auto;
 }
+/* two variants stacked in place; only one is visible at a time depending on
+   what's behind the fixed header (see the :has() rules below). Pages without
+   the scrollytelling story (job/contributor pages) never match those rules,
+   so they simply show the light-background mark, which is correct there
+   since those pages are cream throughout. */
+.site-header .logo-light,
+.site-header .logo-dark{
+  transition: opacity .6s ease; /* matches .pin's own background-color transition timing */
+}
+.site-header .logo-dark{
+  position:absolute;
+  left:0; top:50%;
+  transform:translateY(-50%);
+  opacity:0;
+}
+body:has(.pin[data-beat="5"]) .site-header .logo-light,
+body:has(.pin[data-beat="7"]) .site-header .logo-light{ opacity:0; }
+body:has(.pin[data-beat="5"]) .site-header .logo-dark,
+body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
 .site-nav{
   pointer-events:auto;
   display:flex;

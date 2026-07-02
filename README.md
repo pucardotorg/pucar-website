@@ -118,6 +118,37 @@ beat 2 onward; disabled on mobile (≤860px, single column).
 
 `prefers-reduced-motion` disables every figure/layer animation.
 
+### 3.x Logo assets and the header swap
+
+Real PUCAR marks live in `assets/`:
+- `logo-pucar-green.avif` — short green wordmark, for light backgrounds.
+- `logo-pucar-white-short.png` — white "PUCAR" only, cropped (via PIL, off
+  the alpha channel's gap between the wordmark and the tagline) from the
+  full white asset below, for dark backgrounds.
+- `logo-pucar-white.avif` — full white wordmark + tagline ("Public
+  Collective for Avoidance and Resolution of Disputes"), used in the footer
+  on every page (`.footer-top .logo`, capped at 22px tall).
+
+The header logo (`.site-header .logo`) has no pill/background anymore — it
+sits directly over whatever's scrolled underneath the fixed header, so on
+the homepage it needs to track the story's background. Both variants are
+in the DOM stacked on top of each other (`.logo-light` / `.logo-dark`);
+`body:has(.pin[data-beat="5"])` / `[data-beat="7"]` (the two dark story
+beats) flips their opacity, transitioning over .6s to match `.pin`'s own
+background-color transition. `:has()` means this needs no JS. Job/
+contributor pages never match those selectors (their background is cream
+throughout), so they correctly just show `.logo-light` by default.
+
+**Known gap:** `logo-pucar-green.avif` is the short mark; there isn't yet a
+"real" full green wordmark (mark + tagline, for light backgrounds) to match
+the white one used in the footer — Varun mentioned sharing one but it hasn't
+come through as an actual file yet (pasted chat images don't always attach
+as files the agent can read — worth re-attaching via the file picker if it
+still doesn't show up under `uploads/`). Same for a favicon: a square green
+"P" mark was shared but also never arrived as a file, so no favicon has
+been wired up (`<link rel="icon">` is not yet in `pageShell()` or
+`index.html`) — needs the actual asset first.
+
 ## 4. Collaborate board
 
 ### 4.1 Why it's built this way (decision log)
