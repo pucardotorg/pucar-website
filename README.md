@@ -310,6 +310,75 @@ needed no special accommodation for it beyond generous top padding.
   gets the sketchy outline without touching the type. Both bubble and
   shape carry a slight independent `rotate()` too, on top of the
   turbulence, for extra "drawn free-hand" wonkiness.
+- **Bubble size/tilt/jitter:** bubbles are bigger than the original pass
+  (`max-width` 180px → 230px, `font-size` .8rem → .94rem, more padding) and
+  no longer sit at a fixed angle. `.speech-bubble` uses the independent CSS
+  `translate`/`scale`/`rotate` properties instead of one `transform`
+  shorthand — deliberately, so the position/size entrance (`translate` +
+  `scale`, still driven by the existing `transition`) and a continuous
+  rotate-only jitter (`animation`) can run at the same time without
+  fighting over the same property. `pickBubbleTilt()` (js/script.js) rolls
+  a random `-5deg..5deg` angle into the `--bubble-tilt` CSS variable every
+  time a bubble is shown (idle or scripted, see below), and
+  `@keyframes bubbleJitter` — running continuously while `.is-visible` —
+  oscillates a few degrees around whatever that base tilt is, with
+  uneven, non-sinusoidal keyframe spacing so it reads as an unsteady hand
+  holding a sign rather than a mechanical wobble.
+- **"Running in late" entrance:** every time the active beat becomes 0
+  (`setActiveBeat(0)`, whether arriving from the intro hero for the first
+  time or scrolling back up into it later — it replays every time, not
+  just once), `playLateEntrance()` locks scroll for
+  `ENTRANCE_LOCK_MS = 1700` ms (`body.scroll-locked{ overflow:hidden; }`,
+  the same trick the job modal uses) and plays a scripted moment: `.pin`
+  gets `.is-entrance` + `.is-running` + `.is-walking`, `.litigant` (the
+  `<svg>` itself, not `.litigant-stage`) runs `@keyframes lateRunIn` —
+  sliding in from 140px off to the side and slightly overshooting before
+  settling, like skidding to a stop — and `.is-running` speeds up the
+  existing `figWalk`/`legFront`/`legBack`/`armLeft`/`armRight` keyframes
+  (just their `animation-duration`, down to .4s) for a hurried gait. About
+  half a second in, the speech bubble shows a fixed line — "OMG! I'm so
+  late to get to court!" — overriding whatever the idle-bubble cycle was
+  doing (`stopBubbles()` is called first). When the lock timer ends,
+  `.is-entrance`/`.is-running` come off, `setWalking(false)` stops her
+  cleanly "on the spot," and the bubble hides; ordinary scroll-driven
+  walking and idle bubbles resume exactly as before on the next real
+  scroll.
+  - **Why `.litigant` and not `.litigant-stage`:** `.litigant-stage`'s
+    `transform` is exclusively owned by `updateLitigantPosition()`,
+    rewritten inline every animation frame to drive the scroll-linked
+    side→centre motion (see below) — a CSS animation on that element would
+    just get overwritten the next frame. `.litigant` has no other
+    transform use, so the one-off slide lives there instead, and composes
+    fine visually since it's nested inside `.litigant-stage`'s
+    already-correct resting position for beat 0/1.
+  - **`hasScrolledOnce` guard, and a page-load gotcha it had to work
+    around:** the entrance must not play before the user has scrolled
+    even once (she shouldn't be "late" before anyone's left the intro
+    hero). The obvious guard is a flag set by the existing real-`"scroll"`
+    listener already bound to `resetIdle()`. But `setActiveBeat(0)` also
+    runs once synthetically at page load, purely to render the correct
+    initial DOM state — that call leaves `currentBeat` at `0` before any
+    real scrolling happens, which meant the very first *real* scroll into
+    beat 0 saw `index(0) === currentBeat(0)`, hit `setActiveBeat`'s early
+    return, and never registered as a transition — so the entrance would
+    never fire for what should be its most important trigger, the user's
+    actual first arrival. Fixed by resetting `currentBeat = -1` right
+    after that initial synthetic call, so the first genuine scroll-driven
+    `setActiveBeat(0)` is seen as a real change again.
+  - **A second, subtler bug this surfaced:** the ordinary 180 ms
+    `walkTimeout` (armed by `onScrollFrame` on every real scroll frame,
+    including the one that triggers the entrance) would call
+    `setWalking(false)` and strip `.is-walking` at 180 ms — long before
+    the ~1.7s lock ends — freezing her mid-stride for the rest of the
+    entrance. `setWalking(false)` now no-ops while `.is-entrance` is
+    present; `playLateEntrance()`'s own end-of-lock `setWalking(false)`
+    call still works because it removes `.is-entrance` on the line right
+    before calling it.
+  - Verified end-to-end with a jsdom simulation: no entrance on page load,
+    fires on the actual first scroll into beat 0, `.is-walking` confirmed
+    still present at t+300ms (would have been false with the walkTimeout
+    bug), everything cleaned up by t+1800ms, and re-fires on scrolling
+    back up into beat 0 later.
 - **Occasional "dread" head-shake:** `showSpeechBubble()` calls
   `maybeShakeHead()` every time a bubble appears, which only actually
   triggers `DREAD_CHANCE = 0.25` of the time (~1 in 4 bubbles) — deliberately

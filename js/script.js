@@ -49,6 +49,13 @@
     return minMs + Math.random() * (maxMs - minMs);
   }
 
+  // Random per-appearance tilt (see --bubble-tilt / bubbleJitter in
+  // style.css) -- re-rolled every time a bubble is shown, idle or scripted,
+  // so no two bubbles sit at exactly the same angle.
+  function pickBubbleTilt() {
+    return (Math.random() * 10 - 5).toFixed(1) + "deg"; // -5deg .. 5deg
+  }
+
   function maybeShakeHead() {
     if (Math.random() > DREAD_CHANCE) return;
     pin.classList.add("is-dreading");
@@ -62,6 +69,7 @@
     if (!speechEl) return;
     var line = SPEECH_LINES[Math.floor(Math.random() * SPEECH_LINES.length)];
     speechEl.textContent = line;
+    speechEl.style.setProperty("--bubble-tilt", pickBubbleTilt());
     speechEl.classList.add("is-visible");
     clearTimeout(speechHideTimer);
     speechHideTimer = setTimeout(function () {
@@ -90,6 +98,45 @@
     speechHideTimer = null;
     if (speechEl) speechEl.classList.remove("is-visible");
     pin.classList.remove("is-dreading");
+  }
+
+  // ---- "running in late" entrance -----------------------------------------
+  // Plays every time the active beat becomes 0 (see the hook in
+  // setActiveBeat below), not just the first time -- scroll back up into
+  // beat 0 later and she runs in again. Locks scroll (body.scroll-locked,
+  // same overflow:hidden trick the job modal uses) for ENTRANCE_LOCK_MS so
+  // the run-in and line have a moment to land instead of being scrolled
+  // past instantly, then hands control back. See @keyframes lateRunIn and
+  // .pin.is-running/.is-entrance in style.css for the visual side.
+  var LATE_LINE = "OMG! I'm so late to get to court!";
+  var ENTRANCE_LOCK_MS = 1700;
+  var ENTRANCE_BUBBLE_DELAY_MS = 480; // let the run-in read for a beat before she "speaks"
+  var entranceLockTimer = null;
+  var entranceBubbleTimer = null;
+
+  function playLateEntrance() {
+    // This scripted line takes priority over -- and interrupts -- whatever
+    // the ordinary idle-bubble cycle was doing.
+    stopBubbles();
+    clearTimeout(entranceLockTimer);
+    clearTimeout(entranceBubbleTimer);
+
+    document.body.classList.add("scroll-locked");
+    pin.classList.add("is-entrance", "is-running", "is-walking");
+
+    entranceBubbleTimer = setTimeout(function () {
+      if (!speechEl) return;
+      speechEl.textContent = LATE_LINE;
+      speechEl.style.setProperty("--bubble-tilt", pickBubbleTilt());
+      speechEl.classList.add("is-visible");
+    }, ENTRANCE_BUBBLE_DELAY_MS);
+
+    entranceLockTimer = setTimeout(function () {
+      document.body.classList.remove("scroll-locked");
+      pin.classList.remove("is-entrance", "is-running");
+      setWalking(false); // stop cleanly, "on the spot" -- ordinary scroll-driven walking resumes on the next real scroll
+      if (speechEl) speechEl.classList.remove("is-visible");
+    }, ENTRANCE_LOCK_MS);
   }
 
   // ---- continuous side->centre position (see updateLitigantPosition) ----
@@ -131,7 +178,15 @@
     }
   }
 
+  // Set true the first time a genuine "scroll" event fires (see the
+  // listener bound to resetIdle further down) -- guards the entrance
+  // hook in setActiveBeat below from firing on the synthetic setActiveBeat(0)
+  // call that runs once at page load, before the user has scrolled at all
+  // (she shouldn't "run in late" before anyone's even left the intro hero).
+  var hasScrolledOnce = false;
+
   function resetIdle() {
+    hasScrolledOnce = true;
     pin.classList.remove("is-idle");
     stopBubbles();
     clearTimeout(idleTimeout);
@@ -191,12 +246,27 @@
         el.classList.remove("is-active");
       }
     });
+
+    // Every genuine transition into beat 0 -- whether arriving from the
+    // intro hero above, or scrolling back up into it from beat 1 -- replays
+    // the run-in. hasScrolledOnce excludes only the one synthetic call this
+    // function gets at page load, before any real scrolling has happened.
+    if (index === 0 && hasScrolledOnce) {
+      playLateEntrance();
+    }
   }
 
   function setWalking(isWalking) {
     if (isWalking) {
       pin.classList.add("is-walking");
     } else {
+      // The ordinary 180ms walkTimeout below fires on a fixed delay from
+      // whichever scroll frame armed it -- including the very frame that
+      // triggers playLateEntrance(), which needs .is-walking held for the
+      // full ~1.7s lock, not just 180ms. Entrance owns the walking state
+      // while it's active; it calls setWalking(false) itself once it's
+      // already removed .is-entrance, so this guard never blocks that.
+      if (pin.classList.contains("is-entrance")) return;
       pin.classList.remove("is-walking");
     }
   }
@@ -259,6 +329,17 @@
   // initial state
   setActiveBeat(0);
   onScrollFrame();
+
+  // Reset currentBeat back to -1 right after the synthetic seeding above.
+  // Without this, the page loads with currentBeat already at 0 (beat 0 is
+  // visually correct from the very first frame, before any real scrolling),
+  // so the FIRST real scroll from the intro hero into the story would see
+  // index(0) === currentBeat(0) and setActiveBeat's guard would return
+  // early -- no detected transition, so playLateEntrance() would never
+  // fire for what should be the most important trigger: the user's actual
+  // first arrival at beat 0. hasScrolledOnce still gates it from firing
+  // before any real scrolling happens, so this is safe.
+  currentBeat = -1;
 
   // she looks around and speech bubbles start immediately on page load --
   // not after the usual 10s idle wait, which only applies once scrolling

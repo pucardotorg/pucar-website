@@ -326,28 +326,38 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   top:4%;
   left:52%;
   z-index:6;
-  max-width:180px;
-  padding:10px 14px;
+  max-width:230px;
+  padding:13px 17px;
   color:var(--ink);
   font-family:'Comic Relief', var(--font-body);
-  font-size:.8rem;
+  font-size:.94rem;
   font-weight:400;
-  line-height:1.4;
+  line-height:1.42;
   text-align:left;
   opacity:0;
-  transform:translate(-28%, 6px) scale(.9) rotate(-1deg);
+  /* translate/scale/rotate as independent properties (not one `transform`
+     shorthand) on purpose: it lets the position/size transition below
+     (translate+scale) coexist with the continuous rotate-only jitter
+     animation further down without the two fighting over the same
+     `transform` property. --bubble-tilt is a random per-appearance angle
+     set by js/script.js each time a bubble is shown (pickBubbleTilt()) --
+     the -2deg here is only a fallback for the rare frame before JS has
+     set it. */
+  translate:-28% 6px;
+  scale:.9;
+  rotate:var(--bubble-tilt, -2deg);
   transform-origin:22% 100%;
-  transition:opacity .3s ease, transform .3s ease;
+  transition:opacity .3s ease, translate .3s ease, scale .3s ease;
   pointer-events:none;
-  will-change:opacity, transform;
+  will-change:opacity, translate, scale, rotate;
 }
 .speech-bubble::before{
   content:"";
   position:absolute;
-  inset:-3px;
+  inset:-4px;
   z-index:-1;
   background:var(--paper);
-  border:1.6px solid var(--ink);
+  border:1.8px solid var(--ink);
   /* four differently-weighted corners -- a perfect 14px radius all round
      reads as machine-drawn; uneven ones read as a hand-sketched balloon */
   border-radius:255px 15px 225px 20px / 20px 220px 18px 255px;
@@ -359,19 +369,34 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   content:"";
   position:absolute;
   left:22%;
-  bottom:-8px;
-  width:15px;
-  height:15px;
+  bottom:-9px;
+  width:17px;
+  height:17px;
   background:var(--paper);
-  border-right:1.6px solid var(--ink);
-  border-bottom:1.6px solid var(--ink);
+  border-right:1.8px solid var(--ink);
+  border-bottom:1.8px solid var(--ink);
   border-radius:0 0 4px 0;
   transform:rotate(50deg) skew(-6deg, -3deg);
   filter:url(#speechWobble);
 }
 .speech-bubble.is-visible{
   opacity:1;
-  transform:translate(-28%, 0) scale(1) rotate(-1deg);
+  translate:-28% 0;
+  scale:1;
+  /* rotate itself isn't set here -- bubbleJitter (below) owns it entirely
+     while visible, oscillating around --bubble-tilt so the whole thing
+     reads as held-by-hand rather than perfectly still. */
+  animation:bubbleJitter 2.6s ease-in-out infinite;
+}
+/* An uneven set of keyframes (not a clean sine wave) reads more like an
+   unsteady hand holding a sign than a mechanical wobble. First and last
+   keyframes match for a seamless infinite loop. */
+@keyframes bubbleJitter{
+  0%   { rotate:calc(var(--bubble-tilt, -2deg) - 1.4deg); }
+  22%  { rotate:calc(var(--bubble-tilt, -2deg) + 1deg);   }
+  48%  { rotate:calc(var(--bubble-tilt, -2deg) - .6deg);  }
+  74%  { rotate:calc(var(--bubble-tilt, -2deg) + 1.5deg); }
+  100% { rotate:calc(var(--bubble-tilt, -2deg) - 1.4deg); }
 }
 /* on dark pinned beats (5, 7) the paper bubble still reads fine since it's
    never shown mid-scroll anyway (bubbles only appear while idle, i.e. not
@@ -484,6 +509,40 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
 @keyframes armRight{
   0%,100%{ transform:rotate(-2.4deg); }
   50%    { transform:rotate(2.4deg);  }
+}
+
+/* ---- "running in late" entrance --------------------------------------------
+   Every time the active beat becomes 0 (js/script.js's setActiveBeat, after
+   the user has scrolled at least once), playLateEntrance() locks scroll for
+   ~1.7s, adds .is-entrance + .is-running + .is-walking to #pin, and shows a
+   one-off scripted speech bubble. .is-running only speeds up the SAME
+   figWalk/legFront/legBack/armLeft/armRight keyframes used for ordinary
+   scroll-driven walking (just the animation-duration -- name, timing
+   function, and infinite iteration all still come from the base .litigant
+   rules above) so the legs/arms move at a hurried, running cadence instead
+   of an ordinary stroll. .is-walking (added alongside) is what actually
+   flips those animations from paused to running, exactly as it does for
+   scroll -- .is-running on its own does nothing without it. */
+.pin.is-running .litigant .fig,
+.pin.is-running .litigant .leg-front,
+.pin.is-running .litigant .leg-back,
+.pin.is-running .litigant .arm-left,
+.pin.is-running .litigant .arm-right{ animation-duration:.4s; }
+
+/* The slide-in itself targets .litigant (the <svg>), not .litigant-stage --
+   .litigant-stage's transform is exclusively owned by updateLitigantPosition()
+   in js/script.js, rewritten inline every animation frame to drive the
+   scroll-linked side->centre motion, so a CSS animation/transition on THAT
+   element would just get stomped every frame (same reasoning as the mobile
+   safety-net comment further down). .litigant has no other transform use,
+   so it's free to carry this one-off slide independently: she runs in from
+   just off to the side and skids slightly past her mark before settling
+   back, landing exactly where .litigant-stage already has her positioned. */
+.pin.is-entrance .litigant{ animation: lateRunIn .62s cubic-bezier(.22,.9,.32,1) both; }
+@keyframes lateRunIn{
+  0%   { transform:translateX(-140px); }
+  62%  { transform:translateX(8px);    }  /* slight overshoot -- reads as skidding to a stop */
+  100% { transform:translateX(0);      }
 }
 
 /* ---- idle look-around ------------------------------------------------------
@@ -1172,6 +1231,12 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   background:rgba(36,30,26,.08);
   color:var(--ink-soft);
 }
+
+/* Same overflow:hidden trick as the job modal below, reused to hold the
+   page in place for the ~1.7s "running in late" entrance -- see
+   playLateEntrance() in js/script.js, triggered every time the active
+   beat becomes 0. */
+body.scroll-locked{ overflow:hidden; }
 
 /* ---------------- job modal ---------------- */
 body.modal-open{ overflow:hidden; }
