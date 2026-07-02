@@ -157,31 +157,88 @@
     <div class="collab-head">
       <p class="beat-eyebrow">Collaborate</p>
       <h2 class="collab-title-main">Walk with us.</h2>
-      <p class="collab-sub">PUCAR is a collective — the work happens through people who take up a piece of it. These are the open roles right now.</p>
+      <p class="collab-sub">PUCAR is a collective — the work happens through people who take up a piece of it. Some of this is volunteer work, some are paid roles (permanent or temporary). This is what's open right now.</p>
     </div>
+    <div class="collab-filters" id="collabFilters" hidden>
+      <select data-filter="stream" aria-label="Filter by stream">
+        <option value="">All streams</option>
+        <option>Volunteer</option>
+        <option>Paid</option>
+      </select>
+      <select data-filter="category" aria-label="Filter by type of work">
+        <option value="">All types</option>
+      </select>
+      <select data-filter="difficulty" aria-label="Filter by difficulty">
+        <option value="">Any difficulty</option>
+        <option>Low Difficulty</option>
+        <option>Moderate</option>
+        <option>High</option>
+      </select>
+      <select data-filter="deadline" aria-label="Filter by deadline">
+        <option value="">Any deadline</option>
+        <option value="7">Due within a week</option>
+        <option value="14">Due within 2 weeks</option>
+        <option value="30">Due within a month</option>
+        <option value="90">Due within 3 months</option>
+      </select>
+      <div class="collab-tagbar" id="collabTagbar" role="group" aria-label="Filter by tag"></div>
+      <button class="collab-clear" id="collabClear" type="button" hidden>Clear filters ×</button>
+    </div>
+    <p class="collab-count" id="collabCount" hidden></p>
     <div class="collab-grid" id="collabGrid">
       <!-- COLLAB:START -->
-<a class="collab-card" href="/collaborate/design-researcher-litigant-experience/" data-slug="design-researcher-litigant-experience">
+<article class="collab-card" data-slug="frontend-engineer-odr-platform" data-stream="Paid" data-category="Development" data-difficulty="High" data-deadline="2026-08-01" data-expiry="2026-07-31" data-tags="React|Accessibility|Open source">
+  <a class="collab-cover" href="/collaborate/frontend-engineer-odr-platform/" aria-label="Frontend Engineer — ODR Platform"></a>
+  <div class="collab-topline"><span class="collab-cat">Development</span><span class="collab-diff diff-high">High</span></div>
+  <span class="collab-type">Paid · Permanent</span>
+  <span class="collab-title">Frontend Engineer — ODR Platform</span>
+  <span class="collab-summary">Own the litigant-facing web experience of the open-source Online Dispute Resolution platform — accessibility-first, multilingual, low-bandwidth.</span>
+  <ul class="collab-chips"><li>Full-time</li><li>Remote (India) · quarterly meetups</li><li>React</li><li>Accessibility</li><li>Open source</li></ul>
+  <div class="collab-meta"><span>Deadline 1 Aug 2026</span><span class="collab-closes" data-expiry="2026-07-31">Closes 31 Jul 2026</span></div>
+  <div class="collab-foot">
+    <a class="collab-poster " href="/contributors/varun-h/"><span class="avatar " style="background:hsl(40,35%,38%)" aria-hidden="true">VH</span><span class="poster-meta"><span class="poster-label">Posted by</span><span class="poster-name">Varun H</span></span></a>
+    <span class="collab-btn">View</span>
+  </div>
+</article>
+<article class="collab-card" data-slug="design-researcher-litigant-experience" data-stream="Volunteer" data-category="Design" data-difficulty="Moderate" data-deadline="2026-09-30" data-expiry="2026-08-12" data-tags="Research|Interviews">
+  <a class="collab-cover" href="/collaborate/design-researcher-litigant-experience/" aria-label="Design Researcher — Litigant Experience"></a>
+  <div class="collab-topline"><span class="collab-cat">Design</span><span class="collab-diff diff-moderate">Moderate</span></div>
   <span class="collab-type">Volunteer</span>
   <span class="collab-title">Design Researcher — Litigant Experience</span>
   <span class="collab-summary">Interview litigants, lawyers, and court staff to map the real experience of navigating an Indian court — and turn it into insights the ecosystem can act on.</span>
-  <ul class="collab-chips"><li>6–8 hrs/week · 3 months</li><li>Remote (India)</li><li>Research</li><li>Design</li></ul>
-  <span class="collab-btn">View role</span>
-</a>
-<a class="collab-card" href="/collaborate/open-source-contributor-court-data/" data-slug="open-source-contributor-court-data">
+  <ul class="collab-chips"><li>6–8 hrs/week · 3 months</li><li>Remote (India)</li><li>Research</li><li>Interviews</li></ul>
+  <div class="collab-meta"><span>Deadline 30 Sep 2026</span><span class="collab-closes" data-expiry="2026-08-12">Closes 12 Aug 2026</span></div>
+  <div class="collab-foot">
+    <a class="collab-poster " href="/contributors/aditi-rao/"><span class="avatar " style="background:hsl(83,35%,38%)" aria-hidden="true">AR</span><span class="poster-meta"><span class="poster-label">Posted by</span><span class="poster-name">Aditi Rao</span></span></a>
+    <span class="collab-btn">View</span>
+  </div>
+</article>
+<article class="collab-card" data-slug="open-source-contributor-court-data" data-stream="Volunteer" data-category="Development" data-difficulty="Low Difficulty" data-deadline="2026-12-31" data-expiry="2026-09-18" data-tags="Open source|Data">
+  <a class="collab-cover" href="/collaborate/open-source-contributor-court-data/" aria-label="Open-Source Contributor — Court Data Dashboards"></a>
+  <div class="collab-topline"><span class="collab-cat">Development</span><span class="collab-diff diff-low">Low Difficulty</span></div>
   <span class="collab-type">Volunteer</span>
   <span class="collab-title">Open-Source Contributor — Court Data Dashboards</span>
   <span class="collab-summary">Help build open dashboards that make court performance legible — pendency, disposal rates, hearing patterns — on top of public judicial data.</span>
-  <ul class="collab-chips"><li>Flexible · ongoing</li><li>Remote</li><li>Engineering</li><li>Data</li></ul>
-  <span class="collab-btn">View role</span>
-</a>
-<a class="collab-card" href="/collaborate/legal-process-fellow/" data-slug="legal-process-fellow">
-  <span class="collab-type">Fellowship</span>
+  <ul class="collab-chips"><li>Flexible · ongoing</li><li>Remote</li><li>Open source</li><li>Data</li></ul>
+  <div class="collab-meta"><span>Deadline 31 Dec 2026</span><span class="collab-closes" data-expiry="2026-09-18">Closes 18 Sep 2026</span></div>
+  <div class="collab-foot">
+    <a class="collab-poster " href="/contributors/rohan-mehta/"><span class="avatar " style="background:hsl(13,35%,38%)" aria-hidden="true">RM</span><span class="poster-meta"><span class="poster-label">Posted by</span><span class="poster-name">Rohan Mehta</span></span></a>
+    <span class="collab-btn">View</span>
+  </div>
+</article>
+<article class="collab-card" data-slug="legal-process-fellow" data-stream="Paid" data-category="Legal" data-difficulty="High" data-deadline="2026-08-15" data-expiry="2026-08-11" data-tags="Process design|Fieldwork">
+  <a class="collab-cover" href="/collaborate/legal-process-fellow/" aria-label="Legal Process Fellow — People-Centric Courts"></a>
+  <div class="collab-topline"><span class="collab-cat">Legal</span><span class="collab-diff diff-high">High</span></div>
+  <span class="collab-type">Paid · Temporary</span>
   <span class="collab-title">Legal Process Fellow — People-Centric Courts</span>
   <span class="collab-summary">Work with a partner court to redesign one high-friction process — summons, cause lists, or adjournments — from the litigant&#39;s point of view.</span>
-  <ul class="collab-chips"><li>Full-time · 12 months</li><li>Hybrid · partner court city</li><li>Law</li><li>Process design</li></ul>
-  <span class="collab-btn">View role</span>
-</a>
+  <ul class="collab-chips"><li>Full-time · 12 months</li><li>Hybrid · partner court city</li><li>Process design</li><li>Fieldwork</li></ul>
+  <div class="collab-meta"><span>Deadline 15 Aug 2026</span><span class="collab-closes" data-expiry="2026-08-11">Closes 11 Aug 2026</span></div>
+  <div class="collab-foot">
+    <a class="collab-poster " href="/contributors/varun-h/"><span class="avatar " style="background:hsl(40,35%,38%)" aria-hidden="true">VH</span><span class="poster-meta"><span class="poster-label">Posted by</span><span class="poster-name">Varun H</span></span></a>
+    <span class="collab-btn">View</span>
+  </div>
+</article>
 <!-- COLLAB:END -->
       <!-- cards are generated from content/jobs/ by scripts/build-jobs.js -->
     </div>
@@ -197,7 +254,10 @@
     <button class="job-modal-close" type="button" data-close aria-label="Close">×</button>
     <p class="beat-eyebrow" id="jobModalType"></p>
     <h2 class="job-title" id="jobModalTitle"></h2>
+    <div class="job-meta" id="jobModalMeta"></div>
+    <div class="job-dates" id="jobModalDates"></div>
     <ul class="job-chips" id="jobModalChips"></ul>
+    <div id="jobModalPoster"></div>
     <article class="job-body" id="jobModalBody"></article>
     <div class="cta-row">
       <a class="btn btn-primary" id="jobModalApply" href="#">Express interest</a>

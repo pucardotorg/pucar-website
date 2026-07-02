@@ -517,14 +517,14 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
   gap:18px;
 }
 .collab-card{
+  position:relative;
   display:flex;
   flex-direction:column;
   gap:12px;
-  padding:26px 24px 22px;
+  padding:24px 24px 20px;
   border-radius:22px;
   background:rgba(251,248,242,.06);
   border:1px solid rgba(251,248,242,.14);
-  text-decoration:none;
   color:var(--paper);
   transition:transform .25s ease, background .25s ease, border-color .25s ease;
 }
@@ -533,6 +533,16 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
   background:rgba(251,248,242,.1);
   border-color:rgba(251,248,242,.28);
 }
+/* whole card is clickable via a stretched cover link; the posted-by link
+   sits above it */
+.collab-cover{ position:absolute; inset:0; z-index:1; border-radius:22px; }
+.collab-poster{ position:relative; z-index:2; }
+.collab-topline{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
 .collab-type{
   font-size:.72rem;
   font-weight:600;
@@ -540,6 +550,79 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
   text-transform:uppercase;
   color:var(--gold);
 }
+/* category + colour-coded difficulty labels */
+.collab-cat{
+  font-size:.7rem;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  padding:5px 10px;
+  border-radius:999px;
+  background:rgba(251,248,242,.14);
+  color:rgba(251,248,242,.9);
+}
+.collab-diff{
+  font-size:.7rem;
+  font-weight:700;
+  letter-spacing:.04em;
+  padding:5px 10px;
+  border-radius:999px;
+  color:#fff;
+}
+.diff-low{ background:#3F7D4E; }
+.diff-moderate{ background:#C98A2E; color:#241E1A; }
+.diff-high{ background:#B0402F; }
+.collab-status{
+  font-size:.7rem;
+  font-weight:700;
+  padding:5px 10px;
+  border-radius:999px;
+  background:rgba(36,30,26,.12);
+  color:inherit;
+}
+.collab-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px 16px;
+  font-size:.78rem;
+  color:rgba(251,248,242,.65);
+}
+.collab-closes.is-urgent{ color:#F0A28A; font-weight:600; }
+.collab-foot{
+  margin-top:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding-top:12px;
+  border-top:1px solid rgba(251,248,242,.12);
+}
+/* posted-by: avatar circle + name */
+.collab-poster{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  text-decoration:none;
+  color:inherit;
+  border-radius:999px;
+}
+.collab-poster:hover .poster-name{ text-decoration:underline; }
+.avatar{
+  width:32px; height:32px;
+  border-radius:50%;
+  object-fit:cover;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:.72rem;
+  font-weight:700;
+  color:#fff;
+  letter-spacing:.03em;
+  flex:none;
+}
+.poster-meta{ display:flex; flex-direction:column; line-height:1.25; }
+.poster-label{ font-size:.66rem; text-transform:uppercase; letter-spacing:.08em; opacity:.6; }
+.poster-name{ font-size:.83rem; font-weight:600; }
 .collab-title{
   font-family:var(--font-display);
   font-size:1.35rem;
@@ -579,7 +662,141 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
   transition:background .2s ease;
 }
 .collab-card:hover .collab-btn{ background:#fff; }
+.collab-btn{ margin-top:0; padding:10px 18px; }
 .collab-empty{ color:rgba(251,248,242,.65); }
+
+/* ---------------- collaborate filters ---------------- */
+.collab-filters{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:10px;
+  margin:0 0 14px;
+}
+.collab-filters select{
+  appearance:none;
+  -webkit-appearance:none;
+  padding:10px 34px 10px 16px;
+  border-radius:999px;
+  border:1px solid rgba(251,248,242,.25);
+  background:rgba(251,248,242,.08) url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23F6F1E6' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+  color:var(--paper);
+  font:500 .84rem var(--font-body);
+  cursor:pointer;
+}
+.collab-filters select:hover{ border-color:rgba(251,248,242,.45); }
+.collab-filters select option{ color:var(--ink); background:var(--paper); }
+.collab-tagbar{ display:flex; flex-wrap:wrap; gap:8px; }
+.collab-tag{
+  padding:9px 14px;
+  border-radius:999px;
+  border:1px dashed rgba(251,248,242,.3);
+  background:transparent;
+  color:rgba(251,248,242,.75);
+  font:500 .8rem var(--font-body);
+  cursor:pointer;
+  transition:background .2s ease, color .2s ease, border-color .2s ease;
+}
+.collab-tag:hover{ border-color:rgba(251,248,242,.55); }
+.collab-tag.is-on{
+  background:var(--gold);
+  border-style:solid;
+  border-color:var(--gold);
+  color:var(--ink);
+  font-weight:600;
+}
+.collab-clear{
+  padding:9px 14px;
+  border-radius:999px;
+  border:none;
+  background:transparent;
+  color:var(--gold);
+  font:600 .8rem var(--font-body);
+  cursor:pointer;
+  text-decoration:underline;
+}
+.collab-count{
+  font-size:.82rem;
+  color:rgba(251,248,242,.6);
+  margin:0 0 14px;
+}
+
+/* ---------------- job/contributor page meta ---------------- */
+.job-meta{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px;
+  margin:2px 0 14px;
+}
+.job-page .collab-cat, .job-modal-panel .collab-cat{
+  background:rgba(36,30,26,.08);
+  color:var(--ink-soft);
+}
+.job-page .collab-stream, .job-modal-panel .collab-stream{
+  font-size:.7rem;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  padding:5px 10px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  color:var(--ink-soft);
+}
+.job-dates{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px 18px;
+  font-size:.85rem;
+  color:var(--ink-soft);
+  margin:0 0 14px;
+}
+.job-dates strong{ font-weight:600; color:var(--ink); }
+.job-page .collab-closes.is-urgent, .job-modal-panel .collab-closes.is-urgent{ color:#B0402F; }
+.collab-poster.on-light{ color:var(--ink); margin:6px 0 4px; }
+.btn.is-disabled{ opacity:.55; pointer-events:none; }
+
+/* contributor pages */
+.contrib-head{
+  display:flex;
+  align-items:center;
+  gap:22px;
+  margin-bottom:18px;
+}
+.avatar-xl{ width:84px; height:84px; font-size:1.5rem; }
+.contrib-sub{
+  font-size:1.3rem;
+  margin:36px 0 12px;
+}
+.contrib-jobs{
+  list-style:none;
+  padding:0;
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.contrib-jobs li{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  padding:14px 16px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:rgba(36,30,26,.03);
+}
+.contrib-jobs a{
+  font-weight:600;
+  color:var(--ink);
+  text-decoration:none;
+  margin-right:auto;
+}
+.contrib-jobs a:hover{ text-decoration:underline; }
+.contrib-jobs .collab-status{
+  background:rgba(36,30,26,.08);
+  color:var(--ink-soft);
+}
 
 /* ---------------- job modal ---------------- */
 body.modal-open{ overflow:hidden; }

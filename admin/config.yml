@@ -1,7 +1,7 @@
 # Decap CMS — edits commit straight to the git repo; Netlify rebuilds on push.
 backend:
   name: github
-  repo: CHANGE_ME/pucar-website   # TODO: set to your GitHub owner/repo
+  repo: pucardotorg/pucar-website
   branch: main
   # Uses Netlify's OAuth provider: in the Netlify UI, add a GitHub OAuth app
   # under Site configuration → Access & security → OAuth (see README).
@@ -15,8 +15,8 @@ public_folder: "/assets/uploads"
 
 collections:
   - name: "jobs"
-    label: "Collaborate roles"
-    label_singular: "role"
+    label: "Collaborate — work & roles"
+    label_singular: "work item"
     folder: "content/jobs"
     create: true
     format: "json"
@@ -28,11 +28,45 @@ collections:
     fields:
       - { name: "title", label: "Title", widget: "string" }
       - { name: "date", label: "Posted on", widget: "datetime", date_format: "YYYY-MM-DD", format: "YYYY-MM-DD", time_format: false }
-      - { name: "type", label: "Type", widget: "select", options: ["Volunteer", "Fellowship", "Internship", "Full-time", "Partnership"], default: "Volunteer" }
+      - { name: "listing_days", label: "Listing is up for (days)", widget: "number", default: 30, value_type: "int", min: 1, hint: "The card disappears from the board this many days after the posted date." }
+      - { name: "deadline", label: "Work deadline", widget: "datetime", date_format: "YYYY-MM-DD", format: "YYYY-MM-DD", time_format: false, hint: "When the work itself must be done by." }
+      - { name: "stream", label: "Stream", widget: "select", options: ["Volunteer", "Paid"], default: "Volunteer" }
+      - { name: "term", label: "Term (paid roles)", widget: "select", options: ["", "Permanent", "Temporary"], default: "", required: false, hint: "Leave blank for volunteer work." }
+      - { name: "category", label: "Type of work", widget: "select", options: ["Design", "Development", "Research", "Legal", "Data", "Content", "Operations"] }
+      - { name: "difficulty", label: "Difficulty", widget: "select", options: ["Low Difficulty", "Moderate", "High"], default: "Moderate" }
       - { name: "summary", label: "Card summary", widget: "text", hint: "1–2 sentences shown on the card and in search results." }
       - { name: "commitment", label: "Commitment", widget: "string", required: false, hint: "e.g. 6–8 hrs/week · 3 months" }
       - { name: "location", label: "Location", widget: "string", required: false, hint: "e.g. Remote (India)" }
       - { name: "tags", label: "Tags", widget: "list", required: false, field: { name: "tag", label: "Tag", widget: "string" } }
       - { name: "apply_url", label: "Apply link", widget: "string", hint: "mailto: or form URL" }
+      - { name: "posted_by", label: "Posted by", widget: "relation", collection: "contributors", search_fields: ["name"], value_field: "{{slug}}", display_fields: ["name"] }
+      - { name: "assigned_to", label: "Assigned to", widget: "relation", collection: "contributors", search_fields: ["name"], value_field: "{{slug}}", display_fields: ["name"], required: false }
+      - { name: "status", label: "Status", widget: "select", options: ["Open", "Assigned", "Completed"], default: "Open", hint: "Assigned/Completed items leave the board but stay on contributor pages." }
       - { name: "published", label: "Published", widget: "boolean", default: true }
       - { name: "body", label: "Full description", widget: "markdown" }
+
+  - name: "contributors"
+    label: "Contributors"
+    label_singular: "contributor"
+    folder: "content/contributors"
+    create: true
+    format: "json"
+    extension: "json"
+    slug: "{{slug}}"          # filename becomes the URL: /contributors/<slug>/
+    identifier_field: name
+    editor:
+      preview: false
+    fields:
+      - { name: "name", label: "Name", widget: "string" }
+      - { name: "role", label: "Role / affiliation", widget: "string", required: false }
+      - { name: "photo", label: "Photo", widget: "image", required: false, hint: "Square works best. Leave empty for an initials avatar." }
+      - { name: "email", label: "Email", widget: "string", required: false }
+      - name: "links"
+        label: "Links"
+        widget: "list"
+        required: false
+        fields:
+          - { name: "label", label: "Label", widget: "string" }
+          - { name: "url", label: "URL", widget: "string" }
+      - { name: "published", label: "Published", widget: "boolean", default: true }
+      - { name: "body", label: "Bio", widget: "markdown" }

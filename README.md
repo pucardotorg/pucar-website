@@ -86,15 +86,40 @@ values carry the `translateX`; to change how far, adjust the `25vw`.
 
 ## Collaborate section (Decap CMS + static job pages)
 
-Jobs live as one JSON file each in `content/jobs/`. On every deploy, Netlify
-runs `node scripts/build-jobs.js` (dependency-free), which generates:
+Work items live as one JSON file each in `content/jobs/`; contributors in
+`content/contributors/`. On every deploy, Netlify runs
+`node scripts/build-jobs.js` (dependency-free), which generates:
 
-- `collaborate/<slug>/index.html` — a **crawlable page per role** (canonical
-  URL, OG tags, schema.org JobPosting JSON-LD). The filename is the slug.
+- `collaborate/<slug>/index.html` — a **crawlable page per work item**
+  (canonical URL, OG tags, schema.org JobPosting JSON-LD incl. validThrough).
+- `contributors/<slug>/index.html` — a **crawlable page per contributor**:
+  bio, links, work they've posted, work taken up / completed (Person JSON-LD).
 - static cards injected into `index.html` between the `<!-- COLLAB:START -->`
   / `<!-- COLLAB:END -->` markers (real `<a>` links — crawlable without JS)
 - `collaborate/jobs.json` — index consumed by the modal
 - `sitemap.xml`
+
+### Work item model
+
+Two streams: **Volunteer** and **Paid** (paid roles carry a `term`:
+Permanent/Temporary). Every item has a `category` (Design, Development,
+Research, Legal, Data, Content, Operations), a colour-coded `difficulty`
+(Low Difficulty = green, Moderate = amber, High = red), a work `deadline`,
+and `listing_days` — the card leaves the board `listing_days` after the
+posted `date` (the build computes the expiry; the client refreshes the
+"Closes in N days" label and hides anything that expired since the last
+deploy). `status` Open/Assigned/Completed: only Open, unexpired items appear
+on the board; everything published keeps its page and shows on contributor
+pages. `posted_by` / `assigned_to` reference a contributor by slug and render
+as the avatar + name "Posted by" row (initials avatar if no photo).
+
+### Filters
+
+The board has a client-side filter bar (progressive enhancement — hidden
+without JS): stream, type of work, difficulty, deadline range (within 1/2
+weeks, 1/3 months), and toggleable tag chips (AND across tags). Options are
+derived from the cards present. A live count + clear button appear when
+filters are active.
 
 On the homepage, `js/collaborate.js` intercepts card clicks: opens the detail
 modal and `pushState`s the job's real URL, so browsing feels instant but every
@@ -128,10 +153,12 @@ index.html          markup + all 8 scroll "beats" + collaborate section/modal
 css/style.css       palette, layout, walk-cycle, collaborate + modal styles
 js/script.js        scroll-progress engine (beat switching, counters, walk state)
 js/collaborate.js   job modal + pushState deeplinks
-content/jobs/       one JSON per role (edited by Decap CMS or by hand)
-scripts/build-jobs.js  build step: job pages, cards, jobs.json, sitemap
-admin/              Decap CMS (config.yml needs your repo + OAuth setup)
-collaborate/        GENERATED — one crawlable page per role + jobs.json
+content/jobs/          one JSON per work item (Decap CMS or by hand)
+content/contributors/  one JSON per contributor
+scripts/build-jobs.js  build step: job + contributor pages, cards, jobs.json, sitemap
+admin/              Decap CMS (needs Netlify GitHub OAuth setup)
+collaborate/        GENERATED — one crawlable page per work item + jobs.json
+contributors/       GENERATED — one crawlable page per contributor
 netlify.toml        publish config; runs the build step on deploy
 ```
 
@@ -173,9 +200,10 @@ git push -u origin main
 - Initiative cards (beat 6) link to `#` — point them at the live pucar.org
   pages.
 - "Get in touch" / "Learn about the PUCAR way" CTAs (beat 7) link to `#`.
-- The 3 roles in `content/jobs/` are sample content marked `[placeholder]` —
-  replace with real openings. `admin/config.yml` still has `repo: CHANGE_ME`,
-  and the sitemap domain defaults to a placeholder until deployed (it uses
-  Netlify's `URL` env var on real builds).
+- The 5 work items in `content/jobs/` and the contributors Aditi Rao and
+  Rohan Mehta in `content/contributors/` are sample/placeholder content —
+  replace with real openings and people (and add photos). The sitemap domain
+  defaults to a placeholder until deployed (it uses Netlify's `URL` env var
+  on real builds).
 - Litigant illustration, palette, and copy are all first-pass — happy to
   iterate on any of it.
