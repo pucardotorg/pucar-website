@@ -7,6 +7,7 @@
   var progressFill = document.getElementById("progressFill");
   var beatIndexEl = document.getElementById("beatIndex");
   var beatTotalEl = document.getElementById("beatTotal");
+  var litigantStage = document.getElementById("litigantStage");
   var numBeats = beatEls.length;
 
   if (beatTotalEl) beatTotalEl.textContent = String(numBeats);
@@ -16,6 +17,45 @@
   var walkTimeout = null;
   var idleTimeout = null;
   var IDLE_DELAY = 10000; // ms without scrolling before she looks around
+
+  // ---- continuous side->centre position (see updateLitigantPosition) ----
+  var MOBILE_BREAKPOINT = 860; // matches the CSS media query that disables this entirely
+  var targetCenterT = 0;   // 0 = side (beats 0-1), 1 = centred (beats 2-7)
+  var smoothCenterT = 0;   // eased toward targetCenterT every frame, for a settled feel
+  var centerTickPending = false;
+
+  function smoothstep(t) {
+    return t * t * (3 - 2 * t);
+  }
+
+  function updateLitigantPosition() {
+    centerTickPending = false;
+    if (!litigantStage) return;
+
+    if (window.innerWidth <= MOBILE_BREAKPOINT) {
+      litigantStage.style.transform = ""; // CSS !important rule owns mobile anyway; keep inline clean
+      return;
+    }
+
+    smoothCenterT += (targetCenterT - smoothCenterT) * 0.15;
+    if (Math.abs(targetCenterT - smoothCenterT) < 0.0008) smoothCenterT = targetCenterT;
+
+    var x = (smoothCenterT * 25).toFixed(3);
+    var y = (smoothCenterT * -9).toFixed(3);
+    litigantStage.style.transform = "translate(" + x + "vw, " + y + "vh)";
+
+    if (smoothCenterT !== targetCenterT) {
+      centerTickPending = true;
+      requestAnimationFrame(updateLitigantPosition);
+    }
+  }
+
+  function requestCenterTick() {
+    if (!centerTickPending) {
+      centerTickPending = true;
+      requestAnimationFrame(updateLitigantPosition);
+    }
+  }
 
   function resetIdle() {
     pin.classList.remove("is-idle");
@@ -92,6 +132,7 @@
     var viewportH = window.innerHeight;
     var totalScrollable = rect.height - viewportH;
     var progress = totalScrollable > 0 ? clamp(-rect.top / totalScrollable, 0, 1) : 0;
+    var beatFloat = progress * (numBeats - 1); // continuous, e.g. 2.4 -- not rounded
 
     // only run the story mechanics while the story section is actually
     // on screen (rect.top <= 0 and rect.bottom >= 0 roughly, i.e. pinned)
@@ -102,10 +143,17 @@
     } else if (progress >= 1) {
       setActiveBeat(numBeats - 1);
     } else if (inStory || rect.top < 0) {
-      var beatFloat = progress * (numBeats - 1);
       var nearest = clamp(Math.round(beatFloat), 0, numBeats - 1);
       setActiveBeat(nearest);
     }
+
+    // she starts sliding toward centre as soon as beat 1 begins and is fully
+    // there by beat 2 -- a continuous function of scroll position (not a
+    // discrete flip at the beat boundary), which is what actually makes it
+    // feel smooth: the motion is exactly as fast as the user's scrolling,
+    // never a fixed-duration animation firing at one scroll pixel.
+    targetCenterT = smoothstep(clamp(beatFloat - 1, 0, 1));
+    requestCenterTick();
 
     if (progressFill) progressFill.style.width = (progress * 100).toFixed(1) + "%";
 

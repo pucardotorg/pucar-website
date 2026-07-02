@@ -224,21 +224,18 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   justify-self:center;
   align-self:center;
   width:clamp(230px, 30vw, 380px);
-  /* starts in the left column; slides to viewport centre after beat 2 */
-  transform:translateX(0);
-  transition:transform .9s cubic-bezier(.45,.05,.2,1);
+  /* side→centre position (translate) is set continuously, every frame, by
+     script.js as a direct function of scroll position -- NOT by a CSS
+     transition triggered on a discrete beat change. A time-based CSS
+     transition here used to fire once at the exact scroll pixel where the
+     beat flipped from 1→2, animating over a fixed .9s regardless of how
+     fast/slow the user kept scrolling, which read as a jump-cut into an
+     unrelated animation rather than a motion the scroll itself was driving.
+     Inline styles always win over stylesheet rules, so no transform/
+     transition is declared here at all -- see updateLitigantPosition() in
+     script.js, including its own light easing (lerp) for a settled feel
+     once scrolling stops, instead of relying on a CSS transition. */
 }
-/* beats 0–1: on the side | beats 2–7: centred (col1 centre is ~25vw from
-   viewport centre, so nudge right by ~25vw) and lifted up a bit (-9vh) to
-   leave clear room underneath for the text, which relocates to the bottom
-   left for these beats -- see the .beats override below -- instead of
-   sitting mid-height in column 2, where it used to collide with her. */
-.pin[data-beat="2"] .litigant-stage,
-.pin[data-beat="3"] .litigant-stage,
-.pin[data-beat="4"] .litigant-stage,
-.pin[data-beat="5"] .litigant-stage,
-.pin[data-beat="6"] .litigant-stage,
-.pin[data-beat="7"] .litigant-stage{ transform:translate(25vw, -9vh); }
 
 /* scrolling "path" behind the figure, follows it side→centre */
 .path{
