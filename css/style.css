@@ -74,7 +74,7 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
 }
 .site-header .logo img{
   display:block;
-  height:18px;   /* kept small and deliberate -- a nav mark, not a hero logo */
+  height:26px;
   width:auto;
 }
 /* two variants stacked in place; only one is visible at a time depending on
