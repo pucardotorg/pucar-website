@@ -533,6 +533,12 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
   background:rgba(251,248,242,.1);
   border-color:rgba(251,248,242,.28);
 }
+/* the filter script toggles the `hidden` attribute to show/hide cards, but
+   `.collab-card` above sets `display:flex` with author-stylesheet priority,
+   which silently wins over the browser's default `[hidden]{display:none}`
+   rule (author styles always beat UA styles, regardless of specificity).
+   Without this, cards never actually disappear — this is the fix. */
+.collab-card[hidden]{ display:none; }
 /* whole card is clickable via a stretched cover link; the posted-by link
    sits above it */
 .collab-cover{ position:absolute; inset:0; z-index:1; border-radius:22px; }
@@ -708,6 +714,7 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
   gap:10px;
   margin:0 0 14px;
 }
+.collab-filters[hidden]{ display:none; } /* same author-vs-UA precedence issue as .collab-card */
 /* native selects are hidden by JS and replaced with .dd custom dropdowns
    so the open menu matches the site instead of the OS */
 .dd{ position:relative; }
