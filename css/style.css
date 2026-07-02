@@ -407,6 +407,26 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   82%,100%{ transform:rotate(0deg);   }
 }
 
+/* ---- occasional "dread" head-shake -----------------------------------------
+   Only while a speech bubble is up, and only sometimes (see DREAD_CHANCE in
+   js/script.js -- roughly 1 in 4 bubbles, not every one) js/script.js adds
+   .is-dreading to the pin alongside .is-idle: a quick side-to-side shiver,
+   as though she's dreading whatever the bubble just said. This selector has
+   the same specificity as the headLook rule above (4 classes each) and is
+   declared after it, so it wins the moment .is-dreading is present, then
+   yields back to the looping headLook once js/script.js removes the class. */
+.pin.is-dreading .litigant .head{ animation: headShake .95s ease-in-out; }
+@keyframes headShake{
+  0%     { transform:rotate(0deg);   }
+  14%    { transform:rotate(-9deg);  }
+  30%    { transform:rotate(8deg);   }
+  46%    { transform:rotate(-7deg);  }
+  62%    { transform:rotate(5deg);   }
+  78%    { transform:rotate(-3deg);  }
+  92%    { transform:rotate(1deg);   }
+  100%   { transform:rotate(0deg);   }
+}
+
 /* ---------------- text beats ---------------- */
 .beats{
   position:relative;

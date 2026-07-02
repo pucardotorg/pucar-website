@@ -38,8 +38,24 @@
   var speechHideTimer = null;
   var SPEECH_VISIBLE_MS = 3400;
 
+  // "Dreading" head-shake: fires only sometimes, only alongside a bubble --
+  // see .pin.is-dreading / @keyframes headShake in style.css. Kept low so
+  // it reads as an occasional flourish, not a tic.
+  var DREAD_CHANCE = 0.25; // ~1 in 4 bubbles gets a head-shake
+  var DREAD_MS = 950;      // matches the headShake keyframe duration
+  var dreadTimer = null;
+
   function randomDelay(minMs, maxMs) {
     return minMs + Math.random() * (maxMs - minMs);
+  }
+
+  function maybeShakeHead() {
+    if (Math.random() > DREAD_CHANCE) return;
+    pin.classList.add("is-dreading");
+    clearTimeout(dreadTimer);
+    dreadTimer = setTimeout(function () {
+      pin.classList.remove("is-dreading");
+    }, DREAD_MS);
   }
 
   function showSpeechBubble() {
@@ -51,6 +67,7 @@
     speechHideTimer = setTimeout(function () {
       speechEl.classList.remove("is-visible");
     }, SPEECH_VISIBLE_MS);
+    maybeShakeHead();
   }
 
   function scheduleSpeechBubble() {
@@ -68,9 +85,11 @@
   function stopBubbles() {
     clearTimeout(speechShowTimer);
     clearTimeout(speechHideTimer);
+    clearTimeout(dreadTimer);
     speechShowTimer = null;
     speechHideTimer = null;
     if (speechEl) speechEl.classList.remove("is-visible");
+    pin.classList.remove("is-dreading");
   }
 
   // ---- continuous side->centre position (see updateLitigantPosition) ----

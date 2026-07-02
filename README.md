@@ -236,6 +236,22 @@ properties, never `fill`, `stroke`, or `color`.
   (decorative flavour text) and positioned with a small CSS-triangle tail
   (`.speech-bubble::after`) pointing down toward the figure's head, which
   sits in the upper half of the SVG's viewBox.
+- **Occasional "dread" head-shake:** `showSpeechBubble()` calls
+  `maybeShakeHead()` every time a bubble appears, which only actually
+  triggers `DREAD_CHANCE = 0.25` of the time (~1 in 4 bubbles) — deliberately
+  infrequent, per the brief ("don't make it too often"), so it reads as an
+  occasional flourish rather than a tic. When it fires, `.is-dreading` is
+  added to `#pin` for `DREAD_MS = 950` ms, which runs `@keyframes headShake`
+  (style.css, right after `headLook`) on the same two `.head` groups the
+  idle look-around uses — a few quick side-to-side rotations that damp down
+  to rest, as though she's dreading whatever the bubble just said. The
+  `.pin.is-dreading .litigant .head` selector has identical specificity to
+  `.pin.is-idle .litigant .head` (4 classes each) and is declared later in
+  the stylesheet, so it wins outright while `.is-dreading` is present, then
+  yields back to the looping `headLook` the instant the class is removed —
+  no animation-priority hacks needed. `stopBubbles()` also clears the dread
+  timer and force-removes `.is-dreading`, so a scroll mid-shake cancels it
+  immediately, same as it does the bubble itself.
 
 ## 4. The litigant figure (SVG anatomy + animations)
 
