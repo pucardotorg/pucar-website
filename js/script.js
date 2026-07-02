@@ -373,7 +373,12 @@
     var target = document.getElementById(targetId);
     if (!target) return;
     isJumpingToSection = true;
-    target.scrollIntoView({ behavior: "auto", block: "start" });
+    // "instant", not "auto" -- per spec, behavior:"auto" defers to the
+    // element's CSS scroll-behavior, and html has scroll-behavior:smooth
+    // set globally, so "auto" was actually still smooth-scrolling the
+    // whole way through .story (the exact thing this was meant to avoid).
+    // "instant" unconditionally overrides that and jumps in one step.
+    target.scrollIntoView({ behavior: "instant", block: "start" });
     // Give the browser a moment to actually land and fire whatever
     // scroll/resize events result from the jump before re-arming normal
     // scroll-driven behaviour.

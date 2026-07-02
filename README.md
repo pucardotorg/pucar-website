@@ -372,6 +372,22 @@ needed no special accommodation for it beyond generous top padding.
     can drive her vertical drop-in via `translate` while
     `updateLitigantPosition()`'s inline `transform` keeps driving her
     horizontal beat-based position, with zero conflict between the two.
+  - **First real-browser bug: the travel distance was much too small to
+    actually leave the frame.** `.litigant-stage` is `align-self:center`
+    inside `.pin`, which is exactly `100vh` tall with `overflow:hidden` —
+    so her resting position already sits roughly `50vh` down from the
+    pin's (clipped) top edge. The first version of `@keyframes lateWalkIn`
+    started her at a fixed `-220px`, which on a typical 800–1000px-tall
+    viewport barely nudges her off that centred spot and never actually
+    crosses the pin's clipped top boundary — so nothing visibly left the
+    frame, and the whole animation just read as a small in-place wobble
+    rather than "walking in from off-screen." Fixed by switching to a
+    viewport-relative `-70vh` starting offset, which reliably lands her at
+    roughly `50vh - 70vh = -20vh` from the pin's top — genuinely clipped
+    out of view — regardless of screen height, since it's proportional
+    rather than fixed. Total duration also went from `.62s`/`.75s` up to
+    `.95s` to give the now much more visible travel room to read clearly
+    rather than blur past.
   - **Fallback for a case the walk-in can't cover:** if the user's very
     first real scroll is fast/far enough to skip beat 0 entirely (landing
     straight on, say, beat 3), nothing would ever add `.is-revealed` and
@@ -432,12 +448,18 @@ needed no special accommodation for it beyond generous top padding.
   - Fixed in js/script.js: every `a[href="#collaborate"]` (there are two —
     the intro hero's button and the nav link) gets a click handler that
     calls `preventDefault()` and does `cleanJumpTo("collaborate")` instead,
-    which calls `scrollIntoView({ behavior: "auto", block: "start" })` —
-    explicitly passing `behavior` overrides the element's CSS
-    `scroll-behavior: smooth` for that one programmatic call, so it jumps
-    in one step rather than animating through the story's scroll range at
-    all. No intermediate frame ever renders mid-story, so there's nothing
-    to flicker.
+    which calls `scrollIntoView({ behavior: "instant", block: "start" })`.
+    **`"instant"`, not `"auto"`** — the first version of this used `"auto"`,
+    which per spec means "defer to the element's computed CSS
+    `scroll-behavior`," not "skip the animation." Since `html` has
+    `scroll-behavior: smooth` set globally, `"auto"` was silently
+    inheriting that and *still* smooth-scrolling the whole way through —
+    the exact bug this fix was supposed to remove, just not caught until
+    it was tested in a real browser (a jsdom check only confirms *that*
+    `scrollIntoView` gets called with some options object, not what a real
+    browser does with a given `behavior` value). `"instant"` unconditionally
+    overrides the CSS and jumps in one step, with no intermediate mid-story
+    frame ever rendering.
   - `isJumpingToSection` is set `true` for 300ms around that jump (long
     enough for the jump and any resulting scroll/resize events to settle)
     and checked at the top of `playLateEntrance()`, which now bails out
@@ -450,9 +472,13 @@ needed no special accommodation for it beyond generous top padding.
     that's arguably more defensible since those sections *are* part of the
     story. Left as native smooth-scroll for now; revisit if that turns out
     to feel just as wrong.
-  - Verified with a jsdom simulation: clicking either `#collaborate` link
-    calls `preventDefault()` and `scrollIntoView({behavior:"auto",
-    block:"start"})` (not the default smooth behaviour).
+  - Verified with a jsdom simulation that clicking either `#collaborate`
+    link calls `preventDefault()` and `scrollIntoView` with
+    `behavior:"instant"`. Worth flagging for next time: this check only
+    confirms the *call*, not what a real browser does with a given
+    `behavior` value — that's exactly how the `"auto"` bug above shipped
+    without the automated check catching it. Actually confirming scroll
+    behaviour end-to-end needs a real browser, not jsdom.
 - **Occasional "dread" head-shake:** `showSpeechBubble()` calls
   `maybeShakeHead()` every time a bubble appears, which only actually
   triggers `DREAD_CHANCE = 0.25` of the time (~1 in 4 bubbles) — deliberately
