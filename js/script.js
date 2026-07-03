@@ -44,23 +44,25 @@
     var svg = document.querySelector(".judge-stage .judge");
     var stage = document.querySelector(".judge-stage");
     if (!svg || !stage || !window.HTMLCanvasElement) return;
-    var rect = svg.getBoundingClientRect();
-    // CRITICAL GATE: the stage animates in when beat 3 arrives (translate
-    // 7vh->0 + scale .94->1 over .9s), and getBoundingClientRect measures
-    // the TRANSFORMED box. Preparing on beat 3's first frame captured him
-    // ~6% small and offset -- which made the SVG->canvas swap visibly
-    // shrink/shift. Only accept a rect that matches the untransformed
-    // layout width (computed style is transform-free); otherwise retry
-    // shortly until the entrance transition has fully settled.
-    var cssW = parseFloat(window.getComputedStyle(svg).width) || 0;
-    if (cssW < 40 || Math.abs(rect.width - cssW) > 0.75) {
+    // MEASURE FROM LAYOUT, NEVER FROM THE PAINTED RECT. The stage is
+    // transformed almost all the time (hidden translate/scale off beat 3,
+    // entrance transition on it) and getBoundingClientRect reflects that,
+    // which caused two past bugs: sampling him ~6% small mid-transition
+    // (visible shrink at the SVG->canvas swap), and -- once gated on the
+    // transition settling -- a race where fast scrolls reached the snap
+    // before the sampler finished, dropping users onto the old filter
+    // fallback ("the old filter sometimes shows up"). Computed style
+    // width/height and offsetLeft/Top are transform-free, so this can run
+    // safely AT PAGE LOAD, and the field is ready long before beat 3.
+    var cs = window.getComputedStyle(svg);
+    var W = Math.round(parseFloat(cs.width) || 0);
+    var H = Math.round(parseFloat(cs.height) || 0);
+    if (W < 40 || H < 40) { // layout genuinely not ready yet -- retry
       clearTimeout(judgeDust.retry);
       judgeDust.retry = setTimeout(prepareJudgeDust, 450);
       return;
     }
     judgeDust.preparing = true;
-
-    var W = Math.round(rect.width), H = Math.round(rect.height);
     var xml = new XMLSerializer().serializeToString(svg);
     if (xml.indexOf("xmlns=") === -1) {
       xml = xml.replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ');
@@ -100,10 +102,18 @@
         // edges (the grains fly up-left), so there is no visible boundary
         // for the dust to clip against -- it either fades mid-air or
         // leaves the screen itself (.pin's overflow:hidden edge IS the
-        // screen edge). rect was measured with the stage at rest (beat 3,
-        // translate 0), so these distances are the real ones.
-        var pad = Math.max(40, Math.ceil(rect.left) + 40);
-        var padTop = Math.max(40, Math.ceil(rect.top) + 40);
+        // screen edge). Distances come from the offset* chain up to the
+        // pin (layout coordinates, transform-free): during the snap the
+        // pin is stuck at the viewport's top-left and the stage's beat-3
+        // translate is 0, so layout position == on-screen position.
+        var pad = 40, padTop = 40, anc = stage;
+        while (anc && !(anc.classList && anc.classList.contains("pin"))) {
+          pad += anc.offsetLeft;
+          padTop += anc.offsetTop;
+          anc = anc.offsetParent;
+        }
+        pad = Math.max(40, Math.ceil(pad));
+        padTop = Math.max(40, Math.ceil(padTop));
         var cv = document.createElement("canvas");
         cv.className = "judge-dust-canvas";
         cv.width = (W + pad) * dpr; cv.height = (H + padTop) * dpr;
@@ -819,4 +829,26 @@
   // has actually happened at least once (see resetIdle above).
   pin.classList.add("is-idle");
   startBubbles();
+
+  // Rasterise the judge's grain field NOW, at load -- not on arrival at
+  // beat 3 -- so the Thanos snap can never race the sampler (the race was
+  // why the old filter fallback "sometimes" showed up). The beat-3 hook
+  // stays as a no-op safety (prepare guards against double runs).
+  prepareJudgeDust();
+
+  // A resize invalidates the sampled grain positions/canvas size; rebuild
+  // the field once the resize settles (never mid-snap).
+  var judgeDustResizeT = null;
+  window.addEventListener("resize", function () {
+    clearTimeout(judgeDustResizeT);
+    judgeDustResizeT = setTimeout(function () {
+      if (judgeDust.running || judgeExitActive || judgeDust.preparing) return;
+      if (judgeDust.canvas && judgeDust.canvas.parentNode) {
+        judgeDust.canvas.parentNode.removeChild(judgeDust.canvas);
+      }
+      judgeDust.ready = false;
+      judgeDust.canvas = judgeDust.ctx = judgeDust.parts = null;
+      prepareJudgeDust();
+    }, 350);
+  });
 })();
