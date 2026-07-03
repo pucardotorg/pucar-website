@@ -42,13 +42,12 @@
   }
 
   function openModal(p) {
-    typeEl.textContent = p.author || "";
+    // credit line only -- author · publication. No type/outlet/tag chips
+    // in the modal (explicit request); those stay on the cards.
+    typeEl.textContent = [p.author, p.outlet].filter(Boolean).join(" · ");
     titleEl.textContent = p.title;
-    metaEl.innerHTML =
-      '<span class="collab-cat">' + esc(p.type || "View") + "</span>" +
-      (p.outlet ? '<span class="collab-status">' + esc(p.outlet) + "</span>" : "");
-    chipsEl.innerHTML = (p.tags || [])
-      .map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("");
+    metaEl.innerHTML = "";
+    chipsEl.innerHTML = "";
     bodyEl.innerHTML = p.html || "";
     if (p.url) {
       origEl.href = p.url;
