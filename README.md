@@ -60,8 +60,8 @@ Brand colours, given directly by the client (not sampled from anywhere):
 |---|---|---|
 | `--green` | `#30CF8C` | Dominant accent — **dark backgrounds only**, see rule below. Also the exact colour of the logo mark (`assets/pucar-normal-expanded.png`, sampled and confirmed pixel-identical). |
 | `--pink` | `#DA6EAA` | Secondary accent. Eyebrow labels, tag/chip highlights, footer link hover. No light/dark restriction. |
-| `--forest` | `#123726` | Dark background *and* the light-background stand-in for `--green` (see rule below). Also replaces the old navy-blue dark background (beat 5, nav hover). |
-| `--forest-deep` | `#0B2417` | Darkest background. Replaces the old navy-deep (beat 7, footer). |
+| `--forest` | `#111F26` | Dark background *and* the light-background stand-in for `--green` (see rule below). Also replaces the old navy-blue dark background (beat 5, nav hover). |
+| `--forest-deep` | `#0A151A` | Darkest background. Replaces the old navy-deep (beat 7, footer). |
 | `--green-soft` | `#CCEBDE` | Pale tint of `--green` (~86% lightness, same hue/lower saturation). Available for soft backgrounds; not currently used anywhere but kept for consistency. |
 | `--pink-soft` | `#F1D0E2` | Pale tint of `--pink`. Used as beat 4's background tint. |
 
@@ -168,7 +168,7 @@ properties, never `fill`, `stroke`, or `color`.
     those wrapper contexts are light backgrounds (`--cream`/`--paper`), so
     this override swaps to `background: var(--forest)`, `color: var(--paper)`
     (light text now, since the background itself is dark) — 12.4:1
-    contrast. Hover darkens further to `#184A33`, a lighter tint of
+    contrast. Hover darkens further to `#1C3540`, a lighter tint of
     `--forest` (still reads as "hover state," 9.6:1 with `--paper`).
 - `.btn-ghost` — unaffected (uses `rgba(251,248,242,...)`, not a brand var).
 - Filter chips / tag toggles (`.chip-toggle`, active/hover states) —

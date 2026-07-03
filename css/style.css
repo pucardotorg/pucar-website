@@ -25,8 +25,8 @@
   --green-soft:   #CCEBDE; /* pale tint of --green */
   --pink:         #DA6EAA; /* secondary accent */
   --pink-soft:    #F1D0E2; /* pale tint of --pink */
-  --forest:       #123726; /* dark-green background, replaces old navy */
-  --forest-deep:  #0B2417; /* darkest-green background, replaces old navy-deep */
+  --forest:       #111F26; /* dark teal-green background, sampled from user swatch */
+  --forest-deep:  #0A151A; /* darkest shade of --forest */
 
   /* aliases: keep pre-existing rules working unchanged */
   --navy:         var(--forest);
@@ -182,9 +182,9 @@ body:has(.pin[data-beat="9"]) .site-header .logo-dark{ opacity:1; }
   transition: background .2s ease, translate .2s ease, box-shadow .2s ease;
 }
 .header-cta:hover{
-  background:#184A33; /* lighter forest -- same hover family as .btn-primary on light */
+  background:#1C3540; /* lighter forest -- same hover family as .btn-primary on light */
   translate:0 -1px;
-  box-shadow:0 6px 16px rgba(18,55,38,.28);
+  box-shadow:0 6px 16px rgba(17,31,38,.3);
 }
 /* on the story's dark half the forest button would sink into the forest
    background -- flip to the bright brand green (dark-bg only, per the
@@ -359,7 +359,7 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
   background:var(--forest);
   border-radius:22px;
   padding:clamp(22px, 2.8vw, 36px);
-  box-shadow:0 26px 60px rgba(18,55,38,.28);
+  box-shadow:0 26px 60px rgba(17,31,38,.3);
   rotate:.5deg;
 }
 .board-eyebrow{
@@ -1516,13 +1516,21 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
   50%{ transform:translateY(6px); }
 }
 
+.values-label{
+  margin:26px 0 0;
+  font-size:.72rem;
+  font-weight:600;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:rgba(251,248,242,.55);
+}
 .value-chips{
   list-style:none;
   display:flex;
   flex-wrap:wrap;
   gap:10px;
   padding:0;
-  margin:22px 0 0;
+  margin:12px 0 0;
 }
 .value-chips li{
   padding:9px 16px;
@@ -1583,7 +1591,7 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
 .intro-hero .btn-primary{ background:var(--forest); color:var(--paper); } /* dark bg here, so light text -- paper on forest is 12.4:1 */
 .job-page .btn-primary:hover,
 .job-modal-panel .btn-primary:hover,
-.intro-hero .btn-primary:hover{ background:#184A33; } /* lighter shade of --forest, for hover */
+.intro-hero .btn-primary:hover{ background:#1C3540; } /* lighter shade of --forest, for hover */
 .btn-ghost{ border:1px solid rgba(251,248,242,.4); color:var(--paper); }
 .btn-ghost:hover{ background:rgba(251,248,242,.12); }
 
