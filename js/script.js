@@ -226,6 +226,41 @@
     }
   }
 
+  // ---- beat 1 pendency queue ----------------------------------------------
+  // Four clones of the litigant, coats recoloured, queued in front of
+  // (below, +%) and behind (above, -%) her. Built once here; everything
+  // about how/when they move is CSS driven off .pin[data-beat] -- see
+  // .queue-fig in style.css. Clones drop their id/aria and their <defs>
+  // (clip-path url() refs resolve to the original's defs, and duplicating
+  // ids would be invalid); they keep the .litigant class so the ordinary
+  // walk-cycle rules animate their legs whenever the page scrolls.
+  var QUEUE = [
+    { slot: "-184%", coat: "#4e6e8e" }, // behind, far
+    { slot: "-92%",  coat: "#7d8a4a" }, // behind, near
+    { slot: "92%",   coat: "#b3775a" }, // in front, near
+    { slot: "184%",  coat: "#c05f7c" }  // in front, far
+  ];
+
+  (function buildQueue() {
+    var src = document.getElementById("litigant");
+    if (!src || !litigantStage) return;
+    QUEUE.forEach(function (q) {
+      var clone = src.cloneNode(true);
+      clone.removeAttribute("id");
+      clone.removeAttribute("role");
+      clone.removeAttribute("aria-label");
+      clone.setAttribute("aria-hidden", "true");
+      var defs = clone.querySelector("defs");
+      if (defs) defs.parentNode.removeChild(defs);
+      Array.prototype.forEach.call(clone.querySelectorAll('[fill="#754a76"]'), function (p) {
+        p.setAttribute("fill", q.coat); // the coat -- their "t-shirt colour"
+      });
+      clone.classList.add("queue-fig");
+      clone.style.setProperty("--q-slot", q.slot);
+      litigantStage.appendChild(clone);
+    });
+  })();
+
   // Set true the first time a genuine "scroll" event fires (see the
   // listener bound to resetIdle further down) -- guards the entrance
   // hook in setActiveBeat below from firing on the synthetic setActiveBeat(0)
@@ -347,12 +382,14 @@
       setActiveBeat(nearest);
     }
 
-    // she starts sliding toward centre as soon as beat 1 begins and is fully
-    // there by beat 2 -- a continuous function of scroll position (not a
+    // she stays on the LEFT through beats 0-2 (invisible-litigant, the
+    // pendency queue, and the judge's bench -- where she's absent anyway),
+    // then slides toward centre across beat 3's approach and is fully
+    // centred by beat 3 -- a continuous function of scroll position (not a
     // discrete flip at the beat boundary), which is what actually makes it
     // feel smooth: the motion is exactly as fast as the user's scrolling,
     // never a fixed-duration animation firing at one scroll pixel.
-    targetCenterT = smoothstep(clamp(beatFloat - 1, 0, 1));
+    targetCenterT = smoothstep(clamp(beatFloat - 2, 0, 1));
     requestCenterTick();
 
     // ---- section-based existence -------------------------------------

@@ -416,6 +416,12 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   background-position:center;
   background-repeat:repeat-y;
   opacity:.10;
+  /* slow fade used by the entrance (see .pin:not(.is-revealed) .path in the
+     entrance block) -- a transition, NOT a keyframe animation, on purpose:
+     an animation shorthand here would displace pathScroll and restart it
+     from 0 when it ended, snapping the dash background-position -- the
+     "road jitters at the end" bug. */
+  transition:opacity 2s ease;
   animation: pathScroll 1.1s linear infinite;
   animation-play-state:paused;
 }
@@ -432,13 +438,20 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   background:radial-gradient(ellipse at center, rgba(0,0,0,.28), transparent 70%);
   transform:translateX(-50%);
   filter:blur(2px);
+  /* opacity lives HERE, not in the keyframes: shadowPulse used to animate
+     opacity too, which meant the (even paused) animation overrode any
+     opacity rule on the element -- making it impossible to hide the shadow
+     during the walk-in entrance (it sat visible on the ground before she
+     arrived). Keyframes are transform-only now; the pulse reads the same. */
+  opacity:.55;
+  transition:opacity .7s ease;
   animation: shadowPulse 1.1s ease-in-out infinite;
   animation-play-state:paused;
 }
 .pin.is-walking .shadow{ animation-play-state:running; }
 @keyframes shadowPulse{
-  0%,100%{ opacity:.55; transform:translateX(-50%) scaleX(1); }
-  50%{ opacity:.4; transform:translateX(-50%) scaleX(.9); }
+  0%,100%{ transform:translateX(-50%) scaleX(1); }
+  50%{ transform:translateX(-50%) scaleX(.9); }
 }
 
 .litigant{
@@ -553,7 +566,10 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
    revealLitigantPlainly() in js/script.js), .is-revealed alone reveals her
    with the plain fade above -- no walk-in, since there's no "arriving at
    beat 0" moment to hang one on. */
-.pin.is-entrance .litigant{
+.pin.is-entrance #litigant{
+  /* #litigant (the original figure), NOT .litigant -- the pendency-queue
+     clones share the .litigant class for the walk-cycle rules and must not
+     inherit the walk-in translate. */
   /* Targets .litigant (the <svg> figure) and NOT .litigant-stage: the stage
      also contains the dotted road (.path) and the shadow, and animating the
      whole stage made the road slide down WITH her -- reading as "the road
@@ -573,20 +589,25 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
      a gentle settle in the last quarter. */
   animation: lateWalkIn 2.2s cubic-bezier(.4,.4,.6,1) both;
 }
-/* The dotted road doesn't move during the entrance at all -- it just fades
-   in slowly, in place, while she walks down over it. This shorthand also
-   (deliberately) displaces the road's usual pathScroll animation for the
-   duration of the entrance: her own motion over a STATIC road is what
-   sells the walking; dashes scrolling underneath her at the same time
-   read as the road moving too. pathScroll resumes as normal once
-   .is-entrance comes off (next scroll with .is-walking). */
-.pin.is-entrance .path{
-  animation: pathFadeIn 2.4s ease both;
-}
-@keyframes pathFadeIn{
-  from{ opacity:0;   }
-  to  { opacity:.10; }   /* .path's resting opacity -- keep in sync with the base .path rule */
-}
+/* The dotted road doesn't move during the entrance -- it fades in slowly,
+   in place, while she walks down over it (opacity 0 pre-reveal, then the
+   2s transition declared on .path itself takes it to rest). This used to
+   be a keyframe animation on the `animation` shorthand -- which displaced
+   pathScroll and RESTARTED it (background-position snapping back to 0)
+   the moment the entrance ended: the "road jitters a little at the end"
+   bug. A transition + a play-state longhand never touches pathScroll's
+   clock. The paused rule below outranks `.pin.is-walking .path` (equal
+   specificity) purely by source order -- keep this block after it. */
+.pin:not(.is-revealed) .path{ opacity:0; }
+.pin.is-entrance .path{ animation-play-state:paused; } /* her motion over a STATIC road is what sells the walk-in */
+
+/* The shadow doesn't exist until she lands: it's her contact with the
+   ground, so showing it while she's still mid-air read as "the shadow
+   shows up in place before her." It fades in via .shadow's own .7s
+   opacity transition the moment .is-entrance comes off (~when she lands).
+   Requires shadowPulse to be transform-only -- see .shadow above. */
+.pin:not(.is-revealed) .shadow,
+.pin.is-entrance .shadow{ opacity:0; }
 /* -70vh, not a fixed pixel offset: .litigant-stage sits align-self:center
    inside .pin, which is exactly 100vh tall with overflow:hidden -- so her
    resting position is already ~50vh down from the pin's (clipped) top
@@ -602,13 +623,130 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
    (-70vh -> -16vh -> +3vh overshoot -> 0) decelerated into and
    re-accelerated out of every intermediate stop -- three visible hitches.
    A single 0%->100% segment gives one continuous, smoothly decelerating
-   descent. No opacity fade either: she starts fully opaque but clipped
-   above the pin's overflow:hidden edge, so she appears by *walking into
-   frame*, which is the point (opacity:1 at 0% also overrides the .4s
-   fallback-reveal transition that would otherwise run underneath). */
+   descent. No opacity in the keyframes at all: she starts fully opaque but
+   clipped above the pin's overflow:hidden edge, so she appears by *walking
+   into frame* -- and beat 0's greyscale/half-opacity treatment (see the
+   "invisible litigant" block below) stays free to own the opacity channel
+   even while the walk-in runs. */
 @keyframes lateWalkIn{
-  0%   { opacity:1; translate:0 -70vh; }
-  100% { opacity:1; translate:0 0;     }
+  0%   { translate:0 -70vh; }
+  100% { translate:0 0;     }
+}
+
+/* ---- beat 0: "to most courts, the litigant is invisible" -------------------
+   She's on screen but barely there: greyscale at half opacity, smoothly
+   transitioning back to full colour as beat 1 begins. Scoped to #litigant
+   so the queue clones (same class) are unaffected, and applied via
+   filter/opacity (not display) so the walk-in entrance runs "ghosted",
+   which suits the line. lateWalkIn deliberately carries no opacity
+   keyframes so this rule owns the channel throughout. */
+#litigant{ transition: filter 1.1s ease, opacity 1.1s ease; }
+.pin[data-beat="0"] #litigant{
+  filter:grayscale(1);
+  opacity:.5;
+}
+
+/* ---- beat 1: the pendency queue ---------------------------------------------
+   Four clones of the litigant (built once by js/script.js -- same figure,
+   recoloured coat, no ids/defs) queue up in front of (below) and behind
+   (above) her along the road. They enter walking down-screen from above
+   (--q-slot is each one's place in line, in % of their own height), and
+   leave down-screen past the bottom on later beats -- so both in and out
+   read as walking the queue's direction, not backing up. Their leg/arm
+   cycles come free: they carry the same .fig/.leg/.arm classes, so the
+   ordinary .is-walking rules animate them whenever the page scrolls. */
+.queue-fig{
+  position:absolute;
+  left:0; top:0;
+  width:100%;
+  opacity:0;
+  translate:0 calc(var(--q-slot, 0%) - 70vh);  /* waiting off-screen above */
+  transition: translate 1.7s cubic-bezier(.45,.15,.35,1), opacity .9s ease;
+  pointer-events:none;
+  will-change: translate, opacity;
+}
+.pin[data-beat="1"] .queue-fig{
+  opacity:1;
+  translate:0 var(--q-slot, 0%);               /* standing in line */
+}
+/* beats 2+ (any beat that isn't 0/1): they walk on past her and disappear */
+.pin:not([data-beat="0"]):not([data-beat="1"]) .queue-fig{
+  translate:0 calc(var(--q-slot, 0%) + 70vh);
+}
+
+/* ---- beat 2: she is left behind; the judge takes the bench ------------------
+   The litigant (and her whole stage: road, shadow, queue) fades out -- she
+   never walks into this section; the system speaks for itself. Equal
+   specificity to `.pin.is-revealed .litigant-stage` (which sets opacity:1),
+   so THIS rule must stay later in the file to win. */
+.pin[data-beat="2"] .litigant-stage{
+  opacity:0;
+  transition:opacity .8s ease;
+}
+
+.judge-stage{
+  position:relative;
+  z-index:5;
+  grid-column:1;
+  grid-row:1;               /* overlaps the litigant's grid cell on purpose */
+  justify-self:center;
+  align-self:center;
+  width:clamp(210px, 24vw, 330px);
+  opacity:0;
+  translate:0 7vh;
+  scale:.94;
+  transition: opacity .9s ease, translate .9s cubic-bezier(.3,.6,.3,1), scale .9s cubic-bezier(.3,.6,.3,1);
+  pointer-events:none;
+}
+.pin[data-beat="2"] .judge-stage{
+  opacity:1;
+  translate:0 0;
+  scale:1;
+}
+.judge{
+  display:block;
+  width:100%;
+  height:auto;
+  overflow:visible;
+}
+
+/* gavel swing: the two .gavel groups (hand from one source path, head+handle
+   from another -- split out of the original compound paths, z-order kept)
+   share a pivot at the wrist, same twin-group trick as the litigant's .head.
+   Raise, strike, settle, rest -- looping while the beat is active. */
+.judge .gavel{
+  will-change:transform;
+  transform-box:view-box;
+  transform-origin:190px 300px;
+}
+.pin[data-beat="2"] .judge .gavel{
+  animation: gavelSwing 2.8s ease-in-out .45s infinite;
+}
+@keyframes gavelSwing{
+  0%   { transform:rotate(0deg);   }
+  12%  { transform:rotate(26deg);  }   /* raise */
+  20%  { transform:rotate(-16deg); }   /* strike */
+  27%  { transform:rotate(-8deg);  }   /* bounce */
+  36%  { transform:rotate(0deg);   }   /* settle */
+  100% { transform:rotate(0deg);   }   /* rest until the next swing */
+}
+
+/* the judge's verdict bubble -- same hand-drawn treatment as hers (shared
+   .speech-bubble base: wobble filter, jitter, Comic Relief), shown by the
+   beat itself with a delay timed to land just after the first gavel strike
+   (.45s animation-delay + ~.7s to the strike keyframe). Leaving beat 2
+   drops the rule, and with it the delay, so it hides immediately. */
+.judge-bubble{
+  top:-3%;
+  left:36%;
+  translate:6% 10px;
+}
+.pin[data-beat="2"] .judge-bubble{
+  opacity:1;
+  translate:6% 0;
+  scale:1;
+  animation:bubbleJitter 2.6s ease-in-out infinite;
+  transition-delay:1.2s;
 }
 
 /* ---- idle look-around ------------------------------------------------------
@@ -663,7 +801,9 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
    raised position above. `.beat`'s own absolute children inherit this via
    the flex container's static-position rules, same mechanism as before. */
 @media (min-width: 861px){
-  .pin[data-beat="2"] .beats,
+  /* beat 2 is NOT in this list: she stays on the left through beats 0-2
+     (the judge takes her spot on 2), so the text keeps its right column
+     there; the bottom-left treatment starts once she's actually centred. */
   .pin[data-beat="3"] .beats,
   .pin[data-beat="4"] .beats,
   .pin[data-beat="5"] .beats,
@@ -1455,7 +1595,9 @@ body.modal-open{ overflow:hidden; }
 @media (prefers-reduced-motion: reduce){
   .litigant .fig, .litigant .leg-front, .litigant .leg-back,
   .litigant .arm-left, .litigant .arm-right, .litigant .head,
+  .judge .gavel, .speech-bubble,
   .ground-dots, .path, .shadow, .scroll-cue{ animation:none !important; }
+  .queue-fig, .judge-stage, #litigant{ transition:none !important; }
   /* Collaborate entrance: skip the animation but keep the .js-reveal
      opacity:0 rule from ever winning -- just show everything at rest
      rather than leaving it stuck invisible with nothing to trigger it. */

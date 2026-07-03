@@ -252,11 +252,45 @@ needed no special accommodation for it beyond generous top padding.
   informational value. If a future pass wants ambient decoration again,
   don't resurrect this exact approach; position anything decorative well
   clear of `.beats`' text box instead of layered behind/near it.
-- Beats 0–7: intro → pendency stat → narrative → 10-yr wait → undertrials
+- Beats 0–7 (first three rewritten Jul 2026, beats 3–7 untouched per "keep
+  all the remaining sections as is"): **invisible litigant** → **pendency
+  queue (5.5 Cr)** → **300 years / the judge** → 10-yr wait → undertrials
   (pink-tinted) → PUCAR turn (dark forest-green) → initiatives grid → CTA
   (darkest forest-green). All stats are marked `[placeholder — verify]` in
   the markup. See [§2 Design system](#2-design-system-colour-type-buttons)
   for what `--forest`/`--forest-deep`/`--pink-soft` actually resolve to.
+- **She stays on the LEFT through beats 0–2** (explicit instruction). The
+  continuous side→centre slide in `updateLitigantPosition()` is driven by
+  `beatFloat - 2` (was `- 1`), so centring happens across the 2→3
+  transition; correspondingly the bottom-left text treatment (`.beats`
+  full-row rules, §5) starts at `data-beat="3"`, not 2.
+- **Beat 0 — "To most courts, the litigant is invisible":**
+  `.pin[data-beat="0"] #litigant{ filter:grayscale(1); opacity:.5 }` with a
+  1.1s transition on `#litigant` — she walks in ghosted and regains colour
+  as beat 1 arrives. Scoped to `#litigant` (id), NOT `.litigant`, because
+  the queue clones share the class. `lateWalkIn` carries no opacity
+  keyframes precisely so this rule owns the opacity channel.
+- **Beat 1 — the pendency queue:** four clones of her figure (`buildQueue()`
+  in js/script.js — id/role/aria/defs stripped, coat paths `#754a76`
+  recoloured per clone, `.litigant .fig` walk-cycle rules apply to them for
+  free) sit at `--q-slot` offsets -184 %/-92 %/+92 %/+184 % of their own
+  height (behind/in-front along the road). All CSS-driven off
+  `.pin[data-beat]`: hidden = 70vh above their slot; beat 1 = in line;
+  beats 2+ = 70vh below (they walk on past and fade) — so both entering
+  and leaving read as walking the queue's direction, never backing up.
+  1.7s translate transition; legs animate whenever the page scrolls.
+- **Beat 2 — the judge, "case adjourned to March 2326!!":** she is left
+  behind — `.pin[data-beat="2"] .litigant-stage{ opacity:0 }` (must stay
+  AFTER `.pin.is-revealed .litigant-stage` in the file; equal specificity,
+  source order decides). `.judge-stage` (grid cell 1/1, overlapping hers)
+  fades/rises in; the gavel — two `.gavel` groups split out of the
+  original compound paths (hand from one path, head+handle from another,
+  z-order preserved; same twin-group trick as her `.head`) — swings on a
+  2.8s loop (raise 26° → strike −16° → settle → rest) around a wrist pivot
+  at `190,300`, and his speech bubble (shared `.speech-bubble` styling)
+  appears via `transition-delay:1.2s`, timed to the first strike. Judge
+  asset cleaned into `assets/judge-source.svg` (clip ids prefixed `jdg*`,
+  viewBox widened to `30 20 720 980` so the swing never clips).
 - **Walk state:** on every scroll frame the pin gets `.is-walking`; a 180 ms
   timeout removes it after scrolling stops. All walk animations and the
   ground/path/shadow layers are `animation-play-state: paused` by default
@@ -342,12 +376,27 @@ needed no special accommodation for it beyond generous top padding.
     "it looks like the road's moving with her"). The walk-in originally
     animated `.litigant-stage`, whose children include the road (`.path`)
     and shadow — so the road slid down with the figure. Now only the
-    figure descends; `.pin.is-entrance .path` runs `pathFadeIn` (opacity
-    0 → .10 over 2.4s — keep that end value in sync with `.path`'s base
-    opacity), which also *deliberately* displaces the usual `pathScroll`
-    dash animation for the entrance's duration: her motion over a static
-    road is what sells the walking. `pathScroll` resumes on the next
-    ordinary scroll.
+    figure descends; the road fades in slowly in place, and `pathScroll`
+    is paused for the entrance (her motion over a static road sells the
+    walking).
+  - **Road fade is a `transition` + a play-state longhand, NOT a keyframe
+    animation** (fixed "the dotted road jitters a little at the end"): the
+    first version put a `pathFadeIn` animation on the `animation`
+    shorthand, which displaced `pathScroll` and restarted it from 0 when
+    the entrance ended — the dash `background-position` visibly snapped.
+    Now `.path` carries `transition:opacity 2s`, `.pin:not(.is-revealed)
+    .path{opacity:0}` provides the from-state, and `.pin.is-entrance
+    .path{animation-play-state:paused}` (which must stay AFTER
+    `.pin.is-walking .path` in source order — equal specificity) pauses
+    the dashes without ever touching their clock.
+  - **The shadow doesn't exist until she lands** (fixed "her shadow shows
+    up in place before her"): `.pin:not(.is-revealed) .shadow` and
+    `.pin.is-entrance .shadow` hold it at `opacity:0`; it fades in via
+    `.shadow`'s own .7s transition when `.is-entrance` comes off, right
+    as she arrives. This required making `shadowPulse` **transform-only**
+    — it used to animate opacity too, and even a paused animation
+    overrides the element's opacity declarations, which is exactly why
+    the shadow couldn't be hidden before.
   - **Her descent speed is matched to her feet** (Jul 2026 fix: "she
     slides in faster than her feet are moving"). At desktop size the
     figure renders ~0.6× its viewBox, so one .35s run cycle strides
