@@ -45,12 +45,14 @@
     <img class="logo-dark logo-dark-long" src="/assets/pucar-white-expanded.avif" alt="PUCAR — Public Collective for Avoidance and Resolution of Disputes" width="835" height="100" />
     <img class="logo-dark logo-dark-short" src="/assets/pucar-white-short.png" alt="PUCAR" width="379" height="87" />
   </a>
-  <nav class="site-nav">
-    <a href="#story">The Journey</a>
-    <a href="#initiatives">Initiatives</a>
-    <a href="#collaborate">Collaborate</a>
-    <a href="#cta">Get in touch</a>
-  </nav>
+  <div class="header-right">
+    <nav class="site-nav">
+      <a href="#story">The Journey</a>
+      <a href="#initiatives">Initiatives</a>
+      <a href="#collaborate">Collaborate</a>
+    </nav>
+    <button class="btn header-cta" type="button" id="contactOpen">Get in touch</button>
+  </div>
 </header>
 
 <main id="top">
@@ -64,7 +66,7 @@
         <p class="intro-hook">Find out what happens when you design courts by putting citizens at the centre.</p>
         <p class="intro-skip">Skip the story. Find out how you can collaborate.</p>
         <div class="intro-actions cta-row">
-          <a class="btn btn-primary btn-with-icon" href="#story">Tell me more <span class="btn-arrow" aria-hidden="true">↓</span></a>
+          <a class="btn btn-primary btn-with-icon" href="#story"><span class="btn-arrow" aria-hidden="true">↓</span> Tell me more</a>
           <a class="btn btn-ghost btn-with-icon" href="#collaborate"><span class="board-live" aria-hidden="true"></span>Collaborate</a>
         </div>
       </div>
@@ -337,6 +339,39 @@
   </div>
 </div>
 
+<!-- contact modal: a Netlify form (data-netlify) -- the form MUST exist in
+     the deployed static HTML for Netlify's build-time parser to register
+     it; js/contact.js submits it via fetch and swaps in the success note. -->
+<div class="job-modal contact-modal" id="contactModal" hidden>
+  <div class="job-modal-backdrop" data-close></div>
+  <div class="job-modal-panel contact-panel" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+    <button class="job-modal-close" type="button" data-close aria-label="Close">×</button>
+    <p class="beat-eyebrow">PUCAR</p>
+    <h2 class="job-title" id="contactTitle">Get in touch</h2>
+    <form class="contact-form" id="contactForm" name="contact" method="POST" action="/" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="contact" />
+      <p class="contact-hp" hidden aria-hidden="true"><label>Don't fill this out if you're human: <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+      <label>Name
+        <input type="text" name="name" required autocomplete="name" />
+      </label>
+      <label>Email
+        <input type="email" name="email" required autocomplete="email" />
+      </label>
+      <label>Phone number
+        <input type="tel" name="phone" autocomplete="tel" />
+      </label>
+      <label>Your message
+        <textarea name="message" rows="5" required></textarea>
+      </label>
+      <p class="contact-error" id="contactError" hidden>Something went wrong sending that — please try again, or email <a href="mailto:collaborate@pucar.org">collaborate@pucar.org</a>.</p>
+      <div class="cta-row">
+        <button class="btn btn-primary" type="submit" id="contactSubmit">Send message</button>
+      </div>
+    </form>
+    <p class="contact-success" id="contactSuccess" hidden>Thank you for reaching out! If your message requires a response, we'll get in touch!</p>
+  </div>
+</div>
+
 <footer class="site-footer">
   <div class="footer-top">
     <img class="logo logo-long" src="/assets/pucar-white-expanded.avif" alt="PUCAR — Public Collective for Avoidance and Resolution of Disputes" width="835" height="100" />
@@ -354,5 +389,6 @@
 
 <script src="js/script.js"></script>
 <script src="js/collaborate.js"></script>
+<script src="js/contact.js"></script>
 </body>
 </html>

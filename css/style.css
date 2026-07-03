@@ -146,6 +146,77 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
 }
 .site-nav a:hover{ background:var(--navy); color:var(--paper); }
 
+/* nav + the Get in touch CTA sit together on the right */
+.header-right{
+  pointer-events:auto;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.header-cta{
+  border:none;
+  cursor:pointer;
+  font-family:var(--font-body);
+  background:var(--forest);
+  color:var(--paper);
+  padding:12px 22px;
+}
+.header-cta:hover{ background:#184A33; }
+/* on the story's dark half the forest button would sink into the forest
+   background -- flip to the bright brand green (dark-bg only, per the
+   palette rule), same mechanism as the logo swap */
+body:has(.pin[data-beat="4"]) .header-cta,
+body:has(.pin[data-beat="5"]) .header-cta,
+body:has(.pin[data-beat="6"]) .header-cta,
+body:has(.pin[data-beat="7"]) .header-cta,
+body:has(.pin[data-beat="8"]) .header-cta{
+  background:var(--green);
+  color:var(--ink);
+}
+
+/* ---------------- contact modal + Netlify form ---------------- */
+.contact-panel{ max-width:560px; }
+.contact-form{ margin-top:10px; }
+.contact-form label{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  margin-bottom:16px;
+  font-size:.85rem;
+  font-weight:600;
+  color:var(--ink-soft);
+}
+.contact-form input,
+.contact-form textarea{
+  font:400 1rem var(--font-body);
+  color:var(--ink);
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px 14px;
+  resize:vertical;
+}
+.contact-form input:focus,
+.contact-form textarea:focus{
+  outline:2px solid var(--forest);
+  outline-offset:1px;
+  border-color:var(--forest);
+}
+.contact-form .cta-row{ margin-top:6px; }
+.contact-form .btn{ border:none; cursor:pointer; font-family:var(--font-body); }
+.contact-error{
+  font-size:.88rem;
+  color:#B0402F;
+  margin-bottom:8px;
+}
+.contact-success{
+  margin-top:18px;
+  font-size:1.08rem;
+  line-height:1.6;
+  color:var(--forest);
+  font-weight:600;
+}
+
 @media (max-width: 640px){
   .site-nav{ display:none; }
   .site-header .logo img.logo-light-long,

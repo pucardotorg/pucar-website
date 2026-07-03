@@ -284,6 +284,30 @@ body, CTA), Bengaluru round-table + online discussion placeholders.
 The page is in `sitemap.xml`; `sc-ai-policy/` is a GENERATED directory —
 never hand-edit it.
 
+### 3.3 Header CTA + contact modal (Netlify Form)
+
+"Get in touch" no longer lives inside the nav pill: it's a solid CTA
+button (`.header-cta`, `#contactOpen`) to the right of the nav (both
+wrapped in `.header-right`). Forest-on-light by default; on the story's
+dark half it flips to bright `--green` via the same `body:has(.pin
+[data-beat=4..8])` mechanism as the logo swap. On ≤640px the nav hides
+but the CTA stays.
+
+Clicking it opens `#contactModal` (shared job-modal chrome) containing a
+**Netlify Form** (`name="contact"`): name*, email*, phone (optional),
+message*. Netlify-forms requirements that MUST NOT be broken: the form
+exists statically in index.html with `data-netlify="true"`, a hidden
+`form-name` input, and a `netlify-honeypot="bot-field"` — Netlify's
+build-time parser registers forms from the deployed HTML, so a
+JS-injected form would silently never receive submissions.
+`js/contact.js` submits via fetch (urlencoded POST to `/`, Netlify's
+documented AJAX pattern) and swaps in the success line — exact copy,
+by request: "Thank you for reaching out! If your message requires a
+response, we'll get in touch!" Errors (e.g. local preview, where there's
+no Netlify to receive it) show an inline fallback with the collaborate@
+email. Submissions appear in the Netlify dashboard under Forms;
+notification emails can be configured there.
+
 ## 4. The story (scrollytelling)
 
 - `#story` is `height: calc(var(--beats) * 100vh)` with `--beats:8` set
