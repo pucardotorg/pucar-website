@@ -1,11 +1,11 @@
 {
   "title": "Open online discussion: what should citizen feedback say?",
   "city": "Online",
-  "date_display": "[placeholder — date TBC]",
-  "time_display": "[placeholder — time TBC]",
-  "venue": "Video call — link on registration",
-  "description": "A community call for anyone who wants to understand the draft and contribute to a joint submission — no legal background needed. [placeholder — details to be confirmed]",
-  "url": "mailto:collaborate@pucar.org?subject=Online%20discussion%20—%20SC%20AI%20Regulations",
+  "date_display": "[placeholder, date TBC]",
+  "time_display": "[placeholder, time TBC]",
+  "venue": "Video call, link on registration",
+  "description": "A community call for anyone who wants to understand the draft and contribute to a joint submission, no legal background needed. [placeholder, details to be confirmed]",
+  "url": "mailto:collaborate@pucar.org?subject=Online%20discussion%20-%20SC%20AI%20Regulations",
   "cta": "Register interest",
   "published": true,
   "order": 2

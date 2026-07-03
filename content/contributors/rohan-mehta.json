@@ -1,11 +1,11 @@
 {
   "name": "Rohan Mehta",
-  "role": "Data engineer — Court Performance",
+  "role": "Data engineer, Court Performance",
   "photo": "",
   "email": "",
   "links": [
     { "label": "GitHub", "url": "https://github.com/pucardotorg" }
   ],
   "published": true,
-  "body": "Rohan builds the open data pipelines behind PUCAR's court performance dashboards and mentors new open-source contributors.\n\n[placeholder bio + placeholder person — replace before launch]"
+  "body": "Rohan builds the open data pipelines behind PUCAR's court performance dashboards and mentors new open-source contributors.\n\n[placeholder bio + placeholder person, replace before launch]"
 }

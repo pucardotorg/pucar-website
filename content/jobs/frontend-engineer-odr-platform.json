@@ -7,7 +7,7 @@
   "term": "Permanent",
   "category": "Development",
   "difficulty": "High",
-  "summary": "Own the litigant-facing web experience of the open-source Online Dispute Resolution platform — accessibility-first, multilingual, low-bandwidth.",
+  "summary": "Own the litigant-facing web experience of the open-source Online Dispute Resolution platform: accessibility-first, multilingual, low-bandwidth.",
   "commitment": "Full-time",
   "location": "Remote (India) · quarterly meetups",
   "tags": [
@@ -15,10 +15,10 @@
     "Accessibility",
     "Open source"
   ],
-  "apply_url": "mailto:collaborate@pucar.org?subject=HMW%20—%20Frontend%20engineering%20(DRISTI%202.0)",
+  "apply_url": "mailto:collaborate@pucar.org?subject=HMW%20-%20Frontend%20engineering%20(DRISTI%202.0)",
   "posted_by": "varun-h",
   "assigned_to": "",
   "status": "Open",
   "published": true,
-  "body": "## About the role\n\nA permanent engineering role with a PUCAR collective member organisation, building the open ODR platform used by partner institutions.\n\n[placeholder description — refine with the actual scope before publishing]\n\n## What you'll do\n\n- Ship litigant-facing flows: filing, notices, hearings, settlement\n- Hold a high bar on accessibility, language support, and performance on low-end devices\n- Work in the open — public repo, public roadmap\n\n## Who this suits\n\n- 3+ years building production web apps (React or similar)\n- Care for users who are stressed, rushed, and often on 2G\n- Comfort collaborating with legal-domain experts\n\n## How it works\n\nPaid, permanent role. Interviews include a short paired exercise on a real issue from the repo."
+  "body": "## About the role\n\nA permanent engineering role with a PUCAR collective member organisation, building the open ODR platform used by partner institutions.\n\n[placeholder description, refine with the actual scope before publishing]\n\n## What you'll do\n\n- Ship litigant-facing flows: filing, notices, hearings, settlement\n- Hold a high bar on accessibility, language support, and performance on low-end devices\n- Work in the open, public repo, public roadmap\n\n## Who this suits\n\n- 3+ years building production web apps (React or similar)\n- Care for users who are stressed, rushed, and often on 2G\n- Comfort collaborating with legal-domain experts\n\n## How it works\n\nPaid, permanent role. Interviews include a short paired exercise on a real issue from the repo."
 }

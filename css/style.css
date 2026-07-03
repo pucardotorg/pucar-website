@@ -1166,6 +1166,51 @@ body:has(.pin[data-beat="8"]) .header-cta:hover{
   transition:none;
 }
 
+/* ---- beat 4: reimagining justice around the citizen -------------------------
+   Concentric circles around her FEET (the orbit centre sits at ~87% of the
+   walker's height, where her shoes are), with solid brand-colour dots
+   orbiting along the ring paths. Rings + dots live inside the walker so
+   they travel with her, and only exist on beat 4. Spinning the ring
+   element itself carries its dot around the path; different durations
+   and directions keep it feeling alive rather than mechanical. */
+.orbits{
+  position:absolute;
+  left:50%;
+  top:87%;
+  width:100%;
+  aspect-ratio:1;
+  translate:-50% -50%;
+  opacity:0;
+  transition:opacity 1s ease .4s;   /* fades in after she lands */
+  pointer-events:none;
+}
+.pin[data-beat="4"] .orbits{ opacity:1; }
+.orbit{
+  position:absolute;
+  left:50%; top:50%;
+  translate:-50% -50%;
+  aspect-ratio:1;
+  border:1px solid rgba(251,248,242,.26);  /* beat 4 is the forest half: paper rings */
+  border-radius:50%;
+  animation: orbitSpin linear infinite;
+}
+.orbit-1{ width:52%;  animation-duration:9s;  }
+.orbit-2{ width:86%;  animation-duration:15s; animation-direction:reverse; }
+.orbit-3{ width:122%; animation-duration:22s; }
+@keyframes orbitSpin{ to{ rotate:360deg; } }
+.orb{
+  position:absolute;
+  top:-6px; left:50%;
+  margin-left:-6px;
+  width:12px; height:12px;
+  border-radius:50%;
+  box-shadow:0 0 10px rgba(0,0,0,.25);
+}
+.orbit-2 .orb + .orb{ top:auto; bottom:-6px; }  /* second dot rides the far side */
+.orb-green{ background:var(--green); }
+.orb-pink { background:var(--pink);  }
+.orb-paper{ background:var(--paper); }
+
 /* ---- idle look-around ------------------------------------------------------
    After 10s without scrolling js/script.js adds .is-idle to the pin: the two
    .head groups (face skin + hair/bun, split to preserve z-order) turn to
@@ -2103,7 +2148,7 @@ body.scroll-locked{ overflow:hidden; }
   .litigant .fig, .litigant .leg-front, .litigant .leg-back,
   .litigant .arm-left, .litigant .arm-right, .litigant .head,
   .judge .gavel, .speech-bubble,
-  .board-note, .board-live, .btn-arrow,
+  .board-note, .board-live, .btn-arrow, .orbit,
   .ground-dots, .path, .shadow, .scroll-cue{ animation:none !important; }
   .queue-fig, .judge-stage, #litigant{ transition:none !important; }
   .pin.is-judge-exit .judge-stage, .judge-dust i{ animation:none !important; }

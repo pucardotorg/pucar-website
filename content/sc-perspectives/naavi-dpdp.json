@@ -9,7 +9,7 @@
     "DPDP Act"
   ],
   "order": 3,
-  "summary": "The draft mandates DPDP Act compliance — but that Act is silent on automated decision-making, creating a circularity problem.",
-  "body": "## Key critiques\n\n- The draft mandates compliance with the DPDP Act 2023 — but the DPDP Act is itself **silent on automated decision-making and profiling**\n- Unlike GDPR Article 22, Indian law gives no right *not* to be subjected to decisions based solely on automated processing\n- Risks of algorithmic bias, transparency failures, and errors remain legally unaddressed under current data-protection law\n- This creates a **circularity problem**: the regulations instruct courts to follow a data-protection law that doesn't cover the very AI risks the regulations are trying to manage",
+  "summary": "The draft mandates DPDP Act compliance, but that Act is silent on automated decision-making, creating a circularity problem.",
+  "body": "## Key critiques\n\n- The draft mandates compliance with the DPDP Act 2023, but the DPDP Act is itself **silent on automated decision-making and profiling**\n- Unlike GDPR Article 22, Indian law gives no right *not* to be subjected to decisions based solely on automated processing\n- Risks of algorithmic bias, transparency failures, and errors remain legally unaddressed under current data-protection law\n- This creates a **circularity problem**: the regulations instruct courts to follow a data-protection law that doesn't cover the very AI risks the regulations are trying to manage",
   "published": true
 }

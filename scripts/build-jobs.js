@@ -145,15 +145,15 @@ function pageShell(opts) {
 (opts.jsonLd ? '<script type="application/ld+json">' + JSON.stringify(opts.jsonLd) + "</script>\n" : "") +
 '</head>\n<body class="job-page">\n' +
 '<header class="site-header">\n  <a class="logo" href="/">\n' +
-'    <img class="logo-light logo-light-long" src="/assets/pucar-normal-expanded.png" alt="PUCAR — Public Collective for Avoidance and Resolution of Disputes" width="777" height="93" />\n' +
+'    <img class="logo-light logo-light-long" src="/assets/pucar-normal-expanded.png" alt="PUCAR: Public Collective for Avoidance and Resolution of Disputes" width="777" height="93" />\n' +
 '    <img class="logo-light logo-light-short" src="/assets/logo-pucar-green.avif" alt="PUCAR" width="401" height="100" />\n' +
-'    <img class="logo-dark logo-dark-long" src="/assets/pucar-white-expanded.avif" alt="PUCAR — Public Collective for Avoidance and Resolution of Disputes" width="835" height="100" />\n' +
+'    <img class="logo-dark logo-dark-long" src="/assets/pucar-white-expanded.avif" alt="PUCAR: Public Collective for Avoidance and Resolution of Disputes" width="835" height="100" />\n' +
 '    <img class="logo-dark logo-dark-short" src="/assets/pucar-white-short.png" alt="PUCAR" width="379" height="87" />\n' +
 '  </a>\n' +
 '  <nav class="site-nav"><a href="' + opts.backHref + '">' + opts.backLabel + "</a></nav>\n</header>\n" +
 '<main class="job-main">\n' + opts.main + "\n</main>\n" +
 '<footer class="site-footer">\n  <div class="footer-top">' +
-'<img class="logo logo-long" src="/assets/pucar-white-expanded.avif" alt="PUCAR — Public Collective for Avoidance and Resolution of Disputes" width="835" height="100" />' +
+'<img class="logo logo-long" src="/assets/pucar-white-expanded.avif" alt="PUCAR: Public Collective for Avoidance and Resolution of Disputes" width="835" height="100" />' +
 '<img class="logo logo-short" src="/assets/pucar-white-short.png" alt="PUCAR" width="379" height="87" />\n' +
 "    <p>PUCAR is an unregistered non-profit public mission facilitating a collective of individuals and organizations to contribute their experience and expertise to advance new ideas and approaches in dispute resolution systems.</p>\n" +
 '  </div>\n  <p class="footer-copy">© 2026 PUCAR.</p>\n</footer>\n</body>\n</html>\n';
@@ -216,7 +216,7 @@ function jobPage(job) {
       : '    <span class="btn btn-outline is-disabled">' + esc(job.status) + "</span>\n") +
     '    <a class="btn btn-outline" href="/#collaborate">See all work</a>\n  </div>';
   return pageShell({
-    title: job.title + " — Collaborate with PUCAR",
+    title: job.title + " | Collaborate with PUCAR",
     desc: job.summary, url: job.url, jsonLd: jsonLd,
     backHref: "/#collaborate", backLabel: "← All work", main: main
   });
@@ -249,7 +249,7 @@ function contributorPage(person) {
     (taken.length ? '  <h2 class="contrib-sub">Work taken up</h2>\n  <ul class="contrib-jobs">' +
       taken.map(function (j) { return jobLine(j, j.status === "Completed" ? "Completed" : "In progress"); }).join("") + "</ul>\n" : "");
   return pageShell({
-    title: person.name + " — PUCAR contributor",
+    title: person.name + " | PUCAR contributor",
     desc: (person.role ? person.role + ". " : "") + "Contributor to the PUCAR collective.",
     url: person.url,
     jsonLd: { "@context": "https://schema.org", "@type": "Person", name: person.name, description: person.role,
@@ -330,9 +330,9 @@ function scPolicyPage() {
 '  <p class="beat-eyebrow">PUCAR // Public consultation</p>\n' +
 '  <h1 class="job-title">The Supreme Court wants your views on AI in its courts.</h1>\n' +
 '  <article class="job-body">\n' +
-"    <p>On 3 June 2026, the Supreme Court's Artificial Intelligence Committee published the draft <strong>Regulations for Use of Artificial Intelligence (AI) in Courts, 2026</strong> — a first-of-its-kind framework covering the Supreme Court, all High Courts, subordinate courts, tribunals, and statutory bodies performing adjudicatory roles.</p>\n" +
-"    <p>The draft rests on a simple hierarchy: <strong>AI may assist, but never adjudicate.</strong> It permits AI for research, summarisation, translation, transcription, scheduling, litigant-assistance chatbots, and court analytics — and absolutely prohibits AI-only decisions, AI-based risk scoring for bail or credibility, predictive profiling, surveillance of judges or lawyers, and undisclosed AI-generated evidence. Lawyers must disclose AI use in filings, and a permanent Apex Body at the Supreme Court would approve and supervise tools across the system.</p>\n" +
-'    <p><strong>Citizen feedback is open until 15 July 2026</strong> (extended from June 20). Anyone — lawyers, technologists, litigants, or curious citizens — can email comments to the Member Secretary, AI Committee, at <a href="mailto:office.regcc@sci.nic.in">office.regcc@sci.nic.in</a>.<sup>[verify status before publishing — sources: SCC Online, LiveLaw, The Week, Jun 2026]</sup></p>\n' +
+"    <p>On 3 June 2026, the Supreme Court's Artificial Intelligence Committee published the draft <strong>Regulations for Use of Artificial Intelligence (AI) in Courts, 2026</strong>, a first-of-its-kind framework covering the Supreme Court, all High Courts, subordinate courts, tribunals, and statutory bodies performing adjudicatory roles.</p>\n" +
+"    <p>The draft rests on a simple hierarchy: <strong>AI may assist, but never adjudicate.</strong> It permits AI for research, summarisation, translation, transcription, scheduling, litigant-assistance chatbots, and court analytics, and absolutely prohibits AI-only decisions, AI-based risk scoring for bail or credibility, predictive profiling, surveillance of judges or lawyers, and undisclosed AI-generated evidence. Lawyers must disclose AI use in filings, and a permanent Apex Body at the Supreme Court would approve and supervise tools across the system.</p>\n" +
+'    <p><strong>Citizen feedback is open until 15 July 2026</strong> (extended from June 20). Anyone (lawyers, technologists, litigants, or curious citizens) can email comments to the Member Secretary, AI Committee, at <a href="mailto:office.regcc@sci.nic.in">office.regcc@sci.nic.in</a>.</p>\n' +
 "  </article>\n" +
 '  <div class="cta-row">\n' +
 '    <a class="btn btn-primary" href="mailto:office.regcc@sci.nic.in?subject=Feedback%20on%20Draft%20AI%20Regulations%20for%20Courts%2C%202026">Send the Court your feedback</a>\n' +
@@ -343,7 +343,7 @@ function scPolicyPage() {
 '  <div class="collab-head">\n' +
 '    <p class="beat-eyebrow">What people are saying</p>\n' +
 '    <h2 class="collab-title-main">The public record, so far.</h2>\n' +
-'    <p class="collab-sub">Explainers, critiques, and formal submissions on the draft regulations — click any card for a summary of the viewpoint, or open the original.</p>\n' +
+'    <p class="collab-sub">Explainers, critiques, and formal submissions on the draft regulations. Click any card for a summary of the viewpoint, or open the original.</p>\n' +
 "  </div>\n" +
 '  <div class="collab-grid" id="perspGrid">\n' +
 perspectives.map(function (p) { return perspCard(p, p.slug); }).join("\n") + "\n" +
@@ -359,7 +359,7 @@ perspectives.map(function (p) { return perspCard(p, p.slug); }).join("\n") + "\n
 '      <div class="event-when"><span class="event-city">Anywhere</span><span class="event-date">Until 15 July 2026</span></div>\n' +
 '      <div class="event-body">\n' +
 '        <h3 class="event-title">Send your suggestions</h3>\n' +
-'        <p class="event-desc">Email your comments on the draft to the Member Secretary of the Supreme Court’s AI Committee. Plain language is fine — what matters is the litigant’s point of view. Copy us in if you’d like PUCAR to build on your input.</p>\n' +
+'        <p class="event-desc">Email your comments on the draft to the Member Secretary of the Supreme Court’s AI Committee. Plain language is fine. What matters is the litigant’s point of view. Copy us in if you’d like PUCAR to build on your input.</p>\n' +
 '        <div class="cta-row">\n' +
 '          <a class="btn btn-primary event-cta" href="mailto:office.regcc@sci.nic.in?subject=Feedback%20on%20Draft%20AI%20Regulations%20for%20Courts%2C%202026&cc=collaborate@pucar.org">Email the AI Committee</a>\n' +
 "        </div>\n      </div>\n    </article>\n" +
@@ -380,7 +380,7 @@ scEvents.map(eventCard).join("\n") + "\n" +
 "    </div>\n  </div>\n</div>\n" +
 '<script src="/js/perspectives.js"></script>\n<main hidden>';
   return pageShell({
-    title: "The Supreme Court’s draft AI regulations — have your say | PUCAR",
+    title: "The Supreme Court’s draft AI regulations | Have your say | PUCAR",
     desc: "The Supreme Court of India is inviting public feedback on its draft Regulations for Use of AI in Courts, 2026, until July 15. Read what people are saying and add your voice.",
     url: "/sc-ai-policy/",
     backHref: "/", backLabel: "← pucar.org", main: main
