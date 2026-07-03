@@ -1044,6 +1044,18 @@ neither), `links` has their LinkedIn, `source` is "pucar.org/about", and
 the sandbox cannot reach framerusercontent.com). Until then it hotlinks
 framerusercontent.com.
 
+### Header nav dropdown (Collaborate)
+
+The "Collaborate" nav link (index.html) is wrapped in `.nav-drop` with a
+hover/focus-within dropdown (`.nav-menu`, pure CSS, no JS). Two labelled
+sections: "Active Collaborations" (Advance the DRISTI 2.0 stack → #collaborate,
+Explore the Supreme Court's AI policy → /sc-ai-policy/, same framing as the
+hero bulletin board) and "More" (Meet the Contributors → /contributors/,
+About Contributing → /about-contributing/ which DOES NOT EXIST YET, page is
+planned). A ::before bridge covers the 8px gap so the menu survives the mouse
+travelling to it. The trigger link still goes to #collaborate on click, and
+the whole nav is display:none under 640px as before.
+
 ### 6.3b Contributors index page — /contributors/
 
 `contributorsIndexPage()` in the build script generates `contributors/index.html`:
