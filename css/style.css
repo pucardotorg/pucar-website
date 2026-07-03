@@ -818,13 +818,42 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
    the threshold removes the class and he reassembles via the ordinary
    beat-3 transitions. `forwards` holds him at opacity 0 for as long as the
    class stays on (all beats past 3), so there's no lingering ghost fade. */
-.pin.is-judge-exit .judge{
-  /* coarse turbulence displacement -- tears the artwork into shreds while
-     the keyframes below fade what's left: a crumble, not a fade */
+/* PRIMARY path -- the Thanos snap. js/script.js rasterises the judge SVG
+   into a canvas particle field (prepareJudgeDust/runJudgeDust): the SVG is
+   hidden at the exact moment the canvas draws every grain at rest, so the
+   swap is invisible, then a left-to-right sweep lifts the grains off on
+   the wind -- he erodes into sand rather than fading. The canvas lives in
+   the stage; nothing here animates stage opacity, or it would fade the
+   grains themselves. */
+.pin.is-judge-exit .judge{ visibility:hidden; }
+.judge-dust-canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  opacity:0;
+}
+.pin.is-judge-exit .judge-dust-canvas{ opacity:1; }
+/* his bubble goes with him the moment the dissolve starts (beat 3 is still
+   active at that point, so the [data-beat="3"] show rule above would
+   otherwise keep it up over an empty bench) -- same specificity, this
+   must stay AFTER that rule in source order */
+.pin.is-judge-exit .judge-bubble{
+  opacity:0;
+  translate:6% 10px;
+  scale:.9;
+  transition-delay:0s;
+}
+
+/* FALLBACK path (canvas prep failed / not ready): the earlier coarse
+   turbulence displacement + fade. js/script.js adds the extra class. */
+.pin.is-judge-exit-fallback .judge{
+  visibility:visible;
   filter:url(#judgeDissolve);
 }
-.pin.is-judge-exit .judge-stage{
-  animation: judgeDissolveAway .8s ease-in .3s forwards; /* .3s = let the dust land first */
+.pin.is-judge-exit-fallback .judge-stage{
+  animation: judgeDissolveAway .8s ease-in .3s forwards;
 }
 @keyframes judgeDissolveAway{
   0%  { opacity:1;   translate:0 0;       scale:1;    filter:none; }

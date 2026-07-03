@@ -17,6 +17,153 @@
   var ticking = false;
   var walkTimeout = null;
   var judgeSeen = false; // beat 3 has actually been on screen this visit
+
+  // ---- Thanos-snap dust for the judge --------------------------------------
+  // The judge SVG is rasterised once into an offscreen canvas, sampled into
+  // a grid of "grains" (position + colour), and on exit the grains are
+  // re-drawn on a visible canvas and swept away left-to-right on the wind
+  // -- each grain gets its own delay (sweep + jitter), velocity, and
+  // sinusoidal wobble, fading as it flies. The SVG hides at the exact
+  // moment the canvas paints every grain at rest, so the handoff is
+  // seamless. If any of this fails (no canvas 2d, serialization quirk),
+  // js falls back to the CSS turbulence dissolve.
+  var judgeDust = {
+    ready: false, preparing: false, running: false,
+    canvas: null, ctx: null, parts: null, raf: null, dpr: 1, w: 0, h: 0
+  };
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function prepareJudgeDust() {
+    if (judgeDust.ready || judgeDust.preparing || reduceMotion) return;
+    var svg = document.querySelector(".judge-stage .judge");
+    var stage = document.querySelector(".judge-stage");
+    if (!svg || !stage || !window.HTMLCanvasElement) return;
+    var rect = svg.getBoundingClientRect();
+    if (rect.width < 40) return; // stage not laid out yet; try again next time
+    judgeDust.preparing = true;
+
+    var W = Math.round(rect.width), H = Math.round(rect.height);
+    var xml = new XMLSerializer().serializeToString(svg);
+    if (xml.indexOf("xmlns=") === -1) {
+      xml = xml.replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ');
+    }
+    var url = URL.createObjectURL(new Blob([xml], { type: "image/svg+xml" }));
+    var img = new Image();
+    img.onload = function () {
+      try {
+        var off = document.createElement("canvas");
+        off.width = W; off.height = H;
+        var octx = off.getContext("2d");
+        if (!octx) throw new Error("no 2d context");
+        octx.drawImage(img, 0, 0, W, H);
+        var data = octx.getImageData(0, 0, W, H).data;
+        var GAP = 4, parts = [];
+        for (var y = 0; y < H; y += GAP) {
+          for (var x = 0; x < W; x += GAP) {
+            var i = (y * W + x) * 4;
+            if (data[i + 3] < 40) continue; // transparent: not part of him
+            parts.push({
+              x: x, y: y,
+              c: "rgb(" + data[i] + "," + data[i + 1] + "," + data[i + 2] + ")",
+              // the snap sweeps across him left->right, with jitter so the
+              // erosion edge is ragged, not a hard line
+              delay: (x / W) * 0.5 + Math.random() * 0.35,
+              dur: 0.7 + Math.random() * 0.55,
+              vx: 60 + Math.random() * 170,          // carried right on the wind
+              vy: -(30 + Math.random() * 120),       // and lifted upward
+              wob: 4 + Math.random() * 9,            // sideways flutter
+              ph: Math.random() * 6.28
+            });
+          }
+        }
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        var cv = document.createElement("canvas");
+        cv.className = "judge-dust-canvas";
+        cv.width = W * dpr; cv.height = H * dpr;
+        stage.insertBefore(cv, stage.querySelector(".judge-dust"));
+        judgeDust.canvas = cv;
+        judgeDust.ctx = cv.getContext("2d");
+        judgeDust.parts = parts;
+        judgeDust.dpr = dpr; judgeDust.w = W; judgeDust.h = H;
+        judgeDust.ready = true;
+      } catch (e) { /* fall back to the CSS dissolve */ }
+      URL.revokeObjectURL(url);
+      judgeDust.preparing = false;
+    };
+    img.onerror = function () {
+      URL.revokeObjectURL(url);
+      judgeDust.preparing = false;
+    };
+    img.src = url;
+  }
+
+  function runJudgeDust() {
+    if (!judgeDust.ready || judgeDust.running) return;
+    judgeDust.running = true;
+    var ctx = judgeDust.ctx, dpr = judgeDust.dpr;
+    var GRAIN = 3.6;
+    var start = performance.now();
+    function frame(now) {
+      if (!judgeDust.running) return;
+      var t = (now - start) / 1000;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, judgeDust.w, judgeDust.h);
+      var alive = false;
+      for (var i = 0; i < judgeDust.parts.length; i++) {
+        var p = judgeDust.parts[i];
+        var lt = (t - p.delay) / p.dur;
+        if (lt >= 1) continue;                    // this grain is gone
+        alive = true;
+        if (lt <= 0) {                            // not yet snapped: at rest
+          ctx.globalAlpha = 1;
+          ctx.fillStyle = p.c;
+          ctx.fillRect(p.x, p.y, GRAIN, GRAIN);
+          continue;
+        }
+        var e = lt * (2 - lt);                    // ease-out
+        var x = p.x + p.vx * e * p.dur + Math.sin(p.ph + lt * 9) * p.wob * lt;
+        var y = p.y + p.vy * e * p.dur - 40 * lt * lt;
+        ctx.globalAlpha = 1 - lt;
+        ctx.fillStyle = p.c;
+        ctx.fillRect(x, y, GRAIN * (1 - lt * 0.5), GRAIN * (1 - lt * 0.5));
+      }
+      if (alive) {
+        judgeDust.raf = requestAnimationFrame(frame);
+      } else {
+        judgeDust.running = false;
+        ctx.clearRect(0, 0, judgeDust.w, judgeDust.h);
+      }
+    }
+    judgeDust.raf = requestAnimationFrame(frame);
+  }
+
+  function stopJudgeDust() {
+    judgeDust.running = false;
+    if (judgeDust.raf) cancelAnimationFrame(judgeDust.raf);
+    if (judgeDust.ctx) {
+      judgeDust.ctx.setTransform(judgeDust.dpr, 0, 0, judgeDust.dpr, 0, 0);
+      judgeDust.ctx.clearRect(0, 0, judgeDust.w, judgeDust.h);
+    }
+  }
+
+  var judgeExitActive = false;
+  function startJudgeExit() {
+    if (judgeExitActive) return;
+    judgeExitActive = true;
+    if (reduceMotion) return; // beats 4+ hide his stage plainly; no theatrics
+    if (judgeDust.ready) {
+      pin.classList.add("is-judge-exit");
+      runJudgeDust();
+    } else {
+      pin.classList.add("is-judge-exit", "is-judge-exit-fallback");
+    }
+  }
+  function cancelJudgeExit() {
+    if (!judgeExitActive) return;
+    judgeExitActive = false;
+    stopJudgeDust();
+    pin.classList.remove("is-judge-exit", "is-judge-exit-fallback");
+  }
   var idleTimeout = null;
   var IDLE_DELAY = 10000; // ms without scrolling before she looks around
 
@@ -403,18 +550,22 @@
     requestCenterTick();
 
     // ---- judge dissolution, scroll-driven -------------------------------
-    // The dust + disintegration must FINISH before beat 4's content is on
-    // screen ("i don't like how the judge is still fading out as the next
-    // screen is already active"), so it isn't hooked to the beat CHANGE
-    // (which happens at beatFloat 3.5, too late) -- it starts at 3.3,
-    // while his section is still the active one, and the whole sequence
-    // runs ~1.1s. `judgeSeen` stops a direct landing on a later beat from
-    // flashing a judge the visitor never saw; scrolling back below the
-    // threshold reassembles him via the ordinary beat-3 transitions. The
-    // animation's `forwards` fill keeps him at opacity 0 for as long as
-    // the class stays on (i.e. all beats past 3) -- no lingering ghost.
-    if (currentBeat === 3) judgeSeen = true;
-    pin.classList.toggle("is-judge-exit", judgeSeen && beatFloat >= 3.3);
+    // The snap must FINISH before beat 4's content is on screen ("i don't
+    // like how the judge is still fading out as the next screen is already
+    // active"), so it isn't hooked to the beat CHANGE (which happens at
+    // beatFloat 3.5, too late) -- it starts at 3.3, while his section is
+    // still the active one, and the sweep completes in ~1.6s. `judgeSeen`
+    // stops a direct landing on a later beat from flashing a judge the
+    // visitor never saw; scrolling back below the threshold reassembles
+    // him (the canvas clears and the SVG un-hides). The particle field is
+    // prepared while the visitor is still LOOKING at beat 3, so the snap
+    // starts with zero rasterisation lag.
+    if (currentBeat === 3) {
+      judgeSeen = true;
+      prepareJudgeDust();
+    }
+    if (judgeSeen && beatFloat >= 3.3) startJudgeExit();
+    else cancelJudgeExit();
 
     // ---- section-based existence -------------------------------------
     // While the intro hero owns the screen (story still mostly below the
