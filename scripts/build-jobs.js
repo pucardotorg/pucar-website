@@ -144,6 +144,7 @@ function pageShell(opts) {
 '<link rel="apple-touch-icon" href="/assets/favicon-apple-touch.png" />\n' +
 (opts.jsonLd ? '<script type="application/ld+json">' + JSON.stringify(opts.jsonLd) + "</script>\n" : "") +
 '</head>\n<body class="job-page">\n' +
+'<script src="/js/nav.js" defer></script>\n' +
 '<header class="site-header">\n  <a class="logo" href="/">\n' +
 '    <img class="logo-light logo-light-long" src="/assets/pucar-normal-expanded.png" alt="PUCAR: Public Collective for Avoidance and Resolution of Disputes" width="777" height="93" />\n' +
 '    <img class="logo-light logo-light-short" src="/assets/logo-pucar-green.avif" alt="PUCAR" width="401" height="100" />\n' +
