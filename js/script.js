@@ -614,19 +614,42 @@
   // across the zone's edges -- and scrolling onward continues the story.
   var filmActive = false;
 
-  function filmCurtainAt(bf) {
+  // Three scroll-scrubbed values (all as a function of beatFloat):
+  //   --curtain        entry panel, 0->1 across 5.5-5.95 (slides up, never returns)
+  //   --curtain-exit   exit panel,  0->1 across 6.15-6.45 (rises from BELOW --
+  //                    leaving the film reads as the next section arriving
+  //                    naturally from underneath, per "can't we natural
+  //                    scroll down to the next section")
+  //   --content-shift  the stage/text ride: 0 -> -105vh with the entry
+  //                    curtain, then return from +105vh (below) with the
+  //                    exit curtain; the sign flip happens while parked
+  //                    off-screen, so it's never visible
+  function filmEntryAt(bf) {
     if (bf <= 5.5) return 0;
     if (bf < 5.95) return (bf - 5.5) / 0.45;
-    if (bf <= 6.15) return 1;
-    if (bf < 6.45) return 1 - (bf - 6.15) / 0.3;
+    return 1;
+  }
+  function filmExitAt(bf) {
+    if (bf <= 6.15) return 0;
+    if (bf < 6.45) return (bf - 6.15) / 0.3;
+    return 1;
+  }
+  function filmShiftAt(bf) { // in vh
+    if (bf <= 5.5) return 0;
+    if (bf < 5.95) return -105 * (bf - 5.5) / 0.45;   // up and away
+    if (bf <= 6.15) return -105;                       // parked off-screen
+    if (bf < 6.45) return 105 * (1 - (bf - 6.15) / 0.3); // back in from below
     return 0;
   }
 
   function updateFilm(beatFloat) {
-    var curtain = filmCurtainAt(beatFloat);
-    pin.style.setProperty("--curtain", curtain.toFixed(4));
+    var entry = filmEntryAt(beatFloat);
+    var exit = filmExitAt(beatFloat);
+    pin.style.setProperty("--curtain", entry.toFixed(4));
+    pin.style.setProperty("--curtain-exit", exit.toFixed(4));
+    pin.style.setProperty("--content-shift", filmShiftAt(beatFloat).toFixed(2));
 
-    var shouldPlay = curtain >= 0.999 && filmUsable && !isJumpingToSection;
+    var shouldPlay = entry >= 0.999 && exit <= 0.001 && filmUsable && !isJumpingToSection;
     if (shouldPlay && !filmActive) {
       filmActive = true;
       document.body.classList.add("film-playing"); // header up, progress rail down

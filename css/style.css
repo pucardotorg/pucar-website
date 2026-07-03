@@ -1291,6 +1291,11 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
   visibility:hidden;
 }
 .pin[data-beat="6"] .video-break{ visibility:visible; }
+/* ENTRY curtain: slides UP and away (scrolling into the film pulls the
+   previous section off the top). It never comes back down -- the exit is
+   handled by its own bottom panel below, so leaving the film reads as
+   the NEXT section arriving naturally from underneath, not the old one
+   dropping back in from above. */
 .film-curtain{
   position:absolute;
   inset:0;
@@ -1300,12 +1305,28 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
   visibility:hidden;
   pointer-events:none;
 }
+/* EXIT curtain: parked one viewport BELOW; rises to cover the film as you
+   scroll onward (--curtain-exit 0 -> 1 across beatFloat 6.15 -> 6.45). */
+.film-curtain-exit{
+  position:absolute;
+  inset:0;
+  z-index:3;
+  background:var(--forest);
+  transform:translateY(calc((1 - var(--curtain-exit, 0)) * 102%));
+  visibility:hidden;
+  pointer-events:none;
+}
 .pin[data-beat="5"] .film-curtain,
-.pin[data-beat="6"] .film-curtain{ visibility:visible; }
-/* the page content rides the curtain up with it */
+.pin[data-beat="6"] .film-curtain,
+.pin[data-beat="5"] .film-curtain-exit,
+.pin[data-beat="6"] .film-curtain-exit{ visibility:visible; }
+/* the page content rides out with the entry curtain (negative vh, up and
+   away) and back IN with the exit curtain (from below) -- js writes the
+   signed --content-shift in vh; the sign flips while everything is parked
+   off-screen, so the jump is never visible */
 .litigant-stage,
 .beats{
-  transform:translateY(calc(var(--curtain, 0) * -105vh));
+  transform:translateY(calc(var(--content-shift, 0) * 1vh));
 }
 .video-break video{
   position:absolute;
