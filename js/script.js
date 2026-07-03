@@ -30,7 +30,7 @@
   var judgeDust = {
     ready: false, preparing: false, running: false,
     canvas: null, ctx: null, parts: null, raf: null, dpr: 1, w: 0, h: 0,
-    pad: 0,        // extra canvas width on the LEFT, so grains fly a while before clipping
+    pad: 0, padTop: 0, // canvas extends to the viewport's left/top edges -- no visible clip boundary
     t: 0,          // current virtual time of the snap (seconds)
     target: 0      // scroll-driven virtual time we're easing toward
   };
@@ -76,7 +76,7 @@
               // edge is ragged, not a hard line
               delay: ((W - x) / W) * 0.5 + Math.random() * 0.35,
               dur: 0.7 + Math.random() * 0.55,
-              vx: -(60 + Math.random() * 170),       // carried LEFT on the wind
+              vx: -(80 + Math.random() * 260),       // carried LEFT on the wind, far enough to stream off-screen
               vy: -(30 + Math.random() * 120),       // and lifted upward
               wob: 4 + Math.random() * 9,            // sideways flutter
               ph: Math.random() * 6.28
@@ -84,17 +84,27 @@
           }
         }
         var dpr = Math.min(window.devicePixelRatio || 1, 2);
-        var pad = Math.round(W * 0.45); // room on the left before grains clip
+        // The canvas extends all the way to the VIEWPORT's left and top
+        // edges (the grains fly up-left), so there is no visible boundary
+        // for the dust to clip against -- it either fades mid-air or
+        // leaves the screen itself (.pin's overflow:hidden edge IS the
+        // screen edge). rect was measured with the stage at rest (beat 3,
+        // translate 0), so these distances are the real ones.
+        var pad = Math.max(40, Math.ceil(rect.left) + 40);
+        var padTop = Math.max(40, Math.ceil(rect.top) + 40);
         var cv = document.createElement("canvas");
         cv.className = "judge-dust-canvas";
-        cv.width = (W + pad) * dpr; cv.height = H * dpr;
-        cv.style.width = "calc(100% + " + pad + "px)";
+        cv.width = (W + pad) * dpr; cv.height = (H + padTop) * dpr;
+        cv.style.width = (W + pad) + "px";
+        cv.style.height = (H + padTop) + "px";
         cv.style.left = -pad + "px";
+        cv.style.top = -padTop + "px";
         stage.insertBefore(cv, stage.querySelector(".judge-dust"));
         judgeDust.canvas = cv;
         judgeDust.ctx = cv.getContext("2d");
         judgeDust.parts = parts;
-        judgeDust.dpr = dpr; judgeDust.w = W; judgeDust.h = H; judgeDust.pad = pad;
+        judgeDust.dpr = dpr; judgeDust.w = W; judgeDust.h = H;
+        judgeDust.pad = pad; judgeDust.padTop = padTop;
         judgeDust.ready = true;
       } catch (e) { /* fall back to the CSS dissolve */ }
       URL.revokeObjectURL(url);
@@ -112,10 +122,10 @@
   // scroll position in either direction -- scrolling back literally
   // reassembles him grain by grain.
   function drawJudgeDust(t) {
-    var ctx = judgeDust.ctx, pad = judgeDust.pad;
+    var ctx = judgeDust.ctx, pad = judgeDust.pad, padTop = judgeDust.padTop;
     var GRAIN = 3.6;
     ctx.setTransform(judgeDust.dpr, 0, 0, judgeDust.dpr, 0, 0);
-    ctx.clearRect(0, 0, judgeDust.w + pad, judgeDust.h);
+    ctx.clearRect(0, 0, judgeDust.w + pad, judgeDust.h + padTop);
     for (var i = 0; i < judgeDust.parts.length; i++) {
       var p = judgeDust.parts[i];
       var lt = (t - p.delay) / p.dur;
@@ -123,12 +133,12 @@
       if (lt <= 0) {                              // not yet snapped: at rest
         ctx.globalAlpha = 1;
         ctx.fillStyle = p.c;
-        ctx.fillRect(p.x + pad, p.y, GRAIN, GRAIN);
+        ctx.fillRect(p.x + pad, p.y + padTop, GRAIN, GRAIN);
         continue;
       }
       var e = lt * (2 - lt);                      // ease-out
       var x = p.x + pad + p.vx * e * p.dur + Math.sin(p.ph + lt * 9) * p.wob * lt;
-      var y = p.y + p.vy * e * p.dur - 40 * lt * lt;
+      var y = p.y + padTop + p.vy * e * p.dur - 40 * lt * lt;
       ctx.globalAlpha = 1 - lt;
       ctx.fillStyle = p.c;
       ctx.fillRect(x, y, GRAIN * (1 - lt * 0.5), GRAIN * (1 - lt * 0.5));
@@ -160,7 +170,7 @@
     if (judgeDust.raf) cancelAnimationFrame(judgeDust.raf);
     if (judgeDust.ctx) {
       judgeDust.ctx.setTransform(judgeDust.dpr, 0, 0, judgeDust.dpr, 0, 0);
-      judgeDust.ctx.clearRect(0, 0, judgeDust.w + judgeDust.pad, judgeDust.h);
+      judgeDust.ctx.clearRect(0, 0, judgeDust.w + judgeDust.pad, judgeDust.h + judgeDust.padTop);
     }
   }
 
