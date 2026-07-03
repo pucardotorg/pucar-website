@@ -983,3 +983,43 @@
     }, 350);
   });
 })();
+
+/* ---- keep the "Work you can walk into today" beat in sync with the hero
+   bulletin board. The board (.intro-board .board-note) is the single source
+   of truth: this rebuilds the beat-8 initiative grid from it at load, so
+   adding or editing a board note updates both places. Static markup in
+   index.html mirrors the same two items as a no-JS/SEO fallback. ---- */
+(function () {
+  "use strict";
+  var grid = document.querySelector("#initiatives .initiative-grid");
+  var notes = document.querySelectorAll(".intro-board .board-note");
+  if (!grid || !notes.length) return;
+  grid.innerHTML = "";
+  notes.forEach(function (note, i) {
+    var a = document.createElement("a");
+    a.className = "initiative-card";
+    a.href = note.getAttribute("href");
+    var num = document.createElement("span");
+    num.className = "initiative-num";
+    num.textContent = (i + 1 < 10 ? "0" : "") + (i + 1);
+    var name = document.createElement("span");
+    name.className = "initiative-name";
+    var t = note.querySelector(".board-note-title");
+    name.textContent = t ? t.textContent : "";
+    a.appendChild(num);
+    a.appendChild(name);
+    var s = note.querySelector(".board-note-sub");
+    if (s) {
+      var sub = document.createElement("span");
+      sub.className = "initiative-sub";
+      // board subs end with a directional arrow; drop it here
+      sub.textContent = s.textContent.replace(/[↓→↑←]\s*$/, "").trim();
+      a.appendChild(sub);
+    }
+    var link = document.createElement("span");
+    link.className = "initiative-link";
+    link.textContent = "Learn more →";
+    a.appendChild(link);
+    grid.appendChild(a);
+  });
+})();
