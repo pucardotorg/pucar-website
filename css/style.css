@@ -618,6 +618,7 @@ body:has(.pin[data-beat="8"]) .header-cta:hover{
   font-weight:400;
   line-height:1.42;
   text-align:left;
+  text-wrap:balance;   /* even out short Comic Relief lines instead of a ragged last word */
   opacity:0;
   /* translate/scale/rotate as independent properties (not one `transform`
      shorthand) on purpose: it lets the position/size transition below
@@ -2144,6 +2145,35 @@ body.scroll-locked{ overflow:hidden; }
      transform, so it needs its own reset) */
   .pin[data-beat] .litigant-stage{ transform:none !important; translate:none !important; }
   .pin[data-beat] .litigant-walker{ transform:none !important; }
+
+  /* speech bubbles: the desktop anchor (left:52%, -28% shift, 230px) hangs
+     off a stage that's only ~110-150px wide here, shoving the balloon
+     against the right screen edge -- cramped, raggedly wrapped. Centre it
+     over the figure instead, cap its width to the viewport, and shrink
+     the type a notch. Both translate STATES need overriding (this media
+     block is later in the file, so its translate would win even while
+     visible). */
+  .speech-bubble{
+    max-width:min(240px, 64vw);
+    font-size:.84rem;
+    line-height:1.4;
+    padding:11px 14px;
+    left:50%;
+    top:-6px;
+    translate:-50% 8px;
+  }
+  .speech-bubble.is-visible{ translate:-50% 0; }
+  .speech-bubble::after{ left:44%; }
+
+  /* the judge's bubble: same centring; it stays anchored above the stage
+     top (bottom:calc(100%+...)), which on mobile is the padding strip
+     under the fixed header -- visible, just tighter */
+  .judge-bubble{
+    left:50%;
+    bottom:calc(100% + 8px);
+    translate:-50% 8px;
+  }
+  .pin[data-beat="3"] .judge-bubble{ translate:-50% 0; }
   .beats{
     grid-column:1;
     grid-row:2;  /* mobile really IS two rows (figure above, text below) -- undo the desktop grid-row:1 */
