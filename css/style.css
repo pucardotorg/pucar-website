@@ -91,7 +91,12 @@ body.film-playing .site-header{
   pointer-events:none;
 }
 body.film-playing .progress-rail{
-  translate:0 200%;
+  /* an ABSOLUTE distance, not a %: the rail is only ~20px tall, so the
+     old 200% moved it ~40px -- not even past its own bottom:28px offset,
+     which left it peeking over the film. 90px clears offset + height with
+     room to spare, and the fade covers any transition frame. */
+  translate:0 90px;
+  opacity:0;
 }
 
 .site-header .logo{
@@ -1590,7 +1595,7 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
   z-index:10;
   /* slides down out of frame while the film plays (body.film-playing),
      mirroring the header's slide-up, and glides back on scroll-away */
-  transition: translate .55s cubic-bezier(.4,.1,.3,1);
+  transition: translate .55s cubic-bezier(.4,.1,.3,1), opacity .4s ease;
   display:flex;
   align-items:center;
   gap:10px;
