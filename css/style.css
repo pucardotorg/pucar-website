@@ -109,9 +109,15 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
   transform:translateY(-50%);
   opacity:0;
 }
+body:has(.pin[data-beat="4"]) .site-header .logo-light,
+body:has(.pin[data-beat="5"]) .site-header .logo-light,
 body:has(.pin[data-beat="6"]) .site-header .logo-light,
+body:has(.pin[data-beat="7"]) .site-header .logo-light,
 body:has(.pin[data-beat="8"]) .site-header .logo-light{ opacity:0; }
+body:has(.pin[data-beat="4"]) .site-header .logo-dark,
+body:has(.pin[data-beat="5"]) .site-header .logo-dark,
 body:has(.pin[data-beat="6"]) .site-header .logo-dark,
+body:has(.pin[data-beat="7"]) .site-header .logo-dark,
 body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
 /* both the light and dark marks come in two lengths: full wordmark (+
    tagline) on desktop, PUCAR-only below 640px (same breakpoint .site-nav
@@ -238,21 +244,49 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
   transition: background-color .8s ease;
 }
 
-/* per-beat backdrop tint */
-.pin[data-beat="0"]{ background:var(--cream); }
-.pin[data-beat="1"]{ background:var(--cream); }
+/* per-beat backdrop: exactly TWO story colours (explicit instruction with
+   swatches, Jul 2026) -- the whole first half up to and including the
+   judge is light --cream-deep; everything after him is dark --forest.
+   No per-beat tints any more. */
+.pin[data-beat="0"]{ background:var(--cream-deep); }
+.pin[data-beat="1"]{ background:var(--cream-deep); }
 .pin[data-beat="2"]{ background:var(--cream-deep); }
-.pin[data-beat="3"]{ background:var(--paper); }
-.pin[data-beat="4"]{ background:var(--cream-deep); }
-.pin[data-beat="5"]{ background:var(--pink-soft); }
-.pin[data-beat="6"]{ background:var(--navy); color:var(--paper); }
-.pin[data-beat="7"]{ background:var(--cream); }
-.pin[data-beat="8"]{ background:var(--navy-deep); color:var(--paper); }
+.pin[data-beat="3"]{ background:var(--cream-deep); }
+.pin[data-beat="4"]{ background:var(--forest); color:var(--paper); }
+.pin[data-beat="5"]{ background:var(--forest); color:var(--paper); }
+.pin[data-beat="6"]{ background:var(--forest); color:var(--paper); }
+.pin[data-beat="7"]{ background:var(--forest); color:var(--paper); }
+.pin[data-beat="8"]{ background:var(--forest); color:var(--paper); }
 
+.pin[data-beat="4"] .beat-body,
+.pin[data-beat="5"] .beat-body,
 .pin[data-beat="6"] .beat-body,
+.pin[data-beat="7"] .beat-body,
 .pin[data-beat="8"] .beat-body{ color:rgba(251,248,242,.78); }
+.pin[data-beat="4"] .beat-eyebrow,
+.pin[data-beat="5"] .beat-eyebrow,
 .pin[data-beat="6"] .beat-eyebrow,
+.pin[data-beat="7"] .beat-eyebrow,
 .pin[data-beat="8"] .beat-eyebrow{ color:var(--gold); }
+/* muted footnote placeholders need lifting on the dark half */
+.pin[data-beat="4"] .placeholder-tag, .pin[data-beat="4"] sup,
+.pin[data-beat="5"] .placeholder-tag, .pin[data-beat="5"] sup,
+.pin[data-beat="6"] .placeholder-tag, .pin[data-beat="6"] sup,
+.pin[data-beat="7"] .placeholder-tag, .pin[data-beat="7"] sup,
+.pin[data-beat="8"] .placeholder-tag, .pin[data-beat="8"] sup{
+  color:rgba(251,248,242,.55);
+  border-color:rgba(251,248,242,.25);
+}
+/* ground dots are ink-coloured -- invisible on the forest half; swap them
+   to paper there */
+.pin[data-beat="4"] .ground-dots,
+.pin[data-beat="5"] .ground-dots,
+.pin[data-beat="6"] .ground-dots,
+.pin[data-beat="7"] .ground-dots,
+.pin[data-beat="8"] .ground-dots{
+  background-image:radial-gradient(var(--paper) 1.5px, transparent 1.6px);
+  opacity:.1;
+}
 
 /* ---------------- ground layer ---------------- */
 .ground{
@@ -1011,9 +1045,12 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
    --green accent is legible there and gets reinstated explicitly --
    this is the one place in the story where the literal brand green is
    meant to show up, per "only use it on a dark bg". */
+/* the dark (forest) half is where the literal brand green belongs */
+.pin[data-beat="4"] .beat-stat,
+.pin[data-beat="5"] .beat-stat,
 .pin[data-beat="6"] .beat-stat,
+.pin[data-beat="7"] .beat-stat,
 .pin[data-beat="8"] .beat-stat{ color:var(--green); }
-.pin[data-beat="5"] .beat-stat{ color:#7C1D52; } /* dark pink, legible on --pink-soft */
 .beat-body{
   font-size:1.05rem;
   line-height:1.6;
@@ -1064,22 +1101,24 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
   margin-top:20px;
   max-width:520px;
 }
+/* initiative cards live on the story's DARK (forest) half now -- styled
+   for it (they were ink-on-light before the two-colour split) */
 .initiative-card{
   display:flex;
   flex-direction:column;
   gap:16px;
   padding:16px;
   border-radius:14px;
-  background:rgba(36,30,26,.04);
-  border:1px solid var(--line);
+  background:rgba(251,248,242,.07);
+  border:1px solid rgba(251,248,242,.18);
   text-decoration:none;
-  color:var(--ink);
+  color:var(--paper);
   transition:background .2s ease, transform .2s ease;
 }
-.initiative-card:hover{ background:rgba(36,30,26,.08); transform:translateY(-2px); }
-.initiative-num{ font-family:var(--font-display); font-size:1.1rem; color:var(--forest); } /* dark-green -- sits on beat 6's light bg, so not the bright --green */
+.initiative-card:hover{ background:rgba(251,248,242,.14); transform:translateY(-2px); }
+.initiative-num{ font-family:var(--font-display); font-size:1.1rem; color:var(--green); } /* bright brand green -- dark bg only, per the palette rule */
 .initiative-name{ font-weight:600; font-size:.95rem; line-height:1.3; }
-.initiative-link{ font-size:.78rem; color:var(--muted); margin-top:auto; }
+.initiative-link{ font-size:.78rem; color:rgba(251,248,242,.55); margin-top:auto; }
 
 .cta-row{ display:flex; gap:14px; margin-top:28px; flex-wrap:wrap; }
 .btn{
@@ -1128,7 +1167,10 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
   border-radius:3px;
   overflow:hidden;
 }
+.pin[data-beat="4"] .progress-track,
+.pin[data-beat="5"] .progress-track,
 .pin[data-beat="6"] .progress-track,
+.pin[data-beat="7"] .progress-track,
 .pin[data-beat="8"] .progress-track{ background:rgba(251,248,242,.25); }
 .progress-fill{
   height:100%;
@@ -1138,7 +1180,10 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
 }
 /* rail is fixed inside .pin, so it overlays beats 5/7's dark background too --
    bright --green is legible there, so it's swapped back in for those beats. */
+.pin[data-beat="4"] .progress-fill,
+.pin[data-beat="5"] .progress-fill,
 .pin[data-beat="6"] .progress-fill,
+.pin[data-beat="7"] .progress-fill,
 .pin[data-beat="8"] .progress-fill{ background:var(--green); }
 .progress-count{
   font-size:.75rem;

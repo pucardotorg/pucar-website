@@ -257,9 +257,18 @@ needed no special accommodation for it beyond generous top padding.
   `[data-beat="N"]` CSS was shifted mechanically, so grep for the number
   you mean, don't trust old notes): **intro (78% stat)** → **invisible
   litigant** → **pendency queue (5.5 Cr)** → **300 years / the judge** →
-  10-yr wait → undertrials (pink-tinted) → PUCAR turn (dark forest-green)
-  → initiatives grid → CTA (darkest forest-green). Beats 4–8 content
-  untouched. All stats are marked `[placeholder — verify]` in the markup.
+  10-yr wait → undertrials → PUCAR turn → initiatives grid → CTA. All
+  stats are marked `[placeholder — verify]` in the markup.
+- **Exactly TWO story backgrounds** (explicit instruction with colour
+  swatches, Jul 2026 — the old per-beat tints incl. the pink beat are
+  gone): beats 0–3 (everything up to and including the judge) are
+  `--cream-deep`; beats 4–8 are `--forest` with paper text. The dark half
+  carries a full set of overrides extended from what used to be only
+  beats 6/8: `.beat-body`/`.beat-eyebrow`/`.beat-stat` (bright `--green`,
+  which is dark-bg-only per the palette rule), placeholder-tag/sup
+  lifting, paper ground-dots, progress track/fill, the header logo
+  light↔dark swap (`body:has` selectors), and the initiative cards
+  (restyled paper-on-forest — they used to be ink-on-light).
 - **Her resting position sits ABOVE the viewport midline** (fix: "the
   litigant is too low on the page"): `updateLitigantPosition()` applies a
   constant `-12vh` lift on every beat, plus `-6vh` more while centred
