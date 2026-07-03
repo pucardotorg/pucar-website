@@ -137,7 +137,7 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
 }
 .site-nav a{
   text-decoration:none;
-  font-size:.82rem;
+  font-size:.92rem; /* matches .btn / the Get in touch CTA next to it */
   font-weight:500;
   color:var(--ink-soft);
   padding:8px 14px;
@@ -160,8 +160,13 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
   background:var(--forest);
   color:var(--paper);
   padding:12px 22px;
+  transition: background .2s ease, translate .2s ease, box-shadow .2s ease;
 }
-.header-cta:hover{ background:#184A33; }
+.header-cta:hover{
+  background:#184A33; /* lighter forest -- same hover family as .btn-primary on light */
+  translate:0 -1px;
+  box-shadow:0 6px 16px rgba(18,55,38,.28);
+}
 /* on the story's dark half the forest button would sink into the forest
    background -- flip to the bright brand green (dark-bg only, per the
    palette rule), same mechanism as the logo swap */
@@ -172,6 +177,14 @@ body:has(.pin[data-beat="7"]) .header-cta,
 body:has(.pin[data-beat="8"]) .header-cta{
   background:var(--green);
   color:var(--ink);
+}
+body:has(.pin[data-beat="4"]) .header-cta:hover,
+body:has(.pin[data-beat="5"]) .header-cta:hover,
+body:has(.pin[data-beat="6"]) .header-cta:hover,
+body:has(.pin[data-beat="7"]) .header-cta:hover,
+body:has(.pin[data-beat="8"]) .header-cta:hover{
+  background:#51D79E; /* lighter brand green, matching .btn-primary's dark-bg hover */
+  box-shadow:0 6px 16px rgba(0,0,0,.3);
 }
 
 /* ---------------- contact modal + Netlify form ---------------- */
