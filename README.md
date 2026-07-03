@@ -345,9 +345,17 @@ notification emails can be configured there.
   (full-bleed forest panel, z-index 3, visible beats 5–6) plus
   `.litigant-stage` and `.beats` all `translateY(-curtain·~105vh)` — the
   previous section literally passes up and over the waiting film.
-  `filmCurtainAt(bf)`: 0 until beatFloat 5.5, rises to 1 by 5.95, holds
-  to 6.15, restores to 0 by 6.45 — deliberately BEFORE the 6.5 boundary
-  so her stage is back in position when the beat-7 walk-in fires. At
+  Curtain mechanics (v4, after "it's weird that the section comes in from
+  the top"): TWO panels + a signed content shift. `filmEntryAt` drives
+  `--curtain` (the entry panel slides UP across 5.5→5.95 and never
+  returns); `filmExitAt` drives `--curtain-exit` (a dedicated exit panel
+  parked one viewport BELOW rises to cover the film across 6.15→6.45, so
+  leaving reads as the next section arriving naturally from underneath);
+  `filmShiftAt` drives `--content-shift` in vh (stage/text ride up to
+  −105 with the entry, park off-screen, and return from +105 below with
+  the exit — the sign flip happens while parked, never visible). All
+  settled deliberately BEFORE the 6.5 boundary so her stage is in
+  position when the beat-7 walk-in (with its scroll freeze) fires. At
   curtain==1 on a FORWARD approach with a playable file (`canplay` sets
   `filmUsable`; missing file shows `.video-missing` and never traps),
   playback starts **with audio** and **NO scroll lock** (v3 revision:
