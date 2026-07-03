@@ -293,6 +293,13 @@ dark half it flips to bright `--green` via the same `body:has(.pin
 [data-beat=4..8])` mechanism as the logo swap. On ≤640px the nav hides
 but the CTA stays.
 
+Modal scrolling gotcha: the OVERLAY (.job-modal) is the scroll container,
+not the rounded panel. When the panel scrolled itself, macOS rubber-band made
+WebKit/Blink drop the border-radius clip for a frame (corners flashed
+square); layer hacks didn't cure it. The backdrop is position:fixed so it
+keeps covering the viewport while the overlay scrolls, and overscroll is
+contained.
+
 Clicking it opens `#contactModal` (shared job-modal chrome) containing a
 **Netlify Form** (`name="contact"`): name*, email*, phone (optional),
 message*. Netlify-forms requirements that MUST NOT be broken: the form
