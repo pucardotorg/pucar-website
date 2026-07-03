@@ -252,45 +252,58 @@ needed no special accommodation for it beyond generous top padding.
   informational value. If a future pass wants ambient decoration again,
   don't resurrect this exact approach; position anything decorative well
   clear of `.beats`' text box instead of layered behind/near it.
-- Beats 0–7 (first three rewritten Jul 2026, beats 3–7 untouched per "keep
-  all the remaining sections as is"): **invisible litigant** → **pendency
-  queue (5.5 Cr)** → **300 years / the judge** → 10-yr wait → undertrials
-  (pink-tinted) → PUCAR turn (dark forest-green) → initiatives grid → CTA
-  (darkest forest-green). All stats are marked `[placeholder — verify]` in
-  the markup. See [§2 Design system](#2-design-system-colour-type-buttons)
-  for what `--forest`/`--forest-deep`/`--pink-soft` actually resolve to.
-- **She stays on the LEFT through beats 0–2** (explicit instruction). The
-  continuous side→centre slide in `updateLitigantPosition()` is driven by
-  `beatFloat - 2` (was `- 1`), so centring happens across the 2→3
-  transition; correspondingly the bottom-left text treatment (`.beats`
-  full-row rules, §5) starts at `data-beat="3"`, not 2.
-- **Beat 0 — "To most courts, the litigant is invisible":**
-  `.pin[data-beat="0"] #litigant{ filter:grayscale(1); opacity:.5 }` with a
-  1.1s transition on `#litigant` — she walks in ghosted and regains colour
-  as beat 1 arrives. Scoped to `#litigant` (id), NOT `.litigant`, because
-  the queue clones share the class. `lateWalkIn` carries no opacity
-  keyframes precisely so this rule owns the opacity channel.
-- **Beat 1 — the pendency queue:** four clones of her figure (`buildQueue()`
-  in js/script.js — id/role/aria/defs stripped, coat paths `#754a76`
-  recoloured per clone, `.litigant .fig` walk-cycle rules apply to them for
-  free) sit at `--q-slot` offsets -184 %/-92 %/+92 %/+184 % of their own
-  height (behind/in-front along the road). All CSS-driven off
-  `.pin[data-beat]`: hidden = 70vh above their slot; beat 1 = in line;
-  beats 2+ = 70vh below (they walk on past and fade) — so both entering
-  and leaving read as walking the queue's direction, never backing up.
-  1.7s translate transition; legs animate whenever the page scrolls.
-- **Beat 2 — the judge, "case adjourned to March 2326!!":** she is left
-  behind — `.pin[data-beat="2"] .litigant-stage{ opacity:0 }` (must stay
+- **NINE beats now** (`--beats:9` on `#story`; a new intro beat 0 was
+  inserted Jul 2026 and every other beat renumbered +1 — all
+  `[data-beat="N"]` CSS was shifted mechanically, so grep for the number
+  you mean, don't trust old notes): **intro (78% stat)** → **invisible
+  litigant** → **pendency queue (5.5 Cr)** → **300 years / the judge** →
+  10-yr wait → undertrials (pink-tinted) → PUCAR turn (dark forest-green)
+  → initiatives grid → CTA (darkest forest-green). Beats 4–8 content
+  untouched. All stats are marked `[placeholder — verify]` in the markup.
+- **Her resting position sits ABOVE the viewport midline** (fix: "the
+  litigant is too low on the page"): `updateLitigantPosition()` applies a
+  constant `-12vh` lift on every beat, plus `-6vh` more while centred
+  (replacing the old centred-only `-9vh`). The stage's `align-self:center`
+  alone had put her mass below centre.
+- **She stays on the LEFT through beats 0–3.** The side→centre slide is
+  driven by `beatFloat - 3`; the bottom-left text treatment (`.beats`
+  full-row rules, §5) starts at `data-beat="4"`.
+- **Beat 0 — "No one wants to be in court" (78% Civic Studios stat in the
+  body):** she walks in exactly as before (the run-in entrance), in FULL
+  colour — no greyscale here (explicit correction: "don't lose colour or
+  opacity now").
+- **Beat 1 — "To most courts, the litigant is invisible":**
+  `.pin[data-beat="1"] #litigant{ filter:grayscale(1); opacity:.5 }` with a
+  1.1s transition each way — colour drains as this beat arrives and
+  returns as beat 2 begins. Scoped to `#litigant` (id), NOT `.litigant`,
+  because the queue clones share the class. `lateWalkIn` carries no
+  opacity keyframes precisely so this rule owns the opacity channel.
+- **Beat 2 — the pendency queue:** four clones of her figure
+  (`buildQueue()` in js/script.js — id/role/aria/defs stripped, coat
+  paths `#754a76` recoloured per clone) at `--q-slot` offsets
+  ±105 %/±210 % of their own height (a full figure + gap — the old
+  ±92/184 overlapped, "positioning seems off"). **They fade in AT their
+  slots** with a small settling drift (12% from the arriving side, out
+  the other side on later beats) — the old walk-in-from-above choreography
+  made front clones cross straight over her ("person slides in over the
+  litigant") and is gone. **While the beat is active the whole line walks
+  forward in a loop**: `.pin[data-beat="2"]` forces
+  `animation-play-state:running` on every figure's walk cycle AND on the
+  ground dots / road / shadow — nobody translates, the world scrolls, so
+  the loop is seamless with no wrap-around jump.
+- **Beat 3 — the judge, "case adjourned to March 2326!!":** she is left
+  behind — `.pin[data-beat="3"] .litigant-stage{ opacity:0 }` (must stay
   AFTER `.pin.is-revealed .litigant-stage` in the file; equal specificity,
   source order decides). `.judge-stage` (grid cell 1/1, overlapping hers)
   fades/rises in; the gavel — two `.gavel` groups split out of the
   original compound paths (hand from one path, head+handle from another,
   z-order preserved; same twin-group trick as her `.head`) — swings on a
   2.8s loop (raise 26° → strike −16° → settle → rest) around a wrist pivot
-  at `190,300`, and his speech bubble (shared `.speech-bubble` styling)
-  appears via `transition-delay:1.2s`, timed to the first strike. Judge
-  asset cleaned into `assets/judge-source.svg` (clip ids prefixed `jdg*`,
-  viewBox widened to `30 20 720 980` so the swing never clips).
+  at `190,300`, and his speech bubble (shared `.speech-bubble` styling,
+  `top:-11%` to clear his face) appears via `transition-delay:1.2s`, timed
+  to the first strike. Judge asset cleaned into `assets/judge-source.svg`
+  (clip ids prefixed `jdg*`, viewBox widened to `30 20 720 980` so the
+  swing never clips).
 - **Walk state:** on every scroll frame the pin gets `.is-walking`; a 180 ms
   timeout removes it after scrolling stops. All walk animations and the
   ground/path/shadow layers are `animation-play-state: paused` by default

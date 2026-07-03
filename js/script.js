@@ -209,8 +209,13 @@
     smoothCenterT += (targetCenterT - smoothCenterT) * 0.15;
     if (Math.abs(targetCenterT - smoothCenterT) < 0.0008) smoothCenterT = targetCenterT;
 
+    // -12vh base lift on every beat: the stage is align-self:center, which
+    // sat her figure's mass BELOW the viewport midline ("the litigant is
+    // too low on the page -- she was supposed to be above the middle
+    // point"). The extra -6vh while centred keeps the bottom-left text
+    // treatment clear of her, same job the old -9vh did.
     var x = (smoothCenterT * 25).toFixed(3);
-    var y = (smoothCenterT * -9).toFixed(3);
+    var y = (-12 + smoothCenterT * -6).toFixed(3);
     litigantStage.style.transform = "translate(" + x + "vw, " + y + "vh)";
 
     if (smoothCenterT !== targetCenterT) {
@@ -226,19 +231,22 @@
     }
   }
 
-  // ---- beat 1 pendency queue ----------------------------------------------
+  // ---- beat 2 pendency queue ----------------------------------------------
   // Four clones of the litigant, coats recoloured, queued in front of
   // (below, +%) and behind (above, -%) her. Built once here; everything
   // about how/when they move is CSS driven off .pin[data-beat] -- see
-  // .queue-fig in style.css. Clones drop their id/aria and their <defs>
-  // (clip-path url() refs resolve to the original's defs, and duplicating
-  // ids would be invalid); they keep the .litigant class so the ordinary
-  // walk-cycle rules animate their legs whenever the page scrolls.
+  // .queue-fig in style.css. Slots are ±105/±210% of a figure's own height
+  // -- a full figure plus a small gap -- so neighbours never overlap her
+  // or each other. Clones drop their id/aria and their <defs> (clip-path
+  // url() refs resolve to the original's defs, and duplicating ids would
+  // be invalid); they keep the .litigant class so the ordinary walk-cycle
+  // rules animate their legs whenever the page scrolls or the queue loop
+  // runs.
   var QUEUE = [
-    { slot: "-184%", coat: "#4e6e8e" }, // behind, far
-    { slot: "-92%",  coat: "#7d8a4a" }, // behind, near
-    { slot: "92%",   coat: "#b3775a" }, // in front, near
-    { slot: "184%",  coat: "#c05f7c" }  // in front, far
+    { slot: "-210%", coat: "#4e6e8e" }, // behind, far
+    { slot: "-105%", coat: "#7d8a4a" }, // behind, near
+    { slot: "105%",  coat: "#b3775a" }, // in front, near
+    { slot: "210%",  coat: "#c05f7c" }  // in front, far
   ];
 
   (function buildQueue() {
@@ -382,14 +390,14 @@
       setActiveBeat(nearest);
     }
 
-    // she stays on the LEFT through beats 0-2 (invisible-litigant, the
-    // pendency queue, and the judge's bench -- where she's absent anyway),
-    // then slides toward centre across beat 3's approach and is fully
-    // centred by beat 3 -- a continuous function of scroll position (not a
-    // discrete flip at the beat boundary), which is what actually makes it
-    // feel smooth: the motion is exactly as fast as the user's scrolling,
-    // never a fixed-duration animation firing at one scroll pixel.
-    targetCenterT = smoothstep(clamp(beatFloat - 2, 0, 1));
+    // she stays on the LEFT through beats 0-3 (intro, invisible-litigant,
+    // the pendency queue, and the judge's bench -- where she's absent
+    // anyway), then slides toward centre across beat 4's approach -- a
+    // continuous function of scroll position (not a discrete flip at the
+    // beat boundary), which is what actually makes it feel smooth: the
+    // motion is exactly as fast as the user's scrolling, never a
+    // fixed-duration animation firing at one scroll pixel.
+    targetCenterT = smoothstep(clamp(beatFloat - 3, 0, 1));
     requestCenterTick();
 
     // ---- section-based existence -------------------------------------

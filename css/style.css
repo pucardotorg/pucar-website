@@ -109,10 +109,10 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
   transform:translateY(-50%);
   opacity:0;
 }
-body:has(.pin[data-beat="5"]) .site-header .logo-light,
-body:has(.pin[data-beat="7"]) .site-header .logo-light{ opacity:0; }
-body:has(.pin[data-beat="5"]) .site-header .logo-dark,
-body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
+body:has(.pin[data-beat="6"]) .site-header .logo-light,
+body:has(.pin[data-beat="8"]) .site-header .logo-light{ opacity:0; }
+body:has(.pin[data-beat="6"]) .site-header .logo-dark,
+body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
 /* both the light and dark marks come in two lengths: full wordmark (+
    tagline) on desktop, PUCAR-only below 640px (same breakpoint .site-nav
    collapses at). Which length shows is independent of the opacity toggle
@@ -240,18 +240,19 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
 
 /* per-beat backdrop tint */
 .pin[data-beat="0"]{ background:var(--cream); }
-.pin[data-beat="1"]{ background:var(--cream-deep); }
-.pin[data-beat="2"]{ background:var(--paper); }
-.pin[data-beat="3"]{ background:var(--cream-deep); }
-.pin[data-beat="4"]{ background:var(--pink-soft); }
-.pin[data-beat="5"]{ background:var(--navy); color:var(--paper); }
-.pin[data-beat="6"]{ background:var(--cream); }
-.pin[data-beat="7"]{ background:var(--navy-deep); color:var(--paper); }
+.pin[data-beat="1"]{ background:var(--cream); }
+.pin[data-beat="2"]{ background:var(--cream-deep); }
+.pin[data-beat="3"]{ background:var(--paper); }
+.pin[data-beat="4"]{ background:var(--cream-deep); }
+.pin[data-beat="5"]{ background:var(--pink-soft); }
+.pin[data-beat="6"]{ background:var(--navy); color:var(--paper); }
+.pin[data-beat="7"]{ background:var(--cream); }
+.pin[data-beat="8"]{ background:var(--navy-deep); color:var(--paper); }
 
-.pin[data-beat="5"] .beat-body,
-.pin[data-beat="7"] .beat-body{ color:rgba(251,248,242,.78); }
-.pin[data-beat="5"] .beat-eyebrow,
-.pin[data-beat="7"] .beat-eyebrow{ color:var(--gold); }
+.pin[data-beat="6"] .beat-body,
+.pin[data-beat="8"] .beat-body{ color:rgba(251,248,242,.78); }
+.pin[data-beat="6"] .beat-eyebrow,
+.pin[data-beat="8"] .beat-eyebrow{ color:var(--gold); }
 
 /* ---------------- ground layer ---------------- */
 .ground{
@@ -633,53 +634,79 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   100% { translate:0 0;     }
 }
 
-/* ---- beat 0: "to most courts, the litigant is invisible" -------------------
-   She's on screen but barely there: greyscale at half opacity, smoothly
-   transitioning back to full colour as beat 1 begins. Scoped to #litigant
-   so the queue clones (same class) are unaffected, and applied via
-   filter/opacity (not display) so the walk-in entrance runs "ghosted",
-   which suits the line. lateWalkIn deliberately carries no opacity
-   keyframes so this rule owns the channel throughout. */
+/* ---- beat 1: "to most courts, the litigant is invisible" -------------------
+   (Beat 0 is the intro -- she walks in there in FULL colour; the ghosting
+   only begins once this beat arrives, and lifts again as beat 2 begins.)
+   Greyscale at half opacity, smooth 1.1s both ways. Scoped to #litigant
+   so the queue clones (same class) are unaffected. lateWalkIn deliberately
+   carries no opacity keyframes so this rule owns the channel. */
 #litigant{ transition: filter 1.1s ease, opacity 1.1s ease; }
-.pin[data-beat="0"] #litigant{
+.pin[data-beat="1"] #litigant{
   filter:grayscale(1);
   opacity:.5;
 }
 
-/* ---- beat 1: the pendency queue ---------------------------------------------
+/* ---- beat 2: the pendency queue ---------------------------------------------
    Four clones of the litigant (built once by js/script.js -- same figure,
    recoloured coat, no ids/defs) queue up in front of (below) and behind
-   (above) her along the road. They enter walking down-screen from above
-   (--q-slot is each one's place in line, in % of their own height), and
-   leave down-screen past the bottom on later beats -- so both in and out
-   read as walking the queue's direction, not backing up. Their leg/arm
-   cycles come free: they carry the same .fig/.leg/.arm classes, so the
-   ordinary .is-walking rules animate them whenever the page scrolls. */
+   (above) her along the road, at --q-slot offsets in % of their own
+   height. They DON'T slide in from off-screen any more -- the first
+   version walked the front clones in from above, which crossed straight
+   over her ("person slides in over the litigant"), and the slots were
+   tight enough to overlap. Now spacing is a clean figure-plus-gap
+   (±105% / ±210%) and each clone just fades in at its own slot with a
+   small settling drift (arriving from slightly up-queue, leaving slightly
+   down-queue), so nothing ever passes through anyone. The sense of motion
+   comes from the loop below instead. */
 .queue-fig{
   position:absolute;
   left:0; top:0;
   width:100%;
   opacity:0;
-  translate:0 calc(var(--q-slot, 0%) - 70vh);  /* waiting off-screen above */
-  transition: translate 1.7s cubic-bezier(.45,.15,.35,1), opacity .9s ease;
+  translate:0 calc(var(--q-slot, 0%) - 12%);   /* just shy of their spot */
+  transition: translate 1.2s cubic-bezier(.4,.2,.35,1), opacity .9s ease;
   pointer-events:none;
   will-change: translate, opacity;
 }
-.pin[data-beat="1"] .queue-fig{
+.pin[data-beat="2"] .queue-fig{
   opacity:1;
   translate:0 var(--q-slot, 0%);               /* standing in line */
 }
-/* beats 2+ (any beat that isn't 0/1): they walk on past her and disappear */
-.pin:not([data-beat="0"]):not([data-beat="1"]) .queue-fig{
-  translate:0 calc(var(--q-slot, 0%) + 70vh);
+/* on later beats they drift on down-queue as they fade (beats 0-1 keep
+   the arriving-side offset so re-entering beat 2 reads the same way) */
+.pin[data-beat="3"] .queue-fig,
+.pin[data-beat="4"] .queue-fig,
+.pin[data-beat="5"] .queue-fig,
+.pin[data-beat="6"] .queue-fig,
+.pin[data-beat="7"] .queue-fig,
+.pin[data-beat="8"] .queue-fig{
+  translate:0 calc(var(--q-slot, 0%) + 12%);
 }
 
-/* ---- beat 2: she is left behind; the judge takes the bench ------------------
+/* while the beat is active the whole line walks forward in a LOOP:
+   every figure's walk cycle runs (hers included) and the world -- ground
+   dots, dashed road, shadow pulse -- scrolls past continuously. Nobody
+   actually translates, so it loops seamlessly with no wrap-around jump;
+   the moving ground is what reads as the queue trudging ahead. These
+   outrank the paused/.is-walking rules by specificity (three simple
+   selectors vs two). */
+.pin[data-beat="2"] .litigant .fig,
+.pin[data-beat="2"] .litigant .leg-front,
+.pin[data-beat="2"] .litigant .leg-back,
+.pin[data-beat="2"] .litigant .arm-left,
+.pin[data-beat="2"] .litigant .arm-right,
+.pin[data-beat="2"] .ground-dots,
+.pin[data-beat="2"] .path,
+.pin[data-beat="2"] .shadow{
+  animation-play-state:running;
+}
+
+/* ---- beat 3: she is left behind; the judge takes the bench ------------------
    The litigant (and her whole stage: road, shadow, queue) fades out -- she
    never walks into this section; the system speaks for itself. Equal
    specificity to `.pin.is-revealed .litigant-stage` (which sets opacity:1),
    so THIS rule must stay later in the file to win. */
-.pin[data-beat="2"] .litigant-stage{
+.pin[data-beat="3"] .litigant-stage{
   opacity:0;
   transition:opacity .8s ease;
 }
@@ -698,7 +725,7 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   transition: opacity .9s ease, translate .9s cubic-bezier(.3,.6,.3,1), scale .9s cubic-bezier(.3,.6,.3,1);
   pointer-events:none;
 }
-.pin[data-beat="2"] .judge-stage{
+.pin[data-beat="3"] .judge-stage{
   opacity:1;
   translate:0 0;
   scale:1;
@@ -719,7 +746,7 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   transform-box:view-box;
   transform-origin:190px 300px;
 }
-.pin[data-beat="2"] .judge .gavel{
+.pin[data-beat="3"] .judge .gavel{
   animation: gavelSwing 2.8s ease-in-out .45s infinite;
 }
 @keyframes gavelSwing{
@@ -734,14 +761,14 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
 /* the judge's verdict bubble -- same hand-drawn treatment as hers (shared
    .speech-bubble base: wobble filter, jitter, Comic Relief), shown by the
    beat itself with a delay timed to land just after the first gavel strike
-   (.45s animation-delay + ~.7s to the strike keyframe). Leaving beat 2
+   (.45s animation-delay + ~.7s to the strike keyframe). Leaving beat 3
    drops the rule, and with it the delay, so it hides immediately. */
 .judge-bubble{
-  top:-3%;
+  top:-11%;      /* clear of his face -- it overlapped the head at -3% */
   left:36%;
   translate:6% 10px;
 }
-.pin[data-beat="2"] .judge-bubble{
+.pin[data-beat="3"] .judge-bubble{
   opacity:1;
   translate:6% 0;
   scale:1;
@@ -804,11 +831,11 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   /* beat 2 is NOT in this list: she stays on the left through beats 0-2
      (the judge takes her spot on 2), so the text keeps its right column
      there; the bottom-left treatment starts once she's actually centred. */
-  .pin[data-beat="3"] .beats,
   .pin[data-beat="4"] .beats,
   .pin[data-beat="5"] .beats,
   .pin[data-beat="6"] .beats,
-  .pin[data-beat="7"] .beats{
+  .pin[data-beat="7"] .beats,
+  .pin[data-beat="8"] .beats{
     grid-column: 1 / -1;
     align-items: flex-end;
     justify-content: flex-start;
@@ -852,9 +879,9 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
    --green accent is legible there and gets reinstated explicitly --
    this is the one place in the story where the literal brand green is
    meant to show up, per "only use it on a dark bg". */
-.pin[data-beat="5"] .beat-stat,
-.pin[data-beat="7"] .beat-stat{ color:var(--green); }
-.pin[data-beat="4"] .beat-stat{ color:#7C1D52; } /* dark pink, legible on --pink-soft */
+.pin[data-beat="6"] .beat-stat,
+.pin[data-beat="8"] .beat-stat{ color:var(--green); }
+.pin[data-beat="5"] .beat-stat{ color:#7C1D52; } /* dark pink, legible on --pink-soft */
 .beat-body{
   font-size:1.05rem;
   line-height:1.6;
@@ -969,8 +996,8 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
   border-radius:3px;
   overflow:hidden;
 }
-.pin[data-beat="5"] .progress-track,
-.pin[data-beat="7"] .progress-track{ background:rgba(251,248,242,.25); }
+.pin[data-beat="6"] .progress-track,
+.pin[data-beat="8"] .progress-track{ background:rgba(251,248,242,.25); }
 .progress-fill{
   height:100%;
   width:0%;
@@ -979,8 +1006,8 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
 }
 /* rail is fixed inside .pin, so it overlays beats 5/7's dark background too --
    bright --green is legible there, so it's swapped back in for those beats. */
-.pin[data-beat="5"] .progress-fill,
-.pin[data-beat="7"] .progress-fill{ background:var(--green); }
+.pin[data-beat="6"] .progress-fill,
+.pin[data-beat="8"] .progress-fill{ background:var(--green); }
 .progress-count{
   font-size:.75rem;
   font-variant-numeric:tabular-nums;
