@@ -53,11 +53,16 @@
   function validate() {
     var name = form.querySelector('[name="name"]');
     var email = form.querySelector('[name="email"]');
+    var phone = form.querySelector('[name="phone"]');
     var message = form.querySelector('[name="message"]');
     var firstBad = null;
 
-    if (!name.value.trim()) {
+    var nv = name.value.trim();
+    if (!nv) {
       setFieldError(name, "Please tell us your name.");
+      firstBad = firstBad || name;
+    } else if (!/^[\p{L}][\p{L}\s.'’-]*$/u.test(nv)) {
+      setFieldError(name, "Names shouldn't have numbers or symbols.");
       firstBad = firstBad || name;
     } else setFieldError(name, "");
 
@@ -70,8 +75,23 @@
       firstBad = firstBad || email;
     } else setFieldError(email, "");
 
-    if (!message.value.trim()) {
+    // phone is optional, but if filled it has to look like a number:
+    // digits with the usual +, spaces, dots, dashes, parentheses, and at
+    // least 7 digits overall
+    if (phone) {
+      var pv = phone.value.trim();
+      if (pv && (!/^\+?[0-9\s().-]+$/.test(pv) || (pv.match(/[0-9]/g) || []).length < 7)) {
+        setFieldError(phone, "That phone number doesn't look quite right.");
+        firstBad = firstBad || phone;
+      } else setFieldError(phone, "");
+    }
+
+    var mv = message.value.trim();
+    if (!mv) {
       setFieldError(message, "Tell us a little about what you have in mind.");
+      firstBad = firstBad || message;
+    } else if (mv.split(/\s+/).length < 4) {
+      setFieldError(message, "Give us a few more words, so we know how to help.");
       firstBad = firstBad || message;
     } else setFieldError(message, "");
 
