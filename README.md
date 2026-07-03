@@ -1044,17 +1044,64 @@ neither), `links` has their LinkedIn, `source` is "pucar.org/about", and
 the sandbox cannot reach framerusercontent.com). Until then it hotlinks
 framerusercontent.com.
 
-### Header nav dropdown (Collaborate)
+### Header nav: dropdowns, glass pill, gliders, dark-half flip
 
-The "Collaborate" nav link (index.html) is wrapped in `.nav-drop` with a
-hover/focus-within dropdown (`.nav-menu`, pure CSS, no JS). Two labelled
-sections: "Active Collaborations" (Advance the DRISTI 2.0 stack → #collaborate,
-Explore the Supreme Court's AI policy → /sc-ai-policy/, same framing as the
-hero bulletin board) and "More" (Meet the Contributors → /contributors/,
-About Contributing → /about-contributing/ which DOES NOT EXIST YET, page is
-planned). A ::before bridge covers the 8px gap so the menu survives the mouse
-travelling to it. The trigger link still goes to #collaborate on click, and
-the whole nav is display:none under 640px as before.
+The homepage nav is now: The Journey · About (dropdown) · Collaborate
+(dropdown), plus the Get in touch CTA. Both dropdowns use `.nav-drop` +
+`.nav-menu` (hover / focus-within, opening is pure CSS) with a caret SVG
+(`.nav-caret`) that rotates 180° when open. A ::before bridge covers the 8px
+gap so the menu survives the mouse travelling to it. Nav is display:none
+under 640px as before.
+
+- Collaborate menu: "Active Collaborations" (Advance the DRISTI 2.0 stack →
+  #collaborate, Explore the Supreme Court's AI policy → /sc-ai-policy/, same
+  framing as the hero bulletin board) and "More" (Meet the Contributors →
+  /contributors/, About Contributing → /about-contributing/ which DOES NOT
+  EXIST YET, page is planned).
+- About menu: About PUCAR → /about/, Meet the Team → /team/.
+
+Styling: the nav container is a frosted-glass pill (blur+saturate backdrop,
+hairline border, inset top highlight). js/script.js (homepage only) injects
+`.nav-glider` -- a pill that SLIDES between top-level links on hover/focus
+(nav gets `.has-glider`; the CSS :hover background stays as the fallback for
+generated pages, which don't load script.js). Each dropdown menu gets its own
+`.menu-glider` doing the same between menu items. Gotcha encountered: the
+has-glider "background:transparent on hover" override must be scoped to
+TOP-LEVEL pills (`> a`, `> .nav-drop > a`) or it kills the menu items' hover
+background.
+
+Dark-half flip: over story beats 4-9 (`body:has(.pin:is([data-beat=...]))`,
+same mechanism as the logo/CTA swaps) the pill turns dark glass with light
+text, gliders/hovers switch to brand green with dark (--forest) text, and the
+dropdown panels flip to a dark panel (#0E1B21) with light text. All colour
+rules are scoped with child combinators so panel items never inherit the
+pill's light-on-dark colours.
+
+### About + Team pages
+
+`aboutPage()` and `teamPage()` in the build script generate /about/ (content
+adapted from pucar.org/about: What we do, Why PUCAR, How we work, How we
+organise) and /team/ (PLACEHOLDER cards -- swap in real people). Both in the
+sitemap; homepage footer About link points to /about/.
+
+### Beat 8 syncs with the bulletin board
+
+Beat 8 ("Live right now / Work you can walk into today.") shows the SAME
+items as the hero bulletin board. js/script.js rebuilds its
+`.initiative-grid` from `.intro-board .board-note` at load (titles, subs with
+trailing arrows stripped, hrefs, numbering), so the board is the single
+source of truth; static markup mirrors the two current items as a
+no-JS/SEO fallback. The old static "our initiatives" cards are gone.
+
+### Contributors data notes
+
+Placeholder people (aditi-rao, rohan-mehta, varun-h) are `published:false`,
+kept in content/ for reference; jobs that referenced them as posters simply
+render no "Posted by" block. Organisation names were consolidated (XKDR →
+XKDR Forum, eGovernments → eGov Foundation, SAMA → Sama, Daksh → DAKSH, role
+text like "Lawyer"/"L1 Engineer" replaced with real orgs or blanked) so the
+org filter is a clean list. The three 404'd LinkedIn bios no longer carry the
+"profile unavailable" note.
 
 ### 6.3b Contributors index page — /contributors/
 
