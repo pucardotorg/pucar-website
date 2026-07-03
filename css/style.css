@@ -2310,7 +2310,7 @@ body.scroll-locked{ overflow:hidden; }
 
 /* ---------------- footer ---------------- */
 .site-footer{
-  background:var(--navy-deep);
+  background:#000;
   color:rgba(251,248,242,.8);
   padding:64px clamp(20px,5vw,72px) 32px;
 }
