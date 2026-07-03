@@ -277,19 +277,29 @@ needed no special accommodation for it beyond generous top padding.
   real two-row mobile layout (`.beats{grid-row:2}`, judge sized/rowed for
   mobile too). If you add another stage to the pin, give it explicit
   `grid-column` AND `grid-row`.
-- **She stays on the LEFT through beats 0–3.** The side→centre motion is
-  driven by `beatFloat - 3`; the bottom-left text treatment (`.beats`
+- **She stays on the LEFT through beats 0–3; after the judge she returns
+  by WALKING IN FROM THE CENTRE TOP** (Jul 2026 revision — there is no
+  left→centre slide any more at all; earlier iterations panned the stage,
+  then walked her sideways, both rejected). Mechanics: `targetCenterT` is
+  a STEP (`beatFloat >= 3.45 ? 1 : 0`), and while she's unseen
+  (`currentBeat === 3`, where her stage is opacity 0 behind the judge, or
+  pre-reveal) `smoothCenterT` snaps instantly — so the horizontal
+  reposition to `25vw` happens invisibly. The visible part is
+  `playReturnEntrance()`, fired by `setActiveBeat` on a genuine 3→4
+  transition: the same `lateWalkIn` drop + `.is-running` hurried gait as
+  the beat-0 entrance (shared classes/keyframes), minus the scripted
+  bubble; ~2.4s, replays on every 3→4, cancelled cleanly if you return
+  to beat 3 mid-drop. Direct flings past beat 3 skip it (she's already
+  centred + revealed plainly). The bottom-left text treatment (`.beats`
   full-row rules, §5) starts at `data-beat="4"`.
-- **SHE walks to the centre — the scene doesn't pan** (Jul 2026: "not have
-  the whole thing move from the left to the centre"). The scroll-linked
-  transform moved off `.litigant-stage` onto `.litigant-walker`, a wrapper
-  inside the stage holding the figure + her shadow + her speech bubble.
-  The road (`.path`) stays outside the walker, fixed on the left, and
-  fades out on beats 4–8 (she walks off the marked path). The constant
-  `-12vh` midline lift now lives as a CSS `translate` on the stage
-  (mobile resets it with `translate:none !important` — `translate` is a
-  separate property from `transform`, one reset does not cover the other);
-  JS writes only the walker's `translate(x vw, −6vh·t)`.
+- **The walker owns her transform** (`.litigant-walker`, a wrapper inside
+  the stage holding the figure + her shadow + her speech bubble; JS writes
+  `translate(x vw, −6vh·t)` on it every frame). The road (`.path`) stays
+  outside the walker, fixed on the left, and fades out on beats 4–8 (she
+  left the marked path behind). The constant `-12vh` midline lift lives
+  as a CSS `translate` on the stage (mobile resets it with
+  `translate:none !important` — `translate` is a separate property from
+  `transform`, one reset does not cover the other).
 - **Leaving the judge: a Thanos snap, SCRUBBED by scroll — guaranteed
   complete before beat 4 shows, and the wind blows LEFT.** The snap's
   virtual time is a direct function of scroll position across the last

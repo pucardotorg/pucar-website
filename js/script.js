@@ -520,9 +520,34 @@
     requestAnimationFrame(step);
   }
 
+  // After the judge (3 -> 4): she returns by WALKING IN FROM THE CENTRE
+  // TOP -- the same lateWalkIn drop + hurried gait the beat-0 entrance
+  // uses (shared keyframes/classes), just without the scripted "late!"
+  // bubble. Her horizontal position was already snapped to centre while
+  // she was hidden (see the step logic in onScrollFrame).
+  var returnEndTimer = null;
+  function playReturnEntrance() {
+    pin.classList.add("is-entrance", "is-running", "is-walking");
+    clearTimeout(returnEndTimer);
+    returnEndTimer = setTimeout(function () {
+      pin.classList.remove("is-entrance", "is-running");
+      setWalking(false);
+    }, 2400);
+  }
+
   function setActiveBeat(index) {
     if (index === currentBeat) return;
+    var prevBeat = currentBeat;
     currentBeat = index;
+
+    if (prevBeat === 3 && index === 4 && pin.classList.contains("is-revealed")) {
+      playReturnEntrance();
+    } else if (index === 3) {
+      // back at the judge: kill any in-flight return so re-entering 4
+      // replays it cleanly
+      clearTimeout(returnEndTimer);
+      pin.classList.remove("is-entrance", "is-running");
+    }
 
     pin.setAttribute("data-beat", String(index));
     if (beatIndexEl) beatIndexEl.textContent = String(index + 1);
@@ -590,14 +615,16 @@
       setActiveBeat(nearest);
     }
 
-    // she stays on the LEFT through beats 0-3 (intro, invisible-litigant,
-    // the pendency queue, and the judge's bench -- where she's absent
-    // anyway), then slides toward centre across beat 4's approach -- a
-    // continuous function of scroll position (not a discrete flip at the
-    // beat boundary), which is what actually makes it feel smooth: the
-    // motion is exactly as fast as the user's scrolling, never a
-    // fixed-duration animation firing at one scroll pixel.
-    targetCenterT = smoothstep(clamp(beatFloat - 3, 0, 1));
+    // she does NOT slide left->centre any more ("I want her to walk in
+    // from the centre top", after the judge). The horizontal move is a
+    // step, not a scrub: it happens while she's invisible behind the
+    // judge's beat (stage opacity 0), so the jump is never seen -- and
+    // the visible part of her return is the vertical drop-in that
+    // setActiveBeat fires on the 3->4 transition (playReturnEntrance).
+    targetCenterT = beatFloat >= 3.45 ? 1 : 0;
+    if (currentBeat === 3 || !pin.classList.contains("is-revealed")) {
+      smoothCenterT = targetCenterT; // reposition instantly while unseen
+    }
     requestCenterTick();
 
     // ---- judge dissolution, SCRUBBED by scroll ---------------------------
