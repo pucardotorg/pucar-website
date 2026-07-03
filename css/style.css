@@ -1192,6 +1192,12 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
   width:100%;
   aspect-ratio:1;
   translate:-50% -50%;
+  /* BEHIND her, not over: being position:absolute would otherwise paint
+     this above the static <svg> regardless of DOM order. Negative z-index
+     drops it behind the walker's content (the nearest stacking context is
+     .litigant-stage at z-index:5, so it still sits above the pin's
+     background). Rings and dots now pass behind her body. */
+  z-index:-1;
   opacity:0;
   transition:opacity 1s ease .4s;   /* fades in after she lands */
   pointer-events:none;
