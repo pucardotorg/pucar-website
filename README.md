@@ -1044,6 +1044,18 @@ neither), `links` has their LinkedIn, `source` is "pucar.org/about", and
 the sandbox cannot reach framerusercontent.com). Until then it hotlinks
 framerusercontent.com.
 
+### 6.3b Contributors index page — /contributors/
+
+`contributorsIndexPage()` in the build script generates `contributors/index.html`:
+an alphabetical grid of person cards (avatar, name, role, organisation) that
+link to each profile page. A filter bar offers free-text search (name, role,
+org) and an organisation dropdown built from the distinct `organisation`
+values. Filtering lives in `js/contributors-page.js` (same custom `.dd`
+dropdown pattern as collaborate; the bar is `hidden` until JS runs, so the
+no-JS page is a plain crawlable list). The section reuses the `.collaborate`
+dark-indigo shell with `.contrib-grid` / `.contrib-card` styles in style.css.
+Linked from the homepage footer; included in sitemap.xml.
+
 ### 6.4 The build script — scripts/build-jobs.js
 
 Run by Netlify (`netlify.toml` command) and locally. Zero deps. It:

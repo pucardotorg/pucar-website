@@ -261,6 +261,64 @@ function contributorPage(person) {
   });
 }
 
+/* ---------------- contributors index page ---------------- */
+
+function contributorIndexCard(person) {
+  return '<a class="contrib-card" href="' + person.url + '"' +
+    ' data-name="' + esc(person.name) + '"' +
+    ' data-role="' + esc(person.role || "") + '"' +
+    ' data-org="' + esc(person.organisation || "") + '">' +
+    avatarHtml(person, "avatar-lg") +
+    '<span class="contrib-card-text">' +
+    '<span class="contrib-card-name">' + esc(person.name) + "</span>" +
+    (person.role ? '<span class="contrib-card-role">' + esc(person.role) + "</span>" : "") +
+    (person.organisation ? '<span class="contrib-card-org">' + esc(person.organisation) + "</span>" : "") +
+    "</span></a>";
+}
+
+function contributorsIndexPage() {
+  const people = contributors.slice().sort(function (a, b) {
+    return a.name.localeCompare(b.name);
+  });
+  const orgs = Array.from(new Set(people.map(function (p) { return p.organisation; })
+    .filter(Boolean))).sort(function (a, b) { return a.localeCompare(b); });
+  const main =
+'  <p class="beat-eyebrow">The PUCAR collective</p>\n' +
+'  <h1 class="job-title">The people behind the work.</h1>\n' +
+'  <article class="job-body">\n' +
+"    <p>PUCAR is a collective of 100+ contributors from economics, legal practice, public technology, artificial intelligence, and government. These are some of the people lending their time and expertise. Click anyone to read more about them and the work they have taken up.</p>\n" +
+"  </article>\n" +
+"</main>\n" +
+'<section class="collaborate contrib-section" id="contributors">\n' +
+'  <div class="collab-head">\n' +
+'    <p class="beat-eyebrow">Contributors</p>\n' +
+'    <h2 class="collab-title-main">Find a collaborator.</h2>\n' +
+'    <p class="collab-sub">Search by name or role, or filter by organisation.</p>\n' +
+"  </div>\n" +
+'  <div class="collab-filters contrib-filters" id="contribFilters" hidden>\n' +
+'    <input class="contrib-search" id="contribSearch" type="search" placeholder="Search people, roles…" aria-label="Search contributors" />\n' +
+'    <select id="contribOrg" aria-label="Filter by organisation">\n' +
+'      <option value="">All organisations</option>\n' +
+orgs.map(function (o) { return "      <option>" + esc(o) + "</option>"; }).join("\n") + "\n" +
+"    </select>\n" +
+'    <button class="collab-clear" id="contribClear" type="button" hidden>Clear filters ×</button>\n' +
+"  </div>\n" +
+'  <p class="collab-count" id="contribCount" hidden></p>\n' +
+'  <div class="contrib-grid" id="contribGrid">\n' +
+people.map(contributorIndexCard).join("\n") + "\n" +
+"  </div>\n" +
+"</section>\n" +
+'<script src="/js/contributors-page.js"></script>\n<main hidden>';
+  return pageShell({
+    title: "Contributors | PUCAR",
+    desc: "The people behind PUCAR: " + contributors.length + " contributors from law, technology, economics, and government working to transform dispute resolution in India.",
+    url: "/contributors/",
+    jsonLd: { "@context": "https://schema.org", "@type": "CollectionPage", name: "PUCAR contributors",
+      about: "Contributors to the PUCAR collective" },
+    backHref: "/", backLabel: "← Home", main: main
+  });
+}
+
 /* ---------------- homepage cards ---------------- */
 
 function card(job) {
@@ -418,6 +476,7 @@ contributors.forEach(function (person) {
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, "index.html"), contributorPage(person));
 });
+fs.writeFileSync(path.join(ROOT, "contributors", "index.html"), contributorsIndexPage());
 
 fs.writeFileSync(path.join(ROOT, "collaborate", "jobs.json"), JSON.stringify(jobs.map(function (j) {
   return {
@@ -448,7 +507,7 @@ html = html.slice(0, s + START.length) + "\n" +
 fs.writeFileSync(indexPath, html);
 
 /* sitemap */
-const urls = [SITE + "/", SITE + "/sc-ai-policy/"]
+const urls = [SITE + "/", SITE + "/sc-ai-policy/", SITE + "/contributors/"]
   .concat(jobs.map(function (j) { return SITE + j.url; }))
   .concat(contributors.map(function (c) { return SITE + c.url; }));
 fs.writeFileSync(path.join(ROOT, "sitemap.xml"),
