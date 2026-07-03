@@ -113,12 +113,14 @@ body:has(.pin[data-beat="4"]) .site-header .logo-light,
 body:has(.pin[data-beat="5"]) .site-header .logo-light,
 body:has(.pin[data-beat="6"]) .site-header .logo-light,
 body:has(.pin[data-beat="7"]) .site-header .logo-light,
-body:has(.pin[data-beat="8"]) .site-header .logo-light{ opacity:0; }
+body:has(.pin[data-beat="8"]) .site-header .logo-light,
+body:has(.pin[data-beat="9"]) .site-header .logo-light{ opacity:0; }
 body:has(.pin[data-beat="4"]) .site-header .logo-dark,
 body:has(.pin[data-beat="5"]) .site-header .logo-dark,
 body:has(.pin[data-beat="6"]) .site-header .logo-dark,
 body:has(.pin[data-beat="7"]) .site-header .logo-dark,
-body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
+body:has(.pin[data-beat="8"]) .site-header .logo-dark,
+body:has(.pin[data-beat="9"]) .site-header .logo-dark{ opacity:1; }
 /* both the light and dark marks come in two lengths: full wordmark (+
    tagline) on desktop, PUCAR-only below 640px (same breakpoint .site-nav
    collapses at). Which length shows is independent of the opacity toggle
@@ -174,7 +176,8 @@ body:has(.pin[data-beat="4"]) .header-cta,
 body:has(.pin[data-beat="5"]) .header-cta,
 body:has(.pin[data-beat="6"]) .header-cta,
 body:has(.pin[data-beat="7"]) .header-cta,
-body:has(.pin[data-beat="8"]) .header-cta{
+body:has(.pin[data-beat="8"]) .header-cta,
+body:has(.pin[data-beat="9"]) .header-cta{
   background:var(--green);
   color:var(--ink);
 }
@@ -182,7 +185,8 @@ body:has(.pin[data-beat="4"]) .header-cta:hover,
 body:has(.pin[data-beat="5"]) .header-cta:hover,
 body:has(.pin[data-beat="6"]) .header-cta:hover,
 body:has(.pin[data-beat="7"]) .header-cta:hover,
-body:has(.pin[data-beat="8"]) .header-cta:hover{
+body:has(.pin[data-beat="8"]) .header-cta:hover,
+body:has(.pin[data-beat="9"]) .header-cta:hover{
   background:#51D79E; /* lighter brand green, matching .btn-primary's dark-bg hover */
   box-shadow:0 6px 16px rgba(0,0,0,.3);
 }
@@ -478,26 +482,30 @@ body:has(.pin[data-beat="8"]) .header-cta:hover{
 .pin[data-beat="3"]{ background:var(--cream-deep); }
 .pin[data-beat="4"]{ background:var(--forest); color:var(--paper); }
 .pin[data-beat="5"]{ background:var(--forest); color:var(--paper); }
-.pin[data-beat="6"]{ background:var(--forest); color:var(--paper); }
+.pin[data-beat="6"]{ background:var(--forest); color:var(--paper); } /* the film beat */
 .pin[data-beat="7"]{ background:var(--forest); color:var(--paper); }
 .pin[data-beat="8"]{ background:var(--forest); color:var(--paper); }
+.pin[data-beat="9"]{ background:var(--forest); color:var(--paper); }
 
 .pin[data-beat="4"] .beat-body,
 .pin[data-beat="5"] .beat-body,
 .pin[data-beat="6"] .beat-body,
 .pin[data-beat="7"] .beat-body,
-.pin[data-beat="8"] .beat-body{ color:rgba(251,248,242,.78); }
+.pin[data-beat="8"] .beat-body,
+.pin[data-beat="9"] .beat-body{ color:rgba(251,248,242,.78); }
 .pin[data-beat="4"] .beat-eyebrow,
 .pin[data-beat="5"] .beat-eyebrow,
 .pin[data-beat="6"] .beat-eyebrow,
 .pin[data-beat="7"] .beat-eyebrow,
-.pin[data-beat="8"] .beat-eyebrow{ color:var(--gold); }
+.pin[data-beat="8"] .beat-eyebrow,
+.pin[data-beat="9"] .beat-eyebrow{ color:var(--gold); }
 /* muted footnote placeholders need lifting on the dark half */
 .pin[data-beat="4"] .placeholder-tag, .pin[data-beat="4"] sup,
 .pin[data-beat="5"] .placeholder-tag, .pin[data-beat="5"] sup,
-.pin[data-beat="6"] .placeholder-tag, .pin[data-beat="6"] sup,
+.pin[data-beat="6"] .placeholder-tag, .pin[data-beat="5"] sup,
 .pin[data-beat="7"] .placeholder-tag, .pin[data-beat="7"] sup,
-.pin[data-beat="8"] .placeholder-tag, .pin[data-beat="8"] sup{
+.pin[data-beat="8"] .placeholder-tag, .pin[data-beat="8"] sup,
+.pin[data-beat="9"] .placeholder-tag, .pin[data-beat="9"] sup{
   color:rgba(251,248,242,.55);
   border-color:rgba(251,248,242,.25);
 }
@@ -507,7 +515,8 @@ body:has(.pin[data-beat="8"]) .header-cta:hover{
 .pin[data-beat="5"] .ground-dots,
 .pin[data-beat="6"] .ground-dots,
 .pin[data-beat="7"] .ground-dots,
-.pin[data-beat="8"] .ground-dots{
+.pin[data-beat="8"] .ground-dots,
+.pin[data-beat="9"] .ground-dots{
   background-image:radial-gradient(var(--paper) 1.5px, transparent 1.6px);
   opacity:.1;
 }
@@ -963,7 +972,8 @@ body:has(.pin[data-beat="8"]) .header-cta:hover{
 .pin[data-beat="5"] .queue-fig,
 .pin[data-beat="6"] .queue-fig,
 .pin[data-beat="7"] .queue-fig,
-.pin[data-beat="8"] .queue-fig{
+.pin[data-beat="8"] .queue-fig,
+.pin[data-beat="9"] .queue-fig{
   translate:0 calc(var(--q-slot, 0%) + 12%);
 }
 
@@ -990,7 +1000,8 @@ body:has(.pin[data-beat="8"]) .header-cta:hover{
    never walks into this section; the system speaks for itself. Equal
    specificity to `.pin.is-revealed .litigant-stage` (which sets opacity:1),
    so THIS rule must stay later in the file to win. */
-.pin[data-beat="3"] .litigant-stage{
+.pin[data-beat="3"] .litigant-stage,
+.pin[data-beat="6"] .litigant-stage{  /* judge beat / film beat */
   opacity:0;
   transition:opacity .8s ease;
 }
@@ -1161,7 +1172,8 @@ body:has(.pin[data-beat="8"]) .header-cta:hover{
 .pin[data-beat="5"] .path,
 .pin[data-beat="6"] .path,
 .pin[data-beat="7"] .path,
-.pin[data-beat="8"] .path{
+.pin[data-beat="8"] .path,
+.pin[data-beat="9"] .path{
   opacity:0;
   transition:none;
 }
@@ -1184,7 +1196,8 @@ body:has(.pin[data-beat="8"]) .header-cta:hover{
   transition:opacity 1s ease .4s;   /* fades in after she lands */
   pointer-events:none;
 }
-.pin[data-beat="4"] .orbits{ opacity:1; }
+.pin[data-beat="4"] .orbits,
+.pin[data-beat="5"] .orbits{ opacity:1; }  /* rings carry on into the Kollam beat */
 .orbit{
   position:absolute;
   left:50%; top:50%;
@@ -1210,6 +1223,72 @@ body:has(.pin[data-beat="8"]) .header-cta:hover{
 .orb-green{ background:var(--green); }
 .orb-pink { background:var(--pink);  }
 .orb-paper{ background:var(--paper); }
+
+/* ---- beat 6: the film break ------------------------------------------------
+   A full-bleed overlay inside the pin. Off-beat it waits translated one
+   viewport DOWN; when beat 6 activates it slides up over the frozen
+   Kollam beat (the "parallax in from under" read: the pin is stuck, the
+   overlay rises across it). js/script.js locks scroll while it plays;
+   the skip button (or the film ending) releases and jumps to beat 7,
+   where her usual centre-top walk-in plays. If the video file is missing
+   or unplayable, .video-missing shows the placeholder note and scroll is
+   NEVER locked (no trap with nothing to watch). */
+.video-break{
+  position:absolute;
+  inset:0;
+  z-index:40;               /* over stages and beat text, under the fixed header */
+  background:var(--forest-deep);
+  translate:0 100%;
+  transition:translate .85s cubic-bezier(.3,.6,.25,1);
+  visibility:hidden;        /* also unfocusable while parked below */
+}
+.pin[data-beat="6"] .video-break{
+  translate:0 0;
+  visibility:visible;
+}
+.video-break video{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.video-note{
+  position:absolute;
+  top:50%; left:50%;
+  translate:-50% -50%;
+  max-width:34ch;
+  text-align:center;
+  font-size:.9rem;
+  font-style:italic;
+  color:rgba(251,248,242,.65);
+  display:none;
+}
+.video-break.video-missing .video-note{ display:block; }
+.video-break.video-missing video{ display:none; }
+.video-skip{
+  position:absolute;
+  bottom:28px;
+  left:50%;
+  translate:-50%;
+  border:1px solid rgba(251,248,242,.5);
+  background:rgba(11,36,23,.55);
+  color:var(--paper);
+  cursor:pointer;
+  font-family:var(--font-body);
+  backdrop-filter:blur(4px);
+  padding:11px 22px;
+  font-size:.85rem;
+}
+.video-skip:hover{ background:rgba(251,248,242,.16); }
+
+.visually-hidden{
+  position:absolute;
+  width:1px; height:1px;
+  overflow:hidden;
+  clip-path:inset(50%);
+  white-space:nowrap;
+}
 
 /* ---- idle look-around ------------------------------------------------------
    After 10s without scrolling js/script.js adds .is-idle to the pin: the two
@@ -1269,9 +1348,9 @@ body:has(.pin[data-beat="8"]) .header-cta:hover{
      there; the bottom-left treatment starts once she's actually centred. */
   .pin[data-beat="4"] .beats,
   .pin[data-beat="5"] .beats,
-  .pin[data-beat="6"] .beats,
   .pin[data-beat="7"] .beats,
-  .pin[data-beat="8"] .beats{
+  .pin[data-beat="8"] .beats,
+  .pin[data-beat="9"] .beats{
     grid-column: 1 / -1;
     align-items: flex-end;
     justify-content: flex-start;
@@ -1320,7 +1399,8 @@ body:has(.pin[data-beat="8"]) .header-cta:hover{
 .pin[data-beat="5"] .beat-stat,
 .pin[data-beat="6"] .beat-stat,
 .pin[data-beat="7"] .beat-stat,
-.pin[data-beat="8"] .beat-stat{ color:var(--green); }
+.pin[data-beat="8"] .beat-stat,
+.pin[data-beat="9"] .beat-stat{ color:var(--green); }
 .beat-body{
   font-size:1.05rem;
   line-height:1.6;
@@ -1441,7 +1521,8 @@ body:has(.pin[data-beat="8"]) .header-cta:hover{
 .pin[data-beat="5"] .progress-track,
 .pin[data-beat="6"] .progress-track,
 .pin[data-beat="7"] .progress-track,
-.pin[data-beat="8"] .progress-track{ background:rgba(251,248,242,.25); }
+.pin[data-beat="8"] .progress-track,
+.pin[data-beat="9"] .progress-track{ background:rgba(251,248,242,.25); }
 .progress-fill{
   height:100%;
   width:0%;
@@ -1454,7 +1535,8 @@ body:has(.pin[data-beat="8"]) .header-cta:hover{
 .pin[data-beat="5"] .progress-fill,
 .pin[data-beat="6"] .progress-fill,
 .pin[data-beat="7"] .progress-fill,
-.pin[data-beat="8"] .progress-fill{ background:var(--green); }
+.pin[data-beat="8"] .progress-fill,
+.pin[data-beat="9"] .progress-fill{ background:var(--green); }
 .progress-count{
   font-size:.75rem;
   font-variant-numeric:tabular-nums;

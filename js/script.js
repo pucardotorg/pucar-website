@@ -550,6 +550,54 @@
   // uses (shared keyframes/classes), just without the scripted "late!"
   // bubble. Her horizontal position was already snapped to centre while
   // she was hidden (see the step logic in onScrollFrame).
+  // ---- beat 6: the film break ---------------------------------------------
+  // The overlay slide is CSS ([data-beat="6"] .video-break); this handles
+  // playback + the scroll hold. Scroll locks only on a FORWARD arrival
+  // (prev < 6) and only when the video can actually play -- a missing/
+  // broken file must never trap the page. Exits: the skip button or the
+  // film ending; both release the hold and jump the scroll position to
+  // beat 7's zone, whose 6->7 transition then runs her usual walk-in.
+  var filmVideo = document.getElementById("onCourtsVideo");
+  var filmBreak = document.getElementById("videoBreak");
+  var filmSkip = document.getElementById("videoSkip");
+  var filmUsable = false;
+  if (filmVideo) {
+    filmVideo.addEventListener("canplay", function () { filmUsable = true; });
+    filmVideo.addEventListener("error", function () {
+      filmUsable = false;
+      if (filmBreak) filmBreak.classList.add("video-missing");
+    }, true);
+    var src = filmVideo.querySelector("source");
+    if (src) src.addEventListener("error", function () {
+      filmUsable = false;
+      if (filmBreak) filmBreak.classList.add("video-missing");
+    });
+    filmVideo.addEventListener("ended", exitFilm);
+  }
+  if (filmSkip) filmSkip.addEventListener("click", exitFilm);
+
+  function enterFilm(prevBeat) {
+    if (filmVideo && filmUsable) {
+      try {
+        filmVideo.currentTime = 0;
+        var p = filmVideo.play();
+        if (p && p.catch) p.catch(function () {});
+      } catch (e) { /* playback is best-effort */ }
+    }
+    if (prevBeat < 6 && filmUsable && !reduceMotion) lockScroll();
+  }
+
+  function leaveFilm() {
+    if (filmVideo) filmVideo.pause();
+  }
+
+  function exitFilm() {
+    unlockScroll();
+    // land on beat 7's scroll zone; the 6->7 transition plays her walk-in
+    var seg = (story.offsetHeight - window.innerHeight) / (numBeats - 1);
+    window.scrollTo({ top: story.offsetTop + seg * 7, behavior: "instant" });
+  }
+
   var returnEndTimer = null;
   function playReturnEntrance() {
     lockScroll();
@@ -567,10 +615,17 @@
     var prevBeat = currentBeat;
     currentBeat = index;
 
-    if (prevBeat === 3 && index === 4 && pin.classList.contains("is-revealed")) {
-      playReturnEntrance();
-    } else if (index === 3) {
-      // back at the judge: kill any in-flight return so re-entering 4
+    // film beat lifecycle first, so its unlock can't clobber the
+    // walk-in's own lock below
+    if (index === 6) enterFilm(prevBeat);
+    else if (prevBeat === 6) leaveFilm();
+
+    // her centre-top walk-in replays after BOTH interludes she sits out:
+    // the judge (3->4) and the film (6->7)
+    if ((prevBeat === 3 && index === 4) || (prevBeat === 6 && index === 7)) {
+      if (pin.classList.contains("is-revealed")) playReturnEntrance();
+    } else if (index === 3 || index === 6) {
+      // back at an interlude: kill any in-flight return so re-entering
       // replays it cleanly (and never leave scroll stuck locked)
       clearTimeout(returnEndTimer);
       unlockScroll();

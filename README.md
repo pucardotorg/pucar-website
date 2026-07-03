@@ -329,8 +329,31 @@ notification emails can be configured there.
   `[data-beat="N"]` CSS was shifted mechanically, so grep for the number
   you mean, don't trust old notes): **intro (78% stat)** → **invisible
   litigant** → **pendency queue (5.5 Cr)** → **300 years / the judge** →
-  **reimagine (orbits)** → undertrials → PUCAR turn → initiatives grid →
-  CTA. **Copy conventions (explicit instructions, Jul 2026): NO em dashes
+  **reimagine (orbits)** → **Kollam / 24x7 ON Courts (orbits continue)** →
+  **the film break** → PUCAR turn → initiatives grid → CTA. **TEN beats**
+  (`--beats:10`) since the film beat was inserted at 6 and the old 6–8
+  became 7–9 (second renumbering; grep, don't trust old notes).
+- **Beat 5 — Kollam**: replaced the 75% undertrials stat. Copy: PUCAR +
+  Kerala High Court launched 24x7 ON Courts in Kollam, India's first
+  fully digital end-to-end court. The beat-4 orbit rings deliberately
+  stay visible through this beat (`[data-beat="5"] .orbits`).
+- **Beat 6 — the film break**: `#videoBreak`, a full-bleed overlay inside
+  the pin (z-index 40, under the fixed header) that waits translated one
+  viewport DOWN and slides up over the frozen Kollam beat when the beat
+  activates (the "parallax in from under" read; the pin is sticky, the
+  overlay rises across it). The beat has a near-empty `data-beat="6"`
+  article (sr-only text) so the engine counts it. JS (`enterFilm`/
+  `leaveFilm`/`exitFilm`): plays the video from 0 on entry, **locks
+  scroll only on a forward arrival AND only when the video is actually
+  playable** (`canplay` sets `filmUsable`; a missing/broken file shows
+  the `.video-missing` placeholder note and never traps the page). Exits:
+  the bottom-centre "Skip film" button or the `ended` event, both of
+  which unlock and jump the scroll to beat 7's zone; her stage is hidden
+  during beat 6 and the 6→7 transition plays the same centre-top walk-in
+  (with its own scroll lock) as 3→4. Scrolling back up into the beat
+  replays the video without locking. **The film file itself is a
+  placeholder: drop the real one at `assets/oncourts-film.mp4`** (muted
+  autoplay; add captions/sound design decisions when it lands). **Copy conventions (explicit instructions, Jul 2026): NO em dashes
   anywhere in user-facing copy** (use commas/colons/periods; titles use
   `|`) **and no `[placeholder — verify]` citation sups** — both were
   stripped sitewide, including build-script templates; don't reintroduce

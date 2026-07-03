@@ -93,7 +93,7 @@
   </section>
 
   <!-- ================= STICKY SCROLLYTELLING STORY ================= -->
-  <div class="story" id="story" style="--beats:9">
+  <div class="story" id="story" style="--beats:10">
     <div class="pin" id="pin" data-beat="0">
 
       <!-- animated ground / path layer -->
@@ -163,12 +163,16 @@
         </article>
 
         <article class="beat" data-beat="5" data-theme="stat-alt">
-          <p class="beat-eyebrow">Who bears the cost</p>
-          <h2 class="beat-stat"><span class="count-up" data-target="75" data-suffix="%">0</span></h2>
-          <p class="beat-body">of people in Indian prisons are undertrials: awaiting trial, not convicted of anything.</p>
+          <p class="beat-eyebrow">From question to court</p>
+          <h2 class="beat-title">We took the question to Kollam.</h2>
+          <p class="beat-body">PUCAR began by carrying this question into a single district: Kollam, in Kerala. In partnership with the Kerala High Court, we launched 24x7 ON Courts, India's first fully digital, end-to-end court, built around the litigant from first filing to final order.</p>
         </article>
 
-        <article class="beat" data-beat="6" data-theme="turn">
+        <article class="beat" data-beat="6" data-theme="film">
+          <span class="visually-hidden">Watch: the 24x7 ON Courts film</span>
+        </article>
+
+        <article class="beat" data-beat="7" data-theme="turn">
           <p class="beat-eyebrow">This is where PUCAR steps in</p>
           <h2 class="beat-title">We're changing what this walk feels like.</h2>
           <p class="beat-body">PUCAR is a non-profit public mission building a more people-centric dispute resolution experience, guided by values we return to on every initiative.</p>
@@ -180,7 +184,7 @@
           </ul>
         </article>
 
-        <article class="beat" data-beat="7" data-theme="initiatives" id="initiatives">
+        <article class="beat" data-beat="8" data-theme="initiatives" id="initiatives">
           <p class="beat-eyebrow">How we're doing it</p>
           <h2 class="beat-title">A few of our initiatives</h2>
           <div class="initiative-grid">
@@ -207,7 +211,7 @@
           </div>
         </article>
 
-        <article class="beat" data-beat="8" data-theme="cta" id="cta">
+        <article class="beat" data-beat="9" data-theme="cta" id="cta">
           <p class="beat-eyebrow">Join the mission</p>
           <h2 class="beat-title">The litigant shouldn't walk this alone.</h2>
           <p class="beat-body">We're building an ecosystem to power innovations that improve the dispute resolution experience for every Indian.</p>
@@ -217,6 +221,17 @@
           </div>
         </article>
 
+      </div>
+
+
+      <!-- the film break (beat 6): slides up from under the previous beat,
+           holds the page while it plays; skip (or the film ending) moves on -->
+      <div class="video-break" id="videoBreak">
+        <video id="onCourtsVideo" playsinline muted preload="metadata">
+          <source src="/assets/oncourts-film.mp4" type="video/mp4" />
+        </video>
+        <p class="video-note">[placeholder: drop the ON Courts film at assets/oncourts-film.mp4]</p>
+        <button class="btn video-skip" id="videoSkip" type="button">Skip film ↓</button>
       </div>
 
       <!-- progress rail -->
