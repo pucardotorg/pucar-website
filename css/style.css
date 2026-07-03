@@ -299,6 +299,11 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
   justify-self:center;
   align-self:center;
   width:clamp(230px, 30vw, 380px);
+  /* constant above-the-midline lift (desktop; mobile pins her to the top
+     row instead). This used to ride inside the JS-driven transform, but
+     the horizontal walk was moved off the stage onto .litigant-walker --
+     the stage (and the road inside it) no longer moves at all. */
+  translate:0 -12vh;
   /* side→centre position (translate) is set continuously, every frame, by
      script.js as a direct function of scroll position -- NOT by a CSS
      transition triggered on a discrete beat change. A time-based CSS
@@ -310,6 +315,18 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
      transition is declared here at all -- see updateLitigantPosition() in
      script.js, including its own light easing (lerp) for a settled feel
      once scrolling stops, instead of relying on a CSS transition. */
+}
+
+/* what actually travels side->centre: the figure, her shadow, and her
+   speech bubble -- NOT the road. Sliding the whole stage moved the road
+   along with her, which read as the scene panning rather than her
+   walking ("not have the whole thing move from the left to the centre").
+   js/script.js writes this element's transform every frame; she walks off
+   the road, which stays put on the left and fades (see the road-fade
+   rules near the judge block). */
+.litigant-walker{
+  position:relative;
+  will-change:transform;
 }
 
 /* ---------------- idle speech bubbles ----------------
@@ -772,8 +789,12 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
    (.45s animation-delay + ~.7s to the strike keyframe). Leaving beat 3
    drops the rule, and with it the delay, so it hides immediately. */
 .judge-bubble{
-  top:-11%;      /* clear of his face -- it overlapped the head at -3% */
-  left:36%;
+  /* fully ABOVE his head -- at -11% the bubble's lower half still lay
+     across his face (the head starts almost exactly at the stage's top
+     edge, viewBox y≈27 of a 20-1000 crop). -24% puts the whole balloon,
+     tail included, above the artwork; the tail points down toward him. */
+  top:-24%;
+  left:46%;
   translate:6% 10px;
 }
 .pin[data-beat="3"] .judge-bubble{
@@ -782,6 +803,61 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
   scale:1;
   animation:bubbleJitter 2.6s ease-in-out infinite;
   transition-delay:1.2s;
+}
+
+/* ---- leaving the judge: dust piles up on him, then time blows him away --
+   Triggered by js/script.js adding .is-judge-exit to the pin ONLY on a
+   genuine 3 -> forward transition (a plain [data-beat="4"] rule would also
+   fire when landing on beats 4-8 directly -- flashing a judge the visitor
+   never saw). The class is removed again ~2.6s later (or instantly on
+   returning to beat 3), after which the ordinary hidden state holds. */
+.pin.is-judge-exit .judge-stage{
+  animation: judgeBlowAway 2.3s cubic-bezier(.5,.05,.65,1) forwards;
+}
+@keyframes judgeBlowAway{
+  0%  { opacity:1;   translate:0 0;        filter:none; }
+  35% { opacity:.95; translate:.6vw 0;     filter:grayscale(.5); }         /* fading to grey as the dust settles */
+  100%{ opacity:0;   translate:17vw -6vh;  filter:grayscale(1) blur(4px); } /* carried off, almost by time */
+}
+
+/* the dust itself: small motes that settle onto his head, shoulders, and
+   the bench, then stream away on the same wind. Staggered per-particle
+   via --dd/--dur. */
+.judge-dust{ position:absolute; inset:0; pointer-events:none; }
+.judge-dust i{
+  position:absolute;
+  width:7px; height:7px;
+  border-radius:50%;
+  background:var(--muted);
+  opacity:0;
+}
+.judge-dust i:nth-child(1){ left:46%; top:2%;  width:5px; --dd:0s;   --dur:1.9s; } /* head */
+.judge-dust i:nth-child(2){ left:34%; top:11%; width:6px; --dd:.1s;  --dur:2.1s; } /* shoulder L */
+.judge-dust i:nth-child(3){ left:60%; top:12%;            --dd:.22s; --dur:1.8s; } /* shoulder R */
+.judge-dust i:nth-child(4){ left:24%; top:36%; width:8px; --dd:.05s; --dur:2.2s; } /* bench top L */
+.judge-dust i:nth-child(5){ left:52%; top:34%; width:6px; --dd:.3s;  --dur:1.9s; } /* bench top C */
+.judge-dust i:nth-child(6){ left:74%; top:37%; width:5px; --dd:.16s; --dur:2s;   } /* by the scales */
+.judge-dust i:nth-child(7){ left:38%; top:58%; width:8px; --dd:.34s; --dur:2.2s; } /* panel */
+.judge-dust i:nth-child(8){ left:64%; top:66%; width:6px; --dd:.24s; --dur:2.1s; } /* panel R */
+.pin.is-judge-exit .judge-dust i{
+  animation: dustAway var(--dur, 2s) ease-in var(--dd, 0s) forwards;
+}
+@keyframes dustAway{
+  0%  { opacity:0;   translate:0 -14px; }
+  28% { opacity:.9;  translate:0 0;     }   /* settles onto him / the desk */
+  55% { opacity:.75; translate:3vw -1vh; }
+  100%{ opacity:0;   translate:16vw -5vh; } /* blown off with him */
+}
+
+/* ---- beats 4+: she walks OFF the road ---------------------------------------
+   The road stays put in the stage while the walker carries her to centre,
+   so it fades out behind her (uses .path's own 2s opacity transition). */
+.pin[data-beat="4"] .path,
+.pin[data-beat="5"] .path,
+.pin[data-beat="6"] .path,
+.pin[data-beat="7"] .path,
+.pin[data-beat="8"] .path{
+  opacity:0;
 }
 
 /* ---- idle look-around ------------------------------------------------------
@@ -1634,6 +1710,7 @@ body.modal-open{ overflow:hidden; }
   .judge .gavel, .speech-bubble,
   .ground-dots, .path, .shadow, .scroll-cue{ animation:none !important; }
   .queue-fig, .judge-stage, #litigant{ transition:none !important; }
+  .pin.is-judge-exit .judge-stage, .judge-dust i{ animation:none !important; }
   /* Collaborate entrance: skip the animation but keep the .js-reveal
      opacity:0 rule from ever winning -- just show everything at rest
      rather than leaving it stuck invisible with nothing to trigger it. */
@@ -1667,8 +1744,11 @@ body.modal-open{ overflow:hidden; }
     width:clamp(120px,32vw,170px);
     align-self:start;
   }
-  /* single column on mobile: keep the litigant put, no side→centre slide */
-  .pin[data-beat] .litigant-stage{ transform:none !important; }
+  /* single column on mobile: keep the litigant put, no side→centre slide,
+     and no desktop midline lift (translate is a separate property from
+     transform, so it needs its own reset) */
+  .pin[data-beat] .litigant-stage{ transform:none !important; translate:none !important; }
+  .pin[data-beat] .litigant-walker{ transform:none !important; }
   .beats{
     grid-column:1;
     grid-row:2;  /* mobile really IS two rows (figure above, text below) -- undo the desktop grid-row:1 */

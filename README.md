@@ -277,9 +277,32 @@ needed no special accommodation for it beyond generous top padding.
   real two-row mobile layout (`.beats{grid-row:2}`, judge sized/rowed for
   mobile too). If you add another stage to the pin, give it explicit
   `grid-column` AND `grid-row`.
-- **She stays on the LEFT through beats 0–3.** The side→centre slide is
+- **She stays on the LEFT through beats 0–3.** The side→centre motion is
   driven by `beatFloat - 3`; the bottom-left text treatment (`.beats`
   full-row rules, §5) starts at `data-beat="4"`.
+- **SHE walks to the centre — the scene doesn't pan** (Jul 2026: "not have
+  the whole thing move from the left to the centre"). The scroll-linked
+  transform moved off `.litigant-stage` onto `.litigant-walker`, a wrapper
+  inside the stage holding the figure + her shadow + her speech bubble.
+  The road (`.path`) stays outside the walker, fixed on the left, and
+  fades out on beats 4–8 (she walks off the marked path). The constant
+  `-12vh` midline lift now lives as a CSS `translate` on the stage
+  (mobile resets it with `translate:none !important` — `translate` is a
+  separate property from `transform`, one reset does not cover the other);
+  JS writes only the walker's `translate(x vw, −6vh·t)`.
+- **Leaving the judge (beat 3 → forward): dust piles up and he's blown
+  away, almost by time.** `setActiveBeat` adds `.is-judge-exit` ONLY on a
+  genuine 3→forward transition (a plain `[data-beat="4"]` CSS hook would
+  also fire when landing on later beats directly, flashing a judge the
+  visitor never saw), auto-removed after 2.6s or instantly on returning
+  to 3. It drives `judgeBlowAway` (grey → drift 17vw right + blur + fade)
+  and `dustAway` on eight `.judge-dust i` motes positioned over his head,
+  shoulders, and the bench, staggered via `--dd`/`--dur` — they settle
+  onto him first, then stream off on the same wind. Disabled under
+  `prefers-reduced-motion`.
+- **His speech bubble sits fully above his head** (`top:-24%`) — at
+  shallower offsets it lay across his face, since the head starts almost
+  exactly at the stage's top edge.
 - **Beat 0 — "No one wants to be in court" (78% Civic Studios stat in the
   body):** she walks in exactly as before (the run-in entrance), in FULL
   colour — no greyscale here (explicit correction: "don't lose colour or

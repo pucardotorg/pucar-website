@@ -8,6 +8,7 @@
   var beatIndexEl = document.getElementById("beatIndex");
   var beatTotalEl = document.getElementById("beatTotal");
   var litigantStage = document.getElementById("litigantStage");
+  var litigantWalker = document.getElementById("litigantWalker");
   var numBeats = beatEls.length;
 
   if (beatTotalEl) beatTotalEl.textContent = String(numBeats);
@@ -15,6 +16,7 @@
   var currentBeat = -1;
   var ticking = false;
   var walkTimeout = null;
+  var judgeExitTimer = null;
   var idleTimeout = null;
   var IDLE_DELAY = 10000; // ms without scrolling before she looks around
 
@@ -199,24 +201,24 @@
 
   function updateLitigantPosition() {
     centerTickPending = false;
-    if (!litigantStage) return;
+    if (!litigantWalker) return;
 
     if (window.innerWidth <= MOBILE_BREAKPOINT) {
-      litigantStage.style.transform = ""; // CSS !important rule owns mobile anyway; keep inline clean
+      litigantWalker.style.transform = ""; // CSS !important rule owns mobile anyway; keep inline clean
       return;
     }
 
     smoothCenterT += (targetCenterT - smoothCenterT) * 0.15;
     if (Math.abs(targetCenterT - smoothCenterT) < 0.0008) smoothCenterT = targetCenterT;
 
-    // -12vh base lift on every beat: the stage is align-self:center, which
-    // sat her figure's mass BELOW the viewport midline ("the litigant is
-    // too low on the page -- she was supposed to be above the middle
-    // point"). The extra -6vh while centred keeps the bottom-left text
-    // treatment clear of her, same job the old -9vh did.
+    // Targets .litigant-walker (figure + shadow + bubble), NOT the stage:
+    // the road stays behind on the left so SHE walks to the centre rather
+    // than the whole scene panning there ("not have the whole thing move").
+    // The constant -12vh midline lift lives on .litigant-stage in CSS; the
+    // extra -6vh here keeps the bottom-left text clear once she's centred.
     var x = (smoothCenterT * 25).toFixed(3);
-    var y = (-12 + smoothCenterT * -6).toFixed(3);
-    litigantStage.style.transform = "translate(" + x + "vw, " + y + "vh)";
+    var y = (smoothCenterT * -6).toFixed(3);
+    litigantWalker.style.transform = "translate(" + x + "vw, " + y + "vh)";
 
     if (smoothCenterT !== targetCenterT) {
       centerTickPending = true;
@@ -322,7 +324,25 @@
 
   function setActiveBeat(index) {
     if (index === currentBeat) return;
+    var prevBeat = currentBeat;
     currentBeat = index;
+
+    // Leaving the judge (beat 3) FORWARD: dust piles up on him and he's
+    // blown away, almost by time (.is-judge-exit drives judgeBlowAway +
+    // dustAway in style.css). Gated on a genuine 3->forward transition --
+    // a plain [data-beat] CSS hook would also fire when landing on later
+    // beats directly, flashing a judge the visitor never saw. Scrolling
+    // BACK to beat 3 cancels/normal-fades instead.
+    if (prevBeat === 3 && index > 3) {
+      pin.classList.add("is-judge-exit");
+      clearTimeout(judgeExitTimer);
+      judgeExitTimer = setTimeout(function () {
+        pin.classList.remove("is-judge-exit");
+      }, 2600); // outlives the 2.3s blow-away animation
+    } else if (index === 3) {
+      clearTimeout(judgeExitTimer);
+      pin.classList.remove("is-judge-exit");
+    }
 
     pin.setAttribute("data-beat", String(index));
     if (beatIndexEl) beatIndexEl.textContent = String(index + 1);
