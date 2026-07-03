@@ -177,6 +177,39 @@ body:has(.pin[data-beat="9"]) .site-header .logo-dark{ opacity:1; }
   box-shadow:0 4px 12px rgba(17,31,38,.25);
 }
 
+/* ---- glider: a pill that slides between links on hover (homepage only,
+   js/script.js injects it and adds .has-glider). The plain :hover above
+   stays as the fallback for generated pages, which don't load script.js. */
+.site-nav{ position:relative; }
+.site-nav.has-glider a:hover{ background:transparent; box-shadow:none; }
+.site-nav.has-glider a{ position:relative; z-index:1; }
+.site-nav.has-glider .nav-drop{ position:static; }
+.site-nav.has-glider .nav-drop .nav-menu{ z-index:2; }
+.nav-glider{
+  position:absolute;
+  z-index:0;
+  border-radius:999px;
+  background:var(--forest);
+  box-shadow:0 4px 12px rgba(17,31,38,.25);
+  opacity:0;
+  transition:left .28s cubic-bezier(.5,.1,.2,1), width .28s cubic-bezier(.5,.1,.2,1),
+    top .28s ease, height .28s ease, opacity .2s ease;
+  pointer-events:none;
+}
+.site-nav a.is-lit{ color:var(--paper); }
+/* dot marking the section currently on screen */
+.site-nav a.is-current::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:3px;
+  width:4px; height:4px;
+  border-radius:50%;
+  background:var(--green);
+  translate:-50% 0;
+}
+.site-nav a.is-current.is-lit::after{ background:var(--paper); }
+
 /* ---------------- Collaborate nav dropdown ---------------- */
 .nav-drop{ position:relative; display:inline-flex; }
 .nav-drop-trigger{

@@ -1023,3 +1023,71 @@
     grid.appendChild(a);
   });
 })();
+
+/* ---- nav glider: a green pill that slides between top-level nav links on
+   hover/focus, plus an IntersectionObserver "you are here" dot. Homepage
+   only (generated pages don't load this file; they keep the CSS :hover). */
+(function () {
+  "use strict";
+  var nav = document.querySelector(".site-header .site-nav");
+  if (!nav) return;
+  var links = Array.prototype.slice.call(
+    nav.querySelectorAll(":scope > a, :scope > .nav-drop > a")
+  );
+  if (!links.length) return;
+  nav.classList.add("has-glider");
+  var glider = document.createElement("span");
+  glider.className = "nav-glider";
+  glider.setAttribute("aria-hidden", "true");
+  nav.insertBefore(glider, nav.firstChild);
+
+  var lit = null;
+  function move(a) {
+    glider.style.left = a.offsetLeft + "px";
+    glider.style.top = a.offsetTop + "px";
+    glider.style.width = a.offsetWidth + "px";
+    glider.style.height = a.offsetHeight + "px";
+    glider.style.opacity = "1";
+    if (lit) lit.classList.remove("is-lit");
+    lit = a;
+    a.classList.add("is-lit");
+  }
+  function clear() {
+    glider.style.opacity = "0";
+    if (lit) { lit.classList.remove("is-lit"); lit = null; }
+  }
+  links.forEach(function (a) {
+    a.addEventListener("mouseenter", function () { move(a); });
+    a.addEventListener("focus", function () { move(a); });
+  });
+  // hovering an open dropdown menu keeps its trigger lit
+  Array.prototype.forEach.call(nav.querySelectorAll(".nav-drop"), function (drop) {
+    drop.addEventListener("mouseenter", function () {
+      var t = drop.querySelector("a");
+      if (t) move(t);
+    });
+  });
+  nav.addEventListener("mouseleave", clear);
+  nav.addEventListener("focusout", function (e) {
+    if (!nav.contains(e.relatedTarget)) clear();
+  });
+
+  // "you are here": small dot under the link for the section on screen
+  if ("IntersectionObserver" in window) {
+    var spy = [
+      ["story", nav.querySelector('a[href="#story"]')],
+      ["collaborate", nav.querySelector('.nav-drop > a[href="#collaborate"]')]
+    ].filter(function (p) { return p[1] && document.getElementById(p[0]); });
+    if (spy.length) {
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          spy.forEach(function (p) {
+            p[1].classList.toggle("is-current", p[0] === en.target.id);
+          });
+        });
+      }, { rootMargin: "-40% 0px -50% 0px" });
+      spy.forEach(function (p) { obs.observe(document.getElementById(p[0])); });
+    }
+  }
+})();
