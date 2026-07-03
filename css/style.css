@@ -343,7 +343,9 @@ body:has(.pin:is([data-beat="4"],[data-beat="5"],[data-beat="6"],[data-beat="7"]
     left .24s ease, width .24s ease, opacity .18s ease;
 }
 .nav-menu.has-glider .nav-menu-item{ position:relative; z-index:1; }
-.nav-menu.has-glider .nav-menu-item:hover{ background:transparent; }
+/* box-shadow too: .site-nav a:hover's shadow would otherwise pop in on the
+   hovered item before the glider pill has slid over to it */
+.nav-menu.has-glider .nav-menu-item:hover{ background:transparent; box-shadow:none; }
 .nav-menu .nav-menu-item.is-lit{ color:var(--paper); }
 .nav-menu-sub{
   font-size:.76rem;
