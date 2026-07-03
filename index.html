@@ -371,20 +371,24 @@
     <button class="job-modal-close" type="button" data-close aria-label="Close">×</button>
     <p class="beat-eyebrow">PUCAR</p>
     <h2 class="job-title" id="contactTitle">Get in touch</h2>
-    <form class="contact-form" id="contactForm" name="contact" method="POST" action="/" data-netlify="true" netlify-honeypot="bot-field">
+    <p class="contact-intro">We're always excited by new opportunities to collaborate. Tell us a little about what you have in mind, and we'll take it from there.</p>
+    <form class="contact-form" id="contactForm" name="contact" method="POST" action="/" data-netlify="true" netlify-honeypot="bot-field" novalidate>
       <input type="hidden" name="form-name" value="contact" />
       <p class="contact-hp" hidden aria-hidden="true"><label>Don't fill this out if you're human: <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
       <label>Name
         <input type="text" name="name" required autocomplete="name" />
+        <span class="field-error" aria-live="polite"></span>
       </label>
       <label>Email
         <input type="email" name="email" required autocomplete="email" />
+        <span class="field-error" aria-live="polite"></span>
       </label>
       <label>Phone number
         <input type="tel" name="phone" autocomplete="tel" />
       </label>
       <label>Your message
         <textarea name="message" rows="5" required></textarea>
+        <span class="field-error" aria-live="polite"></span>
       </label>
       <p class="contact-error" id="contactError" hidden>Something went wrong sending that. Please try again, or email <a href="mailto:collaborate@pucar.org">collaborate@pucar.org</a>.</p>
       <div class="cta-row">

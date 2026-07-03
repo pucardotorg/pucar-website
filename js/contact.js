@@ -41,9 +41,55 @@
     if (e.key === "Escape" && !modal.hidden) close();
   });
 
+  // ---- themed inline validation (form carries `novalidate`: the browser's
+  // native OS-styled bubbles are replaced by .field-error notes) ----------
+  function setFieldError(input, msg) {
+    var slot = input.parentNode.querySelector(".field-error");
+    if (slot) slot.textContent = msg || "";
+    input.classList.toggle("is-invalid", !!msg);
+    input.setAttribute("aria-invalid", msg ? "true" : "false");
+  }
+
+  function validate() {
+    var name = form.querySelector('[name="name"]');
+    var email = form.querySelector('[name="email"]');
+    var message = form.querySelector('[name="message"]');
+    var firstBad = null;
+
+    if (!name.value.trim()) {
+      setFieldError(name, "Please tell us your name.");
+      firstBad = firstBad || name;
+    } else setFieldError(name, "");
+
+    var ev = email.value.trim();
+    if (!ev) {
+      setFieldError(email, "We need an email to reply to.");
+      firstBad = firstBad || email;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ev)) {
+      setFieldError(email, "That email doesn't look quite right.");
+      firstBad = firstBad || email;
+    } else setFieldError(email, "");
+
+    if (!message.value.trim()) {
+      setFieldError(message, "Tell us a little about what you have in mind.");
+      firstBad = firstBad || message;
+    } else setFieldError(message, "");
+
+    if (firstBad) firstBad.focus();
+    return !firstBad;
+  }
+
+  // a field's note clears the moment the visitor starts fixing it
+  form.addEventListener("input", function (e) {
+    if (e.target.classList && e.target.classList.contains("is-invalid")) {
+      setFieldError(e.target, "");
+    }
+  });
+
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     errorEl.hidden = true;
+    if (!validate()) return;
     submitBtn.disabled = true;
     submitBtn.textContent = "Sending…";
     fetch("/", {

@@ -205,6 +205,13 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
 
 /* ---------------- contact modal + Netlify form ---------------- */
 .contact-panel{ max-width:560px; }
+.contact-intro{
+  margin:6px 0 6px;
+  font-size:.98rem;
+  line-height:1.6;
+  color:var(--ink-soft);
+  max-width:46ch;
+}
 .contact-form{ margin-top:10px; }
 .contact-form label{
   display:flex;
@@ -231,6 +238,22 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
   outline-offset:1px;
   border-color:var(--forest);
 }
+/* themed inline validation (replaces the browser's native bubbles) */
+.contact-form .is-invalid{
+  border-color:#B0402F;
+}
+.contact-form .is-invalid:focus{
+  outline-color:#B0402F;
+  border-color:#B0402F;
+}
+.field-error{
+  font-size:.8rem;
+  font-weight:500;
+  font-style:italic;
+  color:#B0402F;
+  min-height:0;
+}
+.field-error:empty{ display:none; }
 .contact-form .cta-row{ margin-top:6px; }
 .contact-form .btn{ border:none; cursor:pointer; font-family:var(--font-body); }
 .contact-error{
