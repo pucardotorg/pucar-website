@@ -889,15 +889,22 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
   100%{ opacity:0;   translate:-6vw -6vh;  } /* scattered up and LEFT with him */
 }
 
-/* ---- beats 4+: she walks OFF the road ---------------------------------------
-   The road stays put in the stage while the walker carries her to centre,
-   so it fades out behind her (uses .path's own 2s opacity transition). */
+/* ---- beats 3+: the road is GONE ---------------------------------------------
+   From the judge's section onward there is no road at all. transition:none
+   is the point: the road's base 2s opacity fade is for the walk-in reveal,
+   and letting it run here meant that when her stage faded back in on beat
+   4, the road inside it was caught mid-fade -- briefly visible, then
+   fading out ("the road briefly fades in and fades out"). Hidden with no
+   transition, it can never be caught in between. Scrolling back to beat 2
+   brings it back with the normal soft fade (beat 2 isn't in this list). */
+.pin[data-beat="3"] .path,
 .pin[data-beat="4"] .path,
 .pin[data-beat="5"] .path,
 .pin[data-beat="6"] .path,
 .pin[data-beat="7"] .path,
 .pin[data-beat="8"] .path{
   opacity:0;
+  transition:none;
 }
 
 /* ---- idle look-around ------------------------------------------------------

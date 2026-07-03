@@ -295,8 +295,12 @@ needed no special accommodation for it beyond generous top padding.
 - **The walker owns her transform** (`.litigant-walker`, a wrapper inside
   the stage holding the figure + her shadow + her speech bubble; JS writes
   `translate(x vw, −6vh·t)` on it every frame). The road (`.path`) stays
-  outside the walker, fixed on the left, and fades out on beats 4–8 (she
-  left the marked path behind). The constant `-12vh` midline lift lives
+  outside the walker, fixed on the left, and is hidden with
+  `transition:none` on beats 3–8 — instantly, not faded, because the
+  road's base 2s fade let it get caught mid-transition when her stage
+  faded back in on beat 4 ("the road briefly fades in and fades out").
+  There is no road at all from the judge onward; scrolling back to beat 2
+  restores it with the normal soft fade. The constant `-12vh` midline lift lives
   as a CSS `translate` on the stage (mobile resets it with
   `translate:none !important` — `translate` is a separate property from
   `transform`, one reset does not cover the other).
