@@ -789,12 +789,15 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
    (.45s animation-delay + ~.7s to the strike keyframe). Leaving beat 3
    drops the rule, and with it the delay, so it hides immediately. */
 .judge-bubble{
-  /* fully ABOVE his head -- at -11% the bubble's lower half still lay
-     across his face (the head starts almost exactly at the stage's top
-     edge, viewBox y≈27 of a 20-1000 crop). -24% puts the whole balloon,
-     tail included, above the artwork; the tail points down toward him. */
-  top:-24%;
-  left:46%;
+  /* anchored to the stage's TOP EDGE, not offset by a % of stage height:
+     his head sits almost exactly at that edge (viewBox y≈27 of a 20-1000
+     crop), so `bottom:calc(100% + gap)` puts the balloon just above his
+     head with a constant gap at EVERY screen size -- a % top offset
+     scaled with the (very tall) bench artwork and drifted far too high
+     on large screens. */
+  top:auto;
+  bottom:calc(100% + 12px);
+  left:38%;
   translate:6% 10px;
 }
 .pin[data-beat="3"] .judge-bubble{
@@ -805,19 +808,28 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
   transition-delay:1.2s;
 }
 
-/* ---- leaving the judge: dust piles up on him, then time blows him away --
-   Triggered by js/script.js adding .is-judge-exit to the pin ONLY on a
-   genuine 3 -> forward transition (a plain [data-beat="4"] rule would also
-   fire when landing on beats 4-8 directly -- flashing a judge the visitor
-   never saw). The class is removed again ~2.6s later (or instantly on
-   returning to beat 3), after which the ordinary hidden state holds. */
-.pin.is-judge-exit .judge-stage{
-  animation: judgeBlowAway 2.3s cubic-bezier(.5,.05,.65,1) forwards;
+/* ---- leaving the judge: dust piles up FAST, then he disintegrates --------
+   Scroll-driven, and finished BEFORE the next section arrives: js/script.js
+   toggles .is-judge-exit the moment scroll progress passes beatFloat 3.3 --
+   still comfortably inside beat 3 (the beat flips at 3.5) -- so the whole
+   ~1.1s sequence (dust settles ~.3s, dissolve ~.8s) plays out on HIS
+   screen, not bleeding over the next one. Gated by `judgeSeen` in JS so a
+   direct landing on a later beat never flashes him. Scrolling back below
+   the threshold removes the class and he reassembles via the ordinary
+   beat-3 transitions. `forwards` holds him at opacity 0 for as long as the
+   class stays on (all beats past 3), so there's no lingering ghost fade. */
+.pin.is-judge-exit .judge{
+  /* coarse turbulence displacement -- tears the artwork into shreds while
+     the keyframes below fade what's left: a crumble, not a fade */
+  filter:url(#judgeDissolve);
 }
-@keyframes judgeBlowAway{
-  0%  { opacity:1;   translate:0 0;        filter:none; }
-  35% { opacity:.95; translate:.6vw 0;     filter:grayscale(.5); }         /* fading to grey as the dust settles */
-  100%{ opacity:0;   translate:17vw -6vh;  filter:grayscale(1) blur(4px); } /* carried off, almost by time */
+.pin.is-judge-exit .judge-stage{
+  animation: judgeDissolveAway .8s ease-in .3s forwards; /* .3s = let the dust land first */
+}
+@keyframes judgeDissolveAway{
+  0%  { opacity:1;   translate:0 0;       scale:1;    filter:none; }
+  45% { opacity:.8;  translate:.4vw -1vh; scale:1.01; filter:grayscale(.9) blur(1px); }
+  100%{ opacity:0;   translate:2vw -4vh;  scale:1.04; filter:grayscale(1) blur(6px); }
 }
 
 /* the dust itself: small motes that settle onto his head, shoulders, and
@@ -831,22 +843,22 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
   background:var(--muted);
   opacity:0;
 }
-.judge-dust i:nth-child(1){ left:46%; top:2%;  width:5px; --dd:0s;   --dur:1.9s; } /* head */
-.judge-dust i:nth-child(2){ left:34%; top:11%; width:6px; --dd:.1s;  --dur:2.1s; } /* shoulder L */
-.judge-dust i:nth-child(3){ left:60%; top:12%;            --dd:.22s; --dur:1.8s; } /* shoulder R */
-.judge-dust i:nth-child(4){ left:24%; top:36%; width:8px; --dd:.05s; --dur:2.2s; } /* bench top L */
-.judge-dust i:nth-child(5){ left:52%; top:34%; width:6px; --dd:.3s;  --dur:1.9s; } /* bench top C */
-.judge-dust i:nth-child(6){ left:74%; top:37%; width:5px; --dd:.16s; --dur:2s;   } /* by the scales */
-.judge-dust i:nth-child(7){ left:38%; top:58%; width:8px; --dd:.34s; --dur:2.2s; } /* panel */
-.judge-dust i:nth-child(8){ left:64%; top:66%; width:6px; --dd:.24s; --dur:2.1s; } /* panel R */
+.judge-dust i:nth-child(1){ left:46%; top:2%;  width:5px; --dd:0s;   --dur:1s;   } /* head */
+.judge-dust i:nth-child(2){ left:34%; top:11%; width:6px; --dd:.06s; --dur:1.1s; } /* shoulder L */
+.judge-dust i:nth-child(3){ left:60%; top:12%;            --dd:.12s; --dur:.95s; } /* shoulder R */
+.judge-dust i:nth-child(4){ left:24%; top:36%; width:8px; --dd:.03s; --dur:1.15s;} /* bench top L */
+.judge-dust i:nth-child(5){ left:52%; top:34%; width:6px; --dd:.16s; --dur:1s;   } /* bench top C */
+.judge-dust i:nth-child(6){ left:74%; top:37%; width:5px; --dd:.09s; --dur:1.05s;} /* by the scales */
+.judge-dust i:nth-child(7){ left:38%; top:58%; width:8px; --dd:.18s; --dur:1.15s;} /* panel */
+.judge-dust i:nth-child(8){ left:64%; top:66%; width:6px; --dd:.13s; --dur:1.1s; } /* panel R */
 .pin.is-judge-exit .judge-dust i{
-  animation: dustAway var(--dur, 2s) ease-in var(--dd, 0s) forwards;
+  animation: dustAway var(--dur, 1s) ease-in var(--dd, 0s) forwards;
 }
 @keyframes dustAway{
-  0%  { opacity:0;   translate:0 -14px; }
-  28% { opacity:.9;  translate:0 0;     }   /* settles onto him / the desk */
-  55% { opacity:.75; translate:3vw -1vh; }
-  100%{ opacity:0;   translate:16vw -5vh; } /* blown off with him */
+  0%  { opacity:0;   translate:0 -12px;  }
+  30% { opacity:.95; translate:0 0;      }  /* lands on him / the desk, fast */
+  60% { opacity:.8;  translate:1.5vw -2vh; }
+  100%{ opacity:0;   translate:6vw -6vh;  } /* scattered upward with him */
 }
 
 /* ---- beats 4+: she walks OFF the road ---------------------------------------

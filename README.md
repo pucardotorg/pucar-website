@@ -290,19 +290,28 @@ needed no special accommodation for it beyond generous top padding.
   (mobile resets it with `translate:none !important` — `translate` is a
   separate property from `transform`, one reset does not cover the other);
   JS writes only the walker's `translate(x vw, −6vh·t)`.
-- **Leaving the judge (beat 3 → forward): dust piles up and he's blown
-  away, almost by time.** `setActiveBeat` adds `.is-judge-exit` ONLY on a
-  genuine 3→forward transition (a plain `[data-beat="4"]` CSS hook would
-  also fire when landing on later beats directly, flashing a judge the
-  visitor never saw), auto-removed after 2.6s or instantly on returning
-  to 3. It drives `judgeBlowAway` (grey → drift 17vw right + blur + fade)
-  and `dustAway` on eight `.judge-dust i` motes positioned over his head,
-  shoulders, and the bench, staggered via `--dd`/`--dur` — they settle
-  onto him first, then stream off on the same wind. Disabled under
+- **Leaving the judge: dust piles up fast, then he DISINTEGRATES — and
+  it finishes inside his own section.** Scroll-driven, not beat-driven
+  (revised after "the judge is still fading out as the next screen is
+  already active"): `onScrollFrame` toggles `.is-judge-exit` at
+  `beatFloat >= 3.3` — still inside beat 3, which flips at 3.5 — so the
+  ~1.1s sequence (eight `.judge-dust i` motes land on his head/shoulders/
+  bench in ~.3s, then `judgeDissolveAway` runs .8s) completes before
+  beat 4's content is up. The disappearance itself is a **turbulence
+  filter** (`#judgeDissolve` in index.html, a coarse
+  feTurbulence+feDisplacementMap at scale 55 applied to `.judge` for the
+  exit's duration) that tears the artwork into grainy shreds while the
+  keyframes fade/blur the remains — a crumble, not a fade. `judgeSeen`
+  (set once beat 3 has been active) stops a direct landing on later beats
+  from flashing him; the animation's `forwards` fill holds him hidden
+  while the class stays on, and scrolling back below 3.3 reassembles him
+  via the ordinary beat-3 transitions. Disabled under
   `prefers-reduced-motion`.
-- **His speech bubble sits fully above his head** (`top:-24%`) — at
-  shallower offsets it lay across his face, since the head starts almost
-  exactly at the stage's top edge.
+- **His speech bubble is anchored to the stage's top edge**
+  (`bottom:calc(100% + 12px)`, not a % `top` offset) — his head sits at
+  that edge, so this keeps a constant small gap above his head at every
+  screen size; % offsets scaled with the tall bench artwork and drifted
+  way too high on large screens.
 - **Beat 0 — "No one wants to be in court" (78% Civic Studios stat in the
   body):** she walks in exactly as before (the run-in entrance), in FULL
   colour — no greyscale here (explicit correction: "don't lose colour or

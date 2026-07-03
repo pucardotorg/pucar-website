@@ -16,7 +16,7 @@
   var currentBeat = -1;
   var ticking = false;
   var walkTimeout = null;
-  var judgeExitTimer = null;
+  var judgeSeen = false; // beat 3 has actually been on screen this visit
   var idleTimeout = null;
   var IDLE_DELAY = 10000; // ms without scrolling before she looks around
 
@@ -324,25 +324,7 @@
 
   function setActiveBeat(index) {
     if (index === currentBeat) return;
-    var prevBeat = currentBeat;
     currentBeat = index;
-
-    // Leaving the judge (beat 3) FORWARD: dust piles up on him and he's
-    // blown away, almost by time (.is-judge-exit drives judgeBlowAway +
-    // dustAway in style.css). Gated on a genuine 3->forward transition --
-    // a plain [data-beat] CSS hook would also fire when landing on later
-    // beats directly, flashing a judge the visitor never saw. Scrolling
-    // BACK to beat 3 cancels/normal-fades instead.
-    if (prevBeat === 3 && index > 3) {
-      pin.classList.add("is-judge-exit");
-      clearTimeout(judgeExitTimer);
-      judgeExitTimer = setTimeout(function () {
-        pin.classList.remove("is-judge-exit");
-      }, 2600); // outlives the 2.3s blow-away animation
-    } else if (index === 3) {
-      clearTimeout(judgeExitTimer);
-      pin.classList.remove("is-judge-exit");
-    }
 
     pin.setAttribute("data-beat", String(index));
     if (beatIndexEl) beatIndexEl.textContent = String(index + 1);
@@ -419,6 +401,20 @@
     // fixed-duration animation firing at one scroll pixel.
     targetCenterT = smoothstep(clamp(beatFloat - 3, 0, 1));
     requestCenterTick();
+
+    // ---- judge dissolution, scroll-driven -------------------------------
+    // The dust + disintegration must FINISH before beat 4's content is on
+    // screen ("i don't like how the judge is still fading out as the next
+    // screen is already active"), so it isn't hooked to the beat CHANGE
+    // (which happens at beatFloat 3.5, too late) -- it starts at 3.3,
+    // while his section is still the active one, and the whole sequence
+    // runs ~1.1s. `judgeSeen` stops a direct landing on a later beat from
+    // flashing a judge the visitor never saw; scrolling back below the
+    // threshold reassembles him via the ordinary beat-3 transitions. The
+    // animation's `forwards` fill keeps him at opacity 0 for as long as
+    // the class stays on (i.e. all beats past 3) -- no lingering ghost.
+    if (currentBeat === 3) judgeSeen = true;
+    pin.classList.toggle("is-judge-exit", judgeSeen && beatFloat >= 3.3);
 
     // ---- section-based existence -------------------------------------
     // While the intro hero owns the screen (story still mostly below the
