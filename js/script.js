@@ -29,7 +29,7 @@
   // js falls back to the CSS turbulence dissolve.
   var judgeDust = {
     ready: false, preparing: false, running: false,
-    canvas: null, ctx: null, parts: null, raf: null, dpr: 1, w: 0, h: 0,
+    canvas: null, ctx: null, parts: null, raf: null, retry: null, dpr: 1, w: 0, h: 0,
     pad: 0, padTop: 0, // canvas extends to the viewport's left/top edges -- no visible clip boundary
     t: 0,          // current virtual time of the snap (seconds)
     target: 0      // scroll-driven virtual time we're easing toward
@@ -45,7 +45,19 @@
     var stage = document.querySelector(".judge-stage");
     if (!svg || !stage || !window.HTMLCanvasElement) return;
     var rect = svg.getBoundingClientRect();
-    if (rect.width < 40) return; // stage not laid out yet; try again next time
+    // CRITICAL GATE: the stage animates in when beat 3 arrives (translate
+    // 7vh->0 + scale .94->1 over .9s), and getBoundingClientRect measures
+    // the TRANSFORMED box. Preparing on beat 3's first frame captured him
+    // ~6% small and offset -- which made the SVG->canvas swap visibly
+    // shrink/shift. Only accept a rect that matches the untransformed
+    // layout width (computed style is transform-free); otherwise retry
+    // shortly until the entrance transition has fully settled.
+    var cssW = parseFloat(window.getComputedStyle(svg).width) || 0;
+    if (cssW < 40 || Math.abs(rect.width - cssW) > 0.75) {
+      clearTimeout(judgeDust.retry);
+      judgeDust.retry = setTimeout(prepareJudgeDust, 450);
+      return;
+    }
     judgeDust.preparing = true;
 
     var W = Math.round(rect.width), H = Math.round(rect.height);

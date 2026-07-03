@@ -306,7 +306,14 @@ needed no special accommodation for it beyond generous top padding.
   - **Primary — canvas particle field** (`prepareJudgeDust`/`drawJudgeDust`
     /`runJudgeDust` in js/script.js): while the visitor is still looking
     at beat 3, the judge SVG is serialised → blob URL → offscreen canvas →
-    sampled on a 4px grid into ~5k grains. On exit the SVG flips to
+    sampled on a 4px grid into ~5k grains. **Measurement gate:** the stage
+    animates in when beat 3 arrives (translate/scale transition), and
+    `getBoundingClientRect` returns the TRANSFORMED box — preparing on the
+    beat's first frame once captured him ~6% small and offset, making the
+    SVG→canvas swap visibly shrink/shift. `prepareJudgeDust` therefore
+    only accepts a rect whose width matches the transform-free computed
+    style width (±0.75px), retrying on a 450ms timer until the entrance
+    transition has settled. On exit the SVG flips to
     `visibility:hidden` the same frame the visible `.judge-dust-canvas`
     paints every grain at rest (seamless swap). Erosion starts on the
     windward (RIGHT) side — `delay = (W−x)/W·0.5 + jitter` — and each
