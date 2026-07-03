@@ -1025,7 +1025,7 @@
 })();
 
 /* ---- nav glider: a green pill that slides between top-level nav links on
-   hover/focus, plus an IntersectionObserver "you are here" dot. Homepage
+   hover/focus. Homepage
    only (generated pages don't load this file; they keep the CSS :hover). */
 (function () {
   "use strict";
@@ -1071,23 +1071,4 @@
   nav.addEventListener("focusout", function (e) {
     if (!nav.contains(e.relatedTarget)) clear();
   });
-
-  // "you are here": small dot under the link for the section on screen
-  if ("IntersectionObserver" in window) {
-    var spy = [
-      ["story", nav.querySelector('a[href="#story"]')],
-      ["collaborate", nav.querySelector('.nav-drop > a[href="#collaborate"]')]
-    ].filter(function (p) { return p[1] && document.getElementById(p[0]); });
-    if (spy.length) {
-      var obs = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) {
-          if (!en.isIntersecting) return;
-          spy.forEach(function (p) {
-            p[1].classList.toggle("is-current", p[0] === en.target.id);
-          });
-        });
-      }, { rootMargin: "-40% 0px -50% 0px" });
-      spy.forEach(function (p) { obs.observe(document.getElementById(p[0])); });
-    }
-  }
 })();

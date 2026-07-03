@@ -160,6 +160,7 @@ body:has(.pin[data-beat="9"]) .site-header .logo-dark{ opacity:1; }
   box-shadow:
     0 12px 32px rgba(17,31,38,.10),
     inset 0 1px 0 rgba(255,255,255,.55);
+  transition:background .45s ease, border-color .45s ease, box-shadow .45s ease;
 }
 .site-nav a{
   text-decoration:none;
@@ -181,8 +182,11 @@ body:has(.pin[data-beat="9"]) .site-header .logo-dark{ opacity:1; }
    js/script.js injects it and adds .has-glider). The plain :hover above
    stays as the fallback for generated pages, which don't load script.js. */
 .site-nav{ position:relative; }
-.site-nav.has-glider a:hover{ background:transparent; box-shadow:none; }
-.site-nav.has-glider a{ position:relative; z-index:1; }
+/* top-level pills only -- .nav-menu-item hovers keep their own bg */
+.site-nav.has-glider > a:hover,
+.site-nav.has-glider > .nav-drop > a:hover{ background:transparent; box-shadow:none; }
+.site-nav.has-glider > a,
+.site-nav.has-glider > .nav-drop > a{ position:relative; z-index:1; }
 .site-nav.has-glider .nav-drop{ position:static; }
 .site-nav.has-glider .nav-drop .nav-menu{ z-index:2; }
 .nav-glider{
@@ -197,18 +201,38 @@ body:has(.pin[data-beat="9"]) .site-header .logo-dark{ opacity:1; }
   pointer-events:none;
 }
 .site-nav a.is-lit{ color:var(--paper); }
-/* dot marking the section currently on screen */
-.site-nav a.is-current::after{
-  content:"";
-  position:absolute;
-  left:50%;
-  bottom:3px;
-  width:4px; height:4px;
-  border-radius:50%;
-  background:var(--green);
-  translate:-50% 0;
+
+/* ---- dark-half nav: over the story's dark beats the cream glass pill and
+   ink text lose contrast, so flip: dark glass, light text, brand-green
+   glider with dark text (same family as the header CTA's dark-half flip) */
+body:has(.pin:is([data-beat="4"],[data-beat="5"],[data-beat="6"],[data-beat="7"],[data-beat="8"],[data-beat="9"])) .site-nav{
+  background:rgba(10,21,26,.55);
+  border-color:rgba(251,248,242,.16);
+  box-shadow:0 12px 32px rgba(0,0,0,.35), inset 0 1px 0 rgba(251,248,242,.12);
 }
-.site-nav a.is-current.is-lit::after{ background:var(--paper); }
+/* top-level pills only: the dropdown panel stays paper with ink text, so its
+   items must NOT inherit the light-on-dark colours */
+body:has(.pin:is([data-beat="4"],[data-beat="5"],[data-beat="6"],[data-beat="7"],[data-beat="8"],[data-beat="9"])) .site-nav > a,
+body:has(.pin:is([data-beat="4"],[data-beat="5"],[data-beat="6"],[data-beat="7"],[data-beat="8"],[data-beat="9"])) .site-nav > .nav-drop > a{
+  color:rgba(251,248,242,.88);
+}
+body:has(.pin:is([data-beat="4"],[data-beat="5"],[data-beat="6"],[data-beat="7"],[data-beat="8"],[data-beat="9"])) .site-nav > a:hover,
+body:has(.pin:is([data-beat="4"],[data-beat="5"],[data-beat="6"],[data-beat="7"],[data-beat="8"],[data-beat="9"])) .site-nav > .nav-drop > a:hover{
+  background:var(--green);
+  color:var(--forest);
+}
+body:has(.pin:is([data-beat="4"],[data-beat="5"],[data-beat="6"],[data-beat="7"],[data-beat="8"],[data-beat="9"])) .site-nav.has-glider > a:hover,
+body:has(.pin:is([data-beat="4"],[data-beat="5"],[data-beat="6"],[data-beat="7"],[data-beat="8"],[data-beat="9"])) .site-nav.has-glider > .nav-drop > a:hover{
+  background:transparent;
+}
+body:has(.pin:is([data-beat="4"],[data-beat="5"],[data-beat="6"],[data-beat="7"],[data-beat="8"],[data-beat="9"])) .nav-glider{
+  background:var(--green);
+  box-shadow:0 4px 12px rgba(0,0,0,.35);
+}
+body:has(.pin:is([data-beat="4"],[data-beat="5"],[data-beat="6"],[data-beat="7"],[data-beat="8"],[data-beat="9"])) .site-nav > a.is-lit,
+body:has(.pin:is([data-beat="4"],[data-beat="5"],[data-beat="6"],[data-beat="7"],[data-beat="8"],[data-beat="9"])) .site-nav > .nav-drop > a.is-lit{
+  color:var(--forest);
+}
 
 /* ---------------- Collaborate nav dropdown ---------------- */
 .nav-drop{ position:relative; display:inline-flex; }
