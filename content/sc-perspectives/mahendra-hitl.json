@@ -1,0 +1,15 @@
+{
+  "title": "Human-in-the-loop must be an active design requirement",
+  "author": "Vikas Mahendra · Co-founder, TERES",
+  "outlet": "LinkedIn",
+  "type": "Viewpoint",
+  "url": "https://www.linkedin.com/in/vikas-mahendra-47349514/recent-activity/all/",
+  "tags": [
+    "HITL",
+    "Judicial independence"
+  ],
+  "order": 4,
+  "summary": "Saying 'the judge has final authority' isn't enough — the tool has to be designed so that authority is real.",
+  "body": "## The argument\n\n- The draft's human-in-the-loop principle is **passive** — it says final authority rests with the judge, but not how a tool must be designed to make that authority real\n- Every design choice is a HITL decision: show the judge a summary or the source? Flag uncertainty or present clean output? Require confirmation or make it easy to proceed?\n- \"A passive HITL norm doesn't protect judicial independence — it creates the appearance of it. The tool must do the work.\"\n- TERES submitted formal comments raising 8 issues, authored by Deepika Kinhal and Subhashini Damodharan",
+  "published": true
+}

@@ -1,0 +1,15 @@
+{
+  "title": "The concerns and the risks: what AI displaces in complex disputes",
+  "author": "Vikas Mahendra · Co-founder, TERES",
+  "outlet": "LinkedIn series",
+  "type": "Viewpoint",
+  "url": "https://www.linkedin.com/in/vikas-mahendra-47349514/recent-activity/all/",
+  "tags": [
+    "Professional judgment",
+    "Risk"
+  ],
+  "order": 5,
+  "summary": "Is the human doing the load-bearing work? If not, the tool hasn't preserved judgment — it has displaced it.",
+  "body": "## The concerns\n\n- Clients pay for judgment continuously exercised — not a polished output\n- 'Human-in-the-loop' has become near-meaningless: a human can be in the loop without making any real calls\n- The key test: **\"Is the human doing the load-bearing work? If not, the tool has not preserved the attorney's judgment. It has displaced it.\"**\n\n## The risks\n\n- **The polish problem**: formatted output suppresses critical review — it's harder to find a flaw in something that looks finished\n- **The confidence problem**: AI strips out the uncertainty signals humans naturally convey through hedging and flagging\n- **The cross-examination test**: deep familiarity from working through a case cannot be replicated by retrieval — \"a trial is a conversation, not a document; it rewards understanding, not retrieval\"",
+  "published": true
+}

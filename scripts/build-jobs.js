@@ -284,12 +284,125 @@ function card(job) {
     "</article>";
 }
 
+/* ---------------- SC AI policy page ---------------------------------------
+   /sc-ai-policy/ -- a research-backed page on the Supreme Court's draft
+   "Regulations for Use of Artificial Intelligence (AI) in Courts, 2026"
+   (published 3 June 2026 by the SC's AI Committee; public feedback to
+   office.regcc@sci.nic.in extended to 15 July 2026). Perspectives come
+   from content/sc-perspectives/*.json (sourced from the tracking sheet),
+   events from content/sc-events/*.json. Cards reuse the collaborate-card
+   classes exactly; the modal is the same job-modal, driven by
+   js/perspectives.js reading perspectives.json. */
+
+const perspectives = loadDir("sc-perspectives")
+  .sort(function (a, b) { return (a.order || 99) - (b.order || 99); });
+const scEvents = loadDir("sc-events")
+  .sort(function (a, b) { return (a.order || 99) - (b.order || 99); });
+
+function perspCard(p, slug) {
+  return '<article class="collab-card persp-card" data-slug="' + esc(slug) + '">\n' +
+    '  <a class="collab-cover" href="' + esc(p.url || "#") + '" ' + (p.url ? 'target="_blank" rel="noopener" ' : "") + 'aria-label="' + esc(p.title) + '"></a>\n' +
+    '  <div class="collab-topline"><span class="collab-cat">' + esc(p.type || "View") + "</span>" +
+    '<span class="collab-status">' + esc(p.outlet || "") + "</span></div>\n" +
+    '  <span class="collab-type">' + esc(p.author || "") + "</span>\n" +
+    '  <span class="collab-title">' + esc(p.title) + "</span>\n" +
+    '  <span class="collab-summary">' + esc(p.summary) + "</span>\n" +
+    '  <ul class="collab-chips">' + (p.tags || []).map(function (t) { return '<li title="' + esc(t) + '">' + esc(t) + "</li>"; }).join("") + "</ul>\n" +
+    '  <div class="collab-foot">\n    <span></span>\n    <span class="collab-btn">Read the summary</span>\n  </div>\n' +
+    "</article>";
+}
+
+function eventCard(ev) {
+  return '<article class="event-card">\n' +
+    '  <div class="event-when"><span class="event-city">' + esc(ev.city) + "</span>" +
+    '<span class="event-date">' + esc(ev.date_display || "") + "</span>" +
+    '<span class="event-time">' + esc(ev.time_display || "") + "</span></div>\n" +
+    '  <div class="event-body">\n' +
+    '    <h3 class="event-title">' + esc(ev.title) + "</h3>\n" +
+    '    <p class="event-venue">' + esc(ev.venue || "") + "</p>\n" +
+    '    <p class="event-desc">' + esc(ev.description || "") + "</p>\n" +
+    '    <a class="btn btn-primary event-cta" href="' + esc(ev.url || "mailto:collaborate@pucar.org") + '">' + esc(ev.cta || "Register interest") + "</a>\n" +
+    "  </div>\n</article>";
+}
+
+function scPolicyPage() {
+  const main =
+'  <p class="beat-eyebrow">PUCAR // Public consultation</p>\n' +
+'  <h1 class="job-title">The Supreme Court wants your views on AI in its courts.</h1>\n' +
+'  <article class="job-body">\n' +
+"    <p>On 3 June 2026, the Supreme Court's Artificial Intelligence Committee published the draft <strong>Regulations for Use of Artificial Intelligence (AI) in Courts, 2026</strong> — a first-of-its-kind framework covering the Supreme Court, all High Courts, subordinate courts, tribunals, and statutory bodies performing adjudicatory roles.</p>\n" +
+"    <p>The draft rests on a simple hierarchy: <strong>AI may assist, but never adjudicate.</strong> It permits AI for research, summarisation, translation, transcription, scheduling, litigant-assistance chatbots, and court analytics — and absolutely prohibits AI-only decisions, AI-based risk scoring for bail or credibility, predictive profiling, surveillance of judges or lawyers, and undisclosed AI-generated evidence. Lawyers must disclose AI use in filings, and a permanent Apex Body at the Supreme Court would approve and supervise tools across the system.</p>\n" +
+'    <p><strong>Citizen feedback is open until 15 July 2026</strong> (extended from June 20). Anyone — lawyers, technologists, litigants, or curious citizens — can email comments to the Member Secretary, AI Committee, at <a href="mailto:office.regcc@sci.nic.in">office.regcc@sci.nic.in</a>.<sup>[verify status before publishing — sources: SCC Online, LiveLaw, The Week, Jun 2026]</sup></p>\n' +
+"  </article>\n" +
+'  <div class="cta-row">\n' +
+'    <a class="btn btn-primary" href="mailto:office.regcc@sci.nic.in?subject=Feedback%20on%20Draft%20AI%20Regulations%20for%20Courts%2C%202026">Send the Court your feedback</a>\n' +
+'    <a class="btn btn-outline" href="https://cdnbbsr.s3waas.gov.in/s3ec0490f1f4972d133619a60c30f3559e/uploads/2026/06/2026060342.pdf" target="_blank" rel="noopener">Read the Court’s notice</a>\n' +
+"  </div>\n" +
+"</main>\n" +
+'<section class="collaborate persp-section" id="perspectives">\n' +
+'  <div class="collab-head">\n' +
+'    <p class="beat-eyebrow">What people are saying</p>\n' +
+'    <h2 class="collab-title-main">The public record, so far.</h2>\n' +
+'    <p class="collab-sub">Explainers, critiques, and formal submissions on the draft regulations — click any card for a summary of the viewpoint, or open the original.</p>\n' +
+"  </div>\n" +
+'  <div class="collab-grid" id="perspGrid">\n' +
+perspectives.map(function (p) { return perspCard(p, p.slug); }).join("\n") + "\n" +
+"  </div>\n" +
+"</section>\n" +
+'<section class="participate" id="participate">\n' +
+'  <div class="collab-head">\n' +
+'    <p class="beat-eyebrow">Ways to participate</p>\n' +
+'    <h2 class="participate-title">Say something before July 15.</h2>\n' +
+"  </div>\n" +
+'  <div class="participate-grid">\n' +
+'    <article class="event-card suggest-card">\n' +
+'      <div class="event-when"><span class="event-city">Anywhere</span><span class="event-date">Until 15 July 2026</span></div>\n' +
+'      <div class="event-body">\n' +
+'        <h3 class="event-title">Send your suggestions</h3>\n' +
+'        <p class="event-desc">Email your comments on the draft to the Member Secretary of the Supreme Court’s AI Committee. Plain language is fine — what matters is the litigant’s point of view. Copy us in if you’d like PUCAR to build on your input.</p>\n' +
+'        <div class="cta-row">\n' +
+'          <a class="btn btn-primary event-cta" href="mailto:office.regcc@sci.nic.in?subject=Feedback%20on%20Draft%20AI%20Regulations%20for%20Courts%2C%202026&cc=collaborate@pucar.org">Email the AI Committee</a>\n' +
+"        </div>\n      </div>\n    </article>\n" +
+scEvents.map(eventCard).join("\n") + "\n" +
+"  </div>\n" +
+'</section>\n' +
+'<div class="job-modal" id="jobModal" hidden>\n' +
+'  <div class="job-modal-backdrop" data-close></div>\n' +
+'  <div class="job-modal-panel" role="dialog" aria-modal="true" aria-labelledby="jobModalTitle">\n' +
+'    <button class="job-modal-close" type="button" data-close aria-label="Close">×</button>\n' +
+'    <p class="beat-eyebrow" id="jobModalType"></p>\n' +
+'    <h2 class="job-title" id="jobModalTitle"></h2>\n' +
+'    <div class="job-meta" id="jobModalMeta"></div>\n' +
+'    <ul class="job-chips" id="jobModalChips"></ul>\n' +
+'    <article class="job-body" id="jobModalBody"></article>\n' +
+'    <div class="cta-row">\n' +
+'      <a class="btn btn-primary" id="jobModalApply" href="#" target="_blank" rel="noopener">Read the original</a>\n' +
+"    </div>\n  </div>\n</div>\n" +
+'<script src="/js/perspectives.js"></script>\n<main hidden>';
+  return pageShell({
+    title: "The Supreme Court’s draft AI regulations — have your say | PUCAR",
+    desc: "The Supreme Court of India is inviting public feedback on its draft Regulations for Use of AI in Courts, 2026, until July 15. Read what people are saying and add your voice.",
+    url: "/sc-ai-policy/",
+    backHref: "/", backLabel: "← pucar.org", main: main
+  }).replace("<main hidden>\n</main>", ""); // close the shell's main early; sections above are full-bleed
+}
+
 /* ---------------- write everything ---------------- */
 
-["collaborate", "contributors"].forEach(function (d) {
+["collaborate", "contributors", "sc-ai-policy"].forEach(function (d) {
   fs.rmSync(path.join(ROOT, d), { recursive: true, force: true });
 });
 fs.mkdirSync(path.join(ROOT, "collaborate"), { recursive: true });
+fs.mkdirSync(path.join(ROOT, "sc-ai-policy"), { recursive: true });
+
+fs.writeFileSync(path.join(ROOT, "sc-ai-policy", "index.html"), scPolicyPage());
+fs.writeFileSync(path.join(ROOT, "sc-ai-policy", "perspectives.json"), JSON.stringify(perspectives.map(function (p) {
+  return {
+    slug: p.slug, title: p.title, author: p.author, outlet: p.outlet,
+    type: p.type, url: p.url, tags: p.tags || [],
+    html: mdToHtml(p.body || "")
+  };
+}), null, 1));
 
 jobs.forEach(function (job) {
   const dir = path.join(ROOT, "collaborate", job.slug);
@@ -332,7 +445,7 @@ html = html.slice(0, s + START.length) + "\n" +
 fs.writeFileSync(indexPath, html);
 
 /* sitemap */
-const urls = [SITE + "/"]
+const urls = [SITE + "/", SITE + "/sc-ai-policy/"]
   .concat(jobs.map(function (j) { return SITE + j.url; }))
   .concat(contributors.map(function (c) { return SITE + c.url; }));
 fs.writeFileSync(path.join(ROOT, "sitemap.xml"),
@@ -340,4 +453,5 @@ fs.writeFileSync(path.join(ROOT, "sitemap.xml"),
   urls.map(function (u) { return "  <url><loc>" + u + "</loc></url>"; }).join("\n") + "\n</urlset>\n");
 
 console.log("Built " + jobs.length + " job page(s) (" + boardJobs.length + " on the board), " +
-  contributors.length + " contributor page(s), jobs.json, cards, sitemap.xml");
+  contributors.length + " contributor page(s), sc-ai-policy (" + perspectives.length +
+  " perspectives, " + scEvents.length + " events), jobs.json, cards, sitemap.xml");

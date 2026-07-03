@@ -1,0 +1,16 @@
+{
+  "title": "Eight formal critiques submitted to the SC's AI Committee",
+  "author": "Deepika Kinhal & Subhashini Damodharan · TERES",
+  "outlet": "Formal submission",
+  "type": "Submission",
+  "url": "https://teres.ai/teres-now?slug=ai_in_courts_india&type=news",
+  "tags": [
+    "HITL",
+    "Explainability",
+    "Equity"
+  ],
+  "order": 6,
+  "summary": "From active HITL design to a common commencement date — the eight changes TERES believes the draft needs.",
+  "body": "## The eight critiques\n\n1. **HITL must be an active design requirement** — passive framing risks rubber-stamp review under heavy caseloads\n2. **AI must be confined to material on record** — surfacing arguments not raised by parties introduces an independent actor into the adversarial process\n3. **Explainability must include source attribution and confidence flags** — without these, hallucination risk cannot be managed\n4. **A common commencement deadline is needed** — independent High Court dates risk regulatory arbitrage and unequal access\n5. **The institutional framework needs sharper role delineation** — overlapping Apex Body, five committees, and CoRE-AI risks unclear accountability\n6. **Risk categorisation must be formally defined** — 'High-Risk AI' is used without definition; a tiered hierarchy is needed\n7. **AI-generated content verification needs independent court-side capacity** — resource-poor parties cannot contest AI filings from large institutional litigants\n8. **Selective deployment risks entrenching inequality** — AI in some courts but not others creates a two-tier justice system",
+  "published": true
+}

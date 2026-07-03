@@ -1,0 +1,16 @@
+{
+  "title": "Four gaps to close before the framework is finalised",
+  "author": "Varun Mehta & Ashirbad Nayak · Cyril Amarchand Mangaldas",
+  "outlet": "LiveLaw",
+  "type": "Analysis",
+  "url": "https://www.livelaw.in/articles/regulating-artificial-intelligence-indian-judiciary-537485",
+  "tags": [
+    "Audits",
+    "Grievance",
+    "Standards"
+  ],
+  "order": 7,
+  "summary": "In-house-only audits, an underdeveloped grievance mechanism, unstated explainability standards, and non-binding training obligations.",
+  "body": "## The four gaps\n\n1. **In-house audit restriction**: prohibiting source-code sharing with third parties contradicts the global consensus that external independent review is what builds public trust\n2. **Grievance mechanism underdeveloped**: no timelines, evidence standards, or compensation for harm; UNESCO's contestability safeguards — the right to challenge, the right to human review — should be incorporated\n3. **Explainability unstated as a technical standard**: minimum requirements per the NIST framework should be prescribed (source evidence, user-comprehensible explanations, explanations reflecting the actual process)\n4. **Training obligations lack binding standards**: no minimum content, frequency, or compliance accountability — they risk remaining aspirational",
+  "published": true
+}
