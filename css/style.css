@@ -2235,6 +2235,16 @@ body.scroll-locked{ overflow:hidden; }
 .job-body ul,.job-body ol{ padding-left:22px; margin:10px 0; }
 .job-body a{ color:var(--forest); } /* dark-green -- job page/modal are both light-bg surfaces */
 .job-page{ background:var(--cream); }
+/* sticky footer: short pages (e.g. contributor profiles) should never show
+   background below the footer -- main stretches, footer hugs the bottom */
+.job-page{
+  min-height:100vh;
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+}
+.job-page .job-main{ flex:1 0 auto; width:100%; }
+.job-page .site-footer{ margin-top:auto; }
 .job-page .cta-row{ margin-top:34px; }
 .btn-outline{
   border:1px solid var(--line);
