@@ -2451,6 +2451,13 @@ body.scroll-locked{ overflow:hidden; }
   /* slim, unobtrusive scrollbar */
   scrollbar-width:thin;                                  /* Firefox */
   scrollbar-color:rgba(36,30,26,.22) transparent;
+  /* macOS rubber-band fix: don't chain the bounce to the page behind, and
+     force the panel onto its own compositing layer -- WebKit/Blink drop the
+     border-radius clip on a plain scroll container during overscroll, which
+     flashed square corners */
+  overscroll-behavior:contain;
+  transform:translateZ(0);
+  -webkit-mask-image:radial-gradient(#fff, #fff); /* Safari: re-assert the rounded clip on the composited layer */
 }
 .job-modal-panel::-webkit-scrollbar{ width:6px; }        /* Chrome/Safari */
 .job-modal-panel::-webkit-scrollbar-track{ background:transparent; margin:22px 0; }
