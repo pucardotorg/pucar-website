@@ -306,7 +306,13 @@ needed no special accommodation for it beyond generous top padding.
   - **Primary — canvas particle field** (`prepareJudgeDust`/`drawJudgeDust`
     /`runJudgeDust` in js/script.js): while the visitor is still looking
     at beat 3, the judge SVG is serialised → blob URL → offscreen canvas →
-    sampled on a 4px grid into ~5k grains. **Measurement gate:** the stage
+    sampled on a 4px grid into ~5k grains. **No hard swap:** over the
+    first .35 virtual seconds `runJudgeDust` cross-fades inline opacities
+    — crisp SVG down, grain canvas (on top) up — so the artwork fades
+    into the dust; early windward grains fly while the solid figure is
+    still visible beneath, reading as dust lifting off him.
+    `stopJudgeDust` clears the inline opacities so scroll-back restores
+    the intact SVG. **Measurement gate:** the stage
     animates in when beat 3 arrives (translate/scale transition), and
     `getBoundingClientRect` returns the TRANSFORMED box — preparing on the
     beat's first frame once captured him ~6% small and offset, making the

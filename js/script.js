@@ -114,6 +114,7 @@
         stage.insertBefore(cv, stage.querySelector(".judge-dust"));
         judgeDust.canvas = cv;
         judgeDust.ctx = cv.getContext("2d");
+        judgeDust.svg = svg;
         judgeDust.parts = parts;
         judgeDust.dpr = dpr; judgeDust.w = W; judgeDust.h = H;
         judgeDust.pad = pad; judgeDust.padTop = padTop;
@@ -171,6 +172,13 @@
       } else {
         judgeDust.t += (judgeDust.target - judgeDust.t) * 0.3;
       }
+      // cross-fade instead of a hard swap: over the first .35 virtual
+      // seconds the crisp SVG fades out beneath while the grain field
+      // fades in on top -- "the svg fades into the dust animation".
+      // Driven off scrub time, so it reverses with scroll too.
+      var f = Math.min(judgeDust.t / 0.35, 1);
+      judgeDust.svg.style.opacity = String(1 - f);
+      judgeDust.canvas.style.opacity = String(f);
       drawJudgeDust(judgeDust.t);
       judgeDust.raf = requestAnimationFrame(frame);
     }
@@ -184,6 +192,9 @@
       judgeDust.ctx.setTransform(judgeDust.dpr, 0, 0, judgeDust.dpr, 0, 0);
       judgeDust.ctx.clearRect(0, 0, judgeDust.w + judgeDust.pad, judgeDust.h + judgeDust.padTop);
     }
+    // undo the cross-fade's inline opacities so the SVG returns intact
+    if (judgeDust.svg) judgeDust.svg.style.opacity = "";
+    if (judgeDust.canvas) judgeDust.canvas.style.opacity = "";
   }
 
   var judgeExitActive = false;
