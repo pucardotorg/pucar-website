@@ -324,6 +324,86 @@ people.map(contributorIndexCard).join("\n") + "\n" +
   });
 }
 
+/* ---------------- about + team pages ---------------- */
+
+function aboutPage() {
+  /* Content adapted from https://pucar.org/about (July 2026). */
+  const main =
+'  <p class="beat-eyebrow">About</p>\n' +
+'  <h1 class="job-title">Transforming dispute resolution.</h1>\n' +
+'  <article class="job-body">\n' +
+"    <h2>What we do</h2>\n" +
+"    <p>We are building an ecosystem that continuously fuels innovation. PUCAR 'unstucks' the dispute resolution system by inspiring imagination and harnessing capacities to create new possibilities.</p>\n" +
+"    <p>We orchestrate key connections, foster collaboration, and develop foundational ideas. We build a vibrant community of innovators who create and ensure the adoption of public goods that can create a multiplier effect.</p>\n" +
+"    <h2>Why PUCAR?</h2>\n" +
+"    <p>The outdated processes and insular structure of our dispute resolution system have left millions disillusioned. To restore trust and reset expectations, we must actively engage diverse users and innovators in evolving resolution processes.</p>\n" +
+"    <p>Born in 2023, PUCAR is now a group of 100+ contributors from diverse fields that include economics, legal practice, public technology, artificial intelligence, and government.</p>\n" +
+"    <h2>How we work</h2>\n" +
+"    <p><strong>Discover and empower contributors.</strong> We discover, curate and empower mission-aligned contributors. Together, we identify strategic opportunities for action.</p>\n" +
+"    <p><strong>Re-imagine with people at the centre.</strong> We recognize systemic challenges and understand user needs. We fundamentally redesign solutions to meet those needs in the most effective and meaningful way.</p>\n" +
+"    <p><strong>Co-create solutions.</strong> We co-create public goods: blueprints for processes and policies, prototypes for services, data, knowledge, and technology. We support changemakers to ensure their adoption.</p>\n" +
+"    <h2>How we organise</h2>\n" +
+"    <p>We self-organise and raise resources around different opportunities that can contribute to the mission. We evolve roles, responsibilities, and processes within each opportunity to guide our efforts and invite participation from the public. Guided by the mission and values, all contributors have the autonomy and flexibility to create and manage opportunities.</p>\n" +
+"  </article>\n" +
+'  <div class="cta-row">\n' +
+'    <a class="btn btn-primary" href="/#collaborate">See open work</a>\n' +
+'    <a class="btn btn-outline" href="/contributors/">Meet the contributors</a>\n' +
+"  </div>";
+  return pageShell({
+    title: "About PUCAR",
+    desc: "PUCAR is a public collective transforming dispute resolution in India: 100+ contributors from law, technology, economics, and government building people-centric justice.",
+    url: "/about/",
+    jsonLd: { "@context": "https://schema.org", "@type": "AboutPage", name: "About PUCAR" },
+    backHref: "/", backLabel: "← Home", main: main
+  });
+}
+
+function teamPage() {
+  /* PLACEHOLDER members -- replace with the real team before launch. */
+  const placeholders = [
+    { name: "Team Member", role: "Convenor" },
+    { name: "Team Member", role: "Programs" },
+    { name: "Team Member", role: "Technology" },
+    { name: "Team Member", role: "Design" },
+    { name: "Team Member", role: "Partnerships" },
+    { name: "Team Member", role: "Operations" }
+  ];
+  const cards = placeholders.map(function (p, i) {
+    return '<div class="contrib-card team-placeholder">' +
+      '<span class="avatar avatar-lg" style="background:hsl(' + (i * 55 % 360) + ',20%,45%)" aria-hidden="true">?</span>' +
+      '<span class="contrib-card-text">' +
+      '<span class="contrib-card-name">' + esc(p.name) + "</span>" +
+      '<span class="contrib-card-role">' + esc(p.role) + " · placeholder</span>" +
+      "</span></div>";
+  }).join("\n");
+  const main =
+'  <p class="beat-eyebrow">The team</p>\n' +
+'  <h1 class="job-title">The people who hold it together.</h1>\n' +
+'  <article class="job-body">\n' +
+"    <p>PUCAR is powered by a small anchor team and a wide collective of contributors. The team below is a placeholder while we gather everyone's details and photos.</p>\n" +
+"  </article>\n" +
+"</main>\n" +
+'<section class="collaborate contrib-section" id="team">\n' +
+'  <div class="collab-head">\n' +
+'    <p class="beat-eyebrow">Core team</p>\n' +
+'    <h2 class="collab-title-main">Coming soon.</h2>\n' +
+'    <p class="collab-sub">Real names, faces, and bios are on their way. Meanwhile, the wider collective is already listed.</p>\n' +
+"  </div>\n" +
+'  <div class="contrib-grid">\n' + cards + "\n  </div>\n" +
+'  <div class="cta-row" style="justify-content:center; margin-top:28px;">\n' +
+'    <a class="btn btn-primary" href="/contributors/">Meet the contributors</a>\n' +
+"  </div>\n" +
+"</section>\n" +
+"<main hidden>";
+  return pageShell({
+    title: "Meet the Team | PUCAR",
+    desc: "The core team behind PUCAR, the public collective for avoidance and resolution of disputes.",
+    url: "/team/",
+    jsonLd: { "@context": "https://schema.org", "@type": "AboutPage", name: "PUCAR team" },
+    backHref: "/", backLabel: "← Home", main: main
+  });
+}
+
 /* ---------------- homepage cards ---------------- */
 
 function card(job) {
@@ -455,7 +535,7 @@ scEvents.map(eventCard).join("\n") + "\n" +
 
 /* ---------------- write everything ---------------- */
 
-["collaborate", "contributors", "sc-ai-policy"].forEach(function (d) {
+["collaborate", "contributors", "sc-ai-policy", "about", "team"].forEach(function (d) {
   fs.rmSync(path.join(ROOT, d), { recursive: true, force: true });
 });
 fs.mkdirSync(path.join(ROOT, "collaborate"), { recursive: true });
@@ -482,6 +562,10 @@ contributors.forEach(function (person) {
   fs.writeFileSync(path.join(dir, "index.html"), contributorPage(person));
 });
 fs.writeFileSync(path.join(ROOT, "contributors", "index.html"), contributorsIndexPage());
+fs.mkdirSync(path.join(ROOT, "about"), { recursive: true });
+fs.writeFileSync(path.join(ROOT, "about", "index.html"), aboutPage());
+fs.mkdirSync(path.join(ROOT, "team"), { recursive: true });
+fs.writeFileSync(path.join(ROOT, "team", "index.html"), teamPage());
 
 fs.writeFileSync(path.join(ROOT, "collaborate", "jobs.json"), JSON.stringify(jobs.map(function (j) {
   return {
@@ -512,7 +596,7 @@ html = html.slice(0, s + START.length) + "\n" +
 fs.writeFileSync(indexPath, html);
 
 /* sitemap */
-const urls = [SITE + "/", SITE + "/sc-ai-policy/", SITE + "/contributors/"]
+const urls = [SITE + "/", SITE + "/sc-ai-policy/", SITE + "/contributors/", SITE + "/about/", SITE + "/team/"]
   .concat(jobs.map(function (j) { return SITE + j.url; }))
   .concat(contributors.map(function (c) { return SITE + c.url; }));
 fs.writeFileSync(path.join(ROOT, "sitemap.xml"),
