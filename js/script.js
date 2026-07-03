@@ -613,6 +613,8 @@
   // plays while fully revealed -- pausing/resuming as the visitor wanders
   // across the zone's edges -- and scrolling onward continues the story.
   var filmActive = false;
+  var filmHoldTimer = null;
+  var filmLockActive = false; // only OUR 2s hold -- never release someone else's lock
 
   // Three scroll-scrubbed values (all as a function of beatFloat):
   //   --curtain        entry panel, 0->1 across 5.5-5.95 (slides up, never returns)
@@ -654,6 +656,18 @@
       filmActive = true;
       document.body.classList.add("film-playing"); // header up, progress rail down
       tryPlayFilm();
+      // a brief 2s hold on EVERY arrival: scroll momentum tends to carry
+      // people straight past the film, so give it a moment to register.
+      // Scoped by filmLockActive so releasing it can never clobber a
+      // walk-in's own scroll lock.
+      if (!reduceMotion) {
+        lockScroll();
+        filmLockActive = true;
+        clearTimeout(filmHoldTimer);
+        filmHoldTimer = setTimeout(function () {
+          if (filmLockActive) { unlockScroll(); filmLockActive = false; }
+        }, 2000);
+      }
     } else if (!shouldPlay && filmActive) {
       filmActive = false;
       document.body.classList.remove("film-playing"); // chrome glides back

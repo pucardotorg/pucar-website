@@ -156,7 +156,7 @@ function pageShell(opts) {
 '<img class="logo logo-long" src="/assets/pucar-white-expanded.avif" alt="PUCAR: Public Collective for Avoidance and Resolution of Disputes" width="835" height="100" />' +
 '<img class="logo logo-short" src="/assets/pucar-white-short.png" alt="PUCAR" width="379" height="87" />\n' +
 "    <p>PUCAR is an unregistered non-profit public mission facilitating a collective of individuals and organizations to contribute their experience and expertise to advance new ideas and approaches in dispute resolution systems.</p>\n" +
-'  </div>\n  <p class="footer-copy">© 2026 PUCAR.</p>\n</footer>\n</body>\n</html>\n';
+'  </div>\n  <p class="footer-copy">© 2026 PUCAR. All rights reserved.</p>\n</footer>\n</body>\n</html>\n';
 }
 
 /* ---------------- job pieces ---------------- */
