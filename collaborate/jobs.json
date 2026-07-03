@@ -21,11 +21,7 @@
    "Open source"
   ],
   "apply_url": "mailto:collaborate@pucar.org?subject=HMW%20-%20Frontend%20engineering%20(DRISTI%202.0)",
-  "poster": {
-   "name": "Varun H",
-   "url": "/contributors/varun-h/",
-   "photo": ""
-  },
+  "poster": null,
   "html": "<h3>About the role</h3>\n<p>A permanent engineering role with a PUCAR collective member organisation, building the open ODR platform used by partner institutions.</p>\n<p>[placeholder description, refine with the actual scope before publishing]</p>\n<h3>What you&#39;ll do</h3>\n<ul><li>Ship litigant-facing flows: filing, notices, hearings, settlement</li><li>Hold a high bar on accessibility, language support, and performance on low-end devices</li><li>Work in the open, public repo, public roadmap</li></ul>\n<h3>Who this suits</h3>\n<ul><li>3+ years building production web apps (React or similar)</li><li>Care for users who are stressed, rushed, and often on 2G</li><li>Comfort collaborating with legal-domain experts</li></ul>\n<h3>How it works</h3>\n<p>Paid, permanent role. Interviews include a short paired exercise on a real issue from the repo.</p>"
  },
  {
@@ -49,11 +45,7 @@
    "Interviews"
   ],
   "apply_url": "mailto:collaborate@pucar.org?subject=HMW%20-%20Litigant%20journey%20research%20(DRISTI%202.0)",
-  "poster": {
-   "name": "Aditi Rao",
-   "url": "/contributors/aditi-rao/",
-   "photo": ""
-  },
+  "poster": null,
   "html": "<h3>About the work</h3>\n<p>PUCAR&#39;s work starts from the litigant&#39;s lived experience, the waits, the commutes, the adjournments. We&#39;re looking for a design researcher to help us document that experience rigorously, so that every initiative we support is grounded in reality rather than assumption.</p>\n<p>[placeholder description, refine with the actual scope before publishing]</p>\n<h3>What you&#39;ll do</h3>\n<ul><li>Plan and run interviews with litigants, lawyers, and court staff</li><li>Synthesise findings into journey maps and insight briefs</li><li>Work with the initiatives teams to turn insights into design principles</li></ul>\n<h3>Who this suits</h3>\n<ul><li>2+ years in design research, service design, or adjacent fields</li><li>Comfort conducting interviews in at least one Indian language besides English</li><li>Curiosity about public systems; no legal background required</li></ul>\n<h3>How it works</h3>\n<p>This is a volunteer engagement with a PUCAR collective member organisation. We&#39;ll set you up with context, introductions, and a buddy from the network.</p>"
  },
  {
@@ -77,11 +69,7 @@
    "Data"
   ],
   "apply_url": "mailto:collaborate@pucar.org?subject=HMW%20-%20Court%20data%20dashboards%20(DRISTI%202.0)",
-  "poster": {
-   "name": "Rohan Mehta",
-   "url": "/contributors/rohan-mehta/",
-   "photo": ""
-  },
+  "poster": null,
   "html": "<h3>About the work</h3>\n<p>Measuring court performance is one of PUCAR&#39;s core initiatives. The tooling is open source, and we welcome contributors who can take issues end-to-end.</p>\n<p>[placeholder description, refine with the actual scope before publishing]</p>\n<h3>What you&#39;ll do</h3>\n<ul><li>Pick up issues on the public repos (data pipelines, visualisation, docs)</li><li>Help design metrics that reflect the litigant&#39;s experience, not just throughput</li><li>Review contributions from other volunteers</li></ul>\n<h3>Who this suits</h3>\n<ul><li>Comfortable with Python or JavaScript and messy public data</li><li>Experience with open-source workflows (issues, PRs, reviews)</li><li>Interest in justice-system data; domain experts especially welcome</li></ul>\n<h3>How it works</h3>\n<p>Start from the GitHub org, introduce yourself, and pick a <code>good-first-issue</code>. Regular contributors are invited into the initiative&#39;s working group.</p>"
  },
  {
@@ -105,11 +93,7 @@
    "Fieldwork"
   ],
   "apply_url": "mailto:collaborate@pucar.org?subject=HMW%20-%20Process%20redesign%20fellowship%20(DRISTI%202.0)",
-  "poster": {
-   "name": "Varun H",
-   "url": "/contributors/varun-h/",
-   "photo": ""
-  },
+  "poster": null,
   "html": "<h3>About the fellowship</h3>\n<p>The People-Centric Courts initiative embeds fellows with partner courts to redesign everyday processes that create the most friction for litigants.</p>\n<p>[placeholder description, refine with the actual scope before publishing]</p>\n<h3>What you&#39;ll do</h3>\n<ul><li>Shadow one process end-to-end and document where time and trust are lost</li><li>Co-design improvements with judges, registry staff, and lawyers</li><li>Publish the playbook openly so other courts can adopt it</li></ul>\n<h3>Who this suits</h3>\n<ul><li>Law graduates or practitioners with 1–5 years of experience</li><li>Strong writing; patience for institutional change</li><li>Based in, or willing to relocate to, the partner court&#39;s city</li></ul>\n<h3>How it works</h3>\n<p>This is a paid, fixed-term fellowship stipended through a PUCAR collective member organisation. Cohorts start quarterly.</p>"
  },
  {
@@ -133,11 +117,7 @@
    "Storytelling"
   ],
   "apply_url": "mailto:collaborate@pucar.org?subject=HMW%20-%20Pendency%20explainer",
-  "poster": {
-   "name": "Aditi Rao",
-   "url": "/contributors/aditi-rao/",
-   "photo": ""
-  },
+  "poster": null,
   "html": "<h3>About the work</h3>\n<p>A short animated explainer that makes pendency legible to people outside the legal system, completed and published in June 2026.</p>\n<p>[placeholder description, this is a sample completed job to demonstrate contributor pages]</p>\n<h3>What was delivered</h3>\n<ul><li>3-minute animation with English and Hindi voiceovers</li><li>Cut-downs for social media</li><li>Open-licensed source files</li></ul>"
  }
 ]

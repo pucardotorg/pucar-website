@@ -4,8 +4,11 @@
   "photo": "",
   "email": "varun@agami.in",
   "links": [
-    { "label": "Website", "url": "https://agami.in" }
+    {
+      "label": "Website",
+      "url": "https://agami.in"
+    }
   ],
-  "published": true,
+  "published": false,
   "body": "Varun convenes the PUCAR collective, connecting courts, technologists, and civil-society organisations working on people-centric dispute resolution.\n\n[placeholder bio, replace with real copy]"
 }

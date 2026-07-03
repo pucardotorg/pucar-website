@@ -4,8 +4,11 @@
   "photo": "",
   "email": "",
   "links": [
-    { "label": "GitHub", "url": "https://github.com/pucardotorg" }
+    {
+      "label": "GitHub",
+      "url": "https://github.com/pucardotorg"
+    }
   ],
-  "published": true,
+  "published": false,
   "body": "Rohan builds the open data pipelines behind PUCAR's court performance dashboards and mentors new open-source contributors.\n\n[placeholder bio + placeholder person, replace before launch]"
 }
