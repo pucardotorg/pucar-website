@@ -1,6 +1,6 @@
 {
   "name": "Sarfraz Alam",
-  "role": "",
+  "role": "Senior Software Engineer, Info Edge",
   "organisation": "",
   "photo": "/assets/contributors/sarfraz-alam.jpeg",
   "email": "",
@@ -12,5 +12,5 @@
   ],
   "source": "pucar.org/about",
   "published": true,
-  "body": ""
+  "body": "Sarfraz is a Senior Software Engineer at Info Edge in Noida, working across the stack with Next.js and Node.js. A Google Summer of Code alumnus, he previously built at Helium and interned at Swiggy. He contributes engineering muscle to open-source projects, including PUCAR's technology."
 }

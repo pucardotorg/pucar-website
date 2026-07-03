@@ -1026,6 +1026,13 @@ filter key for the upcoming contributors page), `photo` (optional; empty →
 initials avatar, background hue hashed from the name), `email`, `links[]`
 ({label,url}), `published`, `body` (bio markdown).
 
+In July 2026 every contributor's LinkedIn profile was visited and used to
+fill `role` (current designation) and `body` (a 3-4 sentence bio). Three
+profiles 404'd (aishwariya-dixit, madhav-pudipeddi, shreyashi-soni) and carry
+short org-only bios flagged as intentionally brief. Names were corrected to
+LinkedIn spellings where pucar.org differed (Nandalike, Roongta, Bharat Chugh,
+Susmita Behera, and others).
+
 77 real contributors were scraped from https://pucar.org/about (July 2026)
 via `scripts/import-pucar-contributors.js` (one-off, safe to re-run; data is
 inlined in the script). For those entries `role` and `body` are empty,

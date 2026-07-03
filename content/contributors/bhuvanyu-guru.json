@@ -1,6 +1,6 @@
 {
   "name": "Bhuvanyu Guru",
-  "role": "",
+  "role": "SDET at BeeHyv",
   "organisation": "L2 Engineer",
   "photo": "/assets/contributors/bhuvanyu-guru.jpeg",
   "email": "",
@@ -12,5 +12,5 @@
   ],
   "source": "pucar.org/about",
   "published": true,
-  "body": ""
+  "body": "Bhuvanyu is a software development engineer in test at BeeHyv, building end-to-end test automation for web and mobile platforms with Playwright, JMeter, and API tooling. He supports PUCAR's DRISTI platform as an L2 engineer, helping keep court technology dependable."
 }

@@ -1,6 +1,6 @@
 {
   "name": "Ravi Prakash",
-  "role": "",
+  "role": "Head of Architecture and Technology Ecosystem, Beckn Labs",
   "organisation": "Beckn",
   "photo": "/assets/contributors/ravi-prakash.jpeg",
   "email": "",
@@ -12,5 +12,5 @@
   ],
   "source": "pucar.org/about",
   "published": true,
-  "body": ""
+  "body": "Ravi heads architecture and the technology ecosystem at Beckn Labs and is a genesis co-author of the Beckn protocol specification, the open network standard behind ONDC and other decentralised networks. He has spent seven years evolving the protocol from principal architect to ecosystem steward. The same open-network thinking shapes DRISTI's architecture."
 }

@@ -1,6 +1,6 @@
 {
   "name": "Devaraj D",
-  "role": "",
+  "role": "Product Manager at IBM",
   "organisation": "Samagra",
   "photo": "/assets/contributors/devaraj-d.jpg",
   "email": "",
@@ -12,5 +12,5 @@
   ],
   "source": "pucar.org/about",
   "published": true,
-  "body": ""
+  "body": "Devaraj is a Product Manager at IBM in Kochi, building low-code, real-time event processing experiences on Apache Flink. Before IBM he was a Product Manager at Samagra, where he contributed to PUCAR's dispute resolution work. He holds degrees from XLRI Jamshedpur and CET Trivandrum."
 }

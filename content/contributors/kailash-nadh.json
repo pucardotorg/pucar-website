@@ -1,6 +1,6 @@
 {
   "name": "Kailash Nadh",
-  "role": "",
+  "role": "CTO, Zerodha",
   "organisation": "Zerodha",
   "photo": "/assets/contributors/kailash-nadh.jpeg",
   "email": "",
@@ -12,5 +12,5 @@
   ],
   "source": "pucar.org/about",
   "published": true,
-  "body": ""
+  "body": "Kailash is the Chief Technology Officer of Zerodha, India's largest stock brokerage, where famously small engineering teams run systems at national scale. He is also the founder of Samagata Foundation, which supports public commons projects across science, culture, technology, and research, and co-founder of the Indic Digital Archive Foundation and FLOSS/fund. He brings a builder's scepticism and an open-source ethos to PUCAR's technology thinking."
 }

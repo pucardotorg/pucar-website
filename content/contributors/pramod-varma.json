@@ -1,6 +1,6 @@
 {
   "name": "Pramod Varma",
-  "role": "",
+  "role": "Co-founder and Chief Architect, Networks for Humanity",
   "organisation": "Technology Architect",
   "photo": "/assets/contributors/pramod-varma.jpeg",
   "email": "",
@@ -12,5 +12,5 @@
   ],
   "source": "pucar.org/about",
   "published": true,
-  "body": ""
+  "body": "Pramod is one of the architects of India's digital public infrastructure: former Chief Architect of Aadhaar and IndiaStack, co-creator of the Beckn protocol and Finternet, and long-time CTO of EkStep Foundation. He now co-founds Networks for Humanity and co-chairs the Centre for Digital Public Infrastructure. His thinking on open networks underpins how DRISTI is designed."
 }
