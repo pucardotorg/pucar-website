@@ -167,6 +167,21 @@ body:has(.pin[data-beat="9"]) .site-header .logo-dark{ opacity:1; }
 
 /* ---------------- Collaborate nav dropdown ---------------- */
 .nav-drop{ position:relative; display:inline-flex; }
+.nav-drop-trigger{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+.nav-caret{
+  flex:none;
+  opacity:.6;
+  transition:transform .18s ease, opacity .18s ease;
+}
+.nav-drop:hover .nav-caret,
+.nav-drop:focus-within .nav-caret{
+  transform:rotate(180deg);
+  opacity:1;
+}
 .nav-menu{
   position:absolute;
   top:100%;
