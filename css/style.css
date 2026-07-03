@@ -1637,7 +1637,11 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
 
 /* ---------------- collaborate ---------------- */
 .collaborate{
-  background:var(--navy);
+  /* deep teal, client-specified hex (Jul 2026) -- distinct from the
+     story's --forest so the board reads as its own space. Also inherited
+     by the /sc-ai-policy/ perspectives section, which shares this class
+     by design. */
+  background:#11353C;
   color:var(--paper);
   padding: clamp(64px,9vw,110px) clamp(20px,5vw,72px);
 }
