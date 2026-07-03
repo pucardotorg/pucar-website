@@ -288,6 +288,14 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
   position:relative;
   z-index:5;
   grid-column:1;
+  /* grid-row:1 is NOT optional. The judge-stage is explicitly placed at
+     (1,1); without an explicit row here, grid auto-placement sees cell
+     (1,1) occupied and silently moves this stage (and .beats after it)
+     down to a NEW row 2 -- splitting the 100vh pin into two stacked
+     half-height rows. That bug shipped once: judge floated in the top
+     half, litigant + text sat "at the bottom" on every beat. All three
+     stages/columns share row 1 on purpose; overlap is intentional. */
+  grid-row:1;
   justify-self:center;
   align-self:center;
   width:clamp(230px, 30vw, 380px);
@@ -815,6 +823,7 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
 .beats{
   position:relative;
   grid-column:2;
+  grid-row:1;  /* same reasoning as .litigant-stage -- see comment there */
   z-index:6;
   height:100%;
   padding: 0 var(--pin-pad) 0 clamp(8px,2vw,24px);
@@ -1647,14 +1656,22 @@ body.modal-open{ overflow:hidden; }
   }
   .litigant-stage{
     grid-column:1;
+    grid-row:1;
     width:clamp(110px,30vw,150px);
     align-self:start;
     margin-top:4px;
+  }
+  .judge-stage{
+    grid-column:1;
+    grid-row:1;
+    width:clamp(120px,32vw,170px);
+    align-self:start;
   }
   /* single column on mobile: keep the litigant put, no side→centre slide */
   .pin[data-beat] .litigant-stage{ transform:none !important; }
   .beats{
     grid-column:1;
+    grid-row:2;  /* mobile really IS two rows (figure above, text below) -- undo the desktop grid-row:1 */
     align-items:flex-start;
     padding: 24px clamp(20px,6vw,32px) 100px;
   }

@@ -265,6 +265,18 @@ needed no special accommodation for it beyond generous top padding.
   constant `-12vh` lift on every beat, plus `-6vh` more while centred
   (replacing the old centred-only `-9vh`). The stage's `align-self:center`
   alone had put her mass below centre.
+- **Grid auto-placement gotcha (shipped as a bug once — everything "sat at
+  the bottom"):** `.judge-stage` is explicitly placed at grid cell (1,1).
+  When `.litigant-stage` and `.beats` had only `grid-column` set, grid
+  auto-placement refused to drop them into the occupied (1,1)/(1,2) row
+  and silently created a SECOND row — the 100vh pin became two stacked
+  half-height rows: judge floating in the top half, litigant + beat text
+  pushed into the bottom half on *every* beat. Both now carry an explicit
+  `grid-row:1` on desktop (overlap is intentional; only one stage is
+  visible at a time), and the ≤860px media block explicitly restores the
+  real two-row mobile layout (`.beats{grid-row:2}`, judge sized/rowed for
+  mobile too). If you add another stage to the pin, give it explicit
+  `grid-column` AND `grid-row`.
 - **She stays on the LEFT through beats 0–3.** The side→centre slide is
   driven by `beatFloat - 3`; the bottom-left text treatment (`.beats`
   full-row rules, §5) starts at `data-beat="4"`.
