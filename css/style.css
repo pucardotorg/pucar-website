@@ -1930,6 +1930,13 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
   align-items:center;
   gap:10px;
   margin:0 0 14px;
+  /* the entrance animation (opacity keyframes + forwards fill) makes this
+     bar a STACKING CONTEXT, so the dropdown menus' z-index:30 only counts
+     inside it -- and the cards' chips (z-index:2 at section level) painted
+     over the open menus. Lifting the whole bar above the cards' small
+     z-indexes fixes it. */
+  position:relative;
+  z-index:20;
 }
 .collab-filters[hidden]{ display:none; } /* same author-vs-UA precedence issue as .collab-card */
 /* native selects are hidden by JS and replaced with .dd custom dropdowns
