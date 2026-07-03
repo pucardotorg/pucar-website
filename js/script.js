@@ -29,8 +29,14 @@
   // js falls back to the CSS turbulence dissolve.
   var judgeDust = {
     ready: false, preparing: false, running: false,
-    canvas: null, ctx: null, parts: null, raf: null, dpr: 1, w: 0, h: 0
+    canvas: null, ctx: null, parts: null, raf: null, dpr: 1, w: 0, h: 0,
+    pad: 0,        // extra canvas width on the LEFT, so grains fly a while before clipping
+    t: 0,          // current virtual time of the snap (seconds)
+    target: 0      // scroll-driven virtual time we're easing toward
   };
+  var JUDGE_SNAP_START = 3.22; // beatFloat where the snap begins
+  var JUDGE_SNAP_END = 3.5;    // beat flips here -- snap is COMPLETE by then
+  var JUDGE_SNAP_TOTAL = 2.1;  // virtual seconds spanned by the scrub
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function prepareJudgeDust() {
@@ -65,11 +71,12 @@
             parts.push({
               x: x, y: y,
               c: "rgb(" + data[i] + "," + data[i + 1] + "," + data[i + 2] + ")",
-              // the snap sweeps across him left->right, with jitter so the
-              // erosion edge is ragged, not a hard line
-              delay: (x / W) * 0.5 + Math.random() * 0.35,
+              // the wind blows LEFT, so erosion starts on the windward
+              // (right) side and sweeps right->left, with jitter so the
+              // edge is ragged, not a hard line
+              delay: ((W - x) / W) * 0.5 + Math.random() * 0.35,
               dur: 0.7 + Math.random() * 0.55,
-              vx: 60 + Math.random() * 170,          // carried right on the wind
+              vx: -(60 + Math.random() * 170),       // carried LEFT on the wind
               vy: -(30 + Math.random() * 120),       // and lifted upward
               wob: 4 + Math.random() * 9,            // sideways flutter
               ph: Math.random() * 6.28
@@ -77,14 +84,17 @@
           }
         }
         var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        var pad = Math.round(W * 0.45); // room on the left before grains clip
         var cv = document.createElement("canvas");
         cv.className = "judge-dust-canvas";
-        cv.width = W * dpr; cv.height = H * dpr;
+        cv.width = (W + pad) * dpr; cv.height = H * dpr;
+        cv.style.width = "calc(100% + " + pad + "px)";
+        cv.style.left = -pad + "px";
         stage.insertBefore(cv, stage.querySelector(".judge-dust"));
         judgeDust.canvas = cv;
         judgeDust.ctx = cv.getContext("2d");
         judgeDust.parts = parts;
-        judgeDust.dpr = dpr; judgeDust.w = W; judgeDust.h = H;
+        judgeDust.dpr = dpr; judgeDust.w = W; judgeDust.h = H; judgeDust.pad = pad;
         judgeDust.ready = true;
       } catch (e) { /* fall back to the CSS dissolve */ }
       URL.revokeObjectURL(url);
@@ -97,42 +107,50 @@
     img.src = url;
   }
 
+  // Draw the grain field at virtual time t (0 = intact, JUDGE_SNAP_TOTAL =
+  // fully blown away). Pure function of t, so the snap can be SCRUBBED by
+  // scroll position in either direction -- scrolling back literally
+  // reassembles him grain by grain.
+  function drawJudgeDust(t) {
+    var ctx = judgeDust.ctx, pad = judgeDust.pad;
+    var GRAIN = 3.6;
+    ctx.setTransform(judgeDust.dpr, 0, 0, judgeDust.dpr, 0, 0);
+    ctx.clearRect(0, 0, judgeDust.w + pad, judgeDust.h);
+    for (var i = 0; i < judgeDust.parts.length; i++) {
+      var p = judgeDust.parts[i];
+      var lt = (t - p.delay) / p.dur;
+      if (lt >= 1) continue;                      // this grain is gone
+      if (lt <= 0) {                              // not yet snapped: at rest
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = p.c;
+        ctx.fillRect(p.x + pad, p.y, GRAIN, GRAIN);
+        continue;
+      }
+      var e = lt * (2 - lt);                      // ease-out
+      var x = p.x + pad + p.vx * e * p.dur + Math.sin(p.ph + lt * 9) * p.wob * lt;
+      var y = p.y + p.vy * e * p.dur - 40 * lt * lt;
+      ctx.globalAlpha = 1 - lt;
+      ctx.fillStyle = p.c;
+      ctx.fillRect(x, y, GRAIN * (1 - lt * 0.5), GRAIN * (1 - lt * 0.5));
+    }
+  }
+
   function runJudgeDust() {
     if (!judgeDust.ready || judgeDust.running) return;
     judgeDust.running = true;
-    var ctx = judgeDust.ctx, dpr = judgeDust.dpr;
-    var GRAIN = 3.6;
-    var start = performance.now();
-    function frame(now) {
+    judgeDust.t = 0;
+    function frame() {
       if (!judgeDust.running) return;
-      var t = (now - start) / 1000;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, judgeDust.w, judgeDust.h);
-      var alive = false;
-      for (var i = 0; i < judgeDust.parts.length; i++) {
-        var p = judgeDust.parts[i];
-        var lt = (t - p.delay) / p.dur;
-        if (lt >= 1) continue;                    // this grain is gone
-        alive = true;
-        if (lt <= 0) {                            // not yet snapped: at rest
-          ctx.globalAlpha = 1;
-          ctx.fillStyle = p.c;
-          ctx.fillRect(p.x, p.y, GRAIN, GRAIN);
-          continue;
-        }
-        var e = lt * (2 - lt);                    // ease-out
-        var x = p.x + p.vx * e * p.dur + Math.sin(p.ph + lt * 9) * p.wob * lt;
-        var y = p.y + p.vy * e * p.dur - 40 * lt * lt;
-        ctx.globalAlpha = 1 - lt;
-        ctx.fillStyle = p.c;
-        ctx.fillRect(x, y, GRAIN * (1 - lt * 0.5), GRAIN * (1 - lt * 0.5));
-      }
-      if (alive) {
-        judgeDust.raf = requestAnimationFrame(frame);
+      // ease toward the scroll-driven target; if the scroll has already
+      // left the snap zone entirely (fast fling), jump straight to done so
+      // no half-dissolved judge ever shows alongside the next section.
+      if (judgeDust.target >= JUDGE_SNAP_TOTAL) {
+        judgeDust.t = JUDGE_SNAP_TOTAL;
       } else {
-        judgeDust.running = false;
-        ctx.clearRect(0, 0, judgeDust.w, judgeDust.h);
+        judgeDust.t += (judgeDust.target - judgeDust.t) * 0.3;
       }
+      drawJudgeDust(judgeDust.t);
+      judgeDust.raf = requestAnimationFrame(frame);
     }
     judgeDust.raf = requestAnimationFrame(frame);
   }
@@ -142,7 +160,7 @@
     if (judgeDust.raf) cancelAnimationFrame(judgeDust.raf);
     if (judgeDust.ctx) {
       judgeDust.ctx.setTransform(judgeDust.dpr, 0, 0, judgeDust.dpr, 0, 0);
-      judgeDust.ctx.clearRect(0, 0, judgeDust.w, judgeDust.h);
+      judgeDust.ctx.clearRect(0, 0, judgeDust.w + judgeDust.pad, judgeDust.h);
     }
   }
 
@@ -549,22 +567,26 @@
     targetCenterT = smoothstep(clamp(beatFloat - 3, 0, 1));
     requestCenterTick();
 
-    // ---- judge dissolution, scroll-driven -------------------------------
-    // The snap must FINISH before beat 4's content is on screen ("i don't
-    // like how the judge is still fading out as the next screen is already
-    // active"), so it isn't hooked to the beat CHANGE (which happens at
-    // beatFloat 3.5, too late) -- it starts at 3.3, while his section is
-    // still the active one, and the sweep completes in ~1.6s. `judgeSeen`
-    // stops a direct landing on a later beat from flashing a judge the
-    // visitor never saw; scrolling back below the threshold reassembles
-    // him (the canvas clears and the SVG un-hides). The particle field is
-    // prepared while the visitor is still LOOKING at beat 3, so the snap
-    // starts with zero rasterisation lag.
+    // ---- judge dissolution, SCRUBBED by scroll ---------------------------
+    // The snap's progress is a direct function of scroll position across
+    // the last stretch of his own beat (JUDGE_SNAP_START..END, i.e.
+    // 3.22..3.5) -- so it is GUARANTEED complete before beat 4's content
+    // is up, at any scroll speed: the "extra space" for the animation is
+    // the final quarter of his section itself. Scrolling slowly scrubs
+    // the grains away gradually; scrolling back scrubs them back onto him;
+    // a stop mid-zone freezes mid-dissolve (consistent with everything
+    // else on this scroll-driven page). `judgeSeen` stops a direct landing
+    // on a later beat from flashing a judge the visitor never saw. The
+    // particle field is prepared while the visitor is still LOOKING at
+    // beat 3, so the snap starts with zero rasterisation lag.
     if (currentBeat === 3) {
       judgeSeen = true;
       prepareJudgeDust();
     }
-    if (judgeSeen && beatFloat >= 3.3) startJudgeExit();
+    judgeDust.target = clamp(
+      (beatFloat - JUDGE_SNAP_START) / (JUDGE_SNAP_END - JUDGE_SNAP_START), 0, 1
+    ) * JUDGE_SNAP_TOTAL;
+    if (judgeSeen && beatFloat >= JUDGE_SNAP_START) startJudgeExit();
     else cancelJudgeExit();
 
     // ---- section-based existence -------------------------------------

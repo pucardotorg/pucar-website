@@ -856,9 +856,9 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
   animation: judgeDissolveAway .8s ease-in .3s forwards;
 }
 @keyframes judgeDissolveAway{
-  0%  { opacity:1;   translate:0 0;       scale:1;    filter:none; }
-  45% { opacity:.8;  translate:.4vw -1vh; scale:1.01; filter:grayscale(.9) blur(1px); }
-  100%{ opacity:0;   translate:2vw -4vh;  scale:1.04; filter:grayscale(1) blur(6px); }
+  0%  { opacity:1;   translate:0 0;        scale:1;    filter:none; }
+  45% { opacity:.8;  translate:-.4vw -1vh; scale:1.01; filter:grayscale(.9) blur(1px); }
+  100%{ opacity:0;   translate:-2vw -4vh;  scale:1.04; filter:grayscale(1) blur(6px); }
 }
 
 /* the dust itself: small motes that settle onto his head, shoulders, and
@@ -886,8 +886,8 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
 @keyframes dustAway{
   0%  { opacity:0;   translate:0 -12px;  }
   30% { opacity:.95; translate:0 0;      }  /* lands on him / the desk, fast */
-  60% { opacity:.8;  translate:1.5vw -2vh; }
-  100%{ opacity:0;   translate:6vw -6vh;  } /* scattered upward with him */
+  60% { opacity:.8;  translate:-1.5vw -2vh; }
+  100%{ opacity:0;   translate:-6vw -6vh;  } /* scattered up and LEFT with him */
 }
 
 /* ---- beats 4+: she walks OFF the road ---------------------------------------

@@ -290,33 +290,42 @@ needed no special accommodation for it beyond generous top padding.
   (mobile resets it with `translate:none !important` — `translate` is a
   separate property from `transform`, one reset does not cover the other);
   JS writes only the walker's `translate(x vw, −6vh·t)`.
-- **Leaving the judge: a Thanos snap — he turns into sand and blows away,
-  finishing inside his own section.** Scroll-driven (`onScrollFrame`
-  triggers at `beatFloat >= 3.3`, still inside beat 3 which flips at 3.5;
-  `judgeSeen` stops direct landings on later beats from flashing him;
-  scrolling back below the threshold clears the canvas and un-hides him).
-  Two implementations, chosen at runtime in `startJudgeExit()`:
-  - **Primary — canvas particle field** (`prepareJudgeDust`/`runJudgeDust`
-    in js/script.js): while the visitor is still looking at beat 3, the
-    judge SVG is serialised → blob URL → drawn to an offscreen canvas →
-    sampled on a 4px grid into ~5k grains ({x, y, colour, per-grain
-    delay/velocity/wobble}). On exit, the SVG flips to `visibility:hidden`
-    at the exact frame a visible `.judge-dust-canvas` paints every grain
-    at rest (seamless swap), then an rAF loop sweeps the snap across him
-    left-to-right (delay = x/W·0.5 + jitter, so the erosion edge is
-    ragged): each grain eases up-and-right with sinusoidal flutter,
-    shrinking and fading — total ~1.6s. Nothing animates the stage's
-    opacity on this path, or it would fade the grains too. Inline-SVG →
-    blob → canvas does NOT taint the canvas (same-origin), so
-    `getImageData` is safe; everything is wrapped in try/catch anyway.
-  - **Fallback** (`.is-judge-exit-fallback`, used when canvas prep failed
-    or hasn't finished): the older `#judgeDissolve` turbulence-displacement
-    filter + `judgeDissolveAway` fade/blur keyframes.
+- **Leaving the judge: a Thanos snap, SCRUBBED by scroll — guaranteed
+  complete before beat 4 shows, and the wind blows LEFT.** The snap's
+  virtual time is a direct function of scroll position across the last
+  stretch of his own beat (`JUDGE_SNAP_START..END` = beatFloat 3.22..3.5,
+  mapped to 0..`JUDGE_SNAP_TOTAL` virtual seconds) — the "extra space" for
+  the animation is the final quarter of his section itself, so at ANY
+  scroll speed he is fully dust by the time the beat flips (a fast fling
+  past the zone jumps `t` straight to done, no easing lag; see
+  `runJudgeDust`). Slow scrolling scrubs the grains away gradually;
+  **scrolling back scrubs them back on — he reassembles grain by grain**;
+  stopping mid-zone freezes mid-dissolve, consistent with the rest of the
+  scroll-driven page. `judgeSeen` stops direct landings on later beats
+  from flashing him. Two implementations, chosen in `startJudgeExit()`:
+  - **Primary — canvas particle field** (`prepareJudgeDust`/`drawJudgeDust`
+    /`runJudgeDust` in js/script.js): while the visitor is still looking
+    at beat 3, the judge SVG is serialised → blob URL → offscreen canvas →
+    sampled on a 4px grid into ~5k grains. On exit the SVG flips to
+    `visibility:hidden` the same frame the visible `.judge-dust-canvas`
+    paints every grain at rest (seamless swap). Erosion starts on the
+    windward (RIGHT) side — `delay = (W−x)/W·0.5 + jitter` — and each
+    grain flies up-and-LEFT (negative vx) with sinusoidal flutter,
+    shrinking and fading. The canvas carries ~45% extra width on the left
+    (`judgeDust.pad`, inline width/left on the element) so grains travel
+    a while before clipping. `drawJudgeDust(t)` is a pure function of
+    virtual time — that's what makes bidirectional scrubbing free.
+    Nothing animates the stage's opacity on this path, or it would fade
+    the grains too. Inline-SVG → blob → canvas does NOT taint the canvas
+    (same-origin), so `getImageData` is safe; wrapped in try/catch anyway.
+  - **Fallback** (`.is-judge-exit-fallback`, canvas prep failed/not
+    ready): the `#judgeDissolve` turbulence filter + `judgeDissolveAway`
+    keyframes (also drifting left), time-based.
   His speech bubble hides the instant the snap starts (rule after the
   `[data-beat="3"]` show rule — same specificity, source order decides).
-  The eight CSS `.judge-dust i` motes still land on him first as
-  foreground grains. Under `prefers-reduced-motion` there are no
-  theatrics at all — beats 4+ simply hide his stage.
+  The eight CSS `.judge-dust i` motes land on him first and scatter left
+  with him. Under `prefers-reduced-motion` there are no theatrics at all —
+  beats 4+ simply hide his stage.
 - **His speech bubble is anchored to the stage's top edge**
   (`bottom:calc(100% + 12px)`, not a % `top` offset) — his head sits at
   that edge, so this keeps a constant small gap above his head at every
