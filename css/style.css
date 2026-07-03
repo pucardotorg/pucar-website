@@ -527,7 +527,7 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
 .pin.is-running .litigant .leg-front,
 .pin.is-running .litigant .leg-back,
 .pin.is-running .litigant .arm-left,
-.pin.is-running .litigant .arm-right{ animation-duration:.4s; }
+.pin.is-running .litigant .arm-right{ animation-duration:.35s; }
 
 /* She's invisible by default -- not present at all until she "arrives."
    .pin.is-revealed (added once, by js/script.js, and never removed again)
@@ -553,8 +553,39 @@ body:has(.pin[data-beat="7"]) .site-header .logo-dark{ opacity:1; }
    revealLitigantPlainly() in js/script.js), .is-revealed alone reveals her
    with the plain fade above -- no walk-in, since there's no "arriving at
    beat 0" moment to hang one on. */
-.pin.is-entrance .litigant-stage{
-  animation: lateWalkIn 1.15s cubic-bezier(.3,.55,.25,1) both;
+.pin.is-entrance .litigant{
+  /* Targets .litigant (the <svg> figure) and NOT .litigant-stage: the stage
+     also contains the dotted road (.path) and the shadow, and animating the
+     whole stage made the road slide down WITH her -- reading as "the road
+     is moving," not "she's walking in." Only the figure descends; the road
+     fades in in place (below) and the shadow stays put on the ground.
+
+     Speed is matched to her FEET, not picked for drama: at desktop size the
+     figure renders ~0.6x its viewBox, making each .35s run cycle's stride
+     reach ~100px of "ground" -- so a credible ground speed is
+     ~100px / .35s ≈ 285px/s. The -70vh travel (~630px on a 900px viewport)
+     therefore takes ~2.2s. If you change the run cadence (.is-running
+     duration below) or the travel distance, rebalance this duration to
+     distance / (stride-per-cycle x cycles-per-second) or she'll read as
+     sliding (too fast) or moonwalking (too slow) again. The near-linear
+     bezier matters too: her cadence is constant, so a strongly decelerating
+     curve makes her feet mismatch at both ends -- this one is ~linear with
+     a gentle settle in the last quarter. */
+  animation: lateWalkIn 2.2s cubic-bezier(.4,.4,.6,1) both;
+}
+/* The dotted road doesn't move during the entrance at all -- it just fades
+   in slowly, in place, while she walks down over it. This shorthand also
+   (deliberately) displaces the road's usual pathScroll animation for the
+   duration of the entrance: her own motion over a STATIC road is what
+   sells the walking; dashes scrolling underneath her at the same time
+   read as the road moving too. pathScroll resumes as normal once
+   .is-entrance comes off (next scroll with .is-walking). */
+.pin.is-entrance .path{
+  animation: pathFadeIn 2.4s ease both;
+}
+@keyframes pathFadeIn{
+  from{ opacity:0;   }
+  to  { opacity:.10; }   /* .path's resting opacity -- keep in sync with the base .path rule */
 }
 /* -70vh, not a fixed pixel offset: .litigant-stage sits align-self:center
    inside .pin, which is exactly 100vh tall with overflow:hidden -- so her

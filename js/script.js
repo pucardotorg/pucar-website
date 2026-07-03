@@ -124,8 +124,9 @@
   // plays *around* the user's scrolling instead of fighting it: she walks
   // in over ~1.15s, the bubble shows, and normal scroll behaviour is
   // never interrupted.
-  var ENTRANCE_MS = 1600;             // is-entrance/is-running lifetime (walk-in is 1.15s)
-  var ENTRANCE_BUBBLE_DELAY_MS = 480; // let the run-in read for a beat before she "speaks"
+  var ENTRANCE_MS = 2400;              // is-entrance/is-running lifetime (walk-in itself is 2.2s -- keep this slightly longer so her feet don't stop before she does)
+  var ENTRANCE_BUBBLE_DELAY_MS = 2050; // she "speaks" as she lands -- the bubble is anchored to the stage (which no longer descends with her), so showing it mid-air would leave it floating where her head hadn't arrived yet
+  var ENTRANCE_BUBBLE_VISIBLE_MS = 1500;
   var entranceEndTimer = null;
   var entranceBubbleTimer = null;
 
@@ -147,12 +148,18 @@
       speechEl.textContent = LATE_LINE;
       speechEl.style.setProperty("--bubble-tilt", pickBubbleTilt());
       speechEl.classList.add("is-visible");
+      // the bubble outlives the entrance classes slightly; speechHideTimer
+      // is the same handle stopBubbles()/dereveal clear, so a scroll-away
+      // still kills it instantly.
+      clearTimeout(speechHideTimer);
+      speechHideTimer = setTimeout(function () {
+        speechEl.classList.remove("is-visible");
+      }, ENTRANCE_BUBBLE_VISIBLE_MS);
     }, ENTRANCE_BUBBLE_DELAY_MS);
 
     entranceEndTimer = setTimeout(function () {
       pin.classList.remove("is-entrance", "is-running");
       setWalking(false); // stop cleanly, "on the spot" -- ordinary scroll-driven walking resumes on the next real scroll
-      if (speechEl) speechEl.classList.remove("is-visible");
     }, ENTRANCE_MS);
   }
 

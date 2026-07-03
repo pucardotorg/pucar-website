@@ -328,15 +328,35 @@ needed no special accommodation for it beyond generous top padding.
   the hero (the section-existence check in `onScrollFrame`) and on every
   genuine beat transition back to 0 — it replays every time, not just once.
   `playLateEntrance()` adds `.is-revealed` + `.is-entrance` + `.is-running`
-  + `.is-walking` to `.pin`: `.litigant-stage` runs `@keyframes lateWalkIn`
-  (a single smooth descent from `-70vh`, see below) while `.is-running`
-  speeds up the existing `figWalk`/`legFront`/`legBack`/`armLeft`/
-  `armRight` keyframes (just their `animation-duration`, down to .4s) for
-  a hurried gait. About half a second in, the speech bubble shows a fixed
-  line — "OMG! I'm so late to get to court!" — overriding whatever the
-  idle-bubble cycle was doing (`stopBubbles()` is called first). After
-  `ENTRANCE_MS = 1600` ms, `.is-entrance`/`.is-running` come off,
-  `setWalking(false)` stops her cleanly, and the bubble hides.
+  + `.is-walking` to `.pin`: **`.litigant` (the `<svg>` figure only — NOT
+  `.litigant-stage`)** runs `@keyframes lateWalkIn` (a single smooth
+  descent from `-70vh`, see below) while `.is-running` speeds the gait
+  keyframes up to .35s cycles. As she lands (`ENTRANCE_BUBBLE_DELAY_MS =
+  2050`), the speech bubble shows a fixed line — "OMG! I'm so late to get
+  to court!" — and stays up ~1.5s (the bubble is anchored to the stage,
+  which doesn't descend with her any more, so showing it mid-air would
+  leave it floating with no head under it). After `ENTRANCE_MS = 2400` ms,
+  `.is-entrance`/`.is-running` come off and `setWalking(false)` stops her
+  cleanly.
+  - **The dotted road doesn't move during the entrance** (Jul 2026 fix:
+    "it looks like the road's moving with her"). The walk-in originally
+    animated `.litigant-stage`, whose children include the road (`.path`)
+    and shadow — so the road slid down with the figure. Now only the
+    figure descends; `.pin.is-entrance .path` runs `pathFadeIn` (opacity
+    0 → .10 over 2.4s — keep that end value in sync with `.path`'s base
+    opacity), which also *deliberately* displaces the usual `pathScroll`
+    dash animation for the entrance's duration: her motion over a static
+    road is what sells the walking. `pathScroll` resumes on the next
+    ordinary scroll.
+  - **Her descent speed is matched to her feet** (Jul 2026 fix: "she
+    slides in faster than her feet are moving"). At desktop size the
+    figure renders ~0.6× its viewBox, so one .35s run cycle strides
+    ~100px of ground → credible speed ≈ 285px/s → the ~630px (`-70vh`)
+    travel takes 2.2s, with a near-linear bezier (a strongly decelerating
+    curve would desync the constant cadence at both ends). The full
+    arithmetic lives in the CSS comment on `.pin.is-entrance .litigant`;
+    rebalance duration/cadence/distance together or she reads as sliding
+    (too fast) or moonwalking (too slow).
   - **No scroll lock, and exactly two keyframes — this fixed a "super
     jerky" walk-in (Jul 2026).** Two independent causes: (1) the old
     version locked scroll (`overflow:hidden`) for 1.7s, which slammed the
