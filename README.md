@@ -959,11 +959,15 @@ two paths.
   left-to-right, top-to-bottom instead of popping all at once. Heading
   animates first, filters/count follow at a fixed `.1s`, then cards cascade
   after that.
-- **One-time reveal, deliberately not repeatable**: unlike the litigant's
-  "running in late" entrance (§4), which is meant to replay as a fun beat
-  every time you arrive at beat 0, this is a page-content reveal — scrolling
-  away and back shouldn't re-trigger it, so the observer unobserves itself
-  on the first intersection rather than toggling the class on/off.
+- **Replays on every arrival** (revised Jul 2026, explicit request:
+  "always trigger, either when collaborate is clicked, or when scrolling
+  there" — it originally revealed once and unobserved). `.is-in` is added
+  at ≥15% visibility and removed only once the section has left the
+  viewport *entirely* (threshold `[0, .15]` with hysteresis — removing at
+  the same 15% line would visibly blank content still on screen while
+  scrolling away). Re-adding the class restarts the entrance keyframes,
+  so the stagger replays each visit, for both scroll arrivals and
+  `cleanJumpTo()` clicks.
 - **`prefers-reduced-motion`**: extends the existing reduced-motion block —
   `.js-reveal` elements render at `opacity:1` outright and the `.is-in`
   animations are disabled, so reduced-motion visitors see the section fully

@@ -499,15 +499,18 @@
   window.addEventListener("resize", requestTick);
 
   // ---------------- Collaborate entrance transition ---------------------
-  // Heading, filters, and job cards fade/rise in the first time the
-  // section is actually seen. One IntersectionObserver covers both ways
-  // a visitor can arrive: scrolling down into it naturally, or landing
-  // there instantly via cleanJumpTo() above -- the jump still ends with
-  // the section intersecting the viewport, it just gets there in one
-  // step instead of many scroll frames, so no special-casing needed here.
-  // Reveals once then unobserves: this is a "welcome to the section"
-  // moment, not a repeatable gag like the litigant's entrance, so
-  // scrolling away and back should not replay it.
+  // Heading, filters, and job cards fade/rise in EVERY time the section
+  // is arrived at (explicit request: "always trigger, either when
+  // collaborate is clicked, or when scrolling there") -- one
+  // IntersectionObserver covers both paths, since a cleanJumpTo() click
+  // still ends with the section intersecting the viewport.
+  //
+  // Replay mechanics: .is-in is added when at least 15% of the section is
+  // visible, and only removed once the section has left the viewport
+  // ENTIRELY (isIntersecting false at threshold 0) -- removing it at the
+  // same 15% line would visibly blank content that's still on screen
+  // while scrolling away. Re-adding the class restarts the entrance
+  // keyframes from 0, so the stagger replays on each visit.
   var collaborateSection = document.getElementById("collaborate");
   if (collaborateSection && "IntersectionObserver" in window) {
     // Only commit to hiding things via .js-reveal once we can also
@@ -523,12 +526,15 @@
     var collabRevealObserver = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          collaborateSection.classList.add("is-in");
-          collabRevealObserver.unobserve(collaborateSection);
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.15) {
+            collaborateSection.classList.add("is-in");
+          } else if (!entry.isIntersecting) {
+            collaborateSection.classList.remove("is-in");
+          }
+          // between 0 and 15% visible: keep whatever state it has
         });
       },
-      { threshold: 0.15 }
+      { threshold: [0, 0.15] }
     );
     collabRevealObserver.observe(collaborateSection);
   }
