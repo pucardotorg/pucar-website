@@ -1068,6 +1068,11 @@ no-JS page is a plain crawlable list). The section reuses the `.collaborate`
 dark-indigo shell with `.contrib-grid` / `.contrib-card` styles in style.css.
 Linked from the homepage footer; included in sitemap.xml.
 
+Every generated page's header nav (pageShell) shows two pills: "← Back",
+which calls history.back() when there is history (href falls back to the
+page's backHref for crawlers/no-JS), and "View all Collaborators" linking to
+/contributors/.
+
 ### 6.4 The build script — scripts/build-jobs.js
 
 Run by Netlify (`netlify.toml` command) and locally. Zero deps. It:

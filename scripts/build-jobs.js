@@ -150,7 +150,12 @@ function pageShell(opts) {
 '    <img class="logo-dark logo-dark-long" src="/assets/pucar-white-expanded.avif" alt="PUCAR: Public Collective for Avoidance and Resolution of Disputes" width="835" height="100" />\n' +
 '    <img class="logo-dark logo-dark-short" src="/assets/pucar-white-short.png" alt="PUCAR" width="379" height="87" />\n' +
 '  </a>\n' +
-'  <nav class="site-nav"><a href="' + opts.backHref + '">' + opts.backLabel + "</a></nav>\n</header>\n" +
+/* "Back" uses real browser history (falls back to opts.backHref for no-JS
+   visitors and crawlers); the second pill always offers the contributors list */
+'  <nav class="site-nav">' +
+'<a href="' + opts.backHref + '" onclick="if(history.length>1){history.back();return false;}">← Back</a>' +
+'<a href="/contributors/">View all Collaborators</a>' +
+"</nav>\n</header>\n" +
 '<main class="job-main">\n' + opts.main + "\n</main>\n" +
 '<footer class="site-footer">\n  <div class="footer-top">' +
 '<img class="logo logo-long" src="/assets/pucar-white-expanded.avif" alt="PUCAR: Public Collective for Avoidance and Resolution of Disputes" width="835" height="100" />' +
