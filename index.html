@@ -224,8 +224,11 @@
       </div>
 
 
-      <!-- the film break (beat 6): slides up from under the previous beat,
-           holds the page while it plays; skip (or the film ending) moves on -->
+      <!-- the film break (beat 6): the video is FIXED UNDERNEATH; the
+           .film-curtain (and the stage/text riding the same --curtain var)
+           scrolls up and off it, then the page holds while it plays; skip
+           (or the film ending) moves on -->
+      <div class="film-curtain" aria-hidden="true"></div>
       <div class="video-break" id="videoBreak">
         <video id="onCourtsVideo" playsinline muted preload="metadata">
           <source src="/assets/oncourts-film.mp4" type="video/mp4" />

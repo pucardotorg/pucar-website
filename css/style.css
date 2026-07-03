@@ -1231,26 +1231,41 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
 .orb-paper{ background:var(--paper); }
 
 /* ---- beat 6: the film break ------------------------------------------------
-   A full-bleed overlay inside the pin. Off-beat it waits translated one
-   viewport DOWN; when beat 6 activates it slides up over the frozen
-   Kollam beat (the "parallax in from under" read: the pin is stuck, the
-   overlay rises across it). js/script.js locks scroll while it plays;
-   the skip button (or the film ending) releases and jumps to beat 7,
-   where her usual centre-top walk-in plays. If the video file is missing
-   or unplayable, .video-missing shows the placeholder note and scroll is
-   NEVER locked (no trap with nothing to watch). */
+   REVISED (Jul 2026, "I meant it should be fixed behind"): the video is
+   the FIXED lower layer (z-index 2, under the stages at 5 and text at 6),
+   and the page scrolls OFF it. js/script.js writes a --curtain custom
+   property on the pin (0 at beatFloat 5.5 -> 1 by ~5.95, held, restored
+   before beat 7); .film-curtain (a full-bleed forest panel at z-index 3)
+   plus the litigant stage and the beats column all translate up by
+   --curtain * ~105vh, so the previous section visibly passes over the
+   waiting film. When the curtain is fully open (and the approach was
+   forward, and the file is actually playable), scroll fixes and the film
+   plays; the skip button or the ended event releases and jumps to beat 7,
+   where her usual walk-in runs. Missing/broken file = note shown, no
+   hold, ever. */
 .video-break{
   position:absolute;
   inset:0;
-  z-index:40;               /* over stages and beat text, under the fixed header */
+  z-index:2;                /* the fixed underlayer */
   background:var(--forest-deep);
-  translate:0 100%;
-  transition:translate .85s cubic-bezier(.3,.6,.25,1);
-  visibility:hidden;        /* also unfocusable while parked below */
+  visibility:hidden;
 }
-.pin[data-beat="6"] .video-break{
-  translate:0 0;
-  visibility:visible;
+.pin[data-beat="6"] .video-break{ visibility:visible; }
+.film-curtain{
+  position:absolute;
+  inset:0;
+  z-index:3;                /* over the video, under stages (5) and text (6) */
+  background:var(--forest);
+  transform:translateY(calc(var(--curtain, 0) * -102%));
+  visibility:hidden;
+  pointer-events:none;
+}
+.pin[data-beat="5"] .film-curtain,
+.pin[data-beat="6"] .film-curtain{ visibility:visible; }
+/* the page content rides the curtain up with it */
+.litigant-stage,
+.beats{
+  transform:translateY(calc(var(--curtain, 0) * -105vh));
 }
 .video-break video{
   position:absolute;
@@ -2274,9 +2289,11 @@ body.scroll-locked{ overflow:hidden; }
     align-self:start;
   }
   /* single column on mobile: keep the litigant put, no side→centre slide,
-     and no desktop midline lift (translate is a separate property from
-     transform, so it needs its own reset) */
-  .pin[data-beat] .litigant-stage{ transform:none !important; translate:none !important; }
+     and no desktop midline lift. NOTE: only `translate` is force-reset on
+     the stage now -- its `transform` carries the film-break curtain ride,
+     which mobile needs too (the old inline-transform reason for resetting
+     it is gone; the walker owns that and keeps its own reset). */
+  .pin[data-beat] .litigant-stage{ translate:none !important; }
   .pin[data-beat] .litigant-walker{ transform:none !important; }
 
   /* speech bubbles: the desktop anchor (left:52%, -28% shift, 230px) hangs

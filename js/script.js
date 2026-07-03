@@ -576,23 +576,52 @@
   }
   if (filmSkip) filmSkip.addEventListener("click", exitFilm);
 
-  function enterFilm(prevBeat) {
-    if (filmVideo && filmUsable) {
-      try {
-        filmVideo.currentTime = 0;
-        var p = filmVideo.play();
-        if (p && p.catch) p.catch(function () {});
-      } catch (e) { /* playback is best-effort */ }
-    }
-    if (prevBeat < 6 && filmUsable && !reduceMotion) lockScroll();
+  // The curtain: 0 = page intact over the hidden film, 1 = film fully
+  // revealed. Rises across beatFloat 5.5->5.95, holds through the middle
+  // of beat 6, and restores by 6.45 -- safely BEFORE the 6.5 boundary, so
+  // her stage is back in place when the beat-7 walk-in fires. The hold
+  // (scroll fix + playback) engages only at curtain==1 on a forward
+  // approach with a playable file.
+  var filmHold = false;
+  var prevBeatFloat = 0;
+
+  function filmCurtainAt(bf) {
+    if (bf <= 5.5) return 0;
+    if (bf < 5.95) return (bf - 5.5) / 0.45;
+    if (bf <= 6.15) return 1;
+    if (bf < 6.45) return 1 - (bf - 6.15) / 0.3;
+    return 0;
   }
 
-  function leaveFilm() {
-    if (filmVideo) filmVideo.pause();
+  function updateFilm(beatFloat) {
+    var curtain = filmCurtainAt(beatFloat);
+    pin.style.setProperty("--curtain", curtain.toFixed(4));
+
+    var forward = beatFloat >= prevBeatFloat;
+    if (!filmHold && curtain >= 0.999 && forward &&
+        filmUsable && !reduceMotion && !isJumpingToSection) {
+      filmHold = true;
+      lockScroll();
+      if (filmVideo) {
+        try {
+          filmVideo.currentTime = 0;
+          var p = filmVideo.play();
+          if (p && p.catch) p.catch(function () {});
+        } catch (e) { /* playback is best-effort */ }
+      }
+    }
+    // pause whenever the film isn't the held centrepiece (backward passes,
+    // post-exit) -- the hold itself only ends via exitFilm
+    if (!filmHold && curtain < 0.98 && filmVideo && !filmVideo.paused) {
+      filmVideo.pause();
+    }
+    prevBeatFloat = beatFloat;
   }
 
   function exitFilm() {
+    filmHold = false;
     unlockScroll();
+    if (filmVideo) filmVideo.pause();
     // land on beat 7's scroll zone; the 6->7 transition plays her walk-in
     var seg = (story.offsetHeight - window.innerHeight) / (numBeats - 1);
     window.scrollTo({ top: story.offsetTop + seg * 7, behavior: "instant" });
@@ -614,11 +643,6 @@
     if (index === currentBeat) return;
     var prevBeat = currentBeat;
     currentBeat = index;
-
-    // film beat lifecycle first, so its unlock can't clobber the
-    // walk-in's own lock below
-    if (index === 6) enterFilm(prevBeat);
-    else if (prevBeat === 6) leaveFilm();
 
     // her centre-top walk-in replays after BOTH interludes she sits out:
     // the judge (3->4) and the film (6->7)
@@ -731,6 +755,9 @@
     ) * JUDGE_SNAP_TOTAL;
     if (judgeSeen && beatFloat >= JUDGE_SNAP_START) startJudgeExit();
     else cancelJudgeExit();
+
+    // film-break curtain + hold (scroll-scrubbed reveal of the fixed video)
+    updateFilm(beatFloat);
 
     // ---- section-based existence -------------------------------------
     // While the intro hero owns the screen (story still mostly below the

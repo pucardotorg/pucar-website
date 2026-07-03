@@ -337,21 +337,26 @@ notification emails can be configured there.
   Kerala High Court launched 24x7 ON Courts in Kollam, India's first
   fully digital end-to-end court. The beat-4 orbit rings deliberately
   stay visible through this beat (`[data-beat="5"] .orbits`).
-- **Beat 6 — the film break**: `#videoBreak`, a full-bleed overlay inside
-  the pin (z-index 40, under the fixed header) that waits translated one
-  viewport DOWN and slides up over the frozen Kollam beat when the beat
-  activates (the "parallax in from under" read; the pin is sticky, the
-  overlay rises across it). The beat has a near-empty `data-beat="6"`
-  article (sr-only text) so the engine counts it. JS (`enterFilm`/
-  `leaveFilm`/`exitFilm`): plays the video from 0 on entry, **locks
-  scroll only on a forward arrival AND only when the video is actually
-  playable** (`canplay` sets `filmUsable`; a missing/broken file shows
-  the `.video-missing` placeholder note and never traps the page). Exits:
-  the bottom-centre "Skip film" button or the `ended` event, both of
-  which unlock and jump the scroll to beat 7's zone; her stage is hidden
-  during beat 6 and the 6→7 transition plays the same centre-top walk-in
-  (with its own scroll lock) as 3→4. Scrolling back up into the beat
-  replays the video without locking. **The real film is in place at
+- **Beat 6 — the film break (v2: the video is FIXED UNDERNEATH and the
+  page scrolls off it).** Revised after "I meant it should be fixed
+  behind": `#videoBreak` sits at z-index 2 (the fixed underlayer, visible
+  on beat 6), and a `--curtain` custom property on the pin, written by
+  `updateFilm()` every scroll frame, drives the reveal: `.film-curtain`
+  (full-bleed forest panel, z-index 3, visible beats 5–6) plus
+  `.litigant-stage` and `.beats` all `translateY(-curtain·~105vh)` — the
+  previous section literally passes up and over the waiting film.
+  `filmCurtainAt(bf)`: 0 until beatFloat 5.5, rises to 1 by 5.95, holds
+  to 6.15, restores to 0 by 6.45 — deliberately BEFORE the 6.5 boundary
+  so her stage is back in position when the beat-7 walk-in fires. At
+  curtain==1 on a FORWARD approach with a playable file (`canplay` sets
+  `filmUsable`; missing file shows `.video-missing` and never traps),
+  scroll fixes and playback starts from 0. Exits: the bottom-centre skip
+  button or `ended`, both jump to beat 7's zone where her walk-in (own
+  lock) runs. Backward passes re-reveal the paused film without locking.
+  The beat has a near-empty `data-beat="6"` article (sr-only) so the
+  engine counts it. Mobile note: the stage's mobile reset is
+  `translate:none` ONLY — its `transform` now carries the curtain ride
+  and must not be force-reset. **The real film is in place at
   `assets/oncourts-film.mp4`** (60.6 MB, added by Varun Jul 2026; muted
   autoplay, so sound/captions are open decisions). Note: it's over
   GitHub's 50 MB warning threshold (under the 100 MB hard limit), so
