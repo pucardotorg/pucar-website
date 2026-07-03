@@ -2201,22 +2201,28 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
   max-width:1180px;
   margin:0 auto;
 }
+/* same translucent card language as .collab-card, just smaller */
 .contrib-card{
   display:flex;
   align-items:center;
   gap:14px;
   padding:16px 18px;
-  border-radius:14px;
-  background:var(--paper, #FBF8F2);
-  color:var(--ink);
+  border-radius:18px;
+  background:rgba(251,248,242,.06);
+  border:1px solid rgba(251,248,242,.14);
+  color:var(--paper);
   text-decoration:none;
-  box-shadow:0 10px 24px rgba(0,0,0,.18);
-  transition:translate .18s ease, box-shadow .18s ease;
+  transition:transform .25s ease, background .25s ease, border-color .25s ease;
 }
 .contrib-card:hover{
-  translate:0 -3px;
-  box-shadow:0 16px 34px rgba(0,0,0,.26);
+  transform:translateY(-4px);
+  background:rgba(251,248,242,.1);
+  border-color:rgba(251,248,242,.28);
 }
+/* the filter script toggles the `hidden` attribute, but display:flex above
+   would silently win over the UA's [hidden]{display:none} -- same gotcha as
+   .collab-card. Re-assert it. */
+.contrib-card[hidden]{ display:none; }
 .contrib-card-text{ display:flex; flex-direction:column; min-width:0; }
 .contrib-card-name{
   font-family:var(--font-display);
@@ -2227,7 +2233,7 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
 .contrib-card-role{
   font-size:.78rem;
   line-height:1.35;
-  opacity:.85;
+  opacity:.75;
   margin-top:2px;
   display:-webkit-box;
   -webkit-line-clamp:2;
