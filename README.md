@@ -401,7 +401,17 @@ notification emails can be configured there.
   - **Primary — canvas particle field** (`prepareJudgeDust`/`drawJudgeDust`
     /`runJudgeDust` in js/script.js): while the visitor is still looking
     at beat 3, the judge SVG is serialised → blob URL → offscreen canvas →
-    sampled on a 4px grid into ~5k grains. **No hard swap:** over the
+    sampled on a 4px grid into ~5k grains. **Prepared AT PAGE LOAD, not on
+    arrival at beat 3** (Jul 2026 fix — preparing on arrival raced fast
+    scrolls, and losing the race dropped users onto the filter fallback:
+    "the old filter sometimes shows up"). This is possible because all
+    geometry comes from transform-free layout values — computed
+    width/height for the figure, the `offsetLeft/Top` chain up to `.pin`
+    for the viewport pads — valid even while the stage is hidden and
+    transformed, since at snap time the pin is stuck at the viewport
+    origin and the stage's beat-3 translate is 0. The old
+    settle-gate/rect approach is gone; the field also rebuilds on
+    (debounced) resize, never mid-snap. **No hard swap:** over the
     first .35 virtual seconds `runJudgeDust` cross-fades inline opacities
     — crisp SVG down, grain canvas (on top) up — so the artwork fades
     into the dust; early windward grains fly while the solid figure is
