@@ -147,23 +147,35 @@ body:has(.pin[data-beat="9"]) .site-header .logo-dark{ opacity:1; }
 .site-nav{
   pointer-events:auto;
   display:flex;
-  gap:6px;
-  background:rgba(251,248,242,.7);
-  backdrop-filter:blur(6px);
-  border:1px solid var(--line);
+  gap:2px;
+  /* frosted glass: a light wash + heavy blur/saturate reads well over both
+     the cream hero and the dark story half; the inset highlight gives the
+     top edge a glass "catch" */
+  background:rgba(251,248,242,.52);
+  backdrop-filter:blur(16px) saturate(1.6);
+  -webkit-backdrop-filter:blur(16px) saturate(1.6);
+  border:1px solid rgba(26,26,26,.07);
   border-radius:999px;
-  padding:6px;
+  padding:5px;
+  box-shadow:
+    0 12px 32px rgba(17,31,38,.10),
+    inset 0 1px 0 rgba(255,255,255,.55);
 }
 .site-nav a{
   text-decoration:none;
-  font-size:.92rem; /* matches .btn / the Get in touch CTA next to it */
-  font-weight:500;
+  font-size:.9rem; /* matches .btn / the Get in touch CTA next to it */
+  font-weight:600;
+  letter-spacing:.01em;
   color:var(--ink-soft);
-  padding:8px 14px;
+  padding:8px 15px;
   border-radius:999px;
-  transition:background .2s ease, color .2s ease;
+  transition:background .22s ease, color .22s ease, box-shadow .22s ease;
 }
-.site-nav a:hover{ background:var(--navy); color:var(--paper); }
+.site-nav a:hover{
+  background:var(--forest);
+  color:var(--paper);
+  box-shadow:0 4px 12px rgba(17,31,38,.25);
+}
 
 /* ---------------- Collaborate nav dropdown ---------------- */
 .nav-drop{ position:relative; display:inline-flex; }
