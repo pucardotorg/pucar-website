@@ -311,9 +311,11 @@ needed no special accommodation for it beyond generous top padding.
     paints every grain at rest (seamless swap). Erosion starts on the
     windward (RIGHT) side — `delay = (W−x)/W·0.5 + jitter` — and each
     grain flies up-and-LEFT (negative vx) with sinusoidal flutter,
-    shrinking and fading. The canvas carries ~45% extra width on the left
-    (`judgeDust.pad`, inline width/left on the element) so grains travel
-    a while before clipping. `drawJudgeDust(t)` is a pure function of
+    shrinking and fading. The canvas extends to the VIEWPORT's left and
+    top edges (`judgeDust.pad`/`padTop`, measured from the stage's rect at
+    prepare time; inline width/height/left/top on the element) so the dust
+    never hits a visible clip boundary — grains either fade mid-air or
+    stream off the actual screen edge. `drawJudgeDust(t)` is a pure function of
     virtual time — that's what makes bidirectional scrubbing free.
     Nothing animates the stage's opacity on this path, or it would fade
     the grains too. Inline-SVG → blob → canvas does NOT taint the canvas
