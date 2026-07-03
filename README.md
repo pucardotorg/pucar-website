@@ -777,6 +777,11 @@ progressive enhancement over real pages.
 
 ### 6.2 Content model — content/jobs/*.json
 
+**Title convention: every card title is a "How might we …" statement
+relating to DRISTI 2.0** (explicit instruction, Jul 2026) — e.g. "How might
+we make DRISTI 2.0 work for a litigant on a 2G phone?". Keep new postings
+in that form; the role/deliverable itself lives in `summary` and `body`.
+
 Filename = slug = URL (`/collaborate/<slug>/`). Fields:
 
 - `title`, `summary` (card + meta description), `body` (markdown)
