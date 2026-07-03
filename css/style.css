@@ -268,9 +268,26 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
   border-radius:4px 12px 6px 10px;
   box-shadow:0 10px 22px rgba(0,0,0,.28);
   rotate:-1.3deg;
+  /* the notes rock gently in the wind, pivoting around the pin (which
+     sits at top-centre, y≈-7px) -- hence the raised transform-origin.
+     Amplitude is deliberately tiny (±.7deg around each base tilt) so the
+     hover handoff below can't visibly snap. */
+  transform-origin:50% -6px;
+  animation: boardRockA 3.8s ease-in-out infinite;
   transition: rotate .25s ease, translate .25s ease, box-shadow .25s ease;
 }
-.board-note + .board-note{ rotate:1.1deg; }
+.board-note + .board-note{
+  rotate:1.1deg;
+  animation: boardRockB 4.6s ease-in-out infinite .7s;
+}
+@keyframes boardRockA{
+  0%,100%{ rotate:-1.9deg; }
+  50%    { rotate:-.6deg;  }
+}
+@keyframes boardRockB{
+  0%,100%{ rotate:.4deg;  }
+  50%    { rotate:1.7deg; }
+}
 .board-note::before{         /* the pin */
   content:"";
   position:absolute;
@@ -283,6 +300,7 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
   box-shadow:0 3px 4px rgba(0,0,0,.35);
 }
 .board-note:hover{
+  animation:none;      /* stop rocking: straight and still, as before */
   rotate:0deg;
   translate:0 -4px;
   box-shadow:0 16px 30px rgba(0,0,0,.32);
@@ -313,6 +331,22 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
    such shared override yet, so it gets its own light-bg variant here. */
 .intro-hero .btn-ghost{ border:1px solid rgba(36,30,26,.32); color:var(--ink); }
 .intro-hero .btn-ghost:hover{ background:rgba(36,30,26,.06); }
+
+/* buttons that carry a little icon (beacon / arrow) */
+.btn-with-icon{ gap:9px; }
+/* "Tell me more" arrow: loops downward -- appears at the top, slides down,
+   fades out, restarts -- a running "you can scroll" hint */
+.btn-arrow{
+  display:inline-block;
+  animation: arrowLoop 1.6s ease-in-out infinite;
+}
+@keyframes arrowLoop{
+  0%  { translate:0 -5px; opacity:0; }
+  30% { translate:0 0;    opacity:1; }
+  70% { translate:0 2px;  opacity:1; }
+  100%{ translate:0 7px;  opacity:0; }
+}
+/* the green beacon is shared with the bulletin board's .board-live */
 
 /* mobile/tablet: the board stacks BELOW the copy, full width, tilts eased */
 @media (max-width: 900px){
@@ -1984,6 +2018,7 @@ body.scroll-locked{ overflow:hidden; }
   .litigant .fig, .litigant .leg-front, .litigant .leg-back,
   .litigant .arm-left, .litigant .arm-right, .litigant .head,
   .judge .gavel, .speech-bubble,
+  .board-note, .board-live, .btn-arrow,
   .ground-dots, .path, .shadow, .scroll-cue{ animation:none !important; }
   .queue-fig, .judge-stage, #litigant{ transition:none !important; }
   .pin.is-judge-exit .judge-stage, .judge-dust i{ animation:none !important; }
