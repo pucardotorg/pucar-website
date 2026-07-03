@@ -448,13 +448,12 @@ const scEvents = loadDir("sc-events")
 function perspCard(p, slug) {
   return '<article class="collab-card persp-card" data-slug="' + esc(slug) + '">\n' +
     '  <a class="collab-cover" href="' + esc(p.url || "#") + '" ' + (p.url ? 'target="_blank" rel="noopener" ' : "") + 'aria-label="' + esc(p.title) + '"></a>\n' +
-    '  <div class="collab-topline"><span class="collab-cat">' + esc(p.type || "View") + "</span>" +
-    '<span class="collab-status">' + esc(p.outlet || "") + "</span></div>\n" +
+    '  <div class="collab-topline"><span class="collab-status">' + esc(p.outlet || "") + "</span></div>\n" +
     '  <span class="collab-type">' + esc(p.author || "") + "</span>\n" +
     '  <span class="collab-title">' + esc(p.title) + "</span>\n" +
     '  <span class="collab-summary">' + esc(p.summary) + "</span>\n" +
     '  <ul class="collab-chips">' + (p.tags || []).map(function (t) { return '<li title="' + esc(t) + '">' + esc(t) + "</li>"; }).join("") + "</ul>\n" +
-    '  <div class="collab-foot">\n    <span></span>\n    <span class="collab-btn">Read the summary</span>\n  </div>\n' +
+    '  <div class="collab-foot">\n    <span class="collab-btn">Read the summary</span>\n  </div>\n' +
     "</article>";
 }
 

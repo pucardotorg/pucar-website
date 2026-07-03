@@ -2533,6 +2533,14 @@ body.scroll-locked{ overflow:hidden; }
    (cards "styled exactly like our collaborate cards"); only additions
    live here: the participate section and its event cards. */
 .persp-section .collab-grid{ grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); }
+/* pin the divider+button to the card bottom (like .collab-meta does on the
+   work cards) and left-align the button across all cards in a row */
+.persp-card .collab-foot{
+  margin-top:auto;
+  justify-content:flex-start;
+}
+/* outlet sits alone on the topline now (the type chip is gone): right-align */
+.persp-card .collab-topline{ justify-content:flex-end; }
 
 .participate{
   background:var(--cream);
