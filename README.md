@@ -1032,8 +1032,10 @@ inlined in the script). For those entries `role` and `body` are empty,
 `organisation` carries whatever the pucar.org card showed (mostly org names,
 sometimes a role like "Lawyer" or "Technology Architect"; Sarfraz Alam has
 neither), `links` has their LinkedIn, `source` is "pucar.org/about", and
-`photo` hotlinks framerusercontent.com — mirror these into assets/ before the
-old Framer site is retired.
+`photo` points at `/assets/contributors/<slug>.<ext>` once
+`scripts/mirror-contributor-photos.js` has been run locally (needs internet;
+the sandbox cannot reach framerusercontent.com). Until then it hotlinks
+framerusercontent.com.
 
 ### 6.4 The build script — scripts/build-jobs.js
 
