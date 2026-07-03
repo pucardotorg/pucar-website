@@ -1,5 +1,5 @@
 {
-  "title": "Open-Source Contributor — Court Data Dashboards",
+  "title": "How might we make court performance visible to everyone in DRISTI 2.0?",
   "date": "2026-06-20",
   "listing_days": 90,
   "deadline": "2026-12-31",
@@ -10,8 +10,11 @@
   "summary": "Help build open dashboards that make court performance legible — pendency, disposal rates, hearing patterns — on top of public judicial data.",
   "commitment": "Flexible · ongoing",
   "location": "Remote",
-  "tags": ["Open source", "Data"],
-  "apply_url": "mailto:collaborate@pucar.org?subject=Open-Source%20Contributor%20—%20Court%20Data",
+  "tags": [
+    "Open source",
+    "Data"
+  ],
+  "apply_url": "mailto:collaborate@pucar.org?subject=HMW%20—%20Court%20data%20dashboards%20(DRISTI%202.0)",
   "posted_by": "rohan-mehta",
   "assigned_to": "",
   "status": "Open",

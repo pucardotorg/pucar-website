@@ -1,5 +1,5 @@
 {
-  "title": "Explainer Video — Why Cases Take So Long",
+  "title": "How might we tell the pendency story behind DRISTI 2.0 in 3 minutes?",
   "date": "2026-05-10",
   "listing_days": 30,
   "deadline": "2026-06-20",
@@ -10,8 +10,11 @@
   "summary": "A 3-minute animated explainer on court pendency for a general audience, based on PUCAR's research briefs.",
   "commitment": "~20 hrs total",
   "location": "Remote",
-  "tags": ["Video", "Storytelling"],
-  "apply_url": "mailto:collaborate@pucar.org?subject=Explainer%20Video",
+  "tags": [
+    "Video",
+    "Storytelling"
+  ],
+  "apply_url": "mailto:collaborate@pucar.org?subject=HMW%20—%20Pendency%20explainer",
   "posted_by": "aditi-rao",
   "assigned_to": "rohan-mehta",
   "status": "Completed",

@@ -1,5 +1,5 @@
 {
-  "title": "Design Researcher — Litigant Experience",
+  "title": "How might we make DRISTI 2.0 reflect the litigant's real journey?",
   "date": "2026-06-28",
   "listing_days": 45,
   "deadline": "2026-09-30",
@@ -10,8 +10,11 @@
   "summary": "Interview litigants, lawyers, and court staff to map the real experience of navigating an Indian court — and turn it into insights the ecosystem can act on.",
   "commitment": "6–8 hrs/week · 3 months",
   "location": "Remote (India)",
-  "tags": ["Research", "Interviews"],
-  "apply_url": "mailto:collaborate@pucar.org?subject=Design%20Researcher%20—%20Litigant%20Experience",
+  "tags": [
+    "Research",
+    "Interviews"
+  ],
+  "apply_url": "mailto:collaborate@pucar.org?subject=HMW%20—%20Litigant%20journey%20research%20(DRISTI%202.0)",
   "posted_by": "aditi-rao",
   "assigned_to": "",
   "status": "Open",

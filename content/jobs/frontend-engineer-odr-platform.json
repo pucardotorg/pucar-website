@@ -1,5 +1,5 @@
 {
-  "title": "Frontend Engineer — ODR Platform",
+  "title": "How might we make DRISTI 2.0 work for a litigant on a 2G phone?",
   "date": "2026-07-01",
   "listing_days": 30,
   "deadline": "2026-08-01",
@@ -10,8 +10,12 @@
   "summary": "Own the litigant-facing web experience of the open-source Online Dispute Resolution platform — accessibility-first, multilingual, low-bandwidth.",
   "commitment": "Full-time",
   "location": "Remote (India) · quarterly meetups",
-  "tags": ["React", "Accessibility", "Open source"],
-  "apply_url": "mailto:collaborate@pucar.org?subject=Frontend%20Engineer%20—%20ODR",
+  "tags": [
+    "React",
+    "Accessibility",
+    "Open source"
+  ],
+  "apply_url": "mailto:collaborate@pucar.org?subject=HMW%20—%20Frontend%20engineering%20(DRISTI%202.0)",
   "posted_by": "varun-h",
   "assigned_to": "",
   "status": "Open",
