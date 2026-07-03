@@ -59,6 +59,7 @@ collections:
     fields:
       - { name: "name", label: "Name", widget: "string" }
       - { name: "role", label: "Role / affiliation", widget: "string", required: false }
+      - { name: "organisation", label: "Organisation", widget: "string", required: false, hint: "Shown on cards and used by the contributors filter." }
       - { name: "photo", label: "Photo", widget: "image", required: false, hint: "Square works best. Leave empty for an initials avatar." }
       - { name: "email", label: "Email", widget: "string", required: false }
       - name: "links"

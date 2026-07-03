@@ -240,7 +240,8 @@ function contributorPage(person) {
     '  <div class="contrib-head">' + avatarHtml(person, "avatar-xl") +
     '<div><p class="beat-eyebrow">Contributor</p>' +
     '<h1 class="job-title">' + esc(person.name) + "</h1>" +
-    (person.role ? '<p class="job-summary">' + esc(person.role) + "</p>" : "") +
+    ((person.role || person.organisation) ? '<p class="job-summary">' +
+      esc([person.role, person.organisation].filter(Boolean).join(" · ")) + "</p>" : "") +
     "</div></div>\n" +
     '  <article class="job-body">\n' + mdToHtml(person.body || "") + "\n  </article>\n" +
     (links ? '  <div class="cta-row">\n    ' + links + "\n  </div>\n" : "") +
@@ -250,10 +251,12 @@ function contributorPage(person) {
       taken.map(function (j) { return jobLine(j, j.status === "Completed" ? "Completed" : "In progress"); }).join("") + "</ul>\n" : "");
   return pageShell({
     title: person.name + " | PUCAR contributor",
-    desc: (person.role ? person.role + ". " : "") + "Contributor to the PUCAR collective.",
+    desc: ((person.role || person.organisation) ? [person.role, person.organisation].filter(Boolean).join(", ") + ". " : "") +
+      "Contributor to the PUCAR collective.",
     url: person.url,
-    jsonLd: { "@context": "https://schema.org", "@type": "Person", name: person.name, description: person.role,
-      affiliation: { "@type": "Organization", name: "PUCAR" } },
+    jsonLd: { "@context": "https://schema.org", "@type": "Person", name: person.name,
+      description: [person.role, person.organisation].filter(Boolean).join(", "),
+      affiliation: { "@type": "Organization", name: person.organisation || "PUCAR" } },
     backHref: "/#collaborate", backLabel: "← Collaborate", main: main
   });
 }

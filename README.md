@@ -1021,8 +1021,19 @@ passed since the last deploy and rewrites "Closes <date>" to
 ### 6.3 Content model — content/contributors/*.json
 
 Filename = slug = URL (`/contributors/<slug>/`). Fields: `name`, `role`,
-`photo` (optional; empty → initials avatar, background hue hashed from the
-name), `email`, `links[]` ({label,url}), `published`, `body` (bio markdown).
+`organisation` (affiliation shown after role with a `·`; also intended as the
+filter key for the upcoming contributors page), `photo` (optional; empty →
+initials avatar, background hue hashed from the name), `email`, `links[]`
+({label,url}), `published`, `body` (bio markdown).
+
+77 real contributors were scraped from https://pucar.org/about (July 2026)
+via `scripts/import-pucar-contributors.js` (one-off, safe to re-run; data is
+inlined in the script). For those entries `role` and `body` are empty,
+`organisation` carries whatever the pucar.org card showed (mostly org names,
+sometimes a role like "Lawyer" or "Technology Architect"; Sarfraz Alam has
+neither), `links` has their LinkedIn, `source` is "pucar.org/about", and
+`photo` hotlinks framerusercontent.com — mirror these into assets/ before the
+old Framer site is retired.
 
 ### 6.4 The build script — scripts/build-jobs.js
 
