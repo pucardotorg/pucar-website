@@ -350,22 +350,22 @@ notification emails can be configured there.
   so her stage is back in position when the beat-7 walk-in fires. At
   curtain==1 on a FORWARD approach with a playable file (`canplay` sets
   `filmUsable`; missing file shows `.video-missing` and never traps),
-  scroll fixes and playback starts from 0, **with audio**: `tryPlayFilm()`
-  attempts unmuted playback first; if the browser's autoplay policy
-  refuses (scroll isn't a click-grade gesture), it falls back to muted
-  playback and shows a one-tap "Tap for sound" pill (a real click, so
-  unmuting always succeeds). The video carries native `controls`
-  (play/pause/volume/seek/fullscreen). A full-width `.video-fade`
-  gradient (black→transparent, 120px, pointer-transparent) keeps
-  burnt-in subtitles legible; the skip control is small side text at
-  bottom-right ("Skip to the next section →") so it never covers them.
-  While the hold is active, `body.film-playing` slides the whole fixed
-  header (logo+nav+CTA) up out of frame, gliding back on exit. Exits:
-  skip or `ended`, both jump to beat 7's zone where her walk-in (own
-  lock) runs; the beat-4 orbits additionally wait for that walk-in to
+  playback starts **with audio** and **NO scroll lock** (v3 revision:
+  "don't lock scroll on the video. Let people scroll to move on" — the
+  earlier skip button and bottom gradient are REMOVED). `updateFilm`
+  toggles `filmActive` at curtain==1: entering the zone plays
+  (`tryPlayFilm()` attempts unmuted first; if autoplay policy refuses —
+  scroll isn't a click-grade gesture — it falls back to muted + a one-tap
+  "Tap for sound" pill), **leaving the zone in either direction pauses
+  the video** and restores the chrome; re-entering RESUMES (it only
+  restarts from 0 after a completed watch, so a wobble at the zone edge
+  doesn't restart it). Native `controls` are on. While the film is the
+  centrepiece, `body.film-playing` slides the fixed header UP out of
+  frame and the `.progress-rail` DOWN, both gliding back on scroll-away
+  (or on `ended`). Scrolling onward crosses into beat 7, whose walk-in
+  (own lock) runs; the beat-4 orbits additionally wait for walk-ins to
   finish (`.pin.is-entrance .orbits{opacity:0}`, after the show rule) so
-  the rings only appear once she has settled. Backward passes re-reveal
-  the paused film without locking.
+  the rings only appear once she has settled.
   The beat has a near-empty `data-beat="6"` article (sr-only) so the
   engine counts it. Mobile note: the stage's mobile reset is
   `translate:none` ONLY — its `transform` now carries the curtain ride
