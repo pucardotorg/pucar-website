@@ -1637,6 +1637,10 @@ body:has(.pin[data-beat="8"]) .site-header .logo-dark{ opacity:1; }
 
 /* ---------------- job modal ---------------- */
 body.modal-open{ overflow:hidden; }
+/* scroll is held while a litigant walk-in plays (beat-0 entrance and the
+   post-judge return) -- explicit request; js/script.js adds/removes it
+   and every cancel path releases it. */
+body.scroll-locked{ overflow:hidden; }
 .job-modal{ position:fixed; inset:0; z-index:100; }
 .job-modal-backdrop{
   position:absolute; inset:0;

@@ -507,20 +507,28 @@ needed no special accommodation for it beyond generous top padding.
     arithmetic lives in the CSS comment on `.pin.is-entrance .litigant`;
     rebalance duration/cadence/distance together or she reads as sliding
     (too fast) or moonwalking (too slow).
-  - **No scroll lock, and exactly two keyframes — this fixed a "super
-    jerky" walk-in (Jul 2026).** Two independent causes: (1) the old
-    version locked scroll (`overflow:hidden`) for 1.7s, which slammed the
-    page to a dead stop mid-scroll-gesture — the page itself jerked, not
-    just the figure. The entrance now plays *around* the user's scrolling
-    and never interrupts it (`body.scroll-locked` is gone from CSS and
-    JS). (2) the old `lateWalkIn` had four keyframe stops
-    (`-70vh → -16vh → +3vh overshoot → 0`), and CSS easing applies **per
-    keyframe segment**, so she decelerated into and re-accelerated out of
-    every intermediate stop — three visible hitches. It's now a single
-    `0% → 100%` segment (`-70vh → 0`, 1.15s, one decelerating bezier) —
-    one continuous descent. The opacity fade is gone too: she starts fully
-    opaque but clipped above the pin's `overflow:hidden` edge, so she
-    appears by walking into frame rather than fading.
+  - **Scroll IS locked during walk-ins — by explicit request, and it has
+    flip-flopped, so know the history before changing it again.** The
+    original entrance locked scroll; that lock was removed as half of a
+    "super jerky" complaint; then it was explicitly requested back ("can
+    we lock scroll until the litigant moves in? Same in the other section
+    where the litigant moves in after the judge"). `lockScroll()`/
+    `unlockScroll()` (body.scroll-locked → overflow:hidden) wrap BOTH the
+    beat-0 entrance and the post-judge return (~2.4s each). Release paths
+    — all of them matter: the entrance/return end timers,
+    `derevealLitigant()` (scrolled back to the hero mid-entrance),
+    the `setActiveBeat` return-cancel branch (back to beat 3 mid-drop),
+    and `cleanJumpTo()` (nav clicks must scroll, and `scrollIntoView`
+    can't move an overflow:hidden viewport). No lock under
+    `prefers-reduced-motion` (nothing to wait for).
+  - **Exactly two keyframes in `lateWalkIn` — the other half of the old
+    "super jerky" fix.** CSS easing applies **per keyframe segment**, so
+    the original four-stop version (`-70vh → -16vh → +3vh → 0`)
+    decelerated into and re-accelerated out of every intermediate stop —
+    three visible hitches. It's a single `0% → 100%` segment now, one
+    continuous descent. No opacity fade either: she starts fully opaque
+    but clipped above the pin's `overflow:hidden` edge, so she appears by
+    walking into frame rather than fading.
   - **She's invisible until she "arrives," not just off-screen.** Revised
     after the first pass read as "doesn't seem to walk in" — a small
     horizontal slide on an already-opaque figure just wasn't a legible

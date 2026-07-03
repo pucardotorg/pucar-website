@@ -330,6 +330,18 @@
   var entranceEndTimer = null;
   var entranceBubbleTimer = null;
 
+  // Scroll is HELD while a walk-in plays (explicit request) -- both the
+  // beat-0 entrance and the post-judge return use this. overflow:hidden on
+  // body propagates to the viewport, freezing scroll without moving it.
+  // Skipped under prefers-reduced-motion (no animation to wait for), and
+  // released by every path that ends or cancels an entrance.
+  function lockScroll() {
+    if (!reduceMotion) document.body.classList.add("scroll-locked");
+  }
+  function unlockScroll() {
+    document.body.classList.remove("scroll-locked");
+  }
+
   function playLateEntrance() {
     // Never fire mid-jump -- see cleanJumpTo() below: a "skip to
     // Collaborate" jump that passes through (or lands exactly on) beat 0
@@ -341,6 +353,7 @@
     clearTimeout(entranceEndTimer);
     clearTimeout(entranceBubbleTimer);
 
+    lockScroll();
     pin.classList.add("is-revealed", "is-entrance", "is-running", "is-walking");
 
     entranceBubbleTimer = setTimeout(function () {
@@ -358,6 +371,7 @@
     }, ENTRANCE_BUBBLE_DELAY_MS);
 
     entranceEndTimer = setTimeout(function () {
+      unlockScroll();
       pin.classList.remove("is-entrance", "is-running");
       setWalking(false); // stop cleanly, "on the spot" -- ordinary scroll-driven walking resumes on the next real scroll
     }, ENTRANCE_MS);
@@ -383,6 +397,7 @@
     if (!pin.classList.contains("is-revealed")) return;
     clearTimeout(entranceEndTimer);
     clearTimeout(entranceBubbleTimer);
+    unlockScroll();
     pin.classList.remove("is-revealed", "is-entrance", "is-running");
     if (speechEl) speechEl.classList.remove("is-visible");
   }
@@ -527,9 +542,11 @@
   // she was hidden (see the step logic in onScrollFrame).
   var returnEndTimer = null;
   function playReturnEntrance() {
+    lockScroll();
     pin.classList.add("is-entrance", "is-running", "is-walking");
     clearTimeout(returnEndTimer);
     returnEndTimer = setTimeout(function () {
+      unlockScroll();
       pin.classList.remove("is-entrance", "is-running");
       setWalking(false);
     }, 2400);
@@ -544,8 +561,9 @@
       playReturnEntrance();
     } else if (index === 3) {
       // back at the judge: kill any in-flight return so re-entering 4
-      // replays it cleanly
+      // replays it cleanly (and never leave scroll stuck locked)
       clearTimeout(returnEndTimer);
+      unlockScroll();
       pin.classList.remove("is-entrance", "is-running");
     }
 
@@ -706,6 +724,9 @@
   function cleanJumpTo(targetId) {
     var target = document.getElementById(targetId);
     if (!target) return;
+    // a nav click must always work, even mid-walk-in: release any hold
+    // (overflow:hidden would stop scrollIntoView from moving the page)
+    unlockScroll();
     isJumpingToSection = true;
     // "instant", not "auto" -- per spec, behavior:"auto" defers to the
     // element's CSS scroll-behavior, and html has scroll-behavior:smooth
