@@ -351,9 +351,12 @@ notification emails can be configured there.
   which unlock and jump the scroll to beat 7's zone; her stage is hidden
   during beat 6 and the 6→7 transition plays the same centre-top walk-in
   (with its own scroll lock) as 3→4. Scrolling back up into the beat
-  replays the video without locking. **The film file itself is a
-  placeholder: drop the real one at `assets/oncourts-film.mp4`** (muted
-  autoplay; add captions/sound design decisions when it lands). **Copy conventions (explicit instructions, Jul 2026): NO em dashes
+  replays the video without locking. **The real film is in place at
+  `assets/oncourts-film.mp4`** (60.6 MB, added by Varun Jul 2026; muted
+  autoplay, so sound/captions are open decisions). Note: it's over
+  GitHub's 50 MB warning threshold (under the 100 MB hard limit), so
+  pushes will nag; if the repo gets heavy, move it to Git LFS or host the
+  file on a video CDN and point the `<source>` there. **Copy conventions (explicit instructions, Jul 2026): NO em dashes
   anywhere in user-facing copy** (use commas/colons/periods; titles use
   `|`) **and no `[placeholder — verify]` citation sups** — both were
   stripped sitewide, including build-script templates; don't reintroduce
