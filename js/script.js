@@ -560,7 +560,30 @@
   var filmVideo = document.getElementById("onCourtsVideo");
   var filmBreak = document.getElementById("videoBreak");
   var filmSkip = document.getElementById("videoSkip");
+  var filmSound = document.getElementById("videoSound");
   var filmUsable = false;
+
+  // Play WITH audio instantly; if the browser's autoplay policy refuses
+  // unmuted playback started from a scroll (no click-grade gesture), fall
+  // back to muted playback and surface a one-tap "Tap for sound" button
+  // (a real click, so unmuting always succeeds).
+  function tryPlayFilm() {
+    if (!filmVideo) return;
+    try { filmVideo.currentTime = 0; } catch (e) { /* not seekable yet */ }
+    filmVideo.muted = false;
+    filmVideo.volume = 1;
+    var p = filmVideo.play();
+    if (p && p.catch) p.catch(function () {
+      filmVideo.muted = true;
+      var p2 = filmVideo.play();
+      if (p2 && p2.catch) p2.catch(function () {});
+      if (filmSound) filmSound.hidden = false;
+    });
+  }
+  if (filmSound) filmSound.addEventListener("click", function () {
+    filmVideo.muted = false;
+    filmSound.hidden = true;
+  });
   if (filmVideo) {
     filmVideo.addEventListener("canplay", function () { filmUsable = true; });
     filmVideo.addEventListener("error", function () {
@@ -602,18 +625,14 @@
         filmUsable && !reduceMotion && !isJumpingToSection) {
       filmHold = true;
       lockScroll();
-      if (filmVideo) {
-        try {
-          filmVideo.currentTime = 0;
-          var p = filmVideo.play();
-          if (p && p.catch) p.catch(function () {});
-        } catch (e) { /* playback is best-effort */ }
-      }
+      document.body.classList.add("film-playing"); // slides the header away
+      tryPlayFilm();
     }
-    // pause whenever the film isn't the held centrepiece (backward passes,
-    // post-exit) -- the hold itself only ends via exitFilm
-    if (!filmHold && curtain < 0.98 && filmVideo && !filmVideo.paused) {
-      filmVideo.pause();
+    if (!filmHold) {
+      document.body.classList.remove("film-playing"); // header returns
+      // pause whenever the film isn't the held centrepiece (backward
+      // passes, post-exit) -- the hold itself only ends via exitFilm
+      if (curtain < 0.98 && filmVideo && !filmVideo.paused) filmVideo.pause();
     }
     prevBeatFloat = beatFloat;
   }
@@ -621,6 +640,8 @@
   function exitFilm() {
     filmHold = false;
     unlockScroll();
+    document.body.classList.remove("film-playing");
+    if (filmSound) filmSound.hidden = true;
     if (filmVideo) filmVideo.pause();
     // land on beat 7's scroll zone; the 6->7 transition plays her walk-in
     var seg = (story.offsetHeight - window.innerHeight) / (numBeats - 1);

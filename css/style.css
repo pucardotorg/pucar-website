@@ -76,12 +76,21 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
   position:fixed;
   top:0; left:0; right:0;
   z-index:50;
+  /* the whole header (logo + nav + CTA) slides up out of the way while
+     the film plays (body.film-playing, toggled with the film hold) and
+     glides back when the hold ends */
+  transition: translate .55s cubic-bezier(.4,.1,.3,1);
   display:flex;
   align-items:center;
   justify-content:space-between;
   padding: 18px clamp(20px,4vw,48px);
   pointer-events:none;
 }
+body.film-playing .site-header{
+  translate:0 -120%;
+  pointer-events:none;
+}
+
 .site-header .logo{
   pointer-events:auto;
   position:relative;
@@ -1204,6 +1213,11 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
 }
 .pin[data-beat="4"] .orbits,
 .pin[data-beat="5"] .orbits{ opacity:1; }  /* rings carry on into the Kollam beat */
+/* ...but never during her walk-in: the rings appear only once she has
+   settled on her spot (equal specificity to the show rule above -- this
+   must stay AFTER it; when .is-entrance drops off, the orbit's own
+   delayed 1s fade brings the rings in) */
+.pin.is-entrance .orbits{ opacity:0; }
 .orbit{
   position:absolute;
   left:50%; top:50%;
@@ -1287,21 +1301,49 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
 }
 .video-break.video-missing .video-note{ display:block; }
 .video-break.video-missing video{ display:none; }
+/* thin legibility gradient spanning the video's full width -- black at the
+   very bottom fading to transparent, sitting UNDER any burnt-in subtitles
+   so they stay readable, and pointer-transparent so the native controls
+   beneath it still work */
+.video-fade{
+  position:absolute;
+  left:0; right:0; bottom:0;
+  height:120px;
+  background:linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0));
+  pointer-events:none;
+}
+/* skip: small text at the SIDE (it used to be a centred pill that sat on
+   top of the subtitles) */
 .video-skip{
   position:absolute;
-  bottom:28px;
+  right:22px;
+  bottom:16px;
+  border:none;
+  background:none;
+  color:rgba(251,248,242,.85);
+  cursor:pointer;
+  font:500 .82rem var(--font-body);
+  text-decoration:underline;
+  text-underline-offset:3px;
+  padding:6px 4px;
+}
+.video-skip:hover{ color:#fff; }
+/* shown only if the browser refused unmuted autoplay: one tap = sound */
+.video-sound{
+  position:absolute;
+  top:18px;
   left:50%;
   translate:-50%;
   border:1px solid rgba(251,248,242,.5);
-  background:rgba(11,36,23,.55);
+  background:rgba(11,36,23,.6);
   color:var(--paper);
   cursor:pointer;
-  font-family:var(--font-body);
+  font:600 .85rem var(--font-body);
+  border-radius:999px;
+  padding:10px 20px;
   backdrop-filter:blur(4px);
-  padding:11px 22px;
-  font-size:.85rem;
 }
-.video-skip:hover{ background:rgba(251,248,242,.16); }
+.video-sound:hover{ background:rgba(251,248,242,.16); }
 
 .visually-hidden{
   position:absolute;

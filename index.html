@@ -230,11 +230,13 @@
            (or the film ending) moves on -->
       <div class="film-curtain" aria-hidden="true"></div>
       <div class="video-break" id="videoBreak">
-        <video id="onCourtsVideo" playsinline muted preload="metadata">
+        <video id="onCourtsVideo" playsinline controls preload="metadata">
           <source src="/assets/oncourts-film.mp4" type="video/mp4" />
         </video>
+        <div class="video-fade" aria-hidden="true"></div>
         <p class="video-note">The film couldn't load. Scroll on, or try refreshing.</p>
-        <button class="btn video-skip" id="videoSkip" type="button">Skip film ↓</button>
+        <button class="video-sound" id="videoSound" type="button" hidden>Tap for sound 🔊</button>
+        <button class="video-skip" id="videoSkip" type="button">Skip to the next section →</button>
       </div>
 
       <!-- progress rail -->
