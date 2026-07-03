@@ -329,8 +329,21 @@ notification emails can be configured there.
   `[data-beat="N"]` CSS was shifted mechanically, so grep for the number
   you mean, don't trust old notes): **intro (78% stat)** → **invisible
   litigant** → **pendency queue (5.5 Cr)** → **300 years / the judge** →
-  10-yr wait → undertrials → PUCAR turn → initiatives grid → CTA. All
-  stats are marked `[placeholder — verify]` in the markup.
+  **reimagine (orbits)** → undertrials → PUCAR turn → initiatives grid →
+  CTA. **Copy conventions (explicit instructions, Jul 2026): NO em dashes
+  anywhere in user-facing copy** (use commas/colons/periods; titles use
+  `|`) **and no `[placeholder — verify]` citation sups** — both were
+  stripped sitewide, including build-script templates; don't reintroduce
+  them. (Content-level placeholders like the sample jobs/events remain.)
+- **Beat 4 — "Reimagine justice around the citizen"** (replaced the 10+ yrs
+  stat beat): copy asks what changes if processes, rules, and tech are
+  designed around the litigant. Design: `.orbits` inside the walker —
+  three concentric paper-coloured rings centred on her FEET (top:87% of
+  the walker) with solid brand-colour dots (`--green`/`--pink`/`--paper`)
+  riding the ring paths; the ring elements themselves spin (varied
+  durations, middle ring reversed, one ring carries two dots on opposite
+  sides), fade in via `.pin[data-beat="4"]`, travel with her, and stop
+  under `prefers-reduced-motion`.
 - **Exactly TWO story backgrounds** (explicit instruction with colour
   swatches, Jul 2026 — the old per-beat tints incl. the pink beat are
   gone): beats 0–3 (everything up to and including the judge) are
