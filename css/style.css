@@ -90,6 +90,9 @@ body.film-playing .site-header{
   translate:0 -120%;
   pointer-events:none;
 }
+body.film-playing .progress-rail{
+  translate:0 200%;
+}
 
 .site-header .logo{
   pointer-events:auto;
@@ -1301,33 +1304,6 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
 }
 .video-break.video-missing .video-note{ display:block; }
 .video-break.video-missing video{ display:none; }
-/* thin legibility gradient spanning the video's full width -- black at the
-   very bottom fading to transparent, sitting UNDER any burnt-in subtitles
-   so they stay readable, and pointer-transparent so the native controls
-   beneath it still work */
-.video-fade{
-  position:absolute;
-  left:0; right:0; bottom:0;
-  height:120px;
-  background:linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0));
-  pointer-events:none;
-}
-/* skip: small text at the SIDE (it used to be a centred pill that sat on
-   top of the subtitles) */
-.video-skip{
-  position:absolute;
-  right:22px;
-  bottom:16px;
-  border:none;
-  background:none;
-  color:rgba(251,248,242,.85);
-  cursor:pointer;
-  font:500 .82rem var(--font-body);
-  text-decoration:underline;
-  text-underline-offset:3px;
-  padding:6px 4px;
-}
-.video-skip:hover{ color:#fff; }
 /* shown only if the browser refused unmuted autoplay: one tap = sound */
 .video-sound{
   position:absolute;
@@ -1568,6 +1544,9 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
   right:20px;
   bottom:28px;
   z-index:10;
+  /* slides down out of frame while the film plays (body.film-playing),
+     mirroring the header's slide-up, and glides back on scroll-away */
+  transition: translate .55s cubic-bezier(.4,.1,.3,1);
   display:flex;
   align-items:center;
   gap:10px;

@@ -559,7 +559,6 @@
   // beat 7's zone, whose 6->7 transition then runs her usual walk-in.
   var filmVideo = document.getElementById("onCourtsVideo");
   var filmBreak = document.getElementById("videoBreak");
-  var filmSkip = document.getElementById("videoSkip");
   var filmSound = document.getElementById("videoSound");
   var filmUsable = false;
 
@@ -569,7 +568,11 @@
   // (a real click, so unmuting always succeeds).
   function tryPlayFilm() {
     if (!filmVideo) return;
-    try { filmVideo.currentTime = 0; } catch (e) { /* not seekable yet */ }
+    // restart only after a complete watch; a scroll wobble at the zone's
+    // edge should RESUME, not restart
+    if (filmVideo.ended) {
+      try { filmVideo.currentTime = 0; } catch (e) { /* not seekable yet */ }
+    }
     filmVideo.muted = false;
     filmVideo.volume = 1;
     var p = filmVideo.play();
@@ -595,18 +598,21 @@
       filmUsable = false;
       if (filmBreak) filmBreak.classList.add("video-missing");
     });
-    filmVideo.addEventListener("ended", exitFilm);
+    // once the film has fully played out, bring the page chrome back
+    // while the visitor is still sitting on the section
+    filmVideo.addEventListener("ended", function () {
+      document.body.classList.remove("film-playing");
+    });
   }
-  if (filmSkip) filmSkip.addEventListener("click", exitFilm);
 
   // The curtain: 0 = page intact over the hidden film, 1 = film fully
   // revealed. Rises across beatFloat 5.5->5.95, holds through the middle
   // of beat 6, and restores by 6.45 -- safely BEFORE the 6.5 boundary, so
-  // her stage is back in place when the beat-7 walk-in fires. The hold
-  // (scroll fix + playback) engages only at curtain==1 on a forward
-  // approach with a playable file.
-  var filmHold = false;
-  var prevBeatFloat = 0;
+  // her stage is back in place when the beat-7 walk-in fires. NO SCROLL
+  // LOCK here (revised, "let people scroll to move on"): the film simply
+  // plays while fully revealed -- pausing/resuming as the visitor wanders
+  // across the zone's edges -- and scrolling onward continues the story.
+  var filmActive = false;
 
   function filmCurtainAt(bf) {
     if (bf <= 5.5) return 0;
@@ -620,32 +626,17 @@
     var curtain = filmCurtainAt(beatFloat);
     pin.style.setProperty("--curtain", curtain.toFixed(4));
 
-    var forward = beatFloat >= prevBeatFloat;
-    if (!filmHold && curtain >= 0.999 && forward &&
-        filmUsable && !reduceMotion && !isJumpingToSection) {
-      filmHold = true;
-      lockScroll();
-      document.body.classList.add("film-playing"); // slides the header away
+    var shouldPlay = curtain >= 0.999 && filmUsable && !isJumpingToSection;
+    if (shouldPlay && !filmActive) {
+      filmActive = true;
+      document.body.classList.add("film-playing"); // header up, progress rail down
       tryPlayFilm();
+    } else if (!shouldPlay && filmActive) {
+      filmActive = false;
+      document.body.classList.remove("film-playing"); // chrome glides back
+      if (filmSound) filmSound.hidden = true;
+      if (filmVideo && !filmVideo.paused) filmVideo.pause();
     }
-    if (!filmHold) {
-      document.body.classList.remove("film-playing"); // header returns
-      // pause whenever the film isn't the held centrepiece (backward
-      // passes, post-exit) -- the hold itself only ends via exitFilm
-      if (curtain < 0.98 && filmVideo && !filmVideo.paused) filmVideo.pause();
-    }
-    prevBeatFloat = beatFloat;
-  }
-
-  function exitFilm() {
-    filmHold = false;
-    unlockScroll();
-    document.body.classList.remove("film-playing");
-    if (filmSound) filmSound.hidden = true;
-    if (filmVideo) filmVideo.pause();
-    // land on beat 7's scroll zone; the 6->7 transition plays her walk-in
-    var seg = (story.offsetHeight - window.innerHeight) / (numBeats - 1);
-    window.scrollTo({ top: story.offsetTop + seg * 7, behavior: "instant" });
   }
 
   var returnEndTimer = null;
