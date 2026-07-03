@@ -1071,4 +1071,38 @@
   nav.addEventListener("focusout", function (e) {
     if (!nav.contains(e.relatedTarget)) clear();
   });
+
+  // same sliding pill inside each dropdown menu
+  Array.prototype.forEach.call(nav.querySelectorAll(".nav-menu"), function (menu) {
+    var items = menu.querySelectorAll(".nav-menu-item");
+    if (!items.length) return;
+    menu.classList.add("has-glider");
+    var mg = document.createElement("span");
+    mg.className = "menu-glider";
+    mg.setAttribute("aria-hidden", "true");
+    menu.insertBefore(mg, menu.firstChild);
+    var mlit = null;
+    function mmove(a) {
+      mg.style.left = a.offsetLeft + "px";
+      mg.style.top = a.offsetTop + "px";
+      mg.style.width = a.offsetWidth + "px";
+      mg.style.height = a.offsetHeight + "px";
+      mg.style.opacity = "1";
+      if (mlit) mlit.classList.remove("is-lit");
+      mlit = a;
+      a.classList.add("is-lit");
+    }
+    function mclear() {
+      mg.style.opacity = "0";
+      if (mlit) { mlit.classList.remove("is-lit"); mlit = null; }
+    }
+    Array.prototype.forEach.call(items, function (a) {
+      a.addEventListener("mouseenter", function () { mmove(a); });
+      a.addEventListener("focus", function () { mmove(a); });
+    });
+    menu.addEventListener("mouseleave", mclear);
+    menu.addEventListener("focusout", function (e) {
+      if (!menu.contains(e.relatedTarget)) mclear();
+    });
+  });
 })();
