@@ -329,10 +329,57 @@ people.map(contributorIndexCard).join("\n") + "\n" +
 /* ---------------- about + team pages ---------------- */
 
 function aboutPage() {
-  /* Content adapted from https://pucar.org/about (July 2026). */
+  /* Content adapted from https://pucar.org/about (July 2026). Jul 2026
+     revision: the page was a single unbroken column of prose top to
+     bottom ("can use a better layout that looks more visual" -- user
+     feedback with a screenshot of the live page). Restructured around
+     three visual beats without inventing or dropping any copy:
+       1. a stat strip right under the title (numbers the prose already
+          states, just pulled out and made big -- same "78% / 5.5 Cr"
+          treatment the story beats use for stats),
+       2. "How we work"'s three bullet paragraphs turned into a numbered
+          3-card process grid instead of a wall of bold lead-ins,
+       3. a real photo strip of the collective (reusing the homepage's
+          .collab-strip component) right before the CTAs, so "100+
+          contributors" ends on actual faces, not just a sentence. */
+  const withPhotos = contributors.filter(function (c) { return c.photo; });
+  const stripCount = Math.min(6, withPhotos.length);
+  const stripStep = Math.max(1, Math.floor(withPhotos.length / (stripCount || 1)));
+  const stripPicks = [];
+  for (let i = 0; i < withPhotos.length && stripPicks.length < stripCount; i += stripStep) stripPicks.push(withPhotos[i]);
+  const stripHeads = stripPicks.map(function (c) {
+    return '<span class="strip-head"><img src="' + esc(c.photo) + '" alt="' + esc(c.name) + '" loading="lazy" /></span>';
+  }).join("");
+  const openRoles = boardJobs.length;
+
+  const steps = [
+    { title: "Discover and empower contributors", body: "We discover, curate and empower mission-aligned contributors. Together, we identify strategic opportunities for action." },
+    { title: "Re-imagine with people at the centre", body: "We recognize systemic challenges and understand user needs. We fundamentally redesign solutions to meet those needs in the most effective and meaningful way." },
+    { title: "Co-create solutions", body: "We co-create public goods: blueprints for processes and policies, prototypes for services, data, knowledge, and technology. We support changemakers to ensure their adoption." }
+  ];
+  const stepsHtml = steps.map(function (s, i) {
+    return '    <div class="about-step">\n' +
+      '      <span class="about-step-num">0' + (i + 1) + '</span>\n' +
+      "      <h3>" + esc(s.title) + "</h3>\n" +
+      "      <p>" + esc(s.body) + "</p>\n" +
+      "    </div>";
+  }).join("\n");
+
   const main =
 '  <p class="beat-eyebrow">About</p>\n' +
 '  <h1 class="job-title">Transforming dispute resolution.</h1>\n' +
+'  <div class="about-stats">\n' +
+    /* "100+"/"2023" are PUCAR's own real-world figures from the prose below
+       (and pucar.org), kept as literals -- NOT contributors.length, which
+       is only how many of those 100+ have a profile built out on this site
+       so far (77 as of Jul 2026, see README §6.3) and would understate the
+       real number. Open roles IS computed live: it's exactly boardJobs,
+       the same list the homepage board renders, so it can never drift out
+       of sync with what's actually posted. */
+'    <div class="about-stat"><span class="about-stat-num">100+</span><span class="about-stat-label">Contributors</span></div>\n' +
+'    <div class="about-stat"><span class="about-stat-num">2023</span><span class="about-stat-label">Founded</span></div>\n' +
+(openRoles ? '    <div class="about-stat"><span class="about-stat-num">' + openRoles + '</span><span class="about-stat-label">Open ' + (openRoles === 1 ? "role" : "roles") + ' right now</span></div>\n' : "") +
+'  </div>\n' +
 '  <article class="job-body prose">\n' +
 "    <h2>What we do</h2>\n" +
 "    <p>We are building an ecosystem that continuously fuels innovation. PUCAR 'unstucks' the dispute resolution system by inspiring imagination and harnessing capacities to create new possibilities.</p>\n" +
@@ -340,13 +387,27 @@ function aboutPage() {
 "    <h2>Why PUCAR?</h2>\n" +
 "    <p>The outdated processes and insular structure of our dispute resolution system have left millions disillusioned. To restore trust and reset expectations, we must actively engage diverse users and innovators in evolving resolution processes.</p>\n" +
 "    <p>Born in 2023, PUCAR is now a group of 100+ contributors from diverse fields that include economics, legal practice, public technology, artificial intelligence, and government.</p>\n" +
-"    <h2>How we work</h2>\n" +
-"    <p><strong>Discover and empower contributors.</strong> We discover, curate and empower mission-aligned contributors. Together, we identify strategic opportunities for action.</p>\n" +
-"    <p><strong>Re-imagine with people at the centre.</strong> We recognize systemic challenges and understand user needs. We fundamentally redesign solutions to meet those needs in the most effective and meaningful way.</p>\n" +
-"    <p><strong>Co-create solutions.</strong> We co-create public goods: blueprints for processes and policies, prototypes for services, data, knowledge, and technology. We support changemakers to ensure their adoption.</p>\n" +
+"  </article>\n" +
+  /* No <p> inside this one -- just the heading, wrapped in the same
+     job-body.prose classes purely to reuse its h2 styling (display face +
+     short green rule) without also reusing the drop-cap rule, which is
+     scoped to `.prose p:first-of-type` and simply has nothing to attach to
+     here. */
+'  <div class="job-body prose about-steps-head"><h2>How we work</h2></div>\n' +
+'  <div class="about-steps">\n' + stepsHtml + "\n  </div>\n" +
+'  <article class="job-body prose no-cap">\n' +
 "    <h2>How we organise</h2>\n" +
 "    <p>We self-organise and raise resources around different opportunities that can contribute to the mission. We evolve roles, responsibilities, and processes within each opportunity to guide our efforts and invite participation from the public. Guided by the mission and values, all contributors have the autonomy and flexibility to create and manage opportunities.</p>\n" +
 "  </article>\n" +
+(stripHeads
+  ? '  <a class="collab-strip about-strip" href="/contributors/">\n' +
+    '    <span class="strip-text">Meet the <strong>100+ collaborators</strong> behind PUCAR</span>\n' +
+    '    <span class="strip-group">\n' +
+    '      <span class="strip-stack" aria-hidden="true">' + stripHeads + "</span>\n" +
+    '      <span class="strip-btn">See everyone<span class="strip-arrow" aria-hidden="true">&rarr;</span></span>\n' +
+    "    </span>\n" +
+    "  </a>\n"
+  : "") +
 '  <div class="cta-row">\n' +
 '    <a class="btn btn-primary" href="/#collaborate">See open work</a>\n' +
 '    <a class="btn btn-outline" href="/contributors/">Meet the contributors</a>\n' +

@@ -1101,6 +1101,58 @@ adapted from pucar.org/about: What we do, Why PUCAR, How we work, How we
 organise) and /team/ (PLACEHOLDER cards -- swap in real people). Both in the
 sitemap; homepage footer About link points to /about/.
 
+**About page visual pass (Jul 2026):** the page was a single unbroken prose
+column top to bottom (user feedback with a screenshot of the live page: "can
+use a better layout that looks more visual"). Restructured around three
+visual beats, `aboutPage()` in build-jobs.js, without inventing or dropping
+any copy:
+- **`.about-stats`**, right under the title: three big serif numbers pulled
+  out of the prose below rather than left buried in sentences -- "100+"
+  contributors and "2023" founded are literals matching the existing prose
+  claim (NOT `contributors.length`, which is only 77 -- how many of PUCAR's
+  100+ people have a profile built out on this site so far, see §6.3; using
+  it here would understate the real, sourced number). The third stat, open
+  roles, IS computed live from `boardJobs.length` -- the exact same list the
+  homepage board renders, so it can never drift out of sync with what's
+  actually posted, and simply omits itself (`openRoles ? ... : ""`) if the
+  board is ever empty rather than showing a hollow "0".
+- **`.about-steps`**, replacing "How we work"'s three bold-lead-in
+  paragraphs: a numbered 3-card grid (`01/02/03` in an outlined display
+  numeral, `-webkit-text-stroke` with a `@supports` fallback to a solid
+  colour where that's unsupported). The section heading reuses
+  `.job-body.prose`'s h2 styling (display face + green rule) via a wrapper
+  div carrying the same classes but zero `<p>` children -- purely to dodge
+  the drop-cap rule, which is scoped to `.prose p:first-of-type` and has
+  nothing to attach to when there's no paragraph in the block.
+- **`.about-strip`**, right before the CTAs: the homepage's `.collab-strip`
+  photo-stack component, reused wholesale but as a single clickable `<a>`
+  card with rounded corners (the homepage version is a full-bleed div,
+  appropriate for a page-width bridge; here it sits inside the contained
+  `.job-main` column, so `.strip-btn` becomes a `<span>` -- an `<a>` can't
+  nest inside another `<a>` -- and lifts on hover of the whole card via
+  `.about-strip:hover .strip-btn` instead of its own hover). Unlike the
+  homepage (JS-populated client-side, see "Waving contributor heads"
+  below), the avatars here are picked and written at BUILD TIME: every
+  published contributor with a photo, evenly sampled down to 6 (`stripStep
+  = floor(withPhotos.length / 6)`), so the page stays fully crawlable and
+  needs no extra client script.
+- A second `.prose` block ("How we organise") sitting after the step grid
+  would otherwise get its OWN drop cap (the rule is scoped per `<article>`,
+  not per page) -- a giant dropcap on one short paragraph read as too much,
+  so that block carries an extra `.no-cap` class,
+  `.job-body.prose.no-cap p:first-of-type::first-letter{ all:unset; }`.
+- **Regeneration note:** `build-jobs.js` can't run directly against this
+  repo in this sandbox -- `fs.rmSync` on `about/` (and every other generated
+  directory) hits the same FUSE-mount EPERM already documented for git's
+  lock files (§7). Worked around by copying the whole repo to a scratch
+  directory, monkey-patching `fs.rmSync` to a no-op (every subsequent write
+  in the script is a plain overwrite of an existing file, which the FUSE
+  mount does allow -- only *deleting* is blocked) and running the real
+  script there, then diffing the copy against the real repo to confirm
+  `about/index.html` was the only file that actually changed before copying
+  it back by hand. If the script is ever run from a real machine, both will
+  already match.
+
 ### Beat 8 syncs with the bulletin board
 
 Beat 8 ("Live right now / Work you can walk into today.") shows the SAME

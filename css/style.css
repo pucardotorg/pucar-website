@@ -2733,6 +2733,108 @@ body.scroll-locked{ overflow:hidden; }
   background:var(--green);
 }
 .job-body.prose strong{ color:var(--ink); }
+/* the drop cap is a nice opener once per page, not once per <article> --
+   About (below) splits its prose into two separate .prose blocks around
+   the step-card grid, and a second giant drop cap on a single short
+   paragraph ("How we organise") reads as too much. .no-cap opts a later
+   block out while keeping everything else about .prose (h2 styling,
+   larger lede size, etc). */
+.job-body.prose.no-cap p:first-of-type::first-letter{
+  all:unset;
+}
+
+/* ---------------- About page: stat strip + process cards + photo strip ----
+   Jul 2026: the page was a single unbroken prose column ("can use a better
+   layout that looks more visual" -- user feedback). These three blocks
+   (aboutPage() in build-jobs.js) break it up without inventing new copy. */
+.about-stats{
+  display:flex;
+  flex-wrap:wrap;
+  gap:28px 44px;
+  margin:8px 0 36px;
+  padding-bottom:28px;
+  border-bottom:1px solid var(--line);
+}
+.about-stat{ display:flex; flex-direction:column; }
+.about-stat-num{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:clamp(1.9rem, 4vw, 2.6rem);
+  color:var(--forest); /* light bg -- bright --green is dark-bg-only, see §2 */
+  line-height:1;
+}
+.about-stat-label{
+  margin-top:6px;
+  font-size:.78rem;
+  font-weight:600;
+  letter-spacing:.04em;
+  color:var(--muted);
+}
+/* the heading-only prose wrapper (no <p> inside, see aboutPage()) still
+   gets the h2 rule's margin-top -- give it a touch less bottom margin than
+   a real prose block since a card grid follows immediately, not a lede
+   paragraph that wants breathing room. */
+.about-steps-head h2{ margin-bottom:4px; }
+.about-steps{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+  gap:18px;
+  margin:18px 0 44px;
+}
+.about-step{
+  position:relative;
+  padding:26px 22px 22px;
+  border-radius:18px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.about-step:hover{
+  transform:translateY(-3px);
+  box-shadow:0 14px 30px rgba(36,30,26,.08);
+}
+.about-step-num{
+  display:block;
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:1.8rem;
+  color:var(--green-soft);
+  -webkit-text-stroke:1.5px var(--forest);
+  /* Fx/older Safari fallback where text-stroke isn't supported: still a
+     legible solid numeral, just without the outlined-numeral flourish. */
+  margin-bottom:8px;
+}
+@supports not (-webkit-text-stroke: 1px black){
+  .about-step-num{ color:var(--forest); }
+}
+.about-step h3{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:1.08rem;
+  margin-bottom:8px;
+  color:var(--ink);
+}
+.about-step p{
+  font-size:.92rem;
+  line-height:1.55;
+  color:var(--ink-soft);
+}
+/* reuse the homepage's .collab-strip component wholesale (same fanning
+   photo stack, same button) but as a fully-clickable card with rounded
+   corners instead of a full-bleed page-width bridge, since here it sits
+   inside the contained .job-main column. .strip-btn becomes a <span> (an
+   <a> can't nest inside another <a>) and lifts on ANY hover over the card,
+   not just its own hover, since the whole thing is now one target. */
+a.about-strip{
+  display:flex;
+  border-radius:20px;
+  margin:8px 0 40px;
+  text-decoration:none;
+}
+.about-strip:hover .strip-btn{
+  translate:0 -2px;
+  box-shadow:0 12px 26px rgba(94,226,160,.42), inset 0 1px 0 rgba(255,255,255,.35);
+}
 .job-page{ background:var(--cream); }
 /* sticky footer: short pages (e.g. contributor profiles) should never show
    background below the footer -- main stretches, footer hugs the bottom */
