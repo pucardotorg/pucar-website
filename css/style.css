@@ -263,7 +263,9 @@ body:has(.pin[data-beat="9"]) .site-header .logo-dark{ opacity:1; }
 /* the homepage up-arrow drifts upward on loop: rises, fades out at the top,
    re-enters from below (#navHome is homepage-only; other pages' house icon
    stays still) */
-#navHome svg{
+/* loop only on hover/focus -- always-on was distracting */
+#navHome:hover svg,
+#navHome:focus-visible svg{
   animation:navArrowUp 1s ease-in-out infinite;
 }
 @keyframes navArrowUp{
