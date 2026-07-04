@@ -459,19 +459,21 @@ function perspCard(p, slug) {
 }
 
 function eventCard(ev) {
-  /* the WHOLE card is the link -- hover states live on .event-card */
+  /* same visual language as the original cards (forest header band + paper
+     body); the WHOLE card is the link and hover adds lift + sliding arrow */
   const when = [ev.date_display, ev.time_display].filter(Boolean).join(" \u00b7 ");
   return '<a class="event-card" href="' + esc(ev.url || "mailto:collaborate@pucar.org") + '">\n' +
-    '  <div class="event-top">\n' +
-    '    <span class="event-city-pill">' + esc(ev.city) + "</span>\n" +
+    '  <div class="event-when">\n' +
+    '    <span class="event-city">' + esc(ev.city) + "</span>\n" +
     (when ? '    <span class="event-datetime">' + esc(when) + "</span>\n" : "") +
     "  </div>\n" +
-    '  <h3 class="event-title">' + esc(ev.title) + "</h3>\n" +
-    (ev.venue ? '  <p class="event-venue">' + esc(ev.venue) + "</p>\n" : "") +
-    '  <p class="event-desc">' + esc(ev.description || "") + "</p>\n" +
-    '  <div class="event-foot"><span class="event-go">' + esc(ev.cta || "Register interest") +
+    '  <div class="event-body">\n' +
+    '    <h3 class="event-title">' + esc(ev.title) + "</h3>\n" +
+    (ev.venue ? '    <p class="event-venue">' + esc(ev.venue) + "</p>\n" : "") +
+    '    <p class="event-desc">' + esc(ev.description || "") + "</p>\n" +
+    '    <div class="event-foot"><span class="event-go">' + esc(ev.cta || "Register interest") +
     '<span class="event-arrow" aria-hidden="true">\u2192</span></span></div>\n' +
-    "</a>";
+    "  </div>\n</a>";
 }
 
 function scPolicyPage() {
