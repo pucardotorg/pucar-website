@@ -1225,6 +1225,22 @@ separate things were wrong:
   so the already-generated `sc-ai-policy/index.html` was hand-patched with
   the same markup the build script would now produce — if the script is ever
   rerun from a real machine, both should stay in sync.
+- **Follow-up: even after the fix above, the city tag was still reported as
+  barely visible ("the colour is off").** The fix above only changed which
+  background/colour pair `.collab-status` uses on a dark section — it never
+  touched `.collab-cat`, whose colour was already the *intended* light
+  treatment (`rgba(251,248,242,.9)`). On paper that's a 90%-opacity
+  near-white and should read as crisp; in practice, against the varying dark
+  backdrops behind these pills, it reads dim and slightly warm rather than
+  white. Rather than keep tuning the alpha by feel, switched `.collab-cat`
+  and the dark-section `.collab-status` override to a fully opaque
+  `color:var(--paper)` (no alpha blending at all, so there's no backdrop-
+  dependent ambiguity in what colour actually renders), bumped the pill
+  background from `.14` to `.18` opacity, added a faint `1px` border for
+  definition, and removed the `.85` opacity dimming that had been applied to
+  the icons. `.job-page`/`.job-modal-panel .collab-cat` (the light-bg
+  override) got an explicit `border-color` reset so the new border doesn't
+  show up unwanted there.
 
 ### Header positioning: logo scrolls, nav stays
 
