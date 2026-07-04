@@ -2783,3 +2783,111 @@ body.scroll-locked{ overflow:hidden; }
 @media (max-width: 480px){
   .beat-body{ font-size:.95rem; }
 }
+
+/* ---------------- cards <-> list view toggle ----------------
+   js/view-toggle.js mounts .view-toggle into each section's filter bar
+   (or a .view-toggle-rail above the grid) and flips .is-list on the grid.
+   Choice persists per grid in localStorage. All grids sit on dark
+   sections, so one colour family works everywhere. */
+.view-toggle{
+  display:inline-flex;
+  gap:2px;
+  padding:3px;
+  border-radius:999px;
+  border:1px solid rgba(251,248,242,.25);
+  background:rgba(251,248,242,.08);
+  margin-left:auto; /* pushes to the right end of the filter bar */
+}
+.view-toggle-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:32px; height:28px;
+  border:0;
+  border-radius:999px;
+  background:transparent;
+  color:rgba(251,248,242,.6);
+  cursor:pointer;
+  transition:background .2s ease, color .2s ease;
+}
+.view-toggle-btn:hover{ color:var(--paper); }
+.view-toggle-btn.is-active{
+  background:var(--green);
+  color:var(--forest);
+}
+.view-toggle-rail{
+  display:flex;
+  justify-content:flex-end;
+  max-width:1180px;
+  margin:0 auto 14px;
+}
+
+/* ---- list mode: work + perspective cards become compact rows ---- */
+.collab-grid.is-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.collab-grid.is-list .collab-card{
+  flex-direction:row;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px 16px;
+  padding:14px 20px;
+  border-radius:14px;
+}
+/* hide the card-only furniture in rows */
+.collab-grid.is-list .collab-summary,
+.collab-grid.is-list .collab-chips,
+.collab-grid.is-list .collab-meta,
+.collab-grid.is-list .collab-poster{ display:none; }
+.collab-grid.is-list .collab-title{
+  order:1;
+  flex:1 1 320px;
+  min-width:0;
+  font-size:1.02rem;
+  margin:0;
+}
+.collab-grid.is-list .collab-type{ order:2; margin:0; }
+.collab-grid.is-list .collab-topline{ order:3; margin:0; gap:8px; width:auto; }
+.collab-grid.is-list .collab-foot{
+  order:4;
+  border-top:0;
+  padding-top:0;
+  margin:0;
+  margin-left:auto;
+  width:auto;
+  flex:none;
+}
+.collab-grid.is-list .collab-btn{ padding:8px 14px; font-size:.8rem; }
+
+/* ---- list mode: contributors become one full-width row per person ---- */
+.contrib-grid.is-list{ grid-template-columns:1fr; gap:8px; }
+.contrib-grid.is-list .contrib-card{
+  flex-direction:row;
+  border-radius:14px;
+  padding:10px 18px;
+}
+.contrib-grid.is-list .contrib-card .avatar-lg{ width:40px; height:40px; font-size:.85rem; }
+.contrib-grid.is-list .contrib-card-text{
+  flex-direction:row;
+  align-items:baseline;
+  gap:14px;
+  flex:1;
+  min-width:0;
+}
+.contrib-grid.is-list .contrib-card-name{ flex:0 0 220px; }
+.contrib-grid.is-list .contrib-card-role{
+  -webkit-line-clamp:1;
+  margin:0;
+  flex:1;
+}
+.contrib-grid.is-list .contrib-card-org{ margin:0; margin-left:auto; text-align:right; }
+
+@media (max-width:640px){
+  /* rows don't fit a phone: quietly fall back to cards */
+  .view-toggle{ display:none; }
+  .collab-grid.is-list .collab-card{ flex-direction:column; align-items:stretch; }
+  .contrib-grid.is-list .contrib-card-text{ flex-direction:column; gap:2px; }
+  .contrib-grid.is-list .contrib-card-org{ margin-left:0; text-align:left; }
+}

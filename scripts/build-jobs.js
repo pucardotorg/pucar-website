@@ -314,7 +314,7 @@ orgs.map(function (o) { return "      <option>" + esc(o) + "</option>"; }).join(
 people.map(contributorIndexCard).join("\n") + "\n" +
 "  </div>\n" +
 "</section>\n" +
-'<script src="/js/contributors-page.js"></script>\n<main hidden>';
+'<script src="/js/contributors-page.js"></script>\n<script src="/js/view-toggle.js"></script>\n<main hidden>';
   return pageShell({
     title: "Contributors | PUCAR",
     desc: "The people behind PUCAR: " + contributors.length + " contributors from law, technology, economics, and government working to transform dispute resolution in India.",
@@ -524,7 +524,7 @@ scEvents.map(eventCard).join("\n") + "\n" +
 '    <div class="cta-row">\n' +
 '      <a class="btn btn-primary" id="jobModalApply" href="#" target="_blank" rel="noopener">Read the original</a>\n' +
 "    </div>\n  </div>\n</div>\n" +
-'<script src="/js/perspectives.js"></script>\n<main hidden>';
+'<script src="/js/perspectives.js"></script>\n<script src="/js/view-toggle.js"></script>\n<main hidden>';
   return pageShell({
     title: "The Supreme Court’s draft AI regulations | Have your say | PUCAR",
     desc: "The Supreme Court of India is inviting public feedback on its draft Regulations for Use of AI in Courts, 2026, until July 15. Read what people are saying and add your voice.",

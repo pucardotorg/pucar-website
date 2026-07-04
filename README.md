@@ -1100,6 +1100,17 @@ trailing arrows stripped, hrefs, numbering), so the board is the single
 source of truth; static markup mirrors the two current items as a
 no-JS/SEO fallback. The old static "our initiatives" cards are gone.
 
+### Cards <-> list view toggle
+
+js/view-toggle.js adds a grid/list switch to every card grid: #collabGrid
+(homepage board), #perspGrid (/sc-ai-policy/), #contribGrid (/contributors/).
+It mounts into the section's filter bar when one exists (margin-left:auto
+pushes it right), else into a .view-toggle-rail above the grid. List mode is
+just `.is-list` on the grid; all reshaping is CSS (summary/chips/meta hidden,
+title flexes, foot moves inline right; contributors become one row per
+person). Preference persists per grid in localStorage (pucar-view-<gridId>).
+Hidden under 640px, where rows don't fit and cards win.
+
 ### Contributors data notes
 
 Placeholder people (aditi-rao, rohan-mehta, varun-h) are `published:false`,
