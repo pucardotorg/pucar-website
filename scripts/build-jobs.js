@@ -459,16 +459,19 @@ function perspCard(p, slug) {
 }
 
 function eventCard(ev) {
-  return '<article class="event-card">\n' +
-    '  <div class="event-when"><span class="event-city">' + esc(ev.city) + "</span>" +
-    '<span class="event-date">' + esc(ev.date_display || "") + "</span>" +
-    '<span class="event-time">' + esc(ev.time_display || "") + "</span></div>\n" +
-    '  <div class="event-body">\n' +
-    '    <h3 class="event-title">' + esc(ev.title) + "</h3>\n" +
-    '    <p class="event-venue">' + esc(ev.venue || "") + "</p>\n" +
-    '    <p class="event-desc">' + esc(ev.description || "") + "</p>\n" +
-    '    <a class="btn btn-primary event-cta" href="' + esc(ev.url || "mailto:collaborate@pucar.org") + '">' + esc(ev.cta || "Register interest") + "</a>\n" +
-    "  </div>\n</article>";
+  /* the WHOLE card is the link -- hover states live on .event-card */
+  const when = [ev.date_display, ev.time_display].filter(Boolean).join(" \u00b7 ");
+  return '<a class="event-card" href="' + esc(ev.url || "mailto:collaborate@pucar.org") + '">\n' +
+    '  <div class="event-top">\n' +
+    '    <span class="event-city-pill">' + esc(ev.city) + "</span>\n" +
+    (when ? '    <span class="event-datetime">' + esc(when) + "</span>\n" : "") +
+    "  </div>\n" +
+    '  <h3 class="event-title">' + esc(ev.title) + "</h3>\n" +
+    (ev.venue ? '  <p class="event-venue">' + esc(ev.venue) + "</p>\n" : "") +
+    '  <p class="event-desc">' + esc(ev.description || "") + "</p>\n" +
+    '  <div class="event-foot"><span class="event-go">' + esc(ev.cta || "Register interest") +
+    '<span class="event-arrow" aria-hidden="true">\u2192</span></span></div>\n' +
+    "</a>";
 }
 
 function scPolicyPage() {
