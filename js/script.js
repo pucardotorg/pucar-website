@@ -1131,7 +1131,7 @@
       .catch(function () { loading = false; });
   }
 
-  function spawn() {
+  function spawn(preAdvance) {
     if (!active || !photos || !photos.length || document.hidden) return;
     var b = document.createElement("div");
     b.className = "hi-bubble";
@@ -1175,6 +1175,9 @@
       { transform: "translateX(60vw) scale(.72)", opacity: 1, offset: .6 },
       { transform: "translateX(105vw) scale(1)", opacity: 1 }
     ], { duration: 9000 + Math.random() * 8000, easing: "linear" });
+    // seeded bubbles start mid-flight so the stream is already crossing
+    // when the visitor arrives at the beat
+    if (preAdvance) anim.currentTime = anim.effect.getTiming().duration * (0.15 + Math.random() * 0.55);
     anim.onfinish = function () { b.remove(); };
     // hover: slow to quarter speed (never stop) + reveal the tooltip
     b.addEventListener("mouseenter", function () {
@@ -1191,8 +1194,19 @@
     if (active) return;
     active = true;
     loadPhotos();
-    spawn();
-    timer = setInterval(spawn, 1300);
+    // seed a few mid-flight, then keep the stream coming
+    var seeded = false;
+    var seed = function () {
+      if (seeded || !photos) return;
+      seeded = true;
+      for (var i = 0; i < 4; i++) spawn(true);
+    };
+    seed();
+    var seedPoll = setInterval(function () {
+      seed();
+      if (seeded || !active) clearInterval(seedPoll);
+    }, 250);
+    timer = setInterval(function () { spawn(false); }, 1300);
   }
   function stop() {
     if (!active) return;
@@ -1201,8 +1215,12 @@
     stream.textContent = ""; // drop all bubbles (their animations die with them)
   }
 
-  new MutationObserver(function () {
-    if (pin.getAttribute("data-beat") === "9") start(); else stop();
-  }).observe(pin, { attributes: true, attributeFilter: ["data-beat"] });
-  if (pin.getAttribute("data-beat") === "9") start();
+  function check() {
+    var b = pin.getAttribute("data-beat");
+    // start a beat EARLY (8): by the time the visitor reaches the CTA the
+    // stream is already mid-screen instead of just beginning
+    if (b === "8" || b === "9") start(); else stop();
+  }
+  new MutationObserver(check).observe(pin, { attributes: true, attributeFilter: ["data-beat"] });
+  check();
 })();

@@ -1617,6 +1617,10 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
   padding: 0 var(--pin-pad) 0 clamp(8px,2vw,24px);
   display:flex;
   align-items:center;
+  /* the container spans the whole pin at z-index 6 and was swallowing hover
+     meant for the waving heads (z 4) below it. The active beat re-enables
+     its own pointer events (.beat.is-active), so links/buttons still work. */
+  pointer-events:none;
 }
 /* once she's centred (beats 2-7, desktop only -- mobile stays single-column
    and untouched), reading text mid-column-2 put it right where she now
