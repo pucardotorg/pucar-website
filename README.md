@@ -1199,6 +1199,22 @@ film-playing slide-away now targets .header-right (the logo has long
 scrolled off by the film beat). The strip-stack heads are randomised on
 every page load (Math.random no-repeat picks).
 
+### Skip Journey + nav home icon
+
+- The story progress rail (bottom-right) now has a "Skip Journey" text link
+  to its LEFT (href="#collaborate"; it goes through the existing
+  cleanJumpTo("collaborate") delegation in js/script.js, which binds to every
+  a[href="#collaborate"], so the jump is instant and unlock-safe). The rail
+  div lost its aria-hidden so the link is reachable; the track carries it
+  instead.
+- .nav-home: an icon-only home button (inline house SVG, no icon library on
+  this site -- everything is inline SVG) as the FIRST child of the nav pill
+  on every page. Hidden (width 0) until you scroll down 200px, then eases in.
+  On the homepage it scrolls to the top (JS preventDefault + scrollTo); on
+  generated pages it is a plain link to "/". Visibility toggling lives in
+  js/script.js (homepage) and js/nav.js (generated pages) via
+  .site-nav.show-home.
+
 ### Collab strip (homepage, above the collaborate section)
 
 .collab-strip is a thin gradient bridge (forest -> indigo) between the story
@@ -1209,7 +1225,7 @@ and a green .strip-btn ("Meet the collaborators ->") to /contributors/.
 Layout: text LEFT, heads + button RIGHT (space-between). Hovering ANYWHERE
 on the strip fans the stack out and raises a staggered continuously-waving
 👋 on every head (shared hiWave keyframes); both ease back on mouseout.
-The fan-out uses TRANSFORMS (translateX leftwards, away from the button),
+The fan-out uses TRANSFORMS (translateX leftwards up to -78px, away from the button),
 never margins, so the button doesn't shift when the heads spread. The
 button is the only link.
 

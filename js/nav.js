@@ -49,6 +49,18 @@
     });
   }
 
+  /* ---- home icon: visible only after scrolling down ---- */
+  var homeShown = false;
+  function homeCheck() {
+    var want = window.scrollY > 200;
+    if (want !== homeShown) {
+      homeShown = want;
+      nav.classList.toggle("show-home", want);
+    }
+  }
+  window.addEventListener("scroll", homeCheck, { passive: true });
+  homeCheck();
+
   /* ---- dark-section detection ---- */
   var darkSections = document.querySelectorAll(".collaborate, .site-footer");
   if (!darkSections.length) return;

@@ -189,6 +189,23 @@ body:has(.pin[data-beat="9"]) .site-header .logo-dark{ opacity:1; }
   box-shadow:0 4px 12px rgba(17,31,38,.25);
 }
 
+.nav-home{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:0;
+  padding:8px 0 !important; /* keep the pill height, no horizontal footprint while hidden */
+  opacity:0;
+  overflow:hidden;
+  transition:width .25s ease, padding .25s ease, opacity .2s ease,
+    background .22s ease, color .22s ease;
+}
+.site-nav.show-home .nav-home{
+  width:38px;
+  padding:8px 8px !important;
+  opacity:1;
+}
+
 /* ---- glider: a pill that slides between links on hover (homepage only,
    js/script.js injects it and adds .has-glider). The plain :hover above
    stays as the fallback for generated pages, which don't load script.js. */
@@ -1811,6 +1828,18 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
 .btn-ghost:hover{ background:rgba(251,248,242,.12); }
 
 /* ---------------- progress rail ---------------- */
+.skip-journey{
+  font-size:.78rem;
+  font-weight:600;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  text-decoration:none;
+  color:inherit;
+  opacity:.55;
+  transition:opacity .2s ease;
+  margin-right:6px;
+}
+.skip-journey:hover{ opacity:1; text-decoration:underline; text-underline-offset:3px; }
 .progress-rail{
   position:absolute;
   right:20px;
@@ -3097,12 +3126,12 @@ a.event-card{ text-decoration:none; }
   filter:drop-shadow(0 1px 3px rgba(0,0,0,.3));
 }
 /* fan out to the LEFT (away from the button): earlier heads travel further */
-.collab-strip:hover .strip-head:nth-child(1){ transform:translateX(-42px); }
-.collab-strip:hover .strip-head:nth-child(2){ transform:translateX(-35px); }
-.collab-strip:hover .strip-head:nth-child(3){ transform:translateX(-28px); }
-.collab-strip:hover .strip-head:nth-child(4){ transform:translateX(-21px); }
-.collab-strip:hover .strip-head:nth-child(5){ transform:translateX(-14px); }
-.collab-strip:hover .strip-head:nth-child(6){ transform:translateX(-7px); }
+.collab-strip:hover .strip-head:nth-child(1){ transform:translateX(-78px); }
+.collab-strip:hover .strip-head:nth-child(2){ transform:translateX(-65px); }
+.collab-strip:hover .strip-head:nth-child(3){ transform:translateX(-52px); }
+.collab-strip:hover .strip-head:nth-child(4){ transform:translateX(-39px); }
+.collab-strip:hover .strip-head:nth-child(5){ transform:translateX(-26px); }
+.collab-strip:hover .strip-head:nth-child(6){ transform:translateX(-13px); }
 .collab-strip:hover .strip-wave,
 .collab-strip:focus-visible .strip-wave{
   opacity:1;

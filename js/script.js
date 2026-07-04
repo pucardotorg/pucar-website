@@ -1263,3 +1263,27 @@
     })
     .catch(function () { /* strip text still works without heads */ });
 })();
+
+/* ---- home icon in the nav: appears (width/opacity ease-in) only once the
+   visitor has scrolled down; on the homepage it scrolls back to the top
+   instead of navigating. ---- */
+(function () {
+  "use strict";
+  var nav = document.querySelector(".site-header .site-nav");
+  var home = document.getElementById("navHome");
+  if (!nav || !home) return;
+  var shown = false;
+  function onScroll() {
+    var want = window.scrollY > 200;
+    if (want !== shown) {
+      shown = want;
+      nav.classList.toggle("show-home", want);
+    }
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+  home.addEventListener("click", function (e) {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: "auto" });
+  });
+})();
