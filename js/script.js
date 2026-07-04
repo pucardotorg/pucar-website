@@ -1133,12 +1133,16 @@
 
   function spawn(preAdvance) {
     if (!active || !photos || !photos.length || document.hidden) return;
-    var b = document.createElement("div");
+    var b = document.createElement("a"); // clickable: goes to the profile
     b.className = "hi-bubble";
     var bob = document.createElement("div");
     bob.className = "hi-bob";
     bob.style.animationDuration = (2.1 + Math.random() * 1.6) + "s";
     var p = photos[(Math.random() * photos.length) | 0];
+    if (p.url) {
+      b.href = p.url;
+      b.setAttribute("aria-label", (p.name || "Contributor") + ", view profile");
+    }
     var img = document.createElement("img");
     img.src = p.src || p; // photos.json is now [{src,name,org}]; tolerate old cached string arrays
     img.alt = "";

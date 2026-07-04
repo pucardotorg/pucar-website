@@ -2997,7 +2997,10 @@ body.scroll-locked{ overflow:hidden; }
 
 /* ---- hover on a waving head: stylised name/org tooltip; the head slows
    down (playbackRate, in js/script.js) but never stops ---- */
-.hi-bubble{ pointer-events:auto; cursor:default; }
+.hi-bubble{ pointer-events:auto; cursor:pointer; }
+.hi-bubble:hover img,
+.hi-bubble:focus-visible img{ border-color:var(--green); }
+.hi-bubble:focus-visible{ outline:none; }
 .hi-tip{
   position:absolute;
   bottom:calc(100% + 12px);

@@ -1139,8 +1139,9 @@ js/script.js (near the end) spawns circular contributor mugshots into
   lives on the parent transform.
 - Hover: paper tooltip (.hi-tip, name + organisation, arrow ::after) and
   the bubble slows to playbackRate .25 WITHOUT stopping; mouseleave
-  restores 1. Bubbles are pointer-events:auto but not clickable (no link,
-  default cursor).
+  restores 1. Each bubble is an <a> to that person's /contributors/<slug>/
+  profile (photos.json carries url; aria-label on the link, and #hiStream
+  is NOT aria-hidden for that reason). Hover/focus rings the photo green.
 - GOTCHA that broke tooltips once: .beats spans the whole pin at z-index 6
   and swallowed hover meant for the heads at z 4. .beats is now
   pointer-events:none; .beat stays none and .beat.is-active restores auto,

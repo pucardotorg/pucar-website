@@ -579,7 +579,7 @@ fs.writeFileSync(path.join(ROOT, "contributors", "index.html"), contributorsInde
 /* photo list for the homepage's beat-9 "waving heads" stream */
 fs.writeFileSync(path.join(ROOT, "contributors", "photos.json"),
   JSON.stringify(contributors.filter(function (c) { return c.photo; })
-    .map(function (c) { return { src: c.photo, name: c.name, org: c.organisation || "" }; })));
+    .map(function (c) { return { src: c.photo, name: c.name, org: c.organisation || "", url: c.url }; })));
 fs.mkdirSync(path.join(ROOT, "about"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, "about", "index.html"), aboutPage());
 fs.mkdirSync(path.join(ROOT, "team"), { recursive: true });
