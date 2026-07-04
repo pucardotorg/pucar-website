@@ -189,7 +189,10 @@ body:has(.pin[data-beat="9"]) .site-header .logo-dark{ opacity:1; }
   box-shadow:0 4px 12px rgba(17,31,38,.25);
 }
 
-.nav-home{
+/* NOTE the a.nav-home specificity: the generic `.site-nav a` rule declares
+   its own transition (background/color/box-shadow) which would otherwise
+   override this one and make the reveal instant. */
+.site-nav a.nav-home{
   display:inline-flex;
   align-items:center;
   justify-content:center;
@@ -204,7 +207,7 @@ body:has(.pin[data-beat="9"]) .site-header .logo-dark{ opacity:1; }
     opacity .3s ease, transform .45s cubic-bezier(.34,1.4,.44,1),
     background .22s ease, color .22s ease;
 }
-.site-nav.show-home .nav-home{
+.site-nav.show-home a.nav-home{
   width:38px;
   padding:8px 8px !important;
   opacity:1;
