@@ -656,7 +656,7 @@
       filmActive = true;
       document.body.classList.add("film-playing"); // header up, progress rail down
       tryPlayFilm();
-      // a brief 1s hold on EVERY arrival (either scroll direction): scroll
+      // a brief 700ms hold on EVERY arrival (either scroll direction): scroll
       // momentum tends to carry people straight past the film, so give it a
       // moment to register. Scoped by filmLockActive so releasing it can
       // never clobber a walk-in's own scroll lock.
@@ -666,7 +666,7 @@
         clearTimeout(filmHoldTimer);
         filmHoldTimer = setTimeout(function () {
           if (filmLockActive) { unlockScroll(); filmLockActive = false; }
-        }, 1000);
+        }, 700);
       }
     } else if (!shouldPlay && filmActive) {
       filmActive = false;
