@@ -2939,15 +2939,14 @@ body.scroll-locked{ overflow:hidden; }
   font-size:38px;
   line-height:1;
   transform-origin:70% 85%;
-  animation:hiWave 1.3s ease-in-out infinite;
+  animation:hiWave .9s ease-in-out infinite;
   filter:drop-shadow(0 2px 4px rgba(0,0,0,.3));
 }
+/* continuous wave: no rest phase, just a smooth back-and-forth */
 @keyframes hiWave{
-  0%, 55%, 100%{ transform:rotate(0deg); }
-  10%{ transform:rotate(20deg); }
-  22%{ transform:rotate(-10deg); }
-  34%{ transform:rotate(16deg); }
-  45%{ transform:rotate(-6deg); }
+  0%{ transform:rotate(-8deg); }
+  50%{ transform:rotate(26deg); }
+  100%{ transform:rotate(-8deg); }
 }
 
 /* ---- hover on a waving head: stylised name/org tooltip; the head slows
