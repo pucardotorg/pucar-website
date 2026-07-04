@@ -1177,12 +1177,16 @@ points. Short bios/job pages are untouched (opt-in class).
 
 ### Participate event cards (sc-ai-policy)
 
-eventCard() renders each event as ONE BIG LINK (<a class="event-card">):
-white panel, forest city pill + uppercase date-time on the topline,
-display-serif title, divider, and a bold forest "Register interest ->" text
-CTA. Hover: 5px lift, deeper shadow, darker border, a green radial bloom
-(::before) fading in, and the arrow sliding right. The old dark-header-bar
-card design was explicitly rejected ("doesn't feel clickable").
+The participate section is now a DARK .collaborate shell
+(class="collaborate participate") and eventCard() renders each event as a
+frosted .collab-card that is ONE BIG LINK (<a class="collab-card
+event-card">): city in .collab-cat, date-time in .collab-status, title,
+venue line, summary, divider + "Register interest" .collab-btn pinned
+bottom-left. Two earlier designs were rejected (dark-header-band "not
+clickable enough"; white glow cards "too different from existing cards") --
+the instruction is match the COLLABORATE cards. The "Email the AI Committee"
+suggestion card was removed; the two events carry realistic dummy details
+(8 and 11 July 2026) to confirm before launch.
 
 ### Cards <-> list view toggle
 

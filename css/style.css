@@ -2602,12 +2602,8 @@ body.scroll-locked{ overflow:hidden; }
 /* outlet sits alone on the topline now (the type chip is gone): right-align */
 .persp-card .collab-topline{ justify-content:flex-end; }
 
-.participate{
-  background:var(--cream);
-  padding: clamp(64px,9vw,110px) clamp(20px,5vw,72px);
-}
-.participate .beat-eyebrow{ color:var(--forest); }
 .participate-title{
+  color:var(--paper);
   font-size:clamp(1.8rem,3.8vw,2.9rem);
   margin-bottom:8px;
 }
@@ -2618,83 +2614,19 @@ body.scroll-locked{ overflow:hidden; }
   margin-top:28px;
   align-items:stretch;
 }
-/* event cards: same language as the site's other cards (forest header band
-   + paper body), but the WHOLE card is a link with a clickable feel:
-   lift + deeper shadow on hover and a sliding arrow CTA. */
-.event-card{
-  display:flex;
-  flex-direction:column;
-  border:1px solid var(--line);
-  border-radius:22px;
-  overflow:hidden;
-  background:var(--paper);
-  color:var(--ink);
-  text-decoration:none;
-  box-shadow:0 6px 16px rgba(17,31,38,.05);
-  transition:translate .22s ease, box-shadow .22s ease, border-color .22s ease;
-}
-.event-card:hover{
-  translate:0 -5px;
-  border-color:rgba(18,55,38,.3);
-  box-shadow:0 20px 40px rgba(17,31,38,.14);
-}
-.event-when{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px 16px;
-  align-items:baseline;
-  justify-content:space-between;
-  padding:16px 22px;
-  background:var(--forest);
-  color:var(--paper);
-}
-.event-city{
-  font-family:var(--font-display);
-  font-size:1.15rem;
-}
-.event-datetime{
-  font-size:.78rem;
+/* event cards: literally .collab-card (frosted panel on the dark section,
+   shared hover lift) rendered as ONE BIG LINK; only the extras live here */
+a.event-card{ text-decoration:none; }
+.event-venue{
+  font-size:.82rem;
+  font-weight:600;
   color:rgba(251,248,242,.75);
 }
-.event-body{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  padding:20px 22px 22px;
-  flex:1;
-}
-.event-title{
-  font-size:1.2rem;
-  line-height:1.25;
-  margin:0;
-}
-.event-venue{
-  font-size:.85rem;
-  font-weight:600;
-  color:var(--ink-soft);
-  margin:0;
-}
-.event-desc{
-  font-size:.92rem;
-  line-height:1.55;
-  color:var(--ink-soft);
-  margin:0;
-}
-.event-foot{
+.event-card .collab-foot{
   margin-top:auto;
-  padding-top:14px;
-  border-top:1px solid var(--line);
+  justify-content:flex-start;
 }
-.event-go{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  font-weight:700;
-  font-size:.95rem;
-  color:var(--forest);
-}
-.event-arrow{ transition:translate .2s ease; }
-.event-card:hover .event-arrow{ translate:5px 0; }
+.event-card:hover .collab-btn{ background:#fff; }
 
 /* ---------------- footer ---------------- */
 .site-footer{

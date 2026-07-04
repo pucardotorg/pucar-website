@@ -459,21 +459,18 @@ function perspCard(p, slug) {
 }
 
 function eventCard(ev) {
-  /* same visual language as the original cards (forest header band + paper
-     body); the WHOLE card is the link and hover adds lift + sliding arrow */
+  /* SAME anatomy as the collaborate/persp cards (frosted .collab-card on a
+     dark section) -- explicit request after two other designs were rejected.
+     The whole card is the link. */
   const when = [ev.date_display, ev.time_display].filter(Boolean).join(" \u00b7 ");
-  return '<a class="event-card" href="' + esc(ev.url || "mailto:collaborate@pucar.org") + '">\n' +
-    '  <div class="event-when">\n' +
-    '    <span class="event-city">' + esc(ev.city) + "</span>\n" +
-    (when ? '    <span class="event-datetime">' + esc(when) + "</span>\n" : "") +
-    "  </div>\n" +
-    '  <div class="event-body">\n' +
-    '    <h3 class="event-title">' + esc(ev.title) + "</h3>\n" +
-    (ev.venue ? '    <p class="event-venue">' + esc(ev.venue) + "</p>\n" : "") +
-    '    <p class="event-desc">' + esc(ev.description || "") + "</p>\n" +
-    '    <div class="event-foot"><span class="event-go">' + esc(ev.cta || "Register interest") +
-    '<span class="event-arrow" aria-hidden="true">\u2192</span></span></div>\n' +
-    "  </div>\n</a>";
+  return '<a class="collab-card event-card" href="' + esc(ev.url || "mailto:collaborate@pucar.org") + '">\n' +
+    '  <div class="collab-topline"><span class="collab-cat">' + esc(ev.city) + "</span>" +
+    (when ? '<span class="collab-status">' + esc(when) + "</span>" : "") + "</div>\n" +
+    '  <span class="collab-title">' + esc(ev.title) + "</span>\n" +
+    (ev.venue ? '  <span class="event-venue">' + esc(ev.venue) + "</span>\n" : "") +
+    '  <span class="collab-summary">' + esc(ev.description || "") + "</span>\n" +
+    '  <div class="collab-foot">\n    <span class="collab-btn">' + esc(ev.cta || "Register interest") + "</span>\n  </div>\n" +
+    "</a>";
 }
 
 function scPolicyPage() {
@@ -511,20 +508,12 @@ function scPolicyPage() {
 perspectives.map(function (p) { return perspCard(p, p.slug); }).join("\n") + "\n" +
 "  </div>\n" +
 "</section>\n" +
-'<section class="participate" id="participate">\n' +
+'<section class="collaborate participate" id="participate">\n' +
 '  <div class="collab-head">\n' +
 '    <p class="beat-eyebrow">Ways to participate</p>\n' +
 '    <h2 class="participate-title">Say something before July 15.</h2>\n' +
 "  </div>\n" +
 '  <div class="participate-grid">\n' +
-'    <article class="event-card suggest-card">\n' +
-'      <div class="event-when"><span class="event-city">Anywhere</span><span class="event-date">Until 15 July 2026</span></div>\n' +
-'      <div class="event-body">\n' +
-'        <h3 class="event-title">Send your suggestions</h3>\n' +
-'        <p class="event-desc">Email your comments on the draft to the Member Secretary of the Supreme Court’s AI Committee. Plain language is fine. What matters is the litigant’s point of view. Copy us in if you’d like PUCAR to build on your input.</p>\n' +
-'        <div class="cta-row">\n' +
-'          <a class="btn btn-primary event-cta" href="mailto:office.regcc@sci.nic.in?subject=Feedback%20on%20Draft%20AI%20Regulations%20for%20Courts%2C%202026&cc=collaborate@pucar.org">Email the AI Committee</a>\n' +
-"        </div>\n      </div>\n    </article>\n" +
 scEvents.map(eventCard).join("\n") + "\n" +
 "  </div>\n" +
 '</section>\n' +
