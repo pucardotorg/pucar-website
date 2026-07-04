@@ -215,6 +215,51 @@ body:has(.pin[data-beat="9"]) .site-header .logo-dark{ opacity:1; }
   transition-delay:0s, 0s, .12s, .12s, 0s, 0s; /* icon arrives after the slot opens */
 }
 
+/* tooltip under the icon (content from data-tip: "Back to Top" on the
+   homepage arrow, "Home" on other pages' house). The button's
+   overflow:hidden is lifted once revealed so the tooltip can escape. */
+.site-nav.show-home a.nav-home{ overflow:visible; position:relative; }
+.nav-home::after{
+  content:attr(data-tip);
+  position:absolute;
+  top:calc(100% + 14px);
+  left:50%;
+  translate:-50% 4px;
+  background:var(--forest);
+  color:var(--paper);
+  font-size:.72rem;
+  font-weight:600;
+  letter-spacing:.03em;
+  white-space:nowrap;
+  padding:6px 12px;
+  border-radius:9px;
+  box-shadow:0 10px 24px rgba(17,31,38,.28);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .18s ease, translate .18s ease;
+  z-index:70;
+}
+.nav-home::before{ /* caret */
+  content:"";
+  position:absolute;
+  top:calc(100% + 3px);
+  left:50%;
+  translate:-50% 4px;
+  border:6px solid transparent;
+  border-bottom-color:var(--forest);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .18s ease, translate .18s ease;
+  z-index:70;
+}
+.site-nav.show-home a.nav-home:hover::after,
+.site-nav.show-home a.nav-home:focus-visible::after,
+.site-nav.show-home a.nav-home:hover::before,
+.site-nav.show-home a.nav-home:focus-visible::before{
+  opacity:1;
+  translate:-50% 0;
+}
+
 /* the homepage up-arrow drifts upward on loop: rises, fades out at the top,
    re-enters from below (#navHome is homepage-only; other pages' house icon
    stays still) */
