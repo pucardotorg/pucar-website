@@ -2891,3 +2891,61 @@ body.scroll-locked{ overflow:hidden; }
   .contrib-grid.is-list .contrib-card-text{ flex-direction:column; gap:2px; }
   .contrib-grid.is-list .contrib-card-org{ margin-left:0; text-align:left; }
 }
+
+/* ---------------- beat 9: waving contributor heads ----------------
+   js/script.js spawns .hi-bubble elements into #hiStream while beat 9 is
+   active: each drifts left->right (Web Animations API on the bubble:
+   translateX + scale .12 -> 1, so they enter tiny and grow to 100px),
+   while the inner .hi-bob adds the sine bob and the emoji waves on loop.
+   z-index 4: over the film curtains (3), under the stages (5) and text (6).
+   Not interactive by design -- pointer-events:none on the whole layer. */
+.hi-stream{
+  position:absolute;
+  inset:0;
+  z-index:4;
+  overflow:hidden;
+  pointer-events:none;
+}
+.hi-bubble{
+  position:absolute;
+  left:0;
+  width:100px;
+  height:100px;
+  will-change:transform;
+}
+.hi-bob{
+  width:100%;
+  height:100%;
+  position:relative;
+  animation:hiBob 2.6s ease-in-out infinite alternate;
+}
+@keyframes hiBob{
+  from{ translate:0 -16px; }
+  to{ translate:0 16px; }
+}
+.hi-bubble img{
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid rgba(251,248,242,.4);
+  box-shadow:0 12px 28px rgba(0,0,0,.4);
+  display:block;
+}
+.hi-wave{
+  position:absolute;
+  right:-10px;
+  bottom:-6px;
+  font-size:38px;
+  line-height:1;
+  transform-origin:70% 85%;
+  animation:hiWave 1.3s ease-in-out infinite;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.3));
+}
+@keyframes hiWave{
+  0%, 55%, 100%{ transform:rotate(0deg); }
+  10%{ transform:rotate(20deg); }
+  22%{ transform:rotate(-10deg); }
+  34%{ transform:rotate(16deg); }
+  45%{ transform:rotate(-6deg); }
+}

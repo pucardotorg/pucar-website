@@ -1100,6 +1100,23 @@ trailing arrows stripped, hrefs, numbering), so the board is the single
 source of truth; static markup mirrors the two current items as a
 no-JS/SEO fallback. The old static "our initiatives" cards are gone.
 
+### Beat 9: waving contributor heads
+
+While the pin sits on beat 9 (the CTA), js/script.js (last IIFE) spawns
+circular contributor mugshots into #hiStream (markup in index.html inside
+.pin). Each bubble enters from the left TINY and grows to 100px as it
+crosses (WAAPI keyframes translateX -120px -> 105vw with scale .12 -> 1,
+linear, 9-17s), an inner .hi-bob adds the sine bob, and a looping wave
+keyframe animates a 👋 pinned to the bubble's leading edge (it scales with
+the bubble since the scale lives on the parent transform). Bubbles are
+confined to top:66-86% (lower third), spawn every 1.3s, and self-remove on
+finish. Photos come from contributors/photos.json (emitted by the build
+script from published contributors with photos). A MutationObserver on
+#pin's data-beat starts/stops the stream and clears bubbles on exit; skipped
+under reduced motion, no spawns while document.hidden. Layer z-index 4:
+over film curtains (3), under stages (5) and beat text (6).
+Decorative only -- pointer-events:none, aria-hidden.
+
 ### Cards <-> list view toggle
 
 js/view-toggle.js adds a grid/list switch to every card grid: #collabGrid

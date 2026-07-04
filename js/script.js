@@ -1106,3 +1106,77 @@
     });
   });
 })();
+
+/* ---- beat 9: a stream of contributors saying hi. Circular mugshots drift
+   in from the left tiny, grow to full size (~100px) as they bob toward the
+   right, each with a looping 👋, then leave the screen. Photos come from
+   contributors/photos.json (emitted by the build script). Runs ONLY while
+   the pin sits on beat 9, cleans up completely on exit, and skips under
+   reduced motion. Bubbles are decorative and not clickable. ---- */
+(function () {
+  "use strict";
+  var pin = document.getElementById("pin");
+  var stream = document.getElementById("hiStream");
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!pin || !stream || reduce || !("animate" in Element.prototype)) return;
+
+  var photos = null, loading = false, timer = null, active = false;
+
+  function loadPhotos() {
+    if (photos || loading || !window.fetch) return;
+    loading = true;
+    fetch("/contributors/photos.json")
+      .then(function (r) { return r.json(); })
+      .then(function (p) { photos = p; loading = false; })
+      .catch(function () { loading = false; });
+  }
+
+  function spawn() {
+    if (!active || !photos || !photos.length || document.hidden) return;
+    var b = document.createElement("div");
+    b.className = "hi-bubble";
+    var bob = document.createElement("div");
+    bob.className = "hi-bob";
+    bob.style.animationDuration = (2.1 + Math.random() * 1.6) + "s";
+    var img = document.createElement("img");
+    img.src = photos[(Math.random() * photos.length) | 0];
+    img.alt = "";
+    img.loading = "lazy";
+    var wave = document.createElement("span");
+    wave.className = "hi-wave";
+    wave.textContent = "👋";
+    wave.style.animationDelay = (Math.random() * 1.2) + "s";
+    bob.appendChild(img);
+    bob.appendChild(wave);
+    b.appendChild(bob);
+    // lower third of the section only
+    b.style.top = (66 + Math.random() * 20) + "%";
+    stream.appendChild(b);
+    var anim = b.animate([
+      { transform: "translateX(-120px) scale(.12)", opacity: 0 },
+      { transform: "translateX(16vw) scale(.32)", opacity: 1, offset: .16 },
+      { transform: "translateX(60vw) scale(.72)", opacity: 1, offset: .6 },
+      { transform: "translateX(105vw) scale(1)", opacity: 1 }
+    ], { duration: 9000 + Math.random() * 8000, easing: "linear" });
+    anim.onfinish = function () { b.remove(); };
+  }
+
+  function start() {
+    if (active) return;
+    active = true;
+    loadPhotos();
+    spawn();
+    timer = setInterval(spawn, 1300);
+  }
+  function stop() {
+    if (!active) return;
+    active = false;
+    clearInterval(timer);
+    stream.textContent = ""; // drop all bubbles (their animations die with them)
+  }
+
+  new MutationObserver(function () {
+    if (pin.getAttribute("data-beat") === "9") start(); else stop();
+  }).observe(pin, { attributes: true, attributeFilter: ["data-beat"] });
+  if (pin.getAttribute("data-beat") === "9") start();
+})();
