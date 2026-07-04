@@ -1189,6 +1189,16 @@ the instruction is match the COLLABORATE cards. The "Email the AI Committee"
 suggestion card was removed; the two events carry realistic dummy details
 (8 and 11 July 2026) to confirm before launch.
 
+### Header positioning: logo scrolls, nav stays
+
+.site-header is position:ABSOLUTE (not fixed): the logo sits at the top and
+scrolls away with the page (explicit request). The nav + CTA are pinned
+separately -- .header-right on the homepage, `body.job-page .site-header >
+.site-nav` on generated pages -- as position:fixed top-right. The
+film-playing slide-away now targets .header-right (the logo has long
+scrolled off by the film beat). The strip-stack heads are randomised on
+every page load (Math.random no-repeat picks).
+
 ### Collab strip (homepage, above the collaborate section)
 
 .collab-strip is a thin gradient bridge (forest -> indigo) between the story

@@ -73,20 +73,31 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
 
 /* ---------------- header ---------------- */
 .site-header{
-  position:fixed;
+  /* ABSOLUTE, not fixed: the logo lives in the header flow and scrolls away
+     with the page (explicit request -- "the logo doesn't need to be
+     sticky"). The nav + CTA are pulled out and pinned separately below. */
+  position:absolute;
   top:0; left:0; right:0;
   z-index:50;
-  /* the whole header (logo + nav + CTA) slides up out of the way while
-     the film plays (body.film-playing, toggled with the film hold) and
-     glides back when the hold ends */
-  transition: translate .55s cubic-bezier(.4,.1,.3,1);
   display:flex;
   align-items:center;
   justify-content:space-between;
   padding: 18px clamp(20px,4vw,48px);
   pointer-events:none;
 }
-body.film-playing .site-header{
+/* nav + CTA stay pinned: homepage wraps them in .header-right; generated
+   pages have the nav as a direct header child */
+.header-right,
+body.job-page .site-header > .site-nav{
+  position:fixed;
+  top:18px;
+  right:clamp(20px,4vw,48px);
+  z-index:50;
+  /* slides up with body.film-playing (the header itself no longer needs
+     to, the logo has scrolled away by the film) */
+  transition: translate .55s cubic-bezier(.4,.1,.3,1);
+}
+body.film-playing .header-right{
   translate:0 -120%;
   pointer-events:none;
 }
