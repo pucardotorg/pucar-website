@@ -1207,11 +1207,11 @@ every page load (Math.random no-repeat picks).
   a[href="#collaborate"], so the jump is instant and unlock-safe). The rail
   div lost its aria-hidden so the link is reachable; the track carries it
   instead.
-- .nav-home: an icon-only home button (inline house SVG, no icon library on
-  this site -- everything is inline SVG) as the FIRST child of the nav pill
-  on every page. Hidden (width 0) until you scroll down 200px, then eases in.
-  On the homepage it scrolls to the top (JS preventDefault + scrollTo); on
-  generated pages it is a plain link to "/". Visibility toggling lives in
+- .nav-home: an icon-only button (inline SVG, no icon library on this site)
+  as the FIRST child of the nav pill on every page. Hidden (width 0) until
+  you scroll down 200px, then eases in. HOMEPAGE: an UP ARROW that scrolls
+  to the top (JS preventDefault + scrollTo). Generated pages: a HOUSE icon
+  that is a plain link to "/". Visibility toggling lives in
   js/script.js (homepage) and js/nav.js (generated pages) via
   .site-nav.show-home.
 
