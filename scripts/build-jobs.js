@@ -459,14 +459,23 @@ function perspCard(p, slug) {
     "</article>";
 }
 
+/* Inline glyphs only -- no icon library on this site (README \u00a79). Same
+   anatomy as the existing nav-home icon: 16x16 viewBox, currentColor
+   stroke, aria-hidden (the text label next to each carries the meaning). */
+const PIN_ICON = '<svg class="tag-icon" viewBox="0 0 16 16" width="11" height="11" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14.3S3.2 9.6 3.2 6.3a4.8 4.8 0 0 1 9.6 0c0 3.3-4.8 8-4.8 8Z"/><circle cx="8" cy="6.2" r="1.5"/></svg>';
+const CALENDAR_ICON = '<svg class="tag-icon" viewBox="0 0 16 16" width="11" height="11" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.3" y="3.3" width="11.4" height="10.4" rx="1.6"/><path d="M2.3 6.6h11.4M5.6 2v2.6M10.4 2v2.6"/></svg>';
+
 function eventCard(ev) {
   /* SAME anatomy as the collaborate/persp cards (frosted .collab-card on a
      dark section) -- explicit request after two other designs were rejected.
-     The whole card is the link. */
+     The whole card is the link. City gets a pin icon, date/time gets a
+     calendar icon -- the plain text pills were "barely visible" against the
+     dark card background (fixed properly in CSS, see .collaborate
+     .collab-status), and the icons add a second, non-colour cue on top. */
   const when = [ev.date_display, ev.time_display].filter(Boolean).join(" \u00b7 ");
   return '<a class="collab-card event-card" href="' + esc(ev.url || "mailto:collaborate@pucar.org") + '">\n' +
-    '  <div class="collab-topline"><span class="collab-cat">' + esc(ev.city) + "</span>" +
-    (when ? '<span class="collab-status">' + esc(when) + "</span>" : "") + "</div>\n" +
+    '  <div class="collab-topline"><span class="collab-cat">' + PIN_ICON + esc(ev.city) + "</span>" +
+    (when ? '<span class="collab-status">' + CALENDAR_ICON + esc(when) + "</span>" : "") + "</div>\n" +
     '  <span class="collab-title">' + esc(ev.title) + "</span>\n" +
     (ev.venue ? '  <span class="event-venue">' + esc(ev.venue) + "</span>\n" : "") +
     '  <span class="collab-summary">' + esc(ev.description || "") + "</span>\n" +

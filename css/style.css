@@ -2099,6 +2099,9 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
 }
 /* category + colour-coded difficulty labels */
 .collab-cat{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
   font-size:.7rem;
   font-weight:700;
   letter-spacing:.1em;
@@ -2108,6 +2111,11 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
   background:rgba(251,248,242,.14);
   color:rgba(251,248,242,.9);
 }
+/* icon glyph inside .collab-cat/.collab-status (event cards' location/date-
+   time pills, see eventCard() in build-jobs.js) -- inline-flex above lines
+   it up with the text on both; harmless everywhere else since text-only
+   pills just render as before with no icon child to lay out. */
+.tag-icon{ flex-shrink:0; opacity:.85; }
 .collab-diff{
   font-size:.7rem;
   font-weight:700;
@@ -2120,12 +2128,26 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
 .diff-moderate{ background:#C98A2E; color:#241E1A; }
 .diff-high{ background:#B0402F; }
 .collab-status{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
   font-size:.7rem;
   font-weight:700;
   padding:5px 10px;
   border-radius:999px;
   background:rgba(36,30,26,.12);
   color:inherit;
+}
+/* .collab-status's dark-tint pill above reads fine on the light job/
+   contributor pages it was designed for (.job-page, .contrib-jobs already
+   fine-tune the exact alpha), but it's nearly invisible on the dark
+   .collaborate sections that also use it -- the homepage board's job
+   "Assigned/Completed" badge, and now the sc-ai-policy event cards' date/
+   time pill. Give it the same light frosted treatment as .collab-cat
+   whenever it's inside a dark .collaborate-classed section. */
+.collaborate .collab-status{
+  background:rgba(251,248,242,.14);
+  color:rgba(251,248,242,.9);
 }
 .collab-meta{
   display:flex;

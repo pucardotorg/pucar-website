@@ -1189,6 +1189,43 @@ the instruction is match the COLLABORATE cards. The "Email the AI Committee"
 suggestion card was removed; the two events carry realistic dummy details
 (8 and 11 July 2026) to confirm before launch.
 
+### Event card tags: pin/calendar icons + a real contrast fix
+
+The sc-ai-policy participate section's event cards showed their city and
+date/time as barely-visible pills (user report, with screenshot). Two
+separate things were wrong:
+
+- **`.collab-status` was never actually meant for a dark background.** Its
+  base rule (`rgba(36,30,26,.12)` bg, `color:inherit`) is a *dark*-tinted
+  pill, designed for the light job/contributor pages that also use it (they
+  fine-tune the exact alpha via `.job-page .collab-status`/`.contrib-jobs
+  .collab-status` overrides, but the base itself already assumes a light
+  backdrop). `eventCard()`'s date/time pill uses the same class inside the
+  dark `.collaborate.participate` section, where a near-black 12%-opacity
+  background is close to invisible — same latent bug already existed for the
+  homepage board's "Assigned/Completed" job-status badge, just rarely
+  triggered since most listed jobs are Open. Fixed with `.collaborate
+  .collab-status{ background:rgba(251,248,242,.14); color:rgba(251,248,242,.9); }`
+  — the same light frosted treatment `.collab-cat` already uses by default —
+  scoped to any `.collab-status` living inside a `.collaborate`-classed
+  section (covers the homepage board, the participate event cards, and the
+  perspectives cards' outlet pill, which shares the same section wrapper).
+- **Icons added as a second, non-colour cue**, not just a contrast fix: a pin
+  glyph before the city (`.collab-cat`) and a calendar glyph before the
+  date/time (`.collab-status`), inline SVG in the same style as the existing
+  `.nav-home` icon (16x16 viewBox, `stroke="currentColor"`, `aria-hidden` —
+  no icon library on this site, see §9). `.tag-icon` + `display:inline-flex;
+  gap:5px` were added to the base `.collab-cat`/`.collab-status` rules so the
+  icon lines up with the text; harmless everywhere else those classes render
+  text-only, since there's no icon child to lay out.
+- `eventCard()` in `scripts/build-jobs.js` emits both icons now (`PIN_ICON`/
+  `CALENDAR_ICON` constants, reused for both events). The build script can't
+  run cleanly in this sandbox (EPERM on `rimraf` when it tries to clear
+  `collaborate/`, same limitation noted in §6.4/§3.x for the favicon links),
+  so the already-generated `sc-ai-policy/index.html` was hand-patched with
+  the same markup the build script would now produce — if the script is ever
+  rerun from a real machine, both should stay in sync.
+
 ### Header positioning: logo scrolls, nav stays
 
 .site-header is position:ABSOLUTE (not fixed): the logo sits at the top and
