@@ -1229,3 +1229,37 @@
   new MutationObserver(check).observe(pin, { attributes: true, attributeFilter: ["data-beat"] });
   check();
 })();
+
+/* ---- collab strip: fill the overlapping head stack from the same
+   contributors photo list the floating heads use. Waves are staggered so
+   the hover greeting looks organic. ---- */
+(function () {
+  "use strict";
+  var stack = document.getElementById("stripStack");
+  if (!stack || !window.fetch) return;
+  fetch("/contributors/photos.json")
+    .then(function (r) { return r.json(); })
+    .then(function (photos) {
+      if (!photos || !photos.length) return;
+      // random pick without repeats
+      var pool = photos.slice();
+      var n = Math.min(7, pool.length);
+      for (var i = 0; i < n; i++) {
+        var pick = pool.splice((Math.random() * pool.length) | 0, 1)[0];
+        var head = document.createElement("span");
+        head.className = "strip-head";
+        var img = document.createElement("img");
+        img.src = pick.src || pick;
+        img.alt = "";
+        img.loading = "lazy";
+        var wave = document.createElement("span");
+        wave.className = "strip-wave";
+        wave.textContent = "👋";
+        wave.style.animationDelay = (i * 0.12) + "s";
+        head.appendChild(img);
+        head.appendChild(wave);
+        stack.appendChild(head);
+      }
+    })
+    .catch(function () { /* strip text still works without heads */ });
+})();

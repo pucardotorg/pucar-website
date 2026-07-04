@@ -1189,6 +1189,17 @@ the instruction is match the COLLABORATE cards. The "Email the AI Committee"
 suggestion card was removed; the two events carry realistic dummy details
 (8 and 11 July 2026) to confirm before launch.
 
+### Collab strip (homepage, above the collaborate section)
+
+.collab-strip is a thin gradient bridge (forest -> indigo) between the story
+and the board: "Join 100+ collaborators helping shape India's courts", a
+stack of 7 overlapping contributor heads (random no-repeat picks from
+contributors/photos.json, filled by the last-but-one IIFE in js/script.js),
+and a green .strip-btn ("Meet the collaborators ->") to /contributors/.
+Hovering ANYWHERE on the strip spreads the stack apart and raises a
+staggered continuously-waving 👋 on every head (shared hiWave keyframes);
+both ease back on mouseout. The button is the only link.
+
 ### Cards <-> list view toggle
 
 js/view-toggle.js adds a grid/list switch to every card grid: #collabGrid
