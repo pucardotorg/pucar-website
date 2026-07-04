@@ -1225,22 +1225,38 @@ separate things were wrong:
   so the already-generated `sc-ai-policy/index.html` was hand-patched with
   the same markup the build script would now produce — if the script is ever
   rerun from a real machine, both should stay in sync.
-- **Follow-up: even after the fix above, the city tag was still reported as
-  barely visible ("the colour is off").** The fix above only changed which
-  background/colour pair `.collab-status` uses on a dark section — it never
-  touched `.collab-cat`, whose colour was already the *intended* light
-  treatment (`rgba(251,248,242,.9)`). On paper that's a 90%-opacity
-  near-white and should read as crisp; in practice, against the varying dark
-  backdrops behind these pills, it reads dim and slightly warm rather than
-  white. Rather than keep tuning the alpha by feel, switched `.collab-cat`
-  and the dark-section `.collab-status` override to a fully opaque
-  `color:var(--paper)` (no alpha blending at all, so there's no backdrop-
-  dependent ambiguity in what colour actually renders), bumped the pill
-  background from `.14` to `.18` opacity, added a faint `1px` border for
-  definition, and removed the `.85` opacity dimming that had been applied to
-  the icons. `.job-page`/`.job-modal-panel .collab-cat` (the light-bg
-  override) got an explicit `border-color` reset so the new border doesn't
-  show up unwanted there.
+- **Follow-up 1 (didn't fully fix it): tried switching `.collab-cat`'s text
+  from a translucent `rgba(251,248,242,.9)` to a fully opaque
+  `color:var(--paper)`, on the theory that the alpha version was reading dim/
+  warm against varying dark backdrops.** Also bumped the pill background
+  `.14`→`.18` opacity, added a `1px` border, and gave `.job-page`/
+  `.job-modal-panel .collab-cat` (the real light-bg override, see below) an
+  explicit `border-color` reset. This landed alongside the `.collab-status`
+  fix but the city tag was still reported unchanged — because opacity was
+  never the actual bug (see follow-up 2).
+- **Follow-up 2 (the actual root cause): `sc-ai-policy`'s `<body>` carries
+  the SAME shared `class="job-page"` wrapper every generated page uses for
+  its nav/footer chrome** (`pageShell()` in the build script — the class
+  name is generic "this is a generated static page," not literally "this
+  page is a job listing"), **even though the page itself mixes a light
+  section (the intro) with dark ones that reuse `.collaborate` wholesale**
+  (`.persp-section`, `.participate` — see the event-cards note above).
+  `.job-page .collab-cat` (2 classes) is a light-background override meant
+  for real job detail pages, and it was silently winning over the plain,
+  1-class, dark-intended base `.collab-cat` rule *purely on specificity* —
+  it doesn't know or care that the actual backdrop here is dark, only that
+  it's inside something classed `.job-page`. That's what painted the city
+  tag in `--ink-soft` (a dark warm brown, `#55493F` — exactly the "off"
+  colour reported), while the date/time pill escaped it because no
+  equivalent `.job-page .collab-status` rule exists. Fixed with a 3-class
+  re-override, `.job-page .collaborate .collab-cat, .job-modal-panel
+  .collaborate .collab-cat`, which wins back the dark treatment specifically
+  when a `.collab-cat` sits inside a `.collaborate` section, regardless of
+  which body class wraps the page. **General lesson for this codebase: any
+  future `.job-page .foo`-style override needs to be checked against every
+  page that carries the `.job-page` body class, not just the literal job/
+  contributor pages it was written for** — `sc-ai-policy` is the one
+  generated page that mixes light and dark sections under that same wrapper.
 
 ### Header positioning: logo scrolls, nav stays
 

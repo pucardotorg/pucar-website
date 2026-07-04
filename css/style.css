@@ -2427,6 +2427,23 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
   border-color:rgba(36,30,26,.1); /* reset the dark-section border colour above for this light-bg context */
   color:var(--ink-soft);
 }
+/* sc-ai-policy's <body> carries the same shared `.job-page` wrapper class
+   every generated page uses for its chrome (nav/footer/layout), even though
+   the page itself has BOTH a light section (the intro) and dark ones
+   (.persp-section, .participate -- both reuse .collaborate wholesale, see
+   §3.2/event cards note). The light-bg override above doesn't know that --
+   it just matches any `.collab-cat` under `.job-page`, so it was silently
+   winning over the dark-section base rule inside the participate event
+   cards (2 classes beats 1, regardless of which is "more correct" for that
+   spot) and painting the location tag in --ink-soft brown on a dark card.
+   This re-override, 3 classes deep, wins back the dark treatment
+   specifically when a `.collab-cat` is inside a `.collaborate` section,
+   even under a `.job-page` body. */
+.job-page .collaborate .collab-cat, .job-modal-panel .collaborate .collab-cat{
+  background:rgba(251,248,242,.18);
+  border-color:rgba(251,248,242,.22);
+  color:var(--paper);
+}
 .job-page .collab-stream, .job-modal-panel .collab-stream{
   font-size:.7rem;
   font-weight:700;
