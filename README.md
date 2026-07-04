@@ -1277,11 +1277,16 @@ every page load (Math.random no-repeat picks).
   div lost its aria-hidden so the link is reachable; the track carries it
   instead.
 - .nav-home: an icon-only button (inline SVG, no icon library on this site)
-  as the FIRST child of the nav pill on every page. Hidden (width 0) until
-  you scroll down 200px, then eases in. HOMEPAGE: an UP ARROW that scrolls
-  to the top (JS preventDefault + scrollTo). Generated pages: a HOUSE icon
-  that is a plain link to "/". Visibility toggling lives in
-  js/script.js (homepage) and js/nav.js (generated pages) via
+  as the FIRST child of the nav pill on every page. HOMEPAGE: an UP ARROW
+  that scrolls to the top (JS preventDefault + scrollTo), hidden (width 0)
+  until you scroll down 200px then eases in -- gating this one makes sense,
+  there's nothing to scroll back up to on load. GENERATED PAGES: a HOUSE icon
+  that is a plain link to "/", shown immediately on load (Jul 2026 fix: it
+  used to copy the homepage's 200px-scroll gate, which made no sense here --
+  a link back to the homepage is useful from the moment the page opens, not
+  just after scrolling). Visibility toggling lives in js/script.js
+  (homepage, still scroll-gated) and js/nav.js (generated pages, now just
+  `nav.classList.add("show-home")` once at init, no scroll listener) via
   .site-nav.show-home.
 
 ### Collab strip (homepage, above the collaborate section)

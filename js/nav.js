@@ -49,17 +49,13 @@
     });
   }
 
-  /* ---- home icon: visible only after scrolling down ---- */
-  var homeShown = false;
-  function homeCheck() {
-    var want = window.scrollY > 200;
-    if (want !== homeShown) {
-      homeShown = want;
-      nav.classList.toggle("show-home", want);
-    }
-  }
-  window.addEventListener("scroll", homeCheck, { passive: true });
-  homeCheck();
+  /* ---- home icon: always on for generated pages ----
+     The homepage's own copy of this (js/script.js) still gates the up-arrow
+     behind a 200px scroll -- that one only appears once there's actually
+     somewhere to scroll back UP to. On every other page it's a plain link
+     to "/", useful the moment the page loads, so it's shown immediately
+     rather than waiting on a scroll threshold that made no sense here. */
+  nav.classList.add("show-home");
 
   /* ---- dark-section detection ---- */
   var darkSections = document.querySelectorAll(".collaborate, .site-footer");
