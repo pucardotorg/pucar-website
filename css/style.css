@@ -2529,7 +2529,10 @@ body.scroll-locked{ overflow:hidden; }
    Editorial pages (about, sc-ai-policy intro) add .prose to .job-body:
    drop cap on the opening paragraph, a larger lede, a calmer measure and
    rhythm, and headings set in the display face with a short rule. */
-.job-body.prose{ max-width:64ch; }
+/* editorial pages get a wider column than job pages (the site already
+   leans on :has() elsewhere, so this is safe) */
+.job-main:has(.job-body.prose){ max-width:880px; }
+.job-body.prose{ max-width:none; }
 .job-body.prose p{
   font-size:1.05rem;
   line-height:1.8;
