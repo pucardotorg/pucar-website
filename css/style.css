@@ -2524,6 +2524,47 @@ body.scroll-locked{ overflow:hidden; }
 }
 .job-body ul,.job-body ol{ padding-left:22px; margin:10px 0; }
 .job-body a{ color:var(--forest); } /* dark-green -- job page/modal are both light-bg surfaces */
+
+/* ---------------- long-form "prose" treatment ----------------
+   Editorial pages (about, sc-ai-policy intro) add .prose to .job-body:
+   drop cap on the opening paragraph, a larger lede, a calmer measure and
+   rhythm, and headings set in the display face with a short rule. */
+.job-body.prose{ max-width:64ch; }
+.job-body.prose p{
+  font-size:1.05rem;
+  line-height:1.8;
+  margin:0 0 1.25em;
+}
+.job-body.prose p:first-of-type{
+  font-size:1.16rem;
+  line-height:1.75;
+  color:var(--ink);
+}
+.job-body.prose p:first-of-type::first-letter{
+  float:left;
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:3.4em;
+  line-height:.82;
+  padding:6px 12px 0 0;
+  color:var(--forest);
+}
+.job-body.prose h2{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:1.5rem;
+  margin:44px 0 14px;
+}
+.job-body.prose h2::after{
+  content:"";
+  display:block;
+  width:44px;
+  height:3px;
+  margin-top:10px;
+  border-radius:2px;
+  background:var(--green);
+}
+.job-body.prose strong{ color:var(--ink); }
 .job-page{ background:var(--cream); }
 /* sticky footer: short pages (e.g. contributor profiles) should never show
    background below the footer -- main stretches, footer hugs the bottom */

@@ -332,7 +332,7 @@ function aboutPage() {
   const main =
 '  <p class="beat-eyebrow">About</p>\n' +
 '  <h1 class="job-title">Transforming dispute resolution.</h1>\n' +
-'  <article class="job-body">\n' +
+'  <article class="job-body prose">\n' +
 "    <h2>What we do</h2>\n" +
 "    <p>We are building an ecosystem that continuously fuels innovation. PUCAR 'unstucks' the dispute resolution system by inspiring imagination and harnessing capacities to create new possibilities.</p>\n" +
 "    <p>We orchestrate key connections, foster collaboration, and develop foundational ideas. We build a vibrant community of innovators who create and ensure the adoption of public goods that can create a multiplier effect.</p>\n" +
@@ -475,7 +475,7 @@ function scPolicyPage() {
   const main =
 '  <p class="beat-eyebrow">PUCAR // Public consultation</p>\n' +
 '  <h1 class="job-title">The Supreme Court wants your views on AI in its courts.</h1>\n' +
-'  <article class="job-body">\n' +
+'  <article class="job-body prose">\n' +
 "    <p>On 3 June 2026, the Supreme Court's Artificial Intelligence Committee published the draft <strong>Regulations for Use of Artificial Intelligence (AI) in Courts, 2026</strong>, a first-of-its-kind framework covering the Supreme Court, all High Courts, subordinate courts, tribunals, and statutory bodies performing adjudicatory roles.</p>\n" +
 "    <p>The draft rests on a simple hierarchy: <strong>AI may assist, but never adjudicate.</strong> It permits AI for research, summarisation, translation, transcription, scheduling, litigant-assistance chatbots, and court analytics, and absolutely prohibits AI-only decisions, AI-based risk scoring for bail or credibility, predictive profiling, surveillance of judges or lawyers, and undisclosed AI-generated evidence. Lawyers must disclose AI use in filings, and a permanent Apex Body at the Supreme Court would approve and supervise tools across the system.</p>\n" +
 '    <p><strong>Citizen feedback is open until 15 July 2026</strong> (extended from June 20). Anyone (lawyers, technologists, litigants, or curious citizens) can email comments to the Member Secretary, AI Committee, at <a href="mailto:office.regcc@sci.nic.in">office.regcc@sci.nic.in</a>.</p>\n' +
