@@ -1117,6 +1117,27 @@ under reduced motion, no spawns while document.hidden. Layer z-index 4:
 over film curtains (3), under stages (5) and beat text (6).
 Decorative only -- pointer-events:none, aria-hidden.
 
+### /sc-ai-policy/: CIVIS callout + live count
+
+Below the intro CTAs sits .civis-callout (forest gradient panel with a green
+glow) whose .civis-btn links to the CIVIS consultation
+(civis.vote/consultations/1575/read). js/perspectives.js fetches the live
+respondent count from https://api.civis.vote/graphql
+(query: consultationProfile(id:1575){consultationResponsesCount} -- field
+name verified against the open-source civis-vote/civis-frontend repo; the
+API serves CORS to any origin) and fills #civisCount under the button
+("N people have already responded on CIVIS", green dot ::before). Fails
+silently; count line stays hidden if the API is down.
+
+### Waving heads: tooltip + wave orientation
+
+The 👋 sits to the LEFT of each head (the emoji's palm angle reads as a hand
+reaching out of the photo). Hovering a head shows a paper tooltip
+(.hi-tip: name + organisation, data from photos.json which now carries
+{src,name,org}) and slows that bubble to playbackRate 0.25 without stopping;
+leaving restores full speed. Bubbles have pointer-events:auto for the hover
+but remain non-clickable (no link, default cursor).
+
 ### Cards <-> list view toggle
 
 js/view-toggle.js adds a grid/list switch to every card grid: #collabGrid

@@ -1138,8 +1138,9 @@
     var bob = document.createElement("div");
     bob.className = "hi-bob";
     bob.style.animationDuration = (2.1 + Math.random() * 1.6) + "s";
+    var p = photos[(Math.random() * photos.length) | 0];
     var img = document.createElement("img");
-    img.src = photos[(Math.random() * photos.length) | 0];
+    img.src = p.src || p; // photos.json is now [{src,name,org}]; tolerate old cached string arrays
     img.alt = "";
     img.loading = "lazy";
     var wave = document.createElement("span");
@@ -1148,6 +1149,22 @@
     wave.style.animationDelay = (Math.random() * 1.2) + "s";
     bob.appendChild(img);
     bob.appendChild(wave);
+    // stylised name/org tooltip; shown on hover while the head slows down
+    if (p.name) {
+      var tip = document.createElement("span");
+      tip.className = "hi-tip";
+      var tn = document.createElement("span");
+      tn.className = "hi-tip-name";
+      tn.textContent = p.name;
+      tip.appendChild(tn);
+      if (p.org) {
+        var to = document.createElement("span");
+        to.className = "hi-tip-org";
+        to.textContent = p.org;
+        tip.appendChild(to);
+      }
+      bob.appendChild(tip);
+    }
     b.appendChild(bob);
     // lower third of the section only
     b.style.top = (66 + Math.random() * 20) + "%";
@@ -1159,6 +1176,15 @@
       { transform: "translateX(105vw) scale(1)", opacity: 1 }
     ], { duration: 9000 + Math.random() * 8000, easing: "linear" });
     anim.onfinish = function () { b.remove(); };
+    // hover: slow to quarter speed (never stop) + reveal the tooltip
+    b.addEventListener("mouseenter", function () {
+      anim.playbackRate = 0.25;
+      b.classList.add("is-hover");
+    });
+    b.addEventListener("mouseleave", function () {
+      anim.playbackRate = 1;
+      b.classList.remove("is-hover");
+    });
   }
 
   function start() {

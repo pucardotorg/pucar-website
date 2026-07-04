@@ -84,3 +84,28 @@
     if (e.key === "Escape") closeModal();
   });
 })();
+
+/* ---- live CIVIS respondent count under the callout button. Field name
+   verified against civis-vote/civis-frontend (consultationResponsesCount);
+   api.civis.vote/graphql serves CORS to any origin. Fails silently: the
+   count line just stays hidden. ---- */
+(function () {
+  "use strict";
+  var el = document.getElementById("civisCount");
+  if (!el || !window.fetch) return;
+  fetch("https://api.civis.vote/graphql", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query: "{consultationProfile(id:1575){consultationResponsesCount}}" })
+  })
+    .then(function (r) { return r.json(); })
+    .then(function (r) {
+      var n = r && r.data && r.data.consultationProfile &&
+        r.data.consultationProfile.consultationResponsesCount;
+      if (typeof n === "number" && n > 0) {
+        el.textContent = n + (n === 1 ? " person has" : " people have") + " already responded on CIVIS";
+        el.hidden = false;
+      }
+    })
+    .catch(function () { /* leave hidden */ });
+})();

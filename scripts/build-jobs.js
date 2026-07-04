@@ -484,6 +484,17 @@ function scPolicyPage() {
 '    <a class="btn btn-primary" href="mailto:office.regcc@sci.nic.in?subject=Feedback%20on%20Draft%20AI%20Regulations%20for%20Courts%2C%202026">Send the Court your feedback</a>\n' +
 '    <a class="btn btn-outline" href="https://cdnbbsr.s3waas.gov.in/s3ec0490f1f4972d133619a60c30f3559e/uploads/2026/06/2026060342.pdf" target="_blank" rel="noopener">Read the Court’s notice</a>\n' +
 "  </div>\n" +
+'  <aside class="civis-callout">\n' +
+'    <div class="civis-callout-text">\n' +
+'      <p class="civis-kicker">Respond in minutes</p>\n' +
+'      <h2 class="civis-title">Not sure where to start? Respond on CIVIS.</h2>\n' +
+'      <p class="civis-sub">CIVIS turns the draft into a short guided questionnaire, in English and four Indian languages, and delivers your views to the Court\u2019s AI Committee.</p>\n' +
+"    </div>\n" +
+'    <div class="civis-callout-action">\n' +
+'      <a class="civis-btn" href="https://www.civis.vote/consultations/1575/read" target="_blank" rel="noopener">Respond on CIVIS<span class="civis-btn-arrow" aria-hidden="true">\u2192</span></a>\n' +
+'      <p class="civis-count" id="civisCount" hidden></p>\n' +
+"    </div>\n" +
+"  </aside>\n" +
 "</main>\n" +
 '<section class="collaborate persp-section" id="perspectives">\n' +
 '  <div class="collab-head">\n' +
@@ -565,7 +576,7 @@ fs.writeFileSync(path.join(ROOT, "contributors", "index.html"), contributorsInde
 /* photo list for the homepage's beat-9 "waving heads" stream */
 fs.writeFileSync(path.join(ROOT, "contributors", "photos.json"),
   JSON.stringify(contributors.filter(function (c) { return c.photo; })
-    .map(function (c) { return c.photo; })));
+    .map(function (c) { return { src: c.photo, name: c.name, org: c.organisation || "" }; })));
 fs.mkdirSync(path.join(ROOT, "about"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, "about", "index.html"), aboutPage());
 fs.mkdirSync(path.join(ROOT, "team"), { recursive: true });
