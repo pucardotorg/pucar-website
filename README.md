@@ -1206,9 +1206,12 @@ and the board: "Join 100+ collaborators helping shape India's courts", a
 stack of 7 overlapping contributor heads (random no-repeat picks from
 contributors/photos.json, filled by the last-but-one IIFE in js/script.js),
 and a green .strip-btn ("Meet the collaborators ->") to /contributors/.
-Hovering ANYWHERE on the strip spreads the stack apart and raises a
-staggered continuously-waving 👋 on every head (shared hiWave keyframes);
-both ease back on mouseout. The button is the only link.
+Layout: text LEFT, heads + button RIGHT (space-between). Hovering ANYWHERE
+on the strip fans the stack out and raises a staggered continuously-waving
+👋 on every head (shared hiWave keyframes); both ease back on mouseout.
+The fan-out uses TRANSFORMS (translateX leftwards, away from the button),
+never margins, so the button doesn't shift when the heads spread. The
+button is the only link.
 
 ### Cards <-> list view toggle
 
