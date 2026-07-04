@@ -119,7 +119,7 @@ body.film-playing .progress-rail{
 }
 .site-header .logo img{
   display:block;
-  height:34px; /* bumped from 26px once the logo stopped being sticky (header only; the footer logo is untouched) */
+  height:28px; /* nudged down from 34px -- read as too large in the header (footer logo, 22px, is untouched) */
   width:auto;
 }
 /* two variants stacked in place; only one is visible at a time depending on
