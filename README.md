@@ -1427,9 +1427,10 @@ and run `npx decap-server` next to the static server.
   nav dropdown ("About Contributing") — build it next or the link 404s.
 - /team/ is entirely placeholder cards ("Team Member · placeholder") —
   swap in real people (teamPage() in the build script).
-- The two sc-ai-policy events (content/sc-events/) are placeholders with
-  "[placeholder, date TBC]" strings — replace with real Bengaluru/online
-  event details.
+- The two sc-ai-policy events (content/sc-events/) carry REALISTIC DUMMY
+  details (8 and 11 July 2026, BIC Domlur venue) — confirm or correct real
+  dates/venues before promoting the page. The "Email the AI Committee"
+  suggestion card was removed from the participate grid on request.
 - All 5 work items are sample content. The placeholder contributors
   (aditi-rao, rohan-mehta, varun-h) are `published:false` in
   content/contributors/ — jobs referencing them as posters render no
