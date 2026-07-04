@@ -219,7 +219,7 @@ body:has(.pin[data-beat="9"]) .site-header .logo-dark{ opacity:1; }
    re-enters from below (#navHome is homepage-only; other pages' house icon
    stays still) */
 #navHome svg{
-  animation:navArrowUp 1.7s ease-in-out infinite;
+  animation:navArrowUp 1s ease-in-out infinite;
 }
 @keyframes navArrowUp{
   0%  { transform:translateY(5px);  opacity:0; }
