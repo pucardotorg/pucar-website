@@ -1128,7 +1128,7 @@ js/script.js (near the end) spawns circular contributor mugshots into
   On start it SEEDS 4 bubbles mid-flight (anim.currentTime advanced to
   15-70% of the duration) so the parade is already crossing when the CTA
   appears, then spawns another every 1.3s. A MutationObserver on #pin's
-  data-beat drives start/stop; leaving beats 8-9 clears every bubble.
+  data-beat drives start/stop; leaving beats 7-9 clears every bubble.
 - Each bubble enters from the left TINY and grows to ~100px as it crosses
   (WAAPI: translateX -120px -> 105vw with scale .12 -> 1, linear, 9-17s);
   an inner .hi-bob adds the sine bob (randomised 2.1-3.7s), confined to
