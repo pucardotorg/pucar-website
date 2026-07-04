@@ -1117,13 +1117,14 @@ Arriving at the film beat (either scroll direction) locks scroll for 700ms
 explicit requests). Scoped by filmLockActive so releasing it can never
 clobber a walk-in's own lock; skipped under reduced motion.
 
-### Waving contributor heads (beats 8-9)
+### Waving contributor heads (beats 7-9)
 
 js/script.js (near the end) spawns circular contributor mugshots into
 #hiStream (markup in index.html inside .pin). Current behaviour, in full:
 
-- STARTS ON BEAT 8 (one beat early, explicit request: visitors were reaching
-  the CTA before the stream had begun) and keeps running through beat 9.
+- STARTS ON BEAT 7 ("All of this is possible because of collaborators like
+  you" -- the heads ARE the collaborators arriving with that line; started
+  at 9, moved to 8, then 7, all explicit requests) and runs through beat 9.
   On start it SEEDS 4 bubbles mid-flight (anim.currentTime advanced to
   15-70% of the duration) so the parade is already crossing when the CTA
   appears, then spawns another every 1.3s. A MutationObserver on #pin's

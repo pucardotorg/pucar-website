@@ -1221,9 +1221,10 @@
 
   function check() {
     var b = pin.getAttribute("data-beat");
-    // start a beat EARLY (8): by the time the visitor reaches the CTA the
-    // stream is already mid-screen instead of just beginning
-    if (b === "8" || b === "9") start(); else stop();
+    // start on beat 7 ("All of this is possible because of collaborators
+    // like you"): the heads ARE the collaborators, so they arrive with that
+    // line and keep streaming through the CTA
+    if (b === "7" || b === "8" || b === "9") start(); else stop();
   }
   new MutationObserver(check).observe(pin, { attributes: true, attributeFilter: ["data-beat"] });
   check();
