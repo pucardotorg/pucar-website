@@ -26,12 +26,22 @@ css/style.css          Everything visual: palette vars, story layout, litigant a
 js/script.js           Story engine: beat switching, count-up stats, is-walking and
                        is-idle classes driven by scroll.
 js/collaborate.js      Board enhancement: filters, closes-in labels, modal + pushState.
+js/contact.js          Get-in-touch modal + Netlify form AJAX + themed validation.
+js/perspectives.js     sc-ai-policy: perspective-card modal + live CIVIS respondent count.
+js/contributors-page.js  /contributors/ search + organisation filter.
+js/nav.js              GENERATED PAGES ONLY: nav glider + body.nav-dark flip over dark sections.
+js/view-toggle.js      Cards <-> list switch for all three card grids.
 scripts/build-jobs.js  THE build step (node scripts/build-jobs.js). Zero dependencies.
+scripts/import-pucar-contributors.js   one-off: 77 contributors scraped from pucar.org/about.
+scripts/mirror-contributor-photos.js   one-off: self-hosts contributor photos (run locally).
 content/jobs/          One JSON per work item  ← source of truth, edited via Decap or hand.
-content/contributors/  One JSON per contributor ← source of truth.
+content/contributors/  One JSON per contributor ← source of truth (77 real + 3 unpublished samples).
+content/sc-perspectives/ + content/sc-events/  sc-ai-policy page content.
 admin/                 Decap CMS: index.html (loads decap from unpkg) + config.yml.
 collaborate/           GENERATED: <slug>/index.html per work item + jobs.json index.
-contributors/          GENERATED: <slug>/index.html per contributor.
+contributors/          GENERATED: <slug>/index.html per contributor + index.html (filterable
+                       list) + photos.json (waving-heads data).
+about/ team/ sc-ai-policy/  GENERATED pages (aboutPage/teamPage/scPolicyPage in build script).
 sitemap.xml            GENERATED.
 assets/litigant-source.svg  Cleaned copy of the litigant illustration (same as inline).
 netlify.toml           publish=".", command="node scripts/build-jobs.js", security headers.
@@ -1100,22 +1110,46 @@ trailing arrows stripped, hrefs, numbering), so the board is the single
 source of truth; static markup mirrors the two current items as a
 no-JS/SEO fallback. The old static "our initiatives" cards are gone.
 
-### Beat 9: waving contributor heads
+### Film arrival scroll hold
 
-While the pin sits on beat 9 (the CTA), js/script.js (last IIFE) spawns
-circular contributor mugshots into #hiStream (markup in index.html inside
-.pin). Each bubble enters from the left TINY and grows to 100px as it
-crosses (WAAPI keyframes translateX -120px -> 105vw with scale .12 -> 1,
-linear, 9-17s), an inner .hi-bob adds the sine bob, and a looping wave
-keyframe animates a 👋 pinned to the bubble's leading edge (it scales with
-the bubble since the scale lives on the parent transform). Bubbles are
-confined to top:66-86% (lower third), spawn every 1.3s, and self-remove on
-finish. Photos come from contributors/photos.json (emitted by the build
-script from published contributors with photos). A MutationObserver on
-#pin's data-beat starts/stops the stream and clears bubbles on exit; skipped
-under reduced motion, no spawns while document.hidden. Layer z-index 4:
-over film curtains (3), under stages (5) and beat text (6).
-Decorative only -- pointer-events:none, aria-hidden.
+Arriving at the film beat (either scroll direction) locks scroll for 700ms
+(js/script.js, filmHoldTimer -- history: 2000ms -> 1000ms -> 700ms, all
+explicit requests). Scoped by filmLockActive so releasing it can never
+clobber a walk-in's own lock; skipped under reduced motion.
+
+### Waving contributor heads (beats 8-9)
+
+js/script.js (near the end) spawns circular contributor mugshots into
+#hiStream (markup in index.html inside .pin). Current behaviour, in full:
+
+- STARTS ON BEAT 8 (one beat early, explicit request: visitors were reaching
+  the CTA before the stream had begun) and keeps running through beat 9.
+  On start it SEEDS 4 bubbles mid-flight (anim.currentTime advanced to
+  15-70% of the duration) so the parade is already crossing when the CTA
+  appears, then spawns another every 1.3s. A MutationObserver on #pin's
+  data-beat drives start/stop; leaving beats 8-9 clears every bubble.
+- Each bubble enters from the left TINY and grows to ~100px as it crosses
+  (WAAPI: translateX -120px -> 105vw with scale .12 -> 1, linear, 9-17s);
+  an inner .hi-bob adds the sine bob (randomised 2.1-3.7s), confined to
+  top:66-86% (lower third of the section). Self-removes on finish.
+- The 👋 sits to the LEFT of the head (the emoji's palm angle reads as a
+  hand reaching out of the photo) and waves CONTINUOUSLY (hiWave: smooth
+  -8deg..26deg swing, .9s, no rest phase -- the earlier version shook then
+  paused, explicitly rejected). It scales with the head because the scale
+  lives on the parent transform.
+- Hover: paper tooltip (.hi-tip, name + organisation, arrow ::after) and
+  the bubble slows to playbackRate .25 WITHOUT stopping; mouseleave
+  restores 1. Bubbles are pointer-events:auto but not clickable (no link,
+  default cursor).
+- GOTCHA that broke tooltips once: .beats spans the whole pin at z-index 6
+  and swallowed hover meant for the heads at z 4. .beats is now
+  pointer-events:none; .beat stays none and .beat.is-active restores auto,
+  so the active beat's buttons/links still work. Don't undo this.
+- Data: contributors/photos.json, emitted by the build script as
+  [{src,name,org}] from published contributors with photos (script.js also
+  tolerates the older plain-string arrays).
+- Skipped under prefers-reduced-motion; no spawns while document.hidden.
+  Layer z-index 4: over film curtains (3), under stages (5) and text (6).
 
 ### /sc-ai-policy/: CIVIS callout + live count
 
@@ -1129,14 +1163,25 @@ API serves CORS to any origin) and fills #civisCount under the button
 ("N people have already responded on CIVIS", green dot ::before). Fails
 silently; count line stays hidden if the API is down.
 
-### Waving heads: tooltip + wave orientation
+### Editorial "prose" treatment
 
-The 👋 sits to the LEFT of each head (the emoji's palm angle reads as a hand
-reaching out of the photo). Hovering a head shows a paper tooltip
-(.hi-tip: name + organisation, data from photos.json which now carries
-{src,name,org}) and slows that bubble to playbackRate 0.25 without stopping;
-leaving restores full speed. Bubbles have pointer-events:auto for the hover
-but remain non-clickable (no link, default cursor).
+.job-body.prose (About page + sc-ai-policy intro, class added in the build
+script) = drop cap on the opening paragraph (Fraunces, forest), a larger
+lede first paragraph, looser rhythm, and display-serif h2s with a short
+green rule. Pages containing .prose widen via
+`.job-main:has(.job-body.prose){max-width:880px}` (base .job-main is 720px).
+The policy intro deliberately has NO bold spans (user: "I don't like the
+random bolding"); the About page keeps its bold lead-ins on the How-we-work
+points. Short bios/job pages are untouched (opt-in class).
+
+### Participate event cards (sc-ai-policy)
+
+eventCard() renders each event as ONE BIG LINK (<a class="event-card">):
+white panel, forest city pill + uppercase date-time on the topline,
+display-serif title, divider, and a bold forest "Register interest ->" text
+CTA. Hover: 5px lift, deeper shadow, darker border, a green radial bloom
+(::before) fading in, and the arrow sliding right. The old dark-header-bar
+card design was explicitly rejected ("doesn't feel clickable").
 
 ### Cards <-> list view toggle
 
@@ -1375,19 +1420,30 @@ and run `npx decap-server` next to the static server.
   no commits for weeks won't drop expired cards server-side — the client
   hides them anyway; a scheduled/manual redeploy also refreshes it.
 
-## 8. Known placeholders / TODO before launch
+## 8. Known placeholders / TODO before launch (updated July 2026)
 
-- All story stats (5.5 Cr pending, 10+ yr, 75% undertrials) are
-  approximations marked `[placeholder — verify]` — check NJDG / Prison
-  Statistics India and cite.
-- Beat-2 narrative is a stand-in; initiative cards (beat 6) and CTA buttons
-  (beat 7) link to `#`.
-- All 5 work items and contributors "Aditi Rao" and "Rohan Mehta" are sample
-  content marked `[placeholder]`; "Varun H" bio is placeholder. Add real
-  photos via Decap (media goes to `assets/uploads/`).
+- /about-contributing/ DOES NOT EXIST yet but is linked from the Collaborate
+  nav dropdown ("About Contributing") — build it next or the link 404s.
+- /team/ is entirely placeholder cards ("Team Member · placeholder") —
+  swap in real people (teamPage() in the build script).
+- The two sc-ai-policy events (content/sc-events/) are placeholders with
+  "[placeholder, date TBC]" strings — replace with real Bengaluru/online
+  event details.
+- All 5 work items are sample content. The placeholder contributors
+  (aditi-rao, rohan-mehta, varun-h) are `published:false` in
+  content/contributors/ — jobs referencing them as posters render no
+  "Posted by" block until real slugs are set.
+- Three contributor LinkedIn URLs 404'd during the bio pass
+  (aishwariya-dixit, madhav-pudipeddi, shreyashi-soni): short org-only bios,
+  fill in when new profile URLs are known.
+- Story stats are approximations — verify against NJDG / Prison Statistics
+  India before launch.
 - Decap OAuth setup (section 6.6) not yet done.
 - Sample job dates are relative to July 2026; re-check expiry behaviour when
   updating.
+- PUSH WORKFLOW: the sandbox agents work in cannot push (no GitHub
+  credentials). Every change session ends with a commented `git push`
+  command for the user to run — keep doing that.
 
 ## 9. Conventions for future changes
 
