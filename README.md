@@ -1427,7 +1427,13 @@ YouTube playlist in July 2026.
   locally (downloads framer blog thumbs + i.ytimg video thumbs; sandbox
   cannot reach either CDN). Until then the cards show broken images.
 - js/resources.js holds the page behaviour (pill filter, tabs, video modal,
-  leave-site modal, and the ONE-LINE TAG CLAMP: every .res-section
+  leave-site modal). BOTH filters (blog topic pills + data tabs) animate
+  with the same FLIP recipe as collaborate.js's animateFilter: exiting
+  cards pin absolute at their old spot and fade/shrink out (.card-exit --
+  works because every resource card is also a .collab-card and every grid
+  a position:relative .collab-grid), survivors slide to their new slot,
+  entrants fade/scale in; prefers-reduced-motion falls back to instant.
+  Also the ONE-LINE TAG CLAMP: every .res-section
   .collab-chips is clamped to a single line, overflow chips collapse behind
   a green "+N" chip that reveals the full set on hover and re-clamps on
   resize -- same offsetTop technique as collaborate.js clampChips).
