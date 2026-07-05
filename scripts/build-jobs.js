@@ -737,10 +737,16 @@ function teamPage() {
 '    <p class="collab-sub">The full-time crew behind DRISTI, the ON Courts, and everything in between. The far wider circle they work with lives on the contributors page.</p>\n' +
 "  </div>\n" +
 '  <div class="team-grid" id="teamGrid">\n' + cards + "\n  </div>\n" +
-'  <div class="cta-row" style="justify-content:center; margin-top:34px;">\n' +
-'    <a class="btn btn-primary" href="/contributors/">Meet the contributors</a>\n' +
-"  </div>\n" +
 "</section>\n" +
+/* contributors bridge: same stylised strip as the homepage/about (heads
+   filled by js/team.js from /contributors/photos.json, waves on hover) */
+'<div class="collab-strip team-strip" id="collabStrip">\n' +
+'  <span class="strip-text">The anchor team leads the mission day to day, but none of it would be possible without <strong>100+ contributors</strong> across the ecosystem</span>\n' +
+'  <span class="strip-group">\n' +
+'    <span class="strip-stack" id="stripStack" aria-hidden="true"></span>\n' +
+'    <a class="strip-btn" href="/contributors/">Meet the contributors<span class="strip-arrow" aria-hidden="true">&rarr;</span></a>\n' +
+"  </span>\n" +
+"</div>\n" +
 '<div class="job-modal" id="teamModal" hidden>\n' +
 '  <div class="job-modal-backdrop" data-close></div>\n' +
 '  <div class="job-modal-panel" role="dialog" aria-modal="true" aria-labelledby="tmName">\n' +

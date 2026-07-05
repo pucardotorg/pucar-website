@@ -71,3 +71,35 @@
     if (e.key === "Escape" && !modal.hidden) closeModal();
   });
 })();
+
+/* ---- contributors strip under the team grid: same head-stack fill as the
+   homepage's (js/script.js is homepage-only, so the logic lives here too) ---- */
+(function () {
+  "use strict";
+  var stack = document.getElementById("stripStack");
+  if (!stack || !window.fetch) return;
+  fetch("/contributors/photos.json")
+    .then(function (r) { return r.json(); })
+    .then(function (photos) {
+      if (!photos || !photos.length) return;
+      var pool = photos.slice();
+      var n = Math.min(7, pool.length);
+      for (var i = 0; i < n; i++) {
+        var pick = pool.splice((Math.random() * pool.length) | 0, 1)[0];
+        var head = document.createElement("span");
+        head.className = "strip-head";
+        var img = document.createElement("img");
+        img.src = pick.src || pick;
+        img.alt = "";
+        img.loading = "lazy";
+        var wave = document.createElement("span");
+        wave.className = "strip-wave";
+        wave.textContent = "👋";
+        wave.style.animationDelay = (i * 0.12) + "s";
+        head.appendChild(img);
+        head.appendChild(wave);
+        stack.appendChild(head);
+      }
+    })
+    .catch(function () { /* strip text still works without heads */ });
+})();

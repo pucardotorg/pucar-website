@@ -1620,7 +1620,14 @@ Layout is modelled on opennyai.org/about's team wall, PUCAR-skinned:
 modal") -- the modal carries the LinkedIn/Website buttons instead.
 @media (hover:none) shows colour + names permanently. Clicking a card
 opens the shared job-modal with the bio (js/team.js; data inlined in a
-#teamData JSON script tag at build time -- no fetch).
+#teamData JSON script tag at build time -- no fetch). Below the grid sits
+the same .collab-strip contributors bridge as the homepage/about (heads
+filled by js/team.js from /contributors/photos.json, hover waves): "The
+anchor team leads the mission day to day, but none of it would be
+possible without 100+ contributors across the ecosystem" + Meet the
+contributors CTA. Designation notes (explicit, Jul 2026): Ayushi is
+"Curator" (NOT Co-lead), Atul is "Tech Consultant" (NOT CTO) -- team.json
+and his contributor entry both say so.
 varun-h's contributor entry was also upgraded from placeholder to real
 (published:true, so contributor pages count went 77 -> 78).
 
