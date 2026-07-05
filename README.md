@@ -1597,6 +1597,10 @@ width, toggle classes, measure new, animate between. overflow:hidden is set
 only DURING the animation (permanently it would clip the main nav's
 absolute dropdown menus); freshly expanded items fade in via the
 navItemsIn keyframe with a 160ms delay, i.e. AFTER the width FLIP lands
+(the GLIDER is excluded from that selector -- :not(.nav-glider): the
+animation's backwards fill forced opacity:0 over the glider's inline
+opacity whenever it restarted, which read as "hover pill vanishes on
+click, lit text unreadable" on sub-nav pages)
 (flex-wrap:nowrap/white-space:nowrap on .nav-cluster .site-nav stop the
 labels wrapping mid-animation, which used to balloon the pill's height).
 While the FLIP runs the cluster carries .is-swapping, which kills

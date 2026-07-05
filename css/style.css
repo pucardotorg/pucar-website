@@ -220,8 +220,12 @@ body.job-page .site-header > .nav-cluster{
 .site-nav.is-collapsed > *:not(.nav-toggle){ display:none !important; }
 .site-nav.is-collapsed > .nav-toggle{ display:inline-flex; }
 /* items stay INVISIBLE until the width FLIP has finished, then fade in --
-   no text painting mid-animation (delay ~= the 160ms FLIP duration) */
-.site-nav:not(.is-collapsed) > *:not(.nav-toggle){
+   no text painting mid-animation (delay ~= the 160ms FLIP duration).
+   NOT the glider: it's a direct child too, and this animation's backwards
+   fill (opacity:0) OVERRIDES the glider's inline opacity whenever the
+   animation restarts -- that was the "hover pill disappears, lit text
+   unreadable" bug on sub-nav clicks. Its opacity is JS-driven only. */
+.site-nav:not(.is-collapsed) > *:not(.nav-toggle):not(.nav-glider){
   animation:navItemsIn .14s ease .16s backwards;
 }
 @keyframes navItemsIn{
