@@ -857,6 +857,188 @@ function teamPage() {
     "</body>\n</html>\n";
 }
 
+
+function dristiPage() {
+  /* /dristi/ (July 2026). Sources: AGAMI_CONTEXT.md + ARCHITECTURE.md (2.0)
+     + oncourts.kerala.gov.in (about + public Metabase dashboard, numbers
+     read 5 July 2026) + egov.org.in/product/dristi-by-pucar +
+     github.com/pucardotorg/dristi. Copy conventions: no em dashes.
+     Layout: intro (what DRISTI is) -> five levers -> 1.0 vs 2.0 -> WHERE
+     IT RUNS: state tabs (Kerala live; Punjab/Haryana/Gujarat greyed
+     "coming soon"), district sub-tabs under each state (Kollam live).
+     The Kerala panel carries the live-dashboard stats, the 600->140
+     journey, the district RACE chart (user-supplied Kaplan-Meier data,
+     re-themed from the uploaded oncourts_overtake.html), and voices. */
+
+  const LEVERS = [
+    { t: "Integrated", b: "The court is digitally connected to police, post and treasury. Summons, fees and processes move between institutions in real time, with tracking." },
+    { t: "Asynchronous", b: "Key case actions happen without everyone standing in the same room at the same time. Cognizance, submissions and many hearings proceed on their own clock." },
+    { t: "Proactive", b: "The court reaches out first: SMS alerts tell litigants where their case stands and what to do next, instead of leaving them to chase updates." },
+    { t: "Assisted", b: "Rule-based guidance helps lawyers file complete cases in about 30 minutes, helps staff scrutinise them, and helps judges act on structured information." },
+    { t: "Data driven", b: "A live public dashboard shows how the court is performing, stage by stage, so processes and policies evolve on evidence rather than anecdote." }
+  ];
+  const leversHtml = LEVERS.map(function (l, i) {
+    return '    <div class="about-step">\n' +
+      '      <span class="about-step-num">0' + (i + 1) + '</span>\n' +
+      "      <h3>" + esc(l.t) + "</h3>\n" +
+      "      <p>" + esc(l.b) + "</p>\n" +
+      "    </div>";
+  }).join("\n");
+
+  const JOURNEY = [
+    ["Filing to registration", "10 days", "Same day"],
+    ["Registration to cognizance", "150 days", "7 days"],
+    ["Summons and bail", "300 days", "52 days"],
+    ["Between hearings", "60 days", "14 days"],
+    ["Filing to disposal", "~600 days", "~140 days"]
+  ];
+  const journeyHtml = JOURNEY.map(function (r, i) {
+    var last = i === JOURNEY.length - 1;
+    return '    <div class="dristi-journey-row' + (last ? " is-total" : "") + '">' +
+      '<span class="dj-stage">' + esc(r[0]) + "</span>" +
+      '<span class="dj-old">' + esc(r[1]) + "</span>" +
+      '<span class="dj-arrow" aria-hidden="true">&rarr;</span>' +
+      '<span class="dj-new">' + esc(r[2]) + "</span></div>";
+  }).join("\n");
+
+  const KSTATS = [
+    ["1,920", "Cases filed"],
+    ["402", "Cases disposed"],
+    ["851", "Advocates on the platform"],
+    ["1,757", "Litigants using it"],
+    ["~5 months", "Average disposal (was ~2 years)"],
+    ["98%", "Hearings held as scheduled"]
+  ];
+  const kstatsHtml = KSTATS.map(function (s) {
+    return '      <div class="dristi-stat"><span class="dristi-stat-num">' + esc(s[0]) + '</span><span class="dristi-stat-label">' + esc(s[1]) + "</span></div>";
+  }).join("\n");
+
+  const main =
+'  <p class="beat-eyebrow">DRISTI</p>\n' +
+'  <h1 class="job-title">The operating system for people-centric courts.</h1>\n' +
+'  <article class="job-body prose no-cap" id="what">\n' +
+"    <p>DRISTI, the Dispute Resolution Intelligent System for Transformation, is the open-source platform that powers PUCAR\u2019s 24x7 Open and Networked Courts. It is not a digitisation of paper processes: it redesigns the court journey end to end, so that filing, scrutiny, summons, bail, hearings and orders all work the way you would build them today, natively digital, rule-based, and connected to the institutions around the court.</p>\n" +
+"    <p>Built in the open as a Digital Public Good, DRISTI is PUCAR\u2019s contribution to Phase III of India\u2019s eCourts project, which calls for exactly this: open, interoperable infrastructure, shared data standards, and reimagined processes. A litigant should be proactively informed, a lawyer should file in minutes from anywhere, a judge should act on structured information, and none of them should run pillar to post.</p>\n" +
+"  </article>\n" +
+'  <div class="about-stats">\n' +
+'    <div class="about-stat"><span class="about-stat-num">10%</span><span class="about-stat-label">of India\u2019s criminal pendency is cheque dishonour, the first case type</span></div>\n' +
+'    <div class="about-stat"><span class="about-stat-num">600 \u2192 140</span><span class="about-stat-label">days, filing to disposal, in the redesigned journey</span></div>\n' +
+'    <div class="about-stat"><span class="about-stat-num">24x7</span><span class="about-stat-label">the court accepts filings and requests around the clock</span></div>\n' +
+"  </div>\n" +
+'  <div class="job-body prose about-steps-head"><h2>Five levers of transformation</h2></div>\n' +
+'  <div class="about-steps dristi-steps">\n' + leversHtml + "\n  </div>\n" +
+"</main>\n" +
+
+'<section class="collaborate dristi-versions" id="versions">\n' +
+'  <div class="collab-head">\n' +
+'    <p class="beat-eyebrow">The platform</p>\n' +
+'    <h2 class="collab-title-main">From 1.0 to 2.0.</h2>\n' +
+'    <p class="collab-sub">The first generation proved the model in a real court. The second generation is being rebuilt around what that court taught us.</p>\n' +
+"  </div>\n" +
+'  <div class="collab-grid dristi-version-grid">\n' +
+'    <article class="collab-card version-card">\n' +
+'      <div class="collab-topline"><span class="res-type">DRISTI 1.0 \u00b7 Live in Kollam</span></div>\n' +
+'      <span class="collab-title">The proven foundation.</span>\n' +
+'      <span class="collab-summary">Built as a Digital Public Good on the DIGIT platform, 1.0 is a rules-based system: modular services, shared registries and data standards, and workflows separated from data so new case types can be added without redesigning the core. It runs the live 24x7 ON Court today, integrated with police, post, treasury and SMS.</span>\n' +
+'      <ul class="collab-chips"><li>Rules-based</li><li>Built on DIGIT</li><li>Open source</li><li>Registries and standards</li></ul>\n' +
+'      <div class="collab-foot"><a class="collab-btn" href="https://github.com/pucardotorg/dristi" target="_blank" rel="noopener">See the code</a></div>\n' +
+"    </article>\n" +
+'    <article class="collab-card version-card">\n' +
+'      <div class="collab-topline"><span class="res-type res-circle-type">DRISTI 2.0 \u00b7 In build</span></div>\n' +
+'      <span class="collab-title">The AI-native rebuild.</span>\n' +
+'      <span class="collab-summary">2.0 starts from the lessons of running a real court: AI-native rather than rules-bolted-on, more standards-compliant, and radically lighter, a single deployable that runs on the court\u2019s own infrastructure. Above all it is bespoke: shaped to the needs and context of each specific court, with roles and processes courts can configure themselves.</span>\n' +
+'      <ul class="collab-chips"><li>AI-native</li><li>Standards-compliant</li><li>Lightweight</li><li>Bespoke per court</li><li>Self-configurable</li></ul>\n' +
+'      <div class="collab-foot"><a class="collab-btn" href="/#collaborate">Help build it</a></div>\n' +
+"    </article>\n" +
+"  </div>\n" +
+"</section>\n" +
+
+'<section class="collaborate dristi-deploy" id="deployments">\n' +
+'  <div class="collab-head">\n' +
+'    <p class="beat-eyebrow">Where it runs</p>\n' +
+'    <h2 class="collab-title-main">One court live. More on the way.</h2>\n' +
+'    <p class="collab-sub">ON Courts in Kollam is the first running instance of DRISTI. Work with new High Courts is underway; each state lights up here as it goes live.</p>\n' +
+"  </div>\n" +
+'  <div class="res-tabbar state-tabbar" role="tablist" aria-label="States">\n' +
+'    <button type="button" class="res-tab is-active" data-state="kerala">Kerala</button>\n' +
+'    <button type="button" class="res-tab tab-soon" disabled>Punjab<span class="soon-chip">Coming soon</span></button>\n' +
+'    <button type="button" class="res-tab tab-soon" disabled>Haryana<span class="soon-chip">Coming soon</span></button>\n' +
+'    <button type="button" class="res-tab tab-soon" disabled>Gujarat<span class="soon-chip">Coming soon</span></button>\n' +
+"  </div>\n" +
+'  <div class="res-tagbar district-tagbar" aria-label="Districts">\n' +
+'    <button type="button" class="res-tab is-active" data-district="kollam">Kollam</button>\n' +
+'    <button type="button" class="res-tab tab-soon" disabled>More districts<span class="soon-chip">Coming soon</span></button>\n' +
+"  </div>\n" +
+
+'  <div class="dristi-panel" id="panelKollam">\n' +
+'    <div class="dristi-panel-head">\n' +
+'      <h3 class="dristi-panel-title">24x7 ON Court, Kollam</h3>\n' +
+'      <p class="dristi-panel-sub">Live since 20 November 2024 under the High Court of Kerala. It accepts cheque dishonour cases under Section 138 of the Negotiable Instruments Act arising from nine police stations in Kollam district, and it never closes: a court that goes to people, instead of people going to courts.</p>\n' +
+"    </div>\n" +
+'    <div class="dristi-stat-grid">\n' + kstatsHtml + "\n    </div>\n" +
+'    <p class="dristi-source">Figures from the <a href="https://oncourts.kerala.gov.in/dashboard" target="_blank" rel="noopener">public ON Courts dashboard</a>, July 2026. 80% of disposed cases end in withdrawal: parties settle directly once the process is credible and predictable.</p>\n' +
+
+'    <div class="dristi-journey">\n' +
+'      <div class="dristi-journey-head"><h4>The journey, before and after</h4><p>Median stage times for cheque dishonour cases, conventional process versus the ON Court redesign.</p></div>\n' +
+journeyHtml + "\n" +
+"    </div>\n" +
+
+/* ---- the race (user-supplied Kaplan-Meier data, PUCAR-themed) ---- */
+'    <div class="race" id="race">\n' +
+'      <div class="race-head">\n' +
+'        <div>\n' +
+'          <h4 class="race-title">The race: fifteen districts, one year</h4>\n' +
+'          <p class="race-sub">Share of January 2025 cheque dishonour filings resolved, day by day, across every Kerala district. The ON Court starts near the back of the pack and finishes first.</p>\n' +
+"        </div>\n" +
+'        <button class="race-btn" id="raceBtn" type="button">\u25b6 Play the race</button>\n' +
+"      </div>\n" +
+'      <div class="race-stats">\n' +
+'        <div class="race-stat is-hero"><span class="race-stat-num">#8 \u2192 #1</span><span class="race-stat-label">ON Court rank over one year</span></div>\n' +
+'        <div class="race-stat"><span class="race-stat-num">39% vs 11%</span><span class="race-stat-label">resolved at one year, ON Court vs Kerala average</span></div>\n' +
+'        <div class="race-stat"><span class="race-stat-num">~Day 359</span><span class="race-stat-label">the ON Court overtakes the last district ahead of it</span></div>\n' +
+"      </div>\n" +
+'      <div class="race-rank"><span class="race-rank-label">ON Court rank</span><span class="race-rank-num" id="raceRank">#8</span><span class="race-rank-pips" id="racePips"></span><span class="race-rank-day" id="raceDay">Day 0</span></div>\n' +
+'      <div class="race-legend">\n' +
+'        <span class="race-leg"><i style="background:#30CF8C;height:4px"></i>ON Court, Kollam</span>\n' +
+'        <span class="race-leg"><i style="background:#DA6EAA;height:3px"></i>Malappuram (closest rival)</span>\n' +
+'        <span class="race-leg"><i style="background:#F0A28A;height:2px"></i>Kerala combined</span>\n' +
+'        <span class="race-leg"><i style="background:rgba(251,248,242,.3);height:2px"></i>Other districts</span>\n' +
+"      </div>\n" +
+'      <div id="raceChart" aria-label="Resolution race chart"></div>\n' +
+'      <div class="race-flash" id="raceFlash" aria-hidden="true"><span class="race-flash-tag">Final overtake</span><span class="race-flash-head">ON Court reaches #1</span><span class="race-flash-sub">Around day 359</span></div>\n' +
+'      <p class="race-note">Kaplan-Meier estimates, January 2025 filing cohort, tracked through day 417. "Rest of Kollam" is the district excluding the ON Court.</p>\n' +
+"    </div>\n" +
+
+'    <div class="dristi-voices">\n' +
+'      <blockquote class="dristi-voice"><p>\u201cIn my experience, the court is completely paperless and filing is very easy. Now it only takes me 10 to 20 minutes to file a case.\u201d</p><cite>Asha G.V, Advocate, first filer at the ON Court</cite></blockquote>\n' +
+'      <blockquote class="dristi-voice"><p>\u201cThe launch is just the beginning of the journey. Progress is not a destination, it is an ongoing journey of knowledge, debate, community and continuous refinement.\u201d</p><cite>Justice Raja Vijayaraghavan, Computer Committee, High Court of Kerala</cite></blockquote>\n' +
+"    </div>\n" +
+'    <div class="cta-row dristi-links">\n' +
+'      <a class="btn btn-primary" href="https://oncourts.kerala.gov.in/" target="_blank" rel="noopener">Visit ON Courts</a>\n' +
+'      <a class="btn btn-ghost" href="https://oncourts.kerala.gov.in/dashboard" target="_blank" rel="noopener">Live dashboard</a>\n' +
+'      <a class="btn btn-ghost" href="https://pucar.gitbook.io/dristi" target="_blank" rel="noopener">Documentation</a>\n' +
+"    </div>\n" +
+"  </div>\n" +
+"</section>\n" +
+'<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" defer></script>\n' +
+'<script src="/js/dristi.js" defer></script>\n<main hidden>';
+
+  return pageShell({
+    title: "DRISTI | PUCAR",
+    desc: "DRISTI is the open-source platform behind PUCAR's 24x7 ON Courts: a people-centric redesign of the court journey, live in Kollam and headed to more states.",
+    url: "/dristi/",
+    jsonLd: { "@context": "https://schema.org", "@type": "SoftwareApplication", name: "DRISTI",
+      applicationCategory: "GovernmentApplication",
+      description: "Open-source dispute resolution platform powering India's 24x7 Open and Networked Courts" },
+    backHref: "/", backLabel: "\u2190 Home", main: main,
+    subnav: [
+      { label: "What it is", href: "#what" },
+      { label: "1.0 \u2192 2.0", href: "#versions" },
+      { label: "Where it runs", href: "#deployments" }
+    ]
+  });
+}
+
 /* ---------------- homepage cards ---------------- */
 
 function card(job) {
@@ -1045,6 +1227,8 @@ fs.mkdirSync(path.join(ROOT, "team"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, "team", "index.html"), teamPage());
 fs.mkdirSync(path.join(ROOT, "resources"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, "resources", "index.html"), resourcesPage());
+fs.mkdirSync(path.join(ROOT, "dristi"), { recursive: true });
+fs.writeFileSync(path.join(ROOT, "dristi", "index.html"), dristiPage());
 
 fs.writeFileSync(path.join(ROOT, "collaborate", "jobs.json"), JSON.stringify(jobs.map(function (j) {
   return {
@@ -1075,7 +1259,7 @@ html = html.slice(0, s + START.length) + "\n" +
 fs.writeFileSync(indexPath, html);
 
 /* sitemap */
-const urls = [SITE + "/", SITE + "/sc-ai-policy/", SITE + "/contributors/", SITE + "/about/", SITE + "/resources/"]
+const urls = [SITE + "/", SITE + "/sc-ai-policy/", SITE + "/contributors/", SITE + "/about/", SITE + "/dristi/", SITE + "/resources/"]
   .concat(jobs.map(function (j) { return SITE + j.url; }))
   .concat(contributors.map(function (c) { return SITE + c.url; }));
 fs.writeFileSync(path.join(ROOT, "sitemap.xml"),

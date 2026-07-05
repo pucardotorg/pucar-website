@@ -1716,6 +1716,39 @@ collaborative mission anchored by Agami, the tradename of Vayam Forum for
 Citizenship, a registered Section 8 non-profit advancing innovation in law
 and justice" (wording sourced from agami.in's own footer).
 
+### /dristi/ page (July 2026)
+
+dristiPage() in the build script. Sources: the user-uploaded
+AGAMI_CONTEXT.md + ARCHITECTURE.md (2.0), oncourts.kerala.gov.in (about
+page + the public Metabase dashboard behind /dashboard -- iframe at
+/pucar-dashboard/public/dashboard/<uuid>; numbers read 5 Jul 2026:
+1,920 filed / 402 disposed / 1,440 pending / 851 advocates / 1,757
+litigants / 80% of disposals withdrawn), egov.org.in/product/
+dristi-by-pucar (name expansion, personas, testimonials, gitbook docs
+link), github.com/pucardotorg/dristi (DIGIT, design principles; repo
+dormant since Mar 2025). Structure: intro + about-stats strip -> five
+levers (about-steps) -> dark band "From 1.0 to 2.0" (two collab-cards:
+1.0 rules-based DPG on DIGIT, live in Kollam; 2.0 AI-native,
+standards-compliant, lightweight, bespoke per court, per the user's
+explicit framing) -> "Where it runs" (#deployments): STATE TABS via
+.res-tabbar (Kerala active; Punjab / Haryana / Gujarat greyed .tab-soon
+with a Coming-soon chip, disabled buttons) + DISTRICT sub-tab row
+(Kollam active, "More districts" greyed) -> Kerala panel: live stat
+grid + source line, the 600->140 before/after journey rows
+(.dristi-journey), THE RACE, two voices (Asha G.V; Justice Raja
+Vijayaraghavan), CTA links (ON Courts site / dashboard / gitbook).
+
+THE RACE (.race, js/dristi.js): the user-supplied Kaplan-Meier
+"oncourts_overtake.html" (Jan 2025 cohort, all 15 Kerala districts,
+day 417) re-themed to the site palette: ON Court line --green #30CF8C,
+Malappuram rival --pink #DA6EAA, Kerala combined #F0A28A, dim paper
+for the rest; Fraunces numbers, Source Sans axes. Plotly 2.35 from CDN
+on THIS PAGE ONLY (deferred; js/dristi.js polls for window.Plotly ~10s
+and degrades to static copy if the CDN fails). Play button animates a
+5s eased race with a rank-pip strip and a green overtake flash at ~day
+359. Data lives inline in js/dristi.js. Page is in the sitemap; NOT
+yet linked from the nav (user said "I'll share more soon").
+
 ### Footer: single source of truth
 
 The footer's right side is a categorised sitemap (.footer-map: Explore /

@@ -4362,6 +4362,290 @@ button.circle-card{
   transform:translateX(130%);
   transition:transform .85s ease;
 }
+/* ---------------- /dristi/ page ----------------
+   Intro + five levers reuse the About page components (.about-stats,
+   .about-steps). Versions and deployments are dark .collaborate bands.
+   State tabs reuse .res-tabbar; disabled states are .tab-soon with a
+   "Coming soon" chip. The race is the user-supplied Kaplan-Meier
+   visualisation re-themed to the site palette (Plotly, this page only). */
+.res-tab.tab-soon{
+  opacity:.42;
+  cursor:not-allowed;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+.res-tab.tab-soon:hover{ color:inherit; border-color:transparent; background:inherit; }
+.soon-chip{
+  font-size:.6rem;
+  font-weight:800;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  padding:3px 8px;
+  border-radius:999px;
+  border:1px solid rgba(251,248,242,.3);
+  color:rgba(251,248,242,.7);
+}
+.district-tagbar{ margin:18px 0 26px; }
+.dristi-version-grid{ grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); }
+.version-card .collab-chips{ margin-top:auto; }
+.version-card .collab-foot{ margin-top:0; justify-content:flex-start; }
+
+.dristi-panel-title{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:clamp(1.5rem,3vw,2.1rem);
+  margin:0 0 10px;
+}
+.dristi-panel-sub{
+  max-width:64ch;
+  line-height:1.65;
+  color:rgba(251,248,242,.75);
+  margin:0 0 30px;
+}
+.dristi-stat-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
+  gap:14px;
+}
+.dristi-stat{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  padding:20px 20px 16px;
+  border-radius:18px;
+  background:rgba(251,248,242,.06);
+  border:1px solid rgba(251,248,242,.14);
+}
+.dristi-stat-num{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:clamp(1.6rem,3vw,2.2rem);
+  color:var(--green);
+  line-height:1;
+}
+.dristi-stat-label{
+  font-size:.8rem;
+  line-height:1.4;
+  color:rgba(251,248,242,.65);
+}
+.dristi-source{
+  margin:14px 0 0;
+  font-size:.85rem;
+  color:rgba(251,248,242,.55);
+  max-width:70ch;
+}
+.dristi-source a{ color:var(--green); }
+
+/* before/after journey rows */
+.dristi-journey{
+  margin:44px 0 0;
+  padding:26px clamp(20px,3vw,34px) 22px;
+  border-radius:22px;
+  background:rgba(251,248,242,.05);
+  border:1px solid rgba(251,248,242,.12);
+}
+.dristi-journey-head h4{
+  font-family:var(--font-display);
+  font-size:1.25rem;
+  font-weight:600;
+  margin:0 0 4px;
+}
+.dristi-journey-head p{
+  margin:0 0 18px;
+  font-size:.88rem;
+  color:rgba(251,248,242,.6);
+}
+.dristi-journey-row{
+  display:grid;
+  grid-template-columns:1fr auto 24px auto;
+  align-items:center;
+  gap:14px;
+  padding:11px 2px;
+  border-top:1px solid rgba(251,248,242,.09);
+  font-size:.95rem;
+}
+.dj-stage{ color:rgba(251,248,242,.85); }
+.dj-old{ color:rgba(251,248,242,.5); text-decoration:line-through; text-decoration-color:rgba(240,162,138,.7); }
+.dj-arrow{ color:rgba(251,248,242,.4); text-align:center; }
+.dj-new{ color:var(--green); font-weight:700; text-align:right; min-width:86px; }
+.dristi-journey-row.is-total{
+  border-top:2px solid rgba(251,248,242,.25);
+  font-weight:700;
+}
+.dristi-journey-row.is-total .dj-new{ font-size:1.15rem; }
+
+/* ---- the race ---- */
+.race{
+  position:relative;
+  margin:44px 0 0;
+  padding:30px clamp(20px,3vw,36px) 22px;
+  border-radius:22px;
+  background:rgba(251,248,242,.05);
+  border:1px solid rgba(251,248,242,.12);
+}
+.race-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+}
+.race-title{
+  font-family:var(--font-display);
+  font-size:clamp(1.25rem,2.4vw,1.6rem);
+  font-weight:600;
+  margin:0 0 6px;
+}
+.race-sub{
+  margin:0;
+  max-width:56ch;
+  font-size:.9rem;
+  line-height:1.55;
+  color:rgba(251,248,242,.65);
+}
+.race-btn{
+  flex:none;
+  padding:11px 22px;
+  border:0;
+  border-radius:999px;
+  background:var(--green);
+  color:var(--forest);
+  font:700 .85rem var(--font-body);
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease, opacity .2s ease;
+}
+.race-btn:hover{ transform:scale(1.04); box-shadow:0 0 18px rgba(48,207,140,.35); }
+.race-btn:disabled{ opacity:.55; cursor:default; transform:none; box-shadow:none; }
+.race-stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
+  gap:12px;
+  margin-bottom:18px;
+}
+.race-stat{
+  padding:16px 18px 13px;
+  border-radius:16px;
+  background:rgba(17,31,38,.45);
+  border:1px solid rgba(251,248,242,.12);
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+.race-stat.is-hero{ border-color:rgba(48,207,140,.4); }
+.race-stat-num{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:1.5rem;
+  line-height:1;
+}
+.race-stat.is-hero .race-stat-num{ color:var(--green); }
+.race-stat-label{
+  font-size:.74rem;
+  line-height:1.4;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  font-weight:600;
+  color:rgba(251,248,242,.55);
+}
+.race-rank{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  padding:11px 16px;
+  border-radius:12px;
+  background:rgba(10,21,26,.5);
+  border:1px solid rgba(251,248,242,.1);
+  margin-bottom:14px;
+  font-size:.85rem;
+}
+.race-rank-label{ color:rgba(251,248,242,.55); font-weight:600; }
+.race-rank-num{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:1.35rem;
+  color:var(--green);
+}
+.race-rank-pips{ flex:1; display:flex; gap:5px; min-width:180px; }
+.race-rank-pips i{
+  flex:1;
+  height:8px;
+  border-radius:4px;
+  background:rgba(251,248,242,.08);
+  transition:background .3s ease;
+}
+.race-rank-pips i.is-filled{ background:var(--green); }
+.race-rank-day{ color:rgba(251,248,242,.6); font-weight:700; }
+.race-legend{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px 16px;
+  margin-bottom:8px;
+  font-size:.78rem;
+  font-weight:600;
+  color:rgba(251,248,242,.75);
+}
+.race-leg{ display:inline-flex; align-items:center; gap:7px; }
+.race-leg i{ width:22px; border-radius:2px; display:inline-block; }
+#raceChart{ width:100%; height:440px; }
+.race-flash{
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%) scale(0);
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  text-align:center;
+  padding:20px 28px;
+  border-radius:18px;
+  background:var(--green);
+  color:var(--forest);
+  opacity:0;
+  pointer-events:none;
+  z-index:5;
+  transition:opacity .25s ease, transform .35s cubic-bezier(.34,1.56,.64,1);
+}
+.race-flash.show{ opacity:1; transform:translate(-50%,-50%) scale(1); }
+.race-flash-tag{ font-size:.62rem; font-weight:800; letter-spacing:.16em; text-transform:uppercase; opacity:.65; }
+.race-flash-head{ font-family:var(--font-display); font-weight:600; font-size:1.5rem; line-height:1.1; }
+.race-flash-sub{ font-size:.78rem; font-weight:600; opacity:.7; }
+.race-note{
+  margin:12px 0 0;
+  font-size:.78rem;
+  color:rgba(251,248,242,.45);
+}
+.dristi-voices{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+  gap:14px;
+  margin:44px 0 0;
+}
+.dristi-voice{
+  margin:0;
+  padding:22px 24px;
+  border-radius:18px;
+  background:rgba(251,248,242,.05);
+  border-left:3px solid var(--green);
+}
+.dristi-voice p{
+  margin:0 0 12px;
+  font-family:var(--font-display);
+  font-weight:500;
+  font-size:1.05rem;
+  line-height:1.5;
+  color:rgba(251,248,242,.9);
+}
+.dristi-voice cite{
+  font-style:normal;
+  font-size:.8rem;
+  color:rgba(251,248,242,.55);
+}
+.dristi-links{ margin-top:36px; }
+
 /* ---------------- /team/ page ----------------
    Portrait wall modelled on opennyai.org/about, re-skinned to PUCAR:
    cards sit on the dark .collaborate band, photos are grayscale until
