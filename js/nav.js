@@ -143,6 +143,21 @@
     n.addEventListener("focusout", function (e) {
       if (!n.contains(e.relatedTarget)) clear();
     });
+    // class flips (the sub-nav's show-home arrow reveal, the main<->page
+    // menu swap) slide the links sideways under a glider parked at stale
+    // pixel coordinates -- lit link turns into bare white text. Ride the
+    // glider along for the transition's duration.
+    if (window.MutationObserver) {
+      var rideT = null;
+      new MutationObserver(function () {
+        var t0 = performance.now();
+        cancelAnimationFrame(rideT);
+        (function ride() {
+          if (lit) move(lit);
+          if (performance.now() - t0 < 600) rideT = requestAnimationFrame(ride);
+        })();
+      }).observe(n, { attributes: true, attributeFilter: ["class"] });
+    }
   });
 
   /* ---- same sliding pill inside each dropdown menu ---- */

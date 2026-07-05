@@ -1083,6 +1083,22 @@
     if (!nav.contains(e.relatedTarget)) clear();
   });
 
+  // the up-arrow reveal (show-home, toggled on scroll) slides every link
+  // sideways while the glider sits at stale pixel coordinates -- the lit
+  // link ends up white text with no pill under it. Watch the nav's class
+  // and ride the glider along for the ~450ms slot transition.
+  if (window.MutationObserver) {
+    var rideT = null;
+    new MutationObserver(function () {
+      var t0 = performance.now();
+      cancelAnimationFrame(rideT);
+      (function ride() {
+        if (lit) move(lit);
+        if (performance.now() - t0 < 600) rideT = requestAnimationFrame(ride);
+      })();
+    }).observe(nav, { attributes: true, attributeFilter: ["class"] });
+  }
+
   // same sliding pill inside each dropdown menu
   Array.prototype.forEach.call(nav.querySelectorAll(".nav-menu"), function (menu) {
     var items = menu.querySelectorAll(".nav-menu-item");
