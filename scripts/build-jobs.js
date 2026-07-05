@@ -335,6 +335,26 @@ people.map(contributorIndexCard).join("\n") + "\n" +
 
 /* ---------------- about + team pages ---------------- */
 
+/* funding contributors (pucar.org/about ticker, identified visually July
+   2026). Logos live at assets/funders/<slug>.png -- run
+   scripts/mirror-funder-logos.js locally once to download them. */
+const FUNDERS = [
+  ["binny-bansal", "Binny Bansal"],
+  ["nilekani-philanthropies", "Rohini & Nandan Nilekani Philanthropies"],
+  ["tree-of-life-foundation", "Tree of Life Foundation"],
+  ["ravi-venkatesan", "Ravi Venkatesan"],
+  ["harish-bina-shah-foundation", "Harish & Bina Shah Foundation"],
+  ["trilegal", "Trilegal"],
+  ["lal-foundation", "Lal Foundation"],
+  ["cyrus-j-guzder", "Cyrus J. Guzder"],
+  ["godrej", "Godrej"],
+  ["spectrum-impact", "Spectrum Impact"],
+  ["c-s-vaidyanathan", "C.S. Vaidyanathan"],
+  ["ajit-issac", "Ajit Issac"],
+  ["mahesh-krishnamurthy", "Mahesh Krishnamurthy"],
+  ["amita-gupta", "Amita Gupta"]
+];
+
 function aboutPage() {
   /* Content adapted from https://pucar.org/about (July 2026). Jul 2026
      revision: the page was a single unbroken column of prose top to
@@ -434,6 +454,14 @@ function aboutPage() {
 '  <div class="cta-row">\n' +
 '    <a class="btn btn-primary" href="/#collaborate">See open work</a>\n' +
 '    <a class="btn btn-outline" href="/contributors/">Meet the contributors</a>\n' +
+"  </div>\n" +
+'  <div class="about-funders">\n' +
+'    <p class="beat-eyebrow">Funding Contributors</p>\n' +
+'    <div class="funder-grid">\n' +
+FUNDERS.map(function (f) {
+  return '      <img src="/assets/funders/' + f[0] + '.png" alt="' + esc(f[1]) + '" title="' + esc(f[1]) + '" loading="lazy" />';
+}).join("\n") + "\n" +
+"    </div>\n" +
 "  </div>\n" +
 "</div>\n<main hidden>";
   return pageShell({

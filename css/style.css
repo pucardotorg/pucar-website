@@ -3522,3 +3522,26 @@ a.event-card{ text-decoration:none; }
   transition:translate .2s ease;
 }
 .strip-btn:hover .strip-arrow{ translate:4px 0; }
+
+/* ---------------- About: funding contributors ----------------
+   Static logo wall (explicitly no animation, unlike pucar.org's ticker).
+   Logos are self-hosted at assets/funders/ via scripts/mirror-funder-logos.js. */
+.about-funders{
+  margin:64px 0 16px;
+  padding-top:36px;
+  border-top:1px solid var(--line);
+}
+.about-funders .beat-eyebrow{ color:var(--forest); }
+.funder-grid{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:30px clamp(32px,4vw,52px);
+  margin-top:22px;
+}
+.funder-grid img{
+  height:42px;
+  width:auto;
+  max-width:180px;
+  object-fit:contain;
+}

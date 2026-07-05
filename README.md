@@ -1242,6 +1242,15 @@ a .job-main.about-lower div (same hidden-main swallow trick as sc-ai-policy)
 so it can bleed edge to edge; its second paragraph is a display pull-quote
 with "100+ contributors" in green. All copy is unchanged from pucar.org.
 
+### About: funding contributors wall
+
+Bottom of /about/: "Funding Contributors" static logo wall (.funder-grid,
+NO animation by request). The 14 funders were identified visually from
+pucar.org/about's funding ticker (list inlined as FUNDERS in the build
+script). Logos are referenced at /assets/funders/<slug>.png -- run
+`node scripts/mirror-funder-logos.js` LOCALLY once to download them
+(the sandbox cannot reach framerusercontent.com); until then the images 404.
+
 ### Participate event cards (sc-ai-policy)
 
 The participate section is now a DARK .collaborate shell
