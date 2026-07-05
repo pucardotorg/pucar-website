@@ -103,6 +103,12 @@ body.job-page .site-header > .nav-cluster{
   gap:10px;
   align-items:flex-start;
 }
+/* never wrap during the width FLIP: mid-animation widths would otherwise
+   fold the menu names onto a second line and balloon the pill's height */
+.nav-cluster .site-nav{
+  flex-wrap:nowrap;
+  white-space:nowrap;
+}
 /* collapse/expand: a collapsed nav shows ONLY its burger toggle; an
    expanded nav hides its toggle (you collapse it by expanding the other) */
 .nav-toggle{
@@ -121,9 +127,10 @@ body.job-page .site-header > .nav-cluster{
 }
 .site-nav.is-collapsed > *:not(.nav-toggle){ display:none !important; }
 .site-nav.is-collapsed > .nav-toggle{ display:inline-flex; }
-/* freshly expanded items fade in just behind the width FLIP (js/nav.js) */
+/* items stay INVISIBLE until the width FLIP has finished, then fade in --
+   no text painting mid-animation (delay ~= the 240ms FLIP duration) */
 .site-nav:not(.is-collapsed) > *:not(.nav-toggle){
-  animation:navItemsIn .3s ease .12s backwards;
+  animation:navItemsIn .16s ease .24s backwards;
 }
 @keyframes navItemsIn{
   from{ opacity:0; }

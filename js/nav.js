@@ -33,7 +33,7 @@
         el.style.overflow = "hidden";
         var anim = el.animate(
           [{ width: job[1] + "px" }, { width: job[2] + "px" }],
-          { duration: 420, easing: ease }
+          { duration: 240, easing: ease } // fast: the text waits for this to finish before fading in
         );
         anim.onfinish = function () { el.style.overflow = ""; };
       });
