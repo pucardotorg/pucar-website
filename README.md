@@ -1606,7 +1606,7 @@ exists on desktop too; only its trigger is media-queried away.
 The team was FOLDED INTO /about/ ("move the whole team section to the
 About page... just go to this anchor"): the #team band (Core team / The
 anchors.) sits at the bottom of About, after How we organise, followed by
-the single contributors strip, then See open work + the funders wall.
+the single contributors strip, then the funders wall (the "See open work" button was removed too).
 DE-DUPED: the old about-strip and the "Meet the contributors" outline
 button were both removed (the team strip carries that CTA now -- one
 contributors CTA on the page). Nav + footer "Meet the Team" point to

@@ -508,9 +508,6 @@ function aboutPage() {
    contributors" outline button are gone (they duplicated it) */
 teamSection() +
 '<div class="job-main about-lower">\n' +
-'  <div class="cta-row">\n' +
-'    <a class="btn btn-primary" href="/#collaborate">See open work</a>\n' +
-"  </div>\n" +
 '  <div class="about-funders">\n' +
 '    <p class="beat-eyebrow">Funding Contributors</p>\n' +
 '    <div class="funder-grid">\n' +
