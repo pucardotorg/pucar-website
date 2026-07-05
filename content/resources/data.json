@@ -1,0 +1,262 @@
+[
+ {
+  "title": "E-Courts Phase III Policy",
+  "desc": "Agami worked as an expert member to the SC e-Committee to draft the Vision Document for Phase III of the e-Courts policy. INR 7000 Cr has been approved to implement this policy.",
+  "url": "https://cdnbbsr.s3waas.gov.in/s388ef51f0bf911e452e8dbb1d807a81ab/uploads/2023/04/2023042088.pdf",
+  "tab": "People Centric Courts",
+  "tags": [
+   "People Centric Courts",
+   "Policy"
+  ]
+ },
+ {
+  "title": "Foundational Digital Infrastructure: DRISTI",
+  "desc": "The world's first open source case management platform for resolution services.",
+  "url": "https://github.com/pucardotorg/dristi",
+  "tab": "People Centric Courts",
+  "tags": [
+   "People Centric Courts",
+   "Open Source"
+  ]
+ },
+ {
+  "title": "24x7 ON Court, Kerala",
+  "desc": "PUCAR is Knowledge Partner to the High Court of Kerala to launch and scale the 24x7 Open and Networked Court.",
+  "url": "https://oncourts.kerala.gov.in/about",
+  "tab": "People Centric Courts",
+  "tags": [
+   "People Centric Courts",
+   "Courts"
+  ]
+ },
+ {
+  "title": "Motor Accident Claims | Ernakulam District Court",
+  "desc": "Case life cycle information for a sample of 50 cases from the Ernakulam District Court MACT, filed and disposed between 2017 and 2022.",
+  "url": "https://docs.google.com/spreadsheets/d/1jMdH9QKQeWZQYC_W5HfbfSQ2zhVJFVUKzV6MJ5n7GZ4/edit",
+  "tab": "People Centric Courts",
+  "tags": [
+   "People Centric Courts",
+   "Dataset"
+  ]
+ },
+ {
+  "title": "Motor Accident Claims | Bengaluru Small Causes Court",
+  "desc": "Case life cycle information for a sample of 48 cases from the Bengaluru Small Causes Court.",
+  "url": "https://docs.google.com/spreadsheets/d/1f8jhUWaDj47yWXsiqdihvNfnbJ8XgEwHiweZAtaF3HA/edit",
+  "tab": "People Centric Courts",
+  "tags": [
+   "People Centric Courts",
+   "Dataset"
+  ]
+ },
+ {
+  "title": "Diagnosing Issues in MACT Cases",
+  "desc": "Findings on the incentives of actors, volume of cases, and an initial order analysis for motor accident claims.",
+  "url": "https://docs.google.com/presentation/d/1OhDIbfwmyQr1JxIt9PRzOVyQY-mO9qd2s4jOOTV7B0o/edit",
+  "tab": "People Centric Courts",
+  "tags": [
+   "People Centric Courts",
+   "Presentation"
+  ]
+ },
+ {
+  "title": "Case Life Cycle Dataset: MACT District Court Samples",
+  "desc": "MACT case life cycle information for 100 randomly collected cases from district courts in Kerala, Karnataka, Maharashtra, and Tamil Nadu.",
+  "url": "https://docs.google.com/spreadsheets/d/1lHoTbigc19jpzdoZe_4lyZzDPCE29M2smOU2-x18Mxo/edit",
+  "tab": "People Centric Courts",
+  "tags": [
+   "People Centric Courts",
+   "Dataset"
+  ]
+ },
+ {
+  "title": "Who is litigating cheque bounce cases?",
+  "desc": "Who are the litigants in Section 138 cases? Does the nature of cases vary based on who the participants are?",
+  "url": "https://blog.theleapjournal.org/2023/06/who-is-litigating-cheque-bounce-cases.html",
+  "tab": "People Centric Courts",
+  "tags": [
+   "People Centric Courts",
+   "Article"
+  ]
+ },
+ {
+  "title": "Cheque Bounce Cases Litigant Classifier Code",
+  "desc": "Code to build a profile of litigants in cheque bouncing cases.",
+  "url": "https://github.com/xKDR/Legalsystem/tree/main/Section%20138",
+  "tab": "People Centric Courts",
+  "tags": [
+   "People Centric Courts",
+   "Code"
+  ]
+ },
+ {
+  "title": "Profile of litigants in cheque bounce cases",
+  "desc": "Data on the profile of litigants in Mumbai cheque bouncing cases, classified as individuals, financial firms, and non-financial firms.",
+  "url": "https://github.com/xKDR/Legalsystem/blob/main/Section%20138/Mumbai/mumbai-all-cases-classified.csv",
+  "tab": "People Centric Courts",
+  "tags": [
+   "People Centric Courts",
+   "Dataset"
+  ]
+ },
+ {
+  "title": "Cheque Bounce Cases | Ernakulam District Court",
+  "desc": "Case life cycle information for 48 cases from the Ernakulam District Court's special bench for Negotiable Instruments Act cases.",
+  "url": "https://docs.google.com/spreadsheets/d/10y7IhxCkoFXQPSOgCfW9QWUEPGFzylGq8H0fjU4zeIM/edit",
+  "tab": "People Centric Courts",
+  "tags": [
+   "People Centric Courts",
+   "Dataset"
+  ]
+ },
+ {
+  "title": "Cheque Bounce Cases | Bengaluru Small Causes Court",
+  "desc": "Case life cycle information for 46 cases from the Bengaluru Small Causes Court.",
+  "url": "https://docs.google.com/spreadsheets/d/1xN71lXbEHEVoEebdomp-vLgL7wQJVFeRr2HF0PCkqDQ/edit",
+  "tab": "People Centric Courts",
+  "tags": [
+   "People Centric Courts",
+   "Dataset"
+  ]
+ },
+ {
+  "title": "Diagnosing Issues in Cheque Bounce Cases",
+  "desc": "Findings on the incentives of actors, litigant analysis, insights from research papers, and an initial order analysis for cheque bounce cases.",
+  "url": "https://docs.google.com/presentation/d/1RzluSR_DIi8lnI8pd91FfTfjBpZBiQKbrgEf5H9888o/edit",
+  "tab": "People Centric Courts",
+  "tags": [
+   "People Centric Courts",
+   "Presentation"
+  ]
+ },
+ {
+  "title": "Case Life Cycle Dataset: Cheque Bounce District Court Samples",
+  "desc": "Cheque bounce case life cycle information for 100 randomly collected cases from district courts in Kerala, Karnataka, Maharashtra, and Tamil Nadu.",
+  "url": "https://docs.google.com/spreadsheets/d/1ETIDXe8bSH4LWkYRXFJuAJF1cu9yqNjnVStQ3I0KCSo/edit",
+  "tab": "People Centric Courts",
+  "tags": [
+   "People Centric Courts",
+   "Dataset"
+  ]
+ },
+ {
+  "title": "A Day in Court: Time & Motion Study",
+  "desc": "Using time and motion studies to understand the utilisation of judicial time in district courts.",
+  "url": "https://drive.google.com/file/d/1nwQ3gic2rXRAkyRAY1GNoLro1Ksj7Uj_/view",
+  "tab": "Court Performance",
+  "tags": [
+   "Court Performance",
+   "Presentation"
+  ]
+ },
+ {
+  "title": "Key Questions for Assessing District Court Functioning",
+  "desc": "Research and baselining questions for understanding the current functioning of district courts.",
+  "url": "https://docs.google.com/spreadsheets/d/1fV3voCX9uFtQ5JA5WxXnZJAFCxWR115I9NOpa2V3ADA/edit",
+  "tab": "Court Performance",
+  "tags": [
+   "Court Performance",
+   "Research"
+  ]
+ },
+ {
+  "title": "The Consequences of Criminalising Cheque Bounce Disputes",
+  "desc": "Which consequences of criminalising cheque bouncing would arise, in reverse, if it were de-criminalised?",
+  "url": "https://blog.theleapjournal.org/2024/02/the-consequences-of-criminalising.html",
+  "tab": "People Centric Courts",
+  "tags": [
+   "People Centric Courts",
+   "Article"
+  ]
+ },
+ {
+  "title": "Evaluating contract enforcement by courts in India: a litigant's lens",
+  "desc": "Using the litigant's expectations as performance metrics, this paper develops an evaluative framework for comparing similar courts.",
+  "url": "https://papers.xkdr.org/papers/2022Manivannanetal_courtmetrics.pdf",
+  "tab": "Court Performance",
+  "tags": [
+   "Court Performance",
+   "Research"
+  ]
+ },
+ {
+  "title": "The litigant perspective upon courts",
+  "desc": "A legal system measurement that produces insights for litigants who are litigating debt disputes.",
+  "url": "https://blog.theleapjournal.org/2022/11/the-litigant-perspective-upon-courts.html",
+  "tab": "Court Performance",
+  "tags": [
+   "Court Performance",
+   "Article"
+  ]
+ },
+ {
+  "title": "Debt recovery litigation in Bombay courts",
+  "desc": "A dataset of about 5000 debt dispute cases filed at the Bombay High Court, NCLT Mumbai, and DRT Mumbai.",
+  "url": "https://papers.xkdr.org/legalsystem/ManivannanTZ_2023_reproducibleResearch_dataset.csv",
+  "tab": "Court Performance",
+  "tags": [
+   "Court Performance",
+   "Dataset"
+  ]
+ },
+ {
+  "title": "Empowering Litigants to understand Debt Recovery",
+  "desc": "An interactive view of about 5000 debt dispute cases across Mumbai forums, built for litigants.",
+  "url": "https://cozy-mandazi-3c331d.netlify.app/",
+  "tab": "Court Performance",
+  "tags": [
+   "Court Performance",
+   "Dashboard"
+  ]
+ },
+ {
+  "title": "Survey-based measurement of Indian courts",
+  "desc": "Ongoing surveys of user experience of courts can help measure legal system performance and assess the impact of interventions.",
+  "url": "https://blog.theleapjournal.org/2024/01/survey-based-measurement-of-indian.html",
+  "tab": "Court Performance",
+  "tags": [
+   "Court Performance",
+   "Article"
+  ]
+ },
+ {
+  "title": "Perception survey of practitioners: Questions & Responses",
+  "desc": "A survey on the functioning of five alternative forums for adjudicating debt disputes.",
+  "url": "https://papers.xkdr.org/legalsystem/ManivannanTZ_2024_practitionerSurveyResponse.csv",
+  "tab": "Court Performance",
+  "tags": [
+   "Court Performance",
+   "Dataset"
+  ]
+ },
+ {
+  "title": "Perception survey of litigants: Questions & Responses",
+  "desc": "A survey conducted with litigants at the DRT to understand the functioning of the forum.",
+  "url": "https://papers.xkdr.org/legalsystem/ManivannanTZ_2024_litigantSurveyResponse.csv",
+  "tab": "Court Performance",
+  "tags": [
+   "Court Performance",
+   "Dataset"
+  ]
+ },
+ {
+  "title": "PULSE Protocol",
+  "desc": "The Protocol for Unified Legal Services (PULSE): an open protocol for seamless discovery and engagement of legal service providers.",
+  "url": "https://github.com/beckn/PULSE-Specification",
+  "tab": "ODR",
+  "tags": [
+   "ODR",
+   "Open Source"
+  ]
+ },
+ {
+  "title": "ODR Handbook",
+  "desc": "First of its kind, the ODR Handbook contains insights and learnings to equip you to successfully adopt ODR.",
+  "url": "https://disputeresolution.online/",
+  "tab": "ODR",
+  "tags": [
+   "ODR",
+   "Handbook"
+  ]
+ }
+]

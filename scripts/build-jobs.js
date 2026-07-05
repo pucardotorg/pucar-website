@@ -501,32 +501,109 @@ FUNDERS.map(function (f) {
 }
 
 function resourcesPage() {
-  /* PLACEHOLDER content -- the three anchors (#blog, #data-resources,
-     #learning-circles) are what the Community nav dropdown links to. */
+  const resBlog = JSON.parse(fs.readFileSync(path.join(ROOT, "content/resources/blog.json"), "utf8"));
+  const resData = JSON.parse(fs.readFileSync(path.join(ROOT, "content/resources/data.json"), "utf8"));
+  const resCircles = JSON.parse(fs.readFileSync(path.join(ROOT, "content/resources/circles.json"), "utf8"));
+
+  const blogTags = Array.from(new Set(resBlog.reduce(function (a, b) { return a.concat(b.tags || []); }, []))).sort();
+
+  const blogCards = resBlog.map(function (b) {
+    return '<a class="collab-card res-card" data-tags="' + esc((b.tags || []).join("|")) + '" href="' + esc(b.url) + '" target="_blank" rel="noopener">\n' +
+      '  <img class="res-thumb" src="' + esc(b.thumb) + '" alt="" loading="lazy" />\n' +
+      '  <div class="collab-topline"><span class="collab-cat">' + esc(b.outlet) + '</span><span class="collab-status">' + esc(b.date) + "</span></div>\n" +
+      '  <span class="collab-title">' + esc(b.title) + "</span>\n" +
+      '  <span class="collab-summary">' + esc(b.summary) + "</span>\n" +
+      '  <ul class="collab-chips">' + (b.tags || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>\n" +
+      '  <div class="collab-foot"><span class="collab-btn">Read article</span></div>\n' +
+      "</a>";
+  }).join("\n");
+
+  const TABS = [
+    { key: "all", label: "All", desc: "Everything the collective has put into the commons: datasets, policy documents, research, code, and playbooks." },
+    { key: "People Centric Courts", label: "People Centric Courts", desc: "Transforming court processes for a seamless, predictable and empowering experience for all litigants." },
+    { key: "Court Performance", label: "Court Performance Metrics", desc: "A framework focused on outcomes like efficiency, fairness, and predictability, giving litigants crucial insights to improve decision-making and drive justice system improvements." },
+    { key: "ODR", label: "Online Dispute Resolution (ODR)", desc: "Enabling an online dispute resolution ecosystem in India: technology combined with trusted mechanisms of negotiation, mediation, conciliation, and arbitration, at scale." }
+  ];
+  const tabBtns = TABS.map(function (t, i) {
+    return '<button type="button" class="res-tab' + (i === 0 ? " is-active" : "") + '" data-tab="' + esc(t.key) + '" data-desc="' + esc(t.desc) + '">' + esc(t.label) + "</button>";
+  }).join("\n      ");
+
+  const dataCards = resData.map(function (d) {
+    const type = (d.tags || [])[1] || "Resource";
+    return '<a class="collab-card res-data-card" data-tab="' + esc(d.tab) + '" href="' + esc(d.url) + '" target="_blank" rel="noopener">\n' +
+      '  <div class="collab-topline"><span class="collab-cat">' + esc(type) + "</span></div>\n" +
+      '  <span class="collab-title">' + esc(d.title) + "</span>\n" +
+      '  <span class="collab-summary">' + esc(d.desc) + "</span>\n" +
+      '  <ul class="collab-chips">' + (d.tags || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>\n" +
+      '  <div class="collab-foot"><span class="collab-btn">Open resource</span></div>\n' +
+      "</a>";
+  }).join("\n");
+
+  const circleCards = resCircles.map(function (c) {
+    return '<button type="button" class="collab-card res-card circle-card" data-id="' + esc(c.id) + '" data-title="' + esc(c.title) + '" data-desc="' + esc(c.desc) + '">\n' +
+      '  <span class="res-thumb-wrap"><img class="res-thumb" src="' + esc(c.thumb) + '" alt="" loading="lazy" /><span class="circle-play" aria-hidden="true">▶</span></span>\n' +
+      '  <div class="collab-topline"><span class="collab-cat">Learning Circle #' + c.n + "</span></div>\n" +
+      '  <span class="collab-title">' + esc(c.title) + "</span>\n" +
+      '  <div class="collab-foot"><span class="collab-btn">Watch</span></div>\n' +
+      "</button>";
+  }).join("\n");
+
   const main =
 '  <p class="beat-eyebrow">Resources</p>\n' +
 '  <h1 class="job-title">Things worth keeping open in a tab.</h1>\n' +
 '  <article class="job-body prose no-cap">\n' +
-"    <p>Writing, data, and shared learning from the PUCAR collective. This page is just getting started, each section below will fill out as the community publishes.</p>\n" +
+"    <p>Writing, data, and shared learning from the PUCAR collective.</p>\n" +
 "  </article>\n" +
-'  <article class="job-body prose no-cap" id="blog">\n' +
-"    <h2>Blog</h2>\n" +
-"    <p>Essays and field notes from contributors on courts, dispute resolution, and building public goods. First posts are on their way.</p>\n" +
-"  </article>\n" +
-'  <article class="job-body prose no-cap" id="data-resources">\n' +
-"    <h2>Data Resources</h2>\n" +
-"    <p>Open datasets, dashboards, and measurement tooling around court performance. Links will appear here as they are cleaned up for public use.</p>\n" +
-"  </article>\n" +
-'  <article class="job-body prose no-cap" id="learning-circles">\n' +
-"    <h2>Learning Circles</h2>\n" +
-"    <p>Small reading and discussion groups the collective runs around justice-system questions. Details on joining the next circle will be posted here.</p>\n" +
-"  </article>";
+"</main>\n" +
+
+'<section class="collaborate res-section" id="blog">\n' +
+'  <div class="collab-head">\n' +
+'    <p class="beat-eyebrow">Blog</p>\n' +
+'    <h2 class="collab-title-main">Uncover fresh perspectives.</h2>\n' +
+'    <p class="collab-sub">Learnings, perspectives and insights published across the press and the collective’s own notes.</p>\n' +
+"  </div>\n" +
+'  <div class="res-tagbar" id="blogTagbar">\n' +
+'      <button type="button" class="res-tab is-active" data-tag="all">All topics</button>\n' +
+blogTags.map(function (t) { return '      <button type="button" class="res-tab" data-tag="' + esc(t) + '">' + esc(t) + "</button>"; }).join("\n") + "\n" +
+"  </div>\n" +
+'  <div class="collab-grid res-grid" id="blogGrid">\n' + blogCards + "\n  </div>\n" +
+"</section>\n" +
+
+'<section class="collaborate res-section" id="data-resources">\n' +
+'  <div class="collab-head">\n' +
+'    <p class="beat-eyebrow">Data, Policy, Research and more</p>\n' +
+'    <h2 class="collab-title-main">An open body of knowledge.</h2>\n' +
+"  </div>\n" +
+'  <div class="res-tagbar" id="dataTabs">\n      ' + tabBtns + "\n  </div>\n" +
+'  <p class="res-tab-desc" id="dataTabDesc">' + esc(TABS[0].desc) + "</p>\n" +
+'  <div class="collab-grid res-grid" id="dataGrid">\n' + dataCards + "\n  </div>\n" +
+"</section>\n" +
+
+'<section class="collaborate res-section" id="learning-circles">\n' +
+'  <div class="collab-head">\n' +
+'    <p class="beat-eyebrow">Learning Circles</p>\n' +
+'    <h2 class="collab-title-main">Learn with the collective.</h2>\n' +
+'    <p class="collab-sub">Recorded sessions where contributors teach each other. Click any card to watch.</p>\n' +
+"  </div>\n" +
+'  <div class="collab-grid res-grid" id="circleGrid">\n' + circleCards + "\n  </div>\n" +
+"</section>\n" +
+
+'<div class="job-modal" id="videoModal" hidden>\n' +
+'  <div class="job-modal-backdrop" data-close></div>\n' +
+'  <div class="job-modal-panel video-panel" role="dialog" aria-modal="true" aria-labelledby="vmTitle">\n' +
+'    <button class="job-modal-close" type="button" data-close aria-label="Close">×</button>\n' +
+'    <div class="video-wrap"><iframe id="vmFrame" src="about:blank" title="Learning circle video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>\n' +
+'    <h2 class="video-title" id="vmTitle"></h2>\n' +
+'    <p class="video-desc" id="vmDesc"></p>\n' +
+"  </div>\n" +
+"</div>\n" +
+'<script src="/js/resources.js"></script>\n<script src="/js/view-toggle.js"></script>\n<main hidden>';
   return pageShell({
     title: "Resources | PUCAR",
-    desc: "Writing, open data, and learning circles from the PUCAR collective.",
+    desc: "Writing, open data, policy, research, and learning circles from the PUCAR collective.",
     url: "/resources/",
     jsonLd: { "@context": "https://schema.org", "@type": "CollectionPage", name: "PUCAR resources" },
-    backHref: "/", backLabel: "\u2190 Home", main: main
+    backHref: "/", backLabel: "← Home", main: main
   });
 }
 

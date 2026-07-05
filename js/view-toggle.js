@@ -12,7 +12,8 @@
   var GRIDS = [
     { id: "collabGrid", bar: "collabFilters" },
     { id: "perspGrid", bar: null },
-    { id: "contribGrid", bar: "contribFilters" }
+    { id: "contribGrid", bar: "contribFilters" },
+    { id: "dataGrid", bar: "dataTabs" } // resources page: Data, Policy, Research and more
   ];
 
   var ICONS = {

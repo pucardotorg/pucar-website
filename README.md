@@ -1397,6 +1397,37 @@ The fan-out uses TRANSFORMS (translateX leftwards up to -78px, away from the but
 never margins, so the button doesn't shift when the heads spread. The
 button is the only link.
 
+### /resources/ page (v2, July 2026)
+
+Data lives in content/resources/{blog,data,circles}.json; resourcesPage()
+in the build script renders three dark .collaborate sections plus a video
+modal. All content was scraped from pucar.org (blog, people-centric-courts,
+court-performance, online-dispute-resolution) and the PUCAR Learning Circles
+YouTube playlist in July 2026.
+
+- BLOG (#blog): 8 external articles as .collab-card clones with local
+  thumbnails (assets/blog/<slug>) and a topic pill filter (.res-tagbar).
+  Whole card links out. NO list view (explicit).
+- DATA, POLICY, RESEARCH AND MORE (#data-resources): 26 items tagged by
+  initiative. Tabs (All / People Centric Courts / Court Performance Metrics
+  / Online Dispute Resolution (ODR)) swap a description pulled from each
+  initiative page's own hero copy, and filter cards via data-tab. Has the
+  cards/list VIEW TOGGLE (dataGrid registered in js/view-toggle.js; the
+  toggle mounts into the #dataTabs bar). Tags are topical and small:
+  initiative + type (Dataset/Presentation/Article/Code/Policy/...).
+- LEARNING CIRCLES (#learning-circles): 9 videos (LC #5 is not in the
+  playlist) as thumbnail cards (assets/circles/<id>.jpg, play overlay);
+  clicking opens #videoModal -- job-modal chrome with ONLY a
+  youtube-nocookie iframe (autoplay) and the description below. Closing
+  resets the iframe src to stop playback. No list view.
+- Nav: Collaborate dropdown is now titled "Community"; the Resources group
+  links to the three anchors, and the middle item is titled "Data, Policy,
+  Research and more".
+- THUMBNAILS ARE NOT COMMITTED YET: run `node scripts/mirror-resource-thumbs.js`
+  locally (downloads framer blog thumbs + i.ytimg video thumbs; sandbox
+  cannot reach either CDN). Until then the cards show broken images.
+- js/resources.js holds the page behaviour (pill filter, tabs, video modal).
+
 ### Cards <-> list view toggle
 
 js/view-toggle.js adds a grid/list switch to every card grid: #collabGrid
