@@ -21,7 +21,11 @@
    "Open source"
   ],
   "apply_url": "mailto:collaborate@pucar.org?subject=HMW%20-%20Frontend%20engineering%20(DRISTI%202.0)",
-  "poster": null,
+  "poster": {
+   "name": "Varun Hemachandran",
+   "url": "/contributors/varun-h/",
+   "photo": "/assets/team/varun-hemachandran.jpg"
+  },
   "html": "<h3>About the role</h3>\n<p>A permanent engineering role with a PUCAR collective member organisation, building the open ODR platform used by partner institutions.</p>\n<p>[placeholder description, refine with the actual scope before publishing]</p>\n<h3>What you&#39;ll do</h3>\n<ul><li>Ship litigant-facing flows: filing, notices, hearings, settlement</li><li>Hold a high bar on accessibility, language support, and performance on low-end devices</li><li>Work in the open, public repo, public roadmap</li></ul>\n<h3>Who this suits</h3>\n<ul><li>3+ years building production web apps (React or similar)</li><li>Care for users who are stressed, rushed, and often on 2G</li><li>Comfort collaborating with legal-domain experts</li></ul>\n<h3>How it works</h3>\n<p>Paid, permanent role. Interviews include a short paired exercise on a real issue from the repo.</p>"
  },
  {
@@ -93,7 +97,11 @@
    "Fieldwork"
   ],
   "apply_url": "mailto:collaborate@pucar.org?subject=HMW%20-%20Process%20redesign%20fellowship%20(DRISTI%202.0)",
-  "poster": null,
+  "poster": {
+   "name": "Varun Hemachandran",
+   "url": "/contributors/varun-h/",
+   "photo": "/assets/team/varun-hemachandran.jpg"
+  },
   "html": "<h3>About the fellowship</h3>\n<p>The People-Centric Courts initiative embeds fellows with partner courts to redesign everyday processes that create the most friction for litigants.</p>\n<p>[placeholder description, refine with the actual scope before publishing]</p>\n<h3>What you&#39;ll do</h3>\n<ul><li>Shadow one process end-to-end and document where time and trust are lost</li><li>Co-design improvements with judges, registry staff, and lawyers</li><li>Publish the playbook openly so other courts can adopt it</li></ul>\n<h3>Who this suits</h3>\n<ul><li>Law graduates or practitioners with 1–5 years of experience</li><li>Strong writing; patience for institutional change</li><li>Based in, or willing to relocate to, the partner court&#39;s city</li></ul>\n<h3>How it works</h3>\n<p>This is a paid, fixed-term fellowship stipended through a PUCAR collective member organisation. Cohorts start quarterly.</p>"
  },
  {

@@ -1105,7 +1105,7 @@ pill's light-on-dark colours.
 
 `aboutPage()` and `teamPage()` in the build script generate /about/ (content
 adapted from pucar.org/about: What we do, Why PUCAR, How we work, How we
-organise) and /team/ (PLACEHOLDER cards -- swap in real people). Both in the
+organise) and /team/ (REAL team as of Jul 2026, see below). Both in the
 sitemap; homepage footer About link points to /about/.
 
 **About page visual pass (Jul 2026):** the page was a single unbroken prose
@@ -1601,6 +1601,29 @@ button that closes the overlay and opens the contact modal. Closes on ×,
 Esc, or any link tap (needed for same-page anchors). The overlay markup
 exists on desktop too; only its trigger is media-queried away.
 
+### /team/ page (real team, July 2026)
+
+content/team/team.json holds the 10 anchors (slug, name, PUCAR role,
+photo, linkedin, optional site, 3rd-person bio). Sources: five bios reuse
+the contributors' LinkedIn-sourced copy; Varun/Ayushi/Sathyajith/Abhiram/
+Garvita were scraped fresh from LinkedIn via the user's Chrome (roles:
+Senior Curator / Co-lead / Program Associate / Design Researcher / Program
+Team). Photos live in assets/team/: five copied from assets/contributors,
+five downloaded by scripts/mirror-team-photos.js (RUN LOCALLY; licdn URLs
+are signed + expiring; Varun's comes from v4.run/images/varun.jpg).
+
+Layout is modelled on opennyai.org/about's team wall, PUCAR-skinned:
+.team-grid of 3:4 portrait .team-cards on the dark band; photos grayscale
+-> colour on hover while name/role rise over a bottom gradient
+(.team-veil/.team-meta) and a frosted LinkedIn chip (.team-ln) fades in
+mid-card. @media (hover:none) shows colour + names permanently and hides
+the chip. Clicking a card opens the shared job-modal with the bio
+(js/team.js; data inlined in a #teamData JSON script tag at build time --
+no fetch). The chip is a real <a>; team.js ignores clicks that pass
+through an anchor so it navigates instead of opening the modal.
+varun-h's contributor entry was also upgraded from placeholder to real
+(published:true, so contributor pages count went 77 -> 78).
+
 ### Footer: single source of truth
 
 The footer's right side is a categorised sitemap (.footer-map: Explore /
@@ -1819,7 +1842,11 @@ and run `npx decap-server` next to the static server.
 
 - /about-contributing/ DOES NOT EXIST yet but is linked from the Collaborate
   nav dropdown ("About Contributing") — build it next or the link 404s.
-- /team/ is entirely placeholder cards ("Team Member · placeholder") —
+- /team/ shows the real 10-person team (Jul 2026). REMAINING: run
+  `node scripts/mirror-team-photos.js` locally — five headshots (ayushi,
+  varun, sathyajith, abhiram, garvita) aren't committed yet (sandbox can't
+  reach media.licdn.com / v4.run; the licdn URLs are SIGNED and EXPIRE, so
+  run it soon or re-grab). Old note —
   swap in real people (teamPage() in the build script).
 - The two sc-ai-policy events (content/sc-events/) carry REALISTIC DUMMY
   details (8 and 11 July 2026, BIC Domlur venue) — confirm or correct real

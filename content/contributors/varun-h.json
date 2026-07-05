@@ -1,14 +1,20 @@
 {
-  "name": "Varun H",
-  "role": "Convenor, PUCAR collective",
-  "photo": "",
+  "name": "Varun Hemachandran",
+  "role": "Senior Curator, PUCAR",
+  "organisation": "Agami",
+  "photo": "/assets/team/varun-hemachandran.jpg",
   "email": "varun@agami.in",
   "links": [
     {
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/in/varunh/"
+    },
+    {
       "label": "Website",
-      "url": "https://agami.in"
+      "url": "https://v4.run"
     }
   ],
-  "published": false,
-  "body": "Varun convenes the PUCAR collective, connecting courts, technologists, and civil-society organisations working on people-centric dispute resolution.\n\n[placeholder bio, replace with real copy]"
+  "published": true,
+  "source": "linkedin.com/in/varunh, v4.run",
+  "body": "Varun is a systems thinker and civic technologist working at the intersection of courts, AI, and the people caught between them. A Senior Curator at PUCAR, he previously co-led OpenNyAI, the collaborative mission building AI public goods for justice in India, and has curated communities at Agami since 2020.\n\nEarlier he founded Talking Earth, a civic-data project crowdsourcing tree censuses in Bengaluru, and led business at The Bohemian House. He writes at seldoncrisis.blog."
 }

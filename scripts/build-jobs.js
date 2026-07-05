@@ -697,48 +697,66 @@ blogTags.map(function (t) { return '      <button type="button" class="res-tab" 
 }
 
 function teamPage() {
-  /* PLACEHOLDER members -- replace with the real team before launch. */
-  const placeholders = [
-    { name: "Team Member", role: "Convenor" },
-    { name: "Team Member", role: "Programs" },
-    { name: "Team Member", role: "Technology" },
-    { name: "Team Member", role: "Design" },
-    { name: "Team Member", role: "Partnerships" },
-    { name: "Team Member", role: "Operations" }
-  ];
-  const cards = placeholders.map(function (p, i) {
-    return '<div class="contrib-card team-placeholder">' +
-      '<span class="avatar avatar-lg" style="background:hsl(' + (i * 55 % 360) + ',20%,45%)" aria-hidden="true">?</span>' +
-      '<span class="contrib-card-text">' +
-      '<span class="contrib-card-name">' + esc(p.name) + "</span>" +
-      '<span class="contrib-card-role">' + esc(p.role) + " · placeholder</span>" +
-      "</span></div>";
+  /* Real team (July 2026): content/team/team.json -- name, PUCAR role,
+     3rd-person bio (sourced from LinkedIn + existing contributor bios),
+     photo in assets/team/ (five copied from assets/contributors, five
+     mirrored via scripts/mirror-team-photos.js -- run locally, licdn URLs
+     are signed + expiring). Layout modelled on opennyai.org/about's team
+     wall: portrait cards, grayscale until hover, name/role rising over a
+     bottom gradient, a LinkedIn chip mid-card, PUCAR chrome throughout.
+     Clicking a card opens the shared job-modal with the bio. */
+  const team = JSON.parse(fs.readFileSync(path.join(ROOT, "content/team/team.json"), "utf8"));
+  const LN_ICON = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="currentColor"><path d="M13.63 13.63h-2.37V9.92c0-.89-.02-2.03-1.24-2.03-1.24 0-1.43.97-1.43 1.96v3.78H6.22V6h2.28v1.04h.03a2.5 2.5 0 0 1 2.25-1.23c2.4 0 2.85 1.58 2.85 3.64v4.18zM3.55 4.95a1.38 1.38 0 1 1 0-2.75 1.38 1.38 0 0 1 0 2.75zM4.73 13.63H2.36V6h2.37v7.63zM14.82 0H1.18C.53 0 0 .52 0 1.15v13.7C0 15.48.53 16 1.18 16h13.64c.65 0 1.18-.52 1.18-1.15V1.15C16 .52 15.47 0 14.82 0z"/></svg>';
+
+  const cards = team.map(function (p) {
+    return '<article class="team-card" data-slug="' + esc(p.slug) + '" tabindex="0" role="button" aria-label="' + esc(p.name) + ', ' + esc(p.role) + '">\n' +
+      '  <img class="team-photo" src="' + esc(p.photo) + '" alt="' + esc(p.name) + '" loading="lazy" />\n' +
+      '  <span class="team-veil" aria-hidden="true"></span>\n' +
+      '  <a class="team-ln" href="' + esc(p.linkedin) + '" target="_blank" rel="noopener" aria-label="' + esc(p.name) + ' on LinkedIn">' + LN_ICON + 'LinkedIn</a>\n' +
+      '  <span class="team-meta"><span class="team-name">' + esc(p.name) + '</span><span class="team-role">' + esc(p.role) + '</span></span>\n' +
+      "</article>";
   }).join("\n");
+
   const main =
 '  <p class="beat-eyebrow">The team</p>\n' +
 '  <h1 class="job-title">The people who hold it together.</h1>\n' +
-'  <article class="job-body">\n' +
-"    <p>PUCAR is powered by a small anchor team and a wide collective of contributors. The team below is a placeholder while we gather everyone's details and photos.</p>\n" +
+'  <article class="job-body prose no-cap">\n' +
+"    <p>PUCAR is powered by a small anchor team and a wide collective of contributors. These are the people keeping the engines running day to day. Tap anyone to read who they are.</p>\n" +
 "  </article>\n" +
 "</main>\n" +
-'<section class="collaborate contrib-section" id="team">\n' +
+'<section class="collaborate team-section" id="team">\n' +
 '  <div class="collab-head">\n' +
 '    <p class="beat-eyebrow">Core team</p>\n' +
-'    <h2 class="collab-title-main">Coming soon.</h2>\n' +
-'    <p class="collab-sub">Real names, faces, and bios are on their way. Meanwhile, the wider collective is already listed.</p>\n' +
+'    <h2 class="collab-title-main">Meet the anchors.</h2>\n' +
+'    <p class="collab-sub">Ten people anchoring a collective of many more. The wider circle lives on the contributors page.</p>\n' +
 "  </div>\n" +
-'  <div class="contrib-grid">\n' + cards + "\n  </div>\n" +
-'  <div class="cta-row" style="justify-content:center; margin-top:28px;">\n' +
+'  <div class="team-grid" id="teamGrid">\n' + cards + "\n  </div>\n" +
+'  <div class="cta-row" style="justify-content:center; margin-top:34px;">\n' +
 '    <a class="btn btn-primary" href="/contributors/">Meet the contributors</a>\n' +
 "  </div>\n" +
 "</section>\n" +
-"<main hidden>";
+'<div class="job-modal" id="teamModal" hidden>\n' +
+'  <div class="job-modal-backdrop" data-close></div>\n' +
+'  <div class="job-modal-panel" role="dialog" aria-modal="true" aria-labelledby="tmName">\n' +
+'    <button class="job-modal-close" type="button" data-close aria-label="Close">\u00d7</button>\n' +
+'    <div class="contrib-head">\n' +
+'      <img class="avatar avatar-xl" id="tmPhoto" src="" alt="" />\n' +
+'      <div><p class="beat-eyebrow">Core team</p>\n' +
+'      <h2 class="job-title" id="tmName"></h2>\n' +
+'      <p class="job-summary" id="tmRole"></p></div>\n' +
+"    </div>\n" +
+'    <article class="job-body" id="tmBody"></article>\n' +
+'    <div class="cta-row" id="tmLinks"></div>\n' +
+"  </div>\n" +
+"</div>\n" +
+'<script type="application/json" id="teamData">' + JSON.stringify(team) + "</script>\n" +
+'<script src="/js/team.js"></script>\n<main hidden>';
   return pageShell({
     title: "Meet the Team | PUCAR",
     desc: "The core team behind PUCAR, the public collective for avoidance and resolution of disputes.",
     url: "/team/",
     jsonLd: { "@context": "https://schema.org", "@type": "AboutPage", name: "PUCAR team" },
-    backHref: "/", backLabel: "← Home", main: main
+    backHref: "/", backLabel: "\u2190 Home", main: main
   });
 }
 

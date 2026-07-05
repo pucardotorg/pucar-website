@@ -4140,6 +4140,113 @@ button.circle-card{
   transform:translateX(130%);
   transition:transform .85s ease;
 }
+/* ---------------- /team/ page ----------------
+   Portrait wall modelled on opennyai.org/about, re-skinned to PUCAR:
+   cards sit on the dark .collaborate band, photos are grayscale until
+   hover, then colour in while the name/role rise over a bottom gradient
+   and a frosted LinkedIn chip appears mid-card. Touch devices (no hover)
+   get colour photos + visible names permanently. */
+.team-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(230px, 1fr));
+  gap:18px;
+}
+.team-card{
+  position:relative;
+  aspect-ratio:3/4;
+  border-radius:22px;
+  overflow:hidden;
+  cursor:pointer;
+  background:rgba(251,248,242,.06);
+  border:1px solid rgba(251,248,242,.14);
+  transition:transform .25s ease, border-color .25s ease;
+}
+.team-card:hover,
+.team-card:focus-visible{
+  transform:translateY(-4px);
+  border-color:rgba(251,248,242,.3);
+}
+.team-photo{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter:grayscale(1);
+  transition:filter .35s ease, transform .45s ease;
+}
+.team-card:hover .team-photo,
+.team-card:focus-visible .team-photo{
+  filter:none;
+  transform:scale(1.045);
+}
+.team-veil{
+  position:absolute;
+  left:0; right:0; bottom:0;
+  height:58%;
+  background:linear-gradient(to top, rgba(10,21,26,.92), rgba(10,21,26,.4) 55%, transparent);
+  opacity:0;
+  transition:opacity .3s ease;
+  pointer-events:none;
+}
+.team-meta{
+  position:absolute;
+  left:18px; right:18px; bottom:16px;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  opacity:0;
+  translate:0 10px;
+  transition:opacity .3s ease, translate .3s ease;
+  pointer-events:none;
+}
+.team-card:hover .team-veil, .team-card:focus-visible .team-veil{ opacity:1; }
+.team-card:hover .team-meta, .team-card:focus-visible .team-meta{ opacity:1; translate:0 0; }
+.team-name{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:1.3rem;
+  line-height:1.2;
+  color:var(--paper);
+}
+.team-role{
+  font-size:.7rem;
+  font-weight:700;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--green);
+}
+.team-ln{
+  position:absolute;
+  top:44%;
+  left:50%;
+  translate:-50% -50%;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 16px;
+  border-radius:999px;
+  background:rgba(10,21,26,.6);
+  border:1px solid rgba(251,248,242,.35);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  color:var(--paper);
+  font-size:.8rem;
+  font-weight:600;
+  text-decoration:none;
+  opacity:0;
+  scale:.9;
+  transition:opacity .25s ease, scale .25s ease, background .2s ease;
+}
+.team-card:hover .team-ln, .team-card:focus-visible .team-ln{ opacity:1; scale:1; }
+.team-ln:hover{ background:var(--green); color:var(--ink); border-color:var(--green); }
+@media (hover:none){
+  /* no hover states on touch: colour photos, names always on */
+  .team-photo{ filter:none; }
+  .team-veil, .team-meta{ opacity:1; translate:0 0; }
+  .team-ln{ display:none; } /* the modal carries the link */
+}
+
 /* leave-site warning: deliberately NOT the house modal look -- a compact
    amber-edged strip that reads as a brief warning, not another dialog */
 .leave-panel{
