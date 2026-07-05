@@ -88,6 +88,20 @@ function diffClass(d) {
   return w === "low" ? "diff-low" : w === "high" ? "diff-high" : "diff-moderate";
 }
 
+function catIcon(cat) {
+  var w = String(cat || "").toLowerCase();
+  var d =
+    w.indexOf("dev") === 0 ? "M5.5 4.5 2 8l3.5 3.5M10.5 4.5 14 8l-3.5 3.5" :            // code
+    w.indexOf("design") === 0 ? "M9.5 2.5 13.5 6.5 6 14H2v-4L9.5 2.5zM8 4l4 4" :        // pen
+    w.indexOf("legal") === 0 ? "M8 1.5v11M4.2 3.5h7.6M4.2 3.5 2.4 8a2 2 0 0 0 3.6 0L4.2 3.5zM11.8 3.5 10 8a2 2 0 0 0 3.6 0l-1.8-4.5zM5.5 14.5h5" : // scales
+    w.indexOf("content") === 0 ? "M3 2.5h10v11H3zM5.5 5.5h5M5.5 8h5M5.5 10.5h3" :        // doc lines
+    w.indexOf("research") === 0 ? "M7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10zM10.6 10.6 14 14" : // magnifier
+    w.indexOf("data") === 0 ? "M2 13.5h12M4 13.5V8M8 13.5V4M12 13.5V6" :                  // chart
+    w.indexOf("policy") === 0 ? "M4 1.5h8a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-11a1 1 0 0 1 1-1zM5.5 5h5M5.5 7.5h5M5.5 10h3" : // scroll
+    "M8 2l1.8 3.6 4 .6-2.9 2.8.7 4-3.6-1.9L4.4 13l.7-4L2.2 6.2l4-.6L8 2z";               // star (fallback)
+  return '<svg class="cat-ico" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="' + d + '"/></svg>';
+}
+
 function streamLabel(job) {
   return job.stream === "Paid" ? "Paid" + (job.term ? " · " + job.term : "") : (job.stream || "Volunteer");
 }
@@ -221,7 +235,7 @@ FOOTER + "\n</body>\n</html>\n";
 
 function jobMetaHtml(job) {
   return '<div class="job-meta">' +
-    '<span class="collab-cat">' + esc(job.category || "Work") + "</span>" +
+    '<span class="collab-cat">' + catIcon(job.category) + esc(job.category || "Work") + "</span>" +
     '<span class="collab-diff ' + diffClass(job.difficulty) + '">' + '<svg class="diff-bars" viewBox="0 0 14 12" width="13" height="11" aria-hidden="true"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5.5" y="3.5" width="3" height="8.5" rx="1"/><rect x="11" y="0" width="3" height="12" rx="1"/></svg>' + esc(job.difficulty || "Moderate") + "</span>" +
     '<span class="collab-stream">' + esc(streamLabel(job)) + "</span>" +
     (job.status !== "Open" ? '<span class="collab-status">' + esc(job.status) + "</span>" : "") +
@@ -284,7 +298,7 @@ function jobPage(job) {
 
 function jobLine(job, note) {
   return '<li><a href="' + job.url + '">' + esc(job.title) + "</a>" +
-    '<span class="collab-cat">' + esc(job.category || "") + "</span>" +
+    '<span class="collab-cat">' + catIcon(job.category) + esc(job.category || "") + "</span>" +
     '<span class="collab-status">' + esc(note) + "</span></li>";
 }
 
@@ -1082,7 +1096,7 @@ function card(job) {
     ' data-expiry="' + esc(job.expiry) + '"' +
     ' data-tags="' + esc(job.tags.join("|")) + '">\n' +
     '  <a class="collab-cover" href="' + job.url + '" aria-label="' + esc(job.title) + '"></a>\n' +
-    '  <div class="collab-topline"><span class="collab-cat">' + esc(job.category || "Work") + "</span>" +
+    '  <div class="collab-topline"><span class="collab-cat">' + catIcon(job.category) + esc(job.category || "Work") + "</span>" +
     '<span class="collab-diff ' + diffClass(job.difficulty) + '">' + '<svg class="diff-bars" viewBox="0 0 14 12" width="13" height="11" aria-hidden="true"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5.5" y="3.5" width="3" height="8.5" rx="1"/><rect x="11" y="0" width="3" height="12" rx="1"/></svg>' + esc(job.difficulty || "Moderate") + "</span></div>\n" +
     '  <span class="collab-type">' + esc(streamLabel(job)) + "</span>\n" +
     '  <span class="collab-title">' + esc(job.title) + "</span>\n" +

@@ -2388,14 +2388,15 @@ button.btn.btn-outline{ border:1px solid var(--line); }
 .collab-cat{
   display:inline-flex;
   align-items:center;
-  gap:5px;
+  gap:7px;
   font-size:.7rem;
   font-weight:700;
   letter-spacing:.1em;
   text-transform:uppercase;
-  padding:5px 10px;
+  padding:5px 12px 5px 10px;
   border-radius:999px;
-  background:rgba(251,248,242,.18);
+  border:1px solid rgba(251,248,242,.2);
+  background:rgba(251,248,242,.08);
   border:1px solid rgba(251,248,242,.22);
   /* solid --paper, not a translucent rgba(...,.9) -- the alpha version read
      as a dim, slightly warm/muddy grey against the dark card in practice
@@ -2404,6 +2405,9 @@ button.btn.btn-outline{ border:1px solid var(--line); }
      composites against whatever's behind it. */
   color:var(--paper);
 }
+/* the category's little stroke icon */
+.cat-ico{ flex:none; opacity:.8; }
+
 /* icon glyph inside .collab-cat/.collab-status (event cards' location/date-
    time pills, see eventCard() in build-jobs.js) -- inline-flex above lines
    it up with the text on both; harmless everywhere else since text-only
@@ -3353,6 +3357,14 @@ a.event-card{ text-decoration:none; }
   transition:color .18s ease;
 }
 .footer-col a:hover{ color:var(--paper); }
+/* live-mission links carry the pulsing green orb */
+.footer-live-link{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+.footer-live-link .board-live{ flex:none; width:8px; height:8px; }
+
 .footer-top{ max-width:640px; }
 .footer-top .logo{ display:block; height:22px; width:auto; margin-bottom:2px; }
 .footer-top .logo-short{ display:none; }
