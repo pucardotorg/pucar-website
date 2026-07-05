@@ -181,7 +181,7 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
 /* two-line blurb slides open under the hovered logo */
 .brand-menu-desc{
   display:block;
-  max-width:30ch;
+  /* fills the panel width; no ch cap (it left a dead right gutter) */
   font-size:.78rem;
   line-height:1.45;
   color:rgba(251,248,242,.65);
