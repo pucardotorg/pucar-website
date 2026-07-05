@@ -638,6 +638,9 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
 .mobile-nav-btn{ display:none; }
 @media (max-width: 640px){
   .site-nav{ display:none !important; }
+  /* Get in touch lives INSIDE the menu overlay on phones (.mnav-cta);
+     no room for it beside the burger */
+  .header-cta{ display:none !important; }
   .site-header .logo img{ display:none; }
   /* the green P works on the cream hero AND the dark half: no light/dark
      swap needed, unlike the wordmarks */
@@ -3321,36 +3324,36 @@ a.event-card{ text-decoration:none; }
   .pin[data-beat] .litigant-stage{ translate:none !important; }
   .pin[data-beat] .litigant-walker{ transform:none !important; }
 
-  /* speech bubbles: the stage is only ~110-150px wide here and sits at
-     the LEFT edge of the single column, so neither the desktop anchor
-     (left:52%) nor centring (-50% of a wide balloon overshoots the left
-     viewport edge) works. Instead the balloon HANGS OFF the stage's left
-     edge and grows RIGHTWARD into the open column, sized to its text
-     (width:max-content on the base rule) and capped to the viewport.
-     Both translate STATES need overriding (this media block is later in
-     the file, so its hidden-state translate would win even while
-     visible). */
+  /* speech bubbles: the stage keeps its justify-self:center on mobile, so
+     the figure sits mid-viewport -- CENTRE the balloon on the stage
+     (= centred on the phone screen; the earlier left-edge anchor ran too
+     far right on long lines). Sizing comes from width:max-content on the
+     base rule (an abs box would otherwise shrink-wrap to the sliver of
+     stage after `left`), capped to the viewport. Both translate STATES
+     need overriding (this media block is later in the file, so its
+     hidden-state translate would win even while visible). */
   .speech-bubble{
-    max-width:min(260px, calc(100vw - 56px));
+    max-width:min(260px, calc(100vw - 40px));
     font-size:.84rem;
     line-height:1.4;
     padding:11px 14px;
-    left:6px;
+    left:50%;
     top:-4px;
-    translate:0 8px;
+    translate:-50% 8px;
   }
-  .speech-bubble.is-visible{ translate:0 0; }
-  .speech-bubble::after{ left:44px; } /* tail points down at her head */
+  .speech-bubble.is-visible{ translate:-50% 0; }
+  /* tail: dead-centre, pointing at the head right below */
+  .speech-bubble::after{ left:calc(50% - 9px); }
 
-  /* the judge's bubble: same left-edge anchor; it stays above the stage
-     top (bottom:calc(100%+...)), which on mobile is the padding strip
-     under the fixed header -- visible, just tighter */
+  /* the judge's bubble: same centring; it stays above the stage top
+     (bottom:calc(100%+...)), which on mobile is the padding strip under
+     the fixed header -- visible, just tighter */
   .judge-bubble{
-    left:6px;
+    left:50%;
     bottom:calc(100% + 8px);
-    translate:0 10px;
+    translate:-50% 10px;
   }
-  .pin[data-beat="3"] .judge-bubble{ translate:0 0; }
+  .pin[data-beat="3"] .judge-bubble{ translate:-50% 0; }
   .beats{
     grid-column:1;
     grid-row:2;  /* mobile really IS two rows (figure above, text below) -- undo the desktop grid-row:1 */
