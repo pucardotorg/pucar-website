@@ -1111,6 +1111,11 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
   top:4%;
   left:52%;
   z-index:6;
+  /* width:max-content, NOT auto: an abs-positioned box shrink-wraps to the
+     space left inside its containing block (the stage) after the `left`
+     offset -- on narrow stages that collapsed the balloon into a one-word-
+     per-line sliver. max-content sizes it to its text, capped below. */
+  width:max-content;
   max-width:230px;
   padding:13px 17px;
   color:var(--ink);
@@ -3316,34 +3321,36 @@ a.event-card{ text-decoration:none; }
   .pin[data-beat] .litigant-stage{ translate:none !important; }
   .pin[data-beat] .litigant-walker{ transform:none !important; }
 
-  /* speech bubbles: the desktop anchor (left:52%, -28% shift, 230px) hangs
-     off a stage that's only ~110-150px wide here, shoving the balloon
-     against the right screen edge -- cramped, raggedly wrapped. Centre it
-     over the figure instead, cap its width to the viewport, and shrink
-     the type a notch. Both translate STATES need overriding (this media
-     block is later in the file, so its translate would win even while
+  /* speech bubbles: the stage is only ~110-150px wide here and sits at
+     the LEFT edge of the single column, so neither the desktop anchor
+     (left:52%) nor centring (-50% of a wide balloon overshoots the left
+     viewport edge) works. Instead the balloon HANGS OFF the stage's left
+     edge and grows RIGHTWARD into the open column, sized to its text
+     (width:max-content on the base rule) and capped to the viewport.
+     Both translate STATES need overriding (this media block is later in
+     the file, so its hidden-state translate would win even while
      visible). */
   .speech-bubble{
-    max-width:min(240px, 64vw);
+    max-width:min(260px, calc(100vw - 56px));
     font-size:.84rem;
     line-height:1.4;
     padding:11px 14px;
-    left:50%;
-    top:-6px;
-    translate:-50% 8px;
+    left:6px;
+    top:-4px;
+    translate:0 8px;
   }
-  .speech-bubble.is-visible{ translate:-50% 0; }
-  .speech-bubble::after{ left:44%; }
+  .speech-bubble.is-visible{ translate:0 0; }
+  .speech-bubble::after{ left:44px; } /* tail points down at her head */
 
-  /* the judge's bubble: same centring; it stays anchored above the stage
+  /* the judge's bubble: same left-edge anchor; it stays above the stage
      top (bottom:calc(100%+...)), which on mobile is the padding strip
      under the fixed header -- visible, just tighter */
   .judge-bubble{
-    left:50%;
+    left:6px;
     bottom:calc(100% + 8px);
-    translate:-50% 8px;
+    translate:0 10px;
   }
-  .pin[data-beat="3"] .judge-bubble{ translate:-50% 0; }
+  .pin[data-beat="3"] .judge-bubble{ translate:0 0; }
   .beats{
     grid-column:1;
     grid-row:2;  /* mobile really IS two rows (figure above, text below) -- undo the desktop grid-row:1 */
