@@ -3676,8 +3676,10 @@ button.circle-card{
 /* on cards WITH tag chips the auto margin lives on the CHIPS instead, so
    they hug the divider; a second auto margin on the foot would split the
    slack and float the chips mid-card */
-.res-card .collab-foot, .res-data-card .collab-foot{ margin-top:0; }
-.res-data-card .collab-chips{ margin-top:auto; }
+.res-card .collab-foot{ margin-top:0; }
+/* data cards lost their chips row (type became the icon label), so the
+   foot takes the auto margin back: divider + button pin to the bottom */
+.res-data-card .collab-foot{ margin-top:auto; }
 /* circle cards have NO chips, so the foot (divider + Watch) takes the auto
    margin back and pins to the card bottom (this must come after the
    margin-top:0 above -- circle cards are also .res-card) */

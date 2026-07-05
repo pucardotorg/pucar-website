@@ -13,7 +13,9 @@
     { id: "collabGrid", bar: "collabFilters" },
     { id: "perspGrid", bar: null },
     { id: "contribGrid", bar: "contribFilters" },
-    { id: "dataGrid", bar: "dataTabs" } // resources page: Data, Policy, Research and more
+    // resources page: mounts in the TYPE-FILTER pill row, not the tab bar --
+    // the pill-shaped toggle looked out of place on the tabs' baseline track
+    { id: "dataGrid", bar: "dataTypebar" }
   ];
 
   var ICONS = {
