@@ -3637,12 +3637,18 @@ button.circle-card{
   color:var(--forest);
   font-weight:700;
 }
+/* substantive tab description: display serif, big enough to read as the
+   tab's own intro rather than a footnote */
 .res-tab-desc{
-  margin:0 0 22px;
-  max-width:70ch;
-  font-size:.95rem;
-  line-height:1.65;
-  color:rgba(251,248,242,.75);
+  margin:18px 0 30px;
+  max-width:56ch;
+  font-family:var(--font-display);
+  font-weight:500;
+  font-size:clamp(1.15rem,2vw,1.5rem);
+  line-height:1.5;
+  color:var(--paper);
+  border-left:3px solid var(--green);
+  padding-left:18px;
 }
 /* list view (data grid only): hide thumbs/summaries, compact rows */
 .res-grid.is-list .res-thumb, .res-grid.is-list .res-thumb-wrap{ display:none; }
