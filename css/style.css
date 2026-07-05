@@ -3529,10 +3529,14 @@ a.event-card{ text-decoration:none; }
 /* ---------------- About: funding contributors ----------------
    Static logo wall (explicitly no animation, unlike pucar.org's ticker).
    Logos are self-hosted at assets/funders/ via scripts/mirror-funder-logos.js. */
+/* white panel: most funder logos ship with white backgrounds, which read
+   as mismatched boxes on the cream page -- on white they melt in */
 .about-funders{
   margin:64px 0 16px;
-  padding-top:36px;
-  border-top:1px solid var(--line);
+  padding:32px clamp(24px,4vw,44px) 38px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:22px;
 }
 .about-funders .beat-eyebrow{ color:var(--forest); }
 .funder-grid{
