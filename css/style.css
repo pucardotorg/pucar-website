@@ -628,13 +628,111 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
   font-weight:600;
 }
 
+/* ---------------- mobile nav (≤640px) ----------------
+   The pills never fit a phone (expanded menus ran over the logo), so:
+   the wordmark collapses to the standalone "P" mark, the nav pills hide,
+   js/mobile-nav.js drops in a "Main Menu" burger pill, and tapping it
+   opens a full-screen tinted overlay with a vertical list that keeps the
+   dropdowns' hierarchy. */
+.site-header .logo img.logo-p{ display:none; }
+.mobile-nav-btn{ display:none; }
 @media (max-width: 640px){
-  .site-nav{ display:none; }
-  .site-header .logo img.logo-light-long,
-  .site-header .logo img.logo-dark-long{ display:none; }
-  .site-header .logo img.logo-light-short{ display:block; }
-  .site-header .logo img.logo-dark-short{ display:block; } /* only actually shown if the dark-bg opacity rule above is also active */
+  .site-nav{ display:none !important; }
+  .site-header .logo img{ display:none; }
+  /* the green P works on the cream hero AND the dark half: no light/dark
+     swap needed, unlike the wordmarks */
+  .site-header .logo img.logo-p{
+    display:block;
+    height:36px;
+    width:auto;
+  }
+  .mobile-nav-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:11px 18px;
+    border:1px solid rgba(26,26,26,.07);
+    border-radius:999px;
+    /* same frosted glass as the desktop nav pill */
+    background:rgba(251,248,242,.52);
+    backdrop-filter:blur(16px) saturate(1.6);
+    -webkit-backdrop-filter:blur(16px) saturate(1.6);
+    box-shadow:0 12px 32px rgba(17,31,38,.10), inset 0 1px 0 rgba(255,255,255,.55);
+    color:var(--ink-soft);
+    font:600 .88rem var(--font-body);
+    cursor:pointer;
+  }
+  :is(body:has(.pin:is([data-beat="4"],[data-beat="5"],[data-beat="6"],[data-beat="7"],[data-beat="8"],[data-beat="9"])), body.nav-dark) .mobile-nav-btn{
+    background:rgba(13,26,32,.55);
+    border-color:rgba(251,248,242,.12);
+    color:rgba(251,248,242,.88);
+    box-shadow:0 12px 32px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.08);
+  }
 }
+/* the overlay itself (rendered on every viewport, opened only on mobile
+   since its trigger is display:none elsewhere) */
+.mobile-nav-overlay{
+  position:fixed;
+  inset:0;
+  z-index:90;
+  overflow-y:auto;
+  padding:74px 26px 44px;
+  background:rgba(13,26,32,.93); /* the tint */
+  backdrop-filter:blur(16px) saturate(1.4);
+  -webkit-backdrop-filter:blur(16px) saturate(1.4);
+  color:var(--paper);
+}
+.mobile-nav-overlay[hidden]{ display:none; }
+.mnav-close{
+  position:absolute;
+  top:18px;
+  right:18px;
+  width:42px;
+  height:42px;
+  border:1px solid rgba(251,248,242,.25);
+  border-radius:50%;
+  background:transparent;
+  color:var(--paper);
+  font-size:22px;
+  line-height:1;
+  cursor:pointer;
+}
+.mnav-list{ display:flex; flex-direction:column; max-width:420px; margin:0 auto; }
+.mnav-heading{
+  margin:26px 0 4px;
+  font-size:.72rem;
+  font-weight:800;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--green);
+}
+.mnav-heading:first-child{ margin-top:0; }
+.mnav-group-label{
+  margin:16px 0 2px;
+  font-size:.68rem;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:rgba(251,248,242,.45);
+}
+.mnav-link{
+  display:block;
+  padding:12px 2px;
+  border-bottom:1px solid rgba(251,248,242,.08);
+  color:var(--paper);
+  text-decoration:none;
+  font-size:1.06rem;
+  font-weight:600;
+}
+.mnav-link:active{ color:var(--green); }
+.mnav-sub{
+  display:block;
+  margin-top:2px;
+  font-size:.78rem;
+  font-weight:400;
+  color:rgba(251,248,242,.55);
+}
+.mnav-cta{ margin-top:30px; justify-content:center; }
 
 /* ---------------- intro hero (before the scrolly story) ----------------
    A plain, static (non-sticky, non-scroll-driven) full-height section that

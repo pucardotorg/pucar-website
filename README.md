@@ -1577,6 +1577,26 @@ back up to.
 Circle anchors. js/nav.js also runs the dropdown menu-gliders (copied from
 script.js) so inner-page dropdowns behave identically to the homepage.
 
+### Mobile nav (≤640px, js/mobile-nav.js on EVERY page)
+
+The pills never fit a phone (expanded menus ran over the logo), so below
+640px: the wordmark collapses to the standalone green "P" mark
+(assets/pacar-p-icon.png -- note the "pacar" typo in the uploaded
+filename; the green works on both halves so there's no light/dark swap),
+all .site-nav pills are display:none !important, and js/mobile-nav.js
+injects a frosted "Main Menu" burger pill (dark variant flips with
+body.nav-dark / story beats). Tapping it opens .mobile-nav-overlay: a
+full-screen tint (blur + rgba(13,26,32,.93)) holding a VERTICAL list
+built by WALKING THE REAL NAV DOM at runtime -- so it can never drift
+from the actual menus. Hierarchy is preserved: dropdown names become
+green uppercase headings, the Community menu's .nav-menu-label groups
+become muted sub-labels, item .nav-menu-sub lines carry through, pages
+with a sub-nav get an "On this page" section first, "Home" appears on
+inner pages only, and the homepage's Get in touch CTA becomes a full
+button that closes the overlay and opens the contact modal. Closes on ×,
+Esc, or any link tap (needed for same-page anchors). The overlay markup
+exists on desktop too; only its trigger is media-queried away.
+
 ### Footer: single source of truth
 
 The footer's right side is a categorised sitemap (.footer-map: Explore /

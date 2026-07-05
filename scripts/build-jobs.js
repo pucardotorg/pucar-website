@@ -194,11 +194,13 @@ function pageShell(opts) {
 (opts.jsonLd ? '<script type="application/ld+json">' + JSON.stringify(opts.jsonLd) + "</script>\n" : "") +
 '</head>\n<body class="job-page">\n' +
 '<script src="/js/nav.js" defer></script>\n' +
+'<script src="/js/mobile-nav.js" defer></script>\n' +
 '<header class="site-header">\n  <a class="logo" href="/">\n' +
 '    <img class="logo-light logo-light-long" src="/assets/pucar-normal-expanded.png" alt="PUCAR: Public Collective for Avoidance and Resolution of Disputes" width="777" height="93" />\n' +
 '    <img class="logo-light logo-light-short" src="/assets/logo-pucar-green.avif" alt="PUCAR" width="401" height="100" />\n' +
 '    <img class="logo-dark logo-dark-long" src="/assets/pucar-white-expanded.avif" alt="PUCAR: Public Collective for Avoidance and Resolution of Disputes" width="835" height="100" />\n' +
 '    <img class="logo-dark logo-dark-short" src="/assets/pucar-white-short.png" alt="PUCAR" width="379" height="87" />\n' +
+'    <img class="logo-p" src="/assets/pacar-p-icon.png" alt="PUCAR" width="250" height="250" />\n' +
 '  </a>\n' +
 /* SAME navbar as the homepage (extracted at build time); pages can add a
    sub-nav via opts.subnav which collapses the main nav behind a burger */
