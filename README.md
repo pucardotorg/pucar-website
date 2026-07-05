@@ -1472,8 +1472,15 @@ YouTube playlist in July 2026.
   glyph; tags sit pinned just above the bottom divider: margin-top:auto on
   the CHIPS and margin-top:0 on the foot (two auto margins would split the
   slack and float the chips mid-card -- this bit, and got fixed);
-  clicking shows the themed LEAVE-SITE modal (#leaveModal: names the
-  destination host, Continue opens a new tab, cmd/ctrl-click skips it).
+  clicking shows the LEAVE-SITE WARNING (#leaveModal: names the destination
+  host, Continue opens a new tab, cmd/ctrl-click skips it). It deliberately
+  does NOT use the house modal look: compact 430px panel, 6px amber left
+  edge, warning-triangle + small uppercase "External link" header, no big
+  serif title ("You're about to leave PUCAR" was rejected). Related fix:
+  button.btn kills the UA button chrome + sets cursor:pointer (with a
+  button.btn.btn-outline re-assert for the outline border, since button.btn
+  outranks .btn-outline) -- .btn was designed for <a> and <button> uses had
+  no pointer cursor and a stray native border.
 - Card sheen: .res-shine sweeps a light band across the thumbnail on hover,
   and .res-thumb-glow is THE SAME IMAGE mirrored (scaleY(-1)), heavily
   blurred and saturated, stretched from under the photo to the card's TRUE

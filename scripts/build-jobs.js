@@ -657,15 +657,16 @@ blogTags.map(function (t) { return '      <button type="button" class="res-tab" 
 '  <div class="collab-grid res-grid" id="circleGrid">\n' + circleCards + "\n  </div>\n" +
 "</section>\n" +
 
+/* deliberately NOT the usual modal look: a compact amber-edged warning
+   strip, small uppercase header, no big serif title */
 '<div class="job-modal" id="leaveModal" hidden>\n' +
 '  <div class="job-modal-backdrop" data-close></div>\n' +
-'  <div class="job-modal-panel leave-panel" role="dialog" aria-modal="true" aria-labelledby="lmTitle">\n' +
+'  <div class="job-modal-panel leave-panel" role="alertdialog" aria-modal="true" aria-labelledby="lmTitle">\n' +
 '    <button class="job-modal-close" type="button" data-close aria-label="Close">\u00d7</button>\n' +
-'    <p class="beat-eyebrow">Heads up</p>\n' +
-'    <h2 class="job-title" id="lmTitle">You\u2019re about to leave PUCAR.</h2>\n' +
-'    <p class="leave-text">This article lives on <strong id="lmHost"></strong>. It\u2019s a link we curated, safe to follow, and it will open in a new tab.</p>\n' +
-'    <div class="cta-row">\n' +
-'      <button class="btn btn-primary" type="button" id="lmGo">Continue to article</button>\n' +
+'    <p class="leave-head" id="lmTitle"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1.8 15 14H1L8 1.8z"/><path d="M8 6.2v3.6M8 11.9h.01"/></svg>External link</p>\n' +
+'    <p class="leave-text">This link opens an external site \u2014 <strong id="lmHost"></strong>. It\u2019s a link we curated, safe to follow, and it will open in a new tab.</p>\n' +
+'    <div class="cta-row leave-actions">\n' +
+'      <button class="btn btn-primary" type="button" id="lmGo">Continue</button>\n' +
 '      <button class="btn btn-outline" type="button" data-close>Stay here</button>\n' +
 "    </div>\n" +
 "  </div>\n" +

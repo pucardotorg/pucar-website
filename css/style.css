@@ -1931,6 +1931,15 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
 .initiative-link{ font-size:.78rem; color:rgba(251,248,242,.55); margin-top:auto; }
 
 .cta-row{ display:flex; gap:14px; margin-top:28px; flex-wrap:wrap; }
+/* .btn is designed for <a> but also used on <button>: kill the UA button
+   chrome (border, font) and make the cursor behave like a link everywhere.
+   .btn-outline re-asserts its border below (button.btn outranks it). */
+button.btn{
+  border:0;
+  cursor:pointer;
+  font-family:var(--font-body);
+}
+button.btn.btn-outline{ border:1px solid var(--line); }
 .btn{
   display:inline-flex;
   align-items:center;
@@ -3936,11 +3945,32 @@ button.circle-card{
   transform:translateX(130%);
   transition:transform .85s ease;
 }
-.leave-panel{ max-width:520px; }
+/* leave-site warning: deliberately NOT the house modal look -- a compact
+   amber-edged strip that reads as a brief warning, not another dialog */
+.leave-panel{
+  max-width:430px;
+  border-left:6px solid #D08700;
+  border-radius:16px;
+  padding:24px 28px 22px;
+}
+.leave-head{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin:0 0 10px;
+  font-size:.78rem;
+  font-weight:800;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:#8A5A14; /* amber-dark: 6.2:1 on --paper */
+}
+.leave-head svg{ flex:none; color:#D08700; }
 .leave-text{
-  font-size:1rem;
-  line-height:1.65;
+  font-size:.98rem;
+  line-height:1.6;
   color:var(--ink-soft);
-  margin:8px 0 6px;
+  margin:0;
 }
 .leave-text strong{ color:var(--ink); }
+.leave-actions{ margin-top:20px; gap:10px; }
+.leave-actions .btn{ padding:10px 20px; font-size:.88rem; }

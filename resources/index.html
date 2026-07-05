@@ -410,13 +410,12 @@
 </section>
 <div class="job-modal" id="leaveModal" hidden>
   <div class="job-modal-backdrop" data-close></div>
-  <div class="job-modal-panel leave-panel" role="dialog" aria-modal="true" aria-labelledby="lmTitle">
+  <div class="job-modal-panel leave-panel" role="alertdialog" aria-modal="true" aria-labelledby="lmTitle">
     <button class="job-modal-close" type="button" data-close aria-label="Close">×</button>
-    <p class="beat-eyebrow">Heads up</p>
-    <h2 class="job-title" id="lmTitle">You’re about to leave PUCAR.</h2>
-    <p class="leave-text">This article lives on <strong id="lmHost"></strong>. It’s a link we curated, safe to follow, and it will open in a new tab.</p>
-    <div class="cta-row">
-      <button class="btn btn-primary" type="button" id="lmGo">Continue to article</button>
+    <p class="leave-head" id="lmTitle"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1.8 15 14H1L8 1.8z"/><path d="M8 6.2v3.6M8 11.9h.01"/></svg>External link</p>
+    <p class="leave-text">This link opens an external site — <strong id="lmHost"></strong>. It’s a link we curated, safe to follow, and it will open in a new tab.</p>
+    <div class="cta-row leave-actions">
+      <button class="btn btn-primary" type="button" id="lmGo">Continue</button>
       <button class="btn btn-outline" type="button" data-close>Stay here</button>
     </div>
   </div>
