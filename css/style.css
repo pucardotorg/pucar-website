@@ -2811,10 +2811,12 @@ button.btn.btn-outline{ border:1px solid var(--line); }
 .contrib-search:focus{ border-color:rgba(251,248,242,.6); background:rgba(251,248,242,.12); }
 .contrib-grid{
   display:grid;
+  /* July 2026: was max-width:1180px + margin:0 auto, which left this
+     section visibly narrower/indented than the DRISTI and Policy sections
+     above it once all three lived on the same /contributors/ hub page.
+     Dropped the cap so it spans the same full-bleed width as .collab-grid. */
   grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));
   gap:14px;
-  max-width:1180px;
-  margin:0 auto;
 }
 /* same translucent card language as .collab-card, just smaller */
 .contrib-card{
@@ -3789,6 +3791,90 @@ a.event-card{ text-decoration:none; }
 }
 @media (max-width:640px){
   .civis-callout-action{ flex:1 1 100%; text-align:left; }
+}
+
+/* ---------------- policy callout: /contributors/ Policy section ----------------
+   Same gradient-card language as .civis-callout (act-now feature block),
+   extended with a live countdown badge. Sits inside .job-main (720px
+   readable column) via the .policy-band wrapper, so it's narrower than the
+   full-bleed DRISTI/.collaborate section above it -- deliberate, this is a
+   feature card in a prose-width band, matching how /sc-ai-policy/ and
+   /about/ use .job-main for their own light-band callouts. */
+.policy-band{ padding-top:70px; padding-bottom:70px; }
+.policy-callout{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:26px 36px;
+  padding:clamp(26px,4vw,40px);
+  border-radius:22px;
+  background:
+    radial-gradient(120% 160% at 85% -20%, rgba(94,226,160,.28), transparent 55%),
+    linear-gradient(135deg, var(--forest), #1C3540);
+  color:var(--paper);
+  box-shadow:0 24px 60px rgba(17,31,38,.28);
+}
+.policy-callout-text{ flex:1 1 320px; min-width:0; }
+.policy-kicker{
+  margin:0 0 6px;
+  font-size:.7rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  color:var(--green);
+}
+.policy-title{
+  margin:0 0 10px;
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:clamp(1.25rem,2.6vw,1.6rem);
+  line-height:1.25;
+}
+.policy-sub{
+  margin:0 0 18px;
+  font-size:.92rem;
+  line-height:1.6;
+  color:rgba(251,248,242,.78);
+  max-width:52ch;
+}
+.policy-countdown{
+  flex:0 0 auto;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:5px;
+  min-width:168px;
+  padding:20px 26px;
+  border-radius:18px;
+  background:rgba(251,248,242,.08);
+  border:1px solid rgba(251,248,242,.18);
+  text-align:center;
+}
+.policy-countdown.is-urgent{
+  background:rgba(240,162,138,.14);
+  border-color:rgba(240,162,138,.4);
+}
+.policy-countdown-num{
+  font-family:var(--font-display);
+  font-size:clamp(2.2rem,4vw,2.8rem);
+  font-weight:700;
+  line-height:1;
+  color:var(--green);
+}
+.policy-countdown.is-urgent .policy-countdown-num{ color:#F0A28A; }
+.policy-countdown-label{
+  font-size:.72rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.09em;
+  color:rgba(251,248,242,.78);
+}
+.policy-countdown-sub{
+  font-size:.74rem;
+  color:rgba(251,248,242,.55);
+}
+@media (max-width:640px){
+  .policy-countdown{ flex:1 1 100%; }
 }
 
 /* ---------------- collab strip: contributor stack + invite ----------------

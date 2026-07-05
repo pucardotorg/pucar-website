@@ -445,16 +445,38 @@ function contributorsPage() {
 '    <div class="collab-filter-empty" id="collabEmpty" hidden>No work matches these filters right now. Try widening them.</div>\n' +
 "  </div>\n" +
 "</section>\n" +
+'<div class="job-modal" id="jobModal" hidden>\n' +
+'  <div class="job-modal-backdrop" data-close></div>\n' +
+'  <div class="job-modal-panel" role="dialog" aria-modal="true" aria-labelledby="jobModalTitle">\n' +
+'    <button class="job-modal-close" type="button" data-close aria-label="Close">×</button>\n' +
+'    <p class="beat-eyebrow" id="jobModalType"></p>\n' +
+'    <h2 class="job-title" id="jobModalTitle"></h2>\n' +
+'    <div class="job-meta" id="jobModalMeta"></div>\n' +
+'    <ul class="job-chips" id="jobModalChips"></ul>\n' +
+'    <article class="job-body" id="jobModalBody"></article>\n' +
+'    <div class="cta-row">\n' +
+'      <a class="btn btn-primary" id="jobModalApply" href="#" target="_blank" rel="noopener">Read the original</a>\n' +
+"    </div>\n  </div>\n</div>\n" +
+'<script src="/js/collaborate.js"></script>\n' +
 
-'<div class="job-main" id="policy">\n' +
-'  <article class="job-body">\n' +
-'    <h2>Policy</h2>\n' +
-"    <p>The Supreme Court's AI Committee has published a draft framework for how courts can use AI: assist, never adjudicate. Citizen feedback is open until 15 July 2026, and the collective has been reading the draft closely, publishing explainers, critiques, and formal submissions along the way.</p>\n" +
-"  </article>\n" +
-'  <div class="cta-row">\n' +
-'    <a class="btn btn-primary" href="/sc-ai-policy/">Explore the Supreme Court’s AI policy</a>\n' +
+'<div class="job-main policy-band" id="policy">\n' +
+'  <div class="policy-callout">\n' +
+'    <div class="policy-callout-text">\n' +
+'      <p class="policy-kicker">Public consultation</p>\n' +
+'      <h2 class="policy-title">The Supreme Court wants your views on AI in its courts.</h2>\n' +
+'      <p class="policy-sub">A draft framework for how courts can use AI -- assist, never adjudicate. The collective has been reading it closely: explainers, critiques, and formal submissions, all in one place.</p>\n' +
+'      <div class="cta-row">\n' +
+'        <a class="btn btn-primary" href="/sc-ai-policy/">Explore the Supreme Court’s AI policy</a>\n' +
+"      </div>\n" +
+"    </div>\n" +
+'    <div class="policy-countdown" id="policyCountdown" data-deadline="2026-07-15">\n' +
+'      <span class="policy-countdown-num" id="policyCountdownNum">—</span>\n' +
+'      <span class="policy-countdown-label" id="policyCountdownLabel">days left</span>\n' +
+'      <span class="policy-countdown-sub">to respond by 15 July 2026</span>\n' +
+"    </div>\n" +
 "  </div>\n" +
 "</div>\n" +
+'<script src="/js/policy-countdown.js"></script>\n\n' +
 
 contributorsSection() +
 "<main hidden>";
