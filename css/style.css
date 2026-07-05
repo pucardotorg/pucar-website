@@ -2335,6 +2335,15 @@ button.btn.btn-outline{ border:1px solid var(--line); }
   border-style:solid;
   border-color:var(--gold);
   color:var(--ink);
+  /* the label is just "×" now: a true circle, not a squat oblong pill */
+  width:30px;
+  height:30px;
+  padding:0;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  line-height:1;
 }
 .collab-btn{
   margin-top:auto;
