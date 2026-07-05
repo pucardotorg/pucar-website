@@ -3713,6 +3713,61 @@ button.circle-card{
   color:var(--forest);
   font-weight:700;
 }
+/* the data section's initiative switcher reads as REAL TABS: a shared
+   baseline with an underline that marks the active one (the pill look is
+   kept for the type FILTERS below the description) */
+.res-tabbar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:2px;
+  margin:0 0 4px;
+  border-bottom:1px solid rgba(251,248,242,.16);
+}
+.res-tabbar .res-tab{
+  border:0;
+  border-radius:0;
+  background:transparent;
+  padding:10px 16px 12px;
+  margin-bottom:-1px; /* the underline sits ON the track line */
+  border-bottom:2px solid transparent;
+  color:rgba(251,248,242,.68);
+  font:500 .92rem var(--font-body);
+}
+.res-tabbar .res-tab:hover{
+  color:var(--paper);
+  border-bottom-color:rgba(251,248,242,.35);
+  background:transparent;
+}
+.res-tabbar .res-tab.is-active{
+  background:transparent;
+  color:var(--green);
+  border-bottom-color:var(--green);
+  font-weight:700;
+}
+/* type filters keep the pill look, with the type's icon inside */
+.res-type-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+}
+/* the display:inline-flex above would beat [hidden] (same gotcha as
+   .collab-card): pills not present in the current tab must actually hide */
+.res-type-pill[hidden]{ display:none; }
+.res-type-pill svg{ opacity:.75; flex:none; }
+.res-type-pill.is-active svg{ opacity:1; }
+/* data cards: the type is an icon + quiet uppercase label (same voice as
+   .res-outlet on blog cards), NOT a pill */
+.res-type{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  font-size:.7rem;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--green);
+}
+.res-type svg{ flex:none; opacity:.9; }
 /* substantive tab description: display serif, big enough to read as the
    tab's own intro rather than a footnote */
 .res-tab-desc{

@@ -184,23 +184,66 @@
     chipT = setTimeout(clampAll, 250);
   });
 
-  /* ---- data tabs ---- */
+  /* ---- data tabs (initiative) + type filters, combined ---- */
   var tabs = document.getElementById("dataTabs");
+  var typebar = document.getElementById("dataTypebar");
   var dataGrid = document.getElementById("dataGrid");
   var tabDesc = document.getElementById("dataTabDesc");
   if (tabs && dataGrid) {
     var dataCards = Array.prototype.slice.call(dataGrid.querySelectorAll(".res-data-card"));
+    var dataState = { tab: "all", type: "all" };
+
+    function applyData() {
+      animateFilter(dataGrid, dataCards, function (card) {
+        return (dataState.tab === "all" || card.getAttribute("data-tab") === dataState.tab) &&
+          (dataState.type === "all" || card.getAttribute("data-type") === dataState.type);
+      });
+    }
+
+    /* only offer type pills that exist inside the current tab (a "Policy"
+       pill under the ODR tab could only ever produce an empty grid); if the
+       active type vanishes with the tab switch, fall back to All types */
+    function refreshTypePills() {
+      if (!typebar) return;
+      var present = {};
+      dataCards.forEach(function (c) {
+        if (dataState.tab === "all" || c.getAttribute("data-tab") === dataState.tab) {
+          present[c.getAttribute("data-type")] = true;
+        }
+      });
+      typebar.querySelectorAll(".res-type-pill").forEach(function (b) {
+        var t = b.getAttribute("data-type");
+        if (t === "all") return;
+        var ok = !!present[t];
+        b.hidden = !ok;
+        if (!ok && dataState.type === t) dataState.type = "all";
+        b.classList.toggle("is-active", dataState.type === t);
+      });
+      typebar.querySelector('[data-type="all"]').classList.toggle("is-active", dataState.type === "all");
+    }
+
     tabs.addEventListener("click", function (e) {
       var btn = e.target.closest(".res-tab");
       if (!btn) return;
       tabs.querySelectorAll(".res-tab").forEach(function (b) { b.classList.remove("is-active"); });
       btn.classList.add("is-active");
-      var key = btn.getAttribute("data-tab");
+      dataState.tab = btn.getAttribute("data-tab");
       if (tabDesc) tabDesc.textContent = btn.getAttribute("data-desc") || "";
-      animateFilter(dataGrid, dataCards, function (card) {
-        return key === "all" || card.getAttribute("data-tab") === key;
-      });
+      refreshTypePills();
+      applyData();
     });
+
+    if (typebar) {
+      typebar.addEventListener("click", function (e) {
+        var btn = e.target.closest(".res-type-pill");
+        if (!btn) return;
+        dataState.type = btn.getAttribute("data-type");
+        typebar.querySelectorAll(".res-type-pill").forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        applyData();
+      });
+      refreshTypePills();
+    }
   }
 
   /* ---- learning circle video modal ---- */

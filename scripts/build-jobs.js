@@ -554,6 +554,25 @@ function resourcesPage() {
       "</a>";
   }).join("\n");
 
+  /* per-type icons (Lucide-style inline strokes) shown instead of the old
+     type pill on data cards, and inside the type-filter pills */
+  function typeIcon(inner) {
+    return '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">' + inner + "</svg>";
+  }
+  const TYPE_ICONS = {
+    "Policy": typeIcon('<path d="M4 1.5h8a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-11a1 1 0 0 1 1-1z"/><path d="M5.5 5h5M5.5 7.5h5M5.5 10h3"/>'),
+    "Dataset": typeIcon('<ellipse cx="8" cy="3.5" rx="5.5" ry="2"/><path d="M2.5 3.5v9c0 1.1 2.5 2 5.5 2s5.5-.9 5.5-2v-9"/><path d="M2.5 8c0 1.1 2.5 2 5.5 2s5.5-.9 5.5-2"/>'),
+    "Courts": typeIcon('<path d="M2 6 8 1.8 14 6"/><path d="M3.5 6v6M6.5 6v6M9.5 6v6M12.5 6v6"/><path d="M2 14.2h12M2 12h12"/>'),
+    "Open Source": typeIcon('<circle cx="4.5" cy="3.8" r="1.7"/><circle cx="4.5" cy="12.2" r="1.7"/><circle cx="11.5" cy="3.8" r="1.7"/><path d="M4.5 5.5v5M11.5 5.5c0 2.8-3.2 3-5.3 3.6"/>'),
+    "Code": typeIcon('<path d="M5.5 4.5 2 8l3.5 3.5M10.5 4.5 14 8l-3.5 3.5"/>'),
+    "Presentation": typeIcon('<rect x="1.5" y="2.5" width="13" height="8.5" rx="1.2"/><path d="M8 11v1.7M5.2 15 8 12.7 10.8 15M8 1v1.5"/>'),
+    "Article": typeIcon('<rect x="1.5" y="3" width="13" height="10" rx="1.2"/><path d="M4 6.2h4.5M4 8.5h8M4 10.8h8M11 6.2h1"/>'),
+    "Research": typeIcon('<path d="M6.3 1.5h3.4M7 1.5v4.2L3.2 12a1.6 1.6 0 0 0 1.4 2.4h6.8A1.6 1.6 0 0 0 12.8 12L9 5.7V1.5"/><path d="M4.6 10h6.8"/>'),
+    "Dashboard": typeIcon('<circle cx="8" cy="8.8" r="5.8"/><path d="M8 8.8l2.8-2.8M4.8 8.8h.01M11.2 8.8h.01M8 5.6h.01"/>'),
+    "Handbook": typeIcon('<path d="M8 3.6C6.7 2.7 4.9 2.3 2.3 2.3v10.8c2.6 0 4.4.4 5.7 1.3 1.3-.9 3.1-1.3 5.7-1.3V2.3C11.1 2.3 9.3 2.7 8 3.6v10.5"/>')
+  };
+  const DEFAULT_TYPE_ICON = typeIcon('<path d="M4 1.5h5.5L13 5v8.5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-11a1 1 0 0 1 1-1z"/><path d="M9.5 1.5V5H13"/>');
+
   const TABS = [
     { key: "all", label: "All", desc: "Everything the collective has put into the commons: datasets, policy documents, research, code, and playbooks." },
     { key: "People Centric Courts", label: "People Centric Courts", desc: "Transforming court processes for a seamless, predictable and empowering experience for all litigants." },
@@ -564,13 +583,21 @@ function resourcesPage() {
     return '<button type="button" class="res-tab' + (i === 0 ? " is-active" : "") + '" data-tab="' + esc(t.key) + '" data-desc="' + esc(t.desc) + '">' + esc(t.label) + "</button>";
   }).join("\n      ");
 
+  /* the resource TYPE (second tag: Policy/Dataset/Article/...) renders as an
+     icon + quiet uppercase label instead of a pill, and doubles as a filter
+     (data-type). No chips row: the tab covers the initiative, the type
+     label + filter bar cover the rest -- pills were pure duplication. */
+  const dataTypes = Array.from(new Set(resData.map(function (d) { return (d.tags || [])[1] || "Resource"; }))).sort();
+  const typeBtns = dataTypes.map(function (t) {
+    return '<button type="button" class="res-tab res-type-pill" data-type="' + esc(t) + '">' + (TYPE_ICONS[t] || DEFAULT_TYPE_ICON) + esc(t) + "</button>";
+  }).join("\n      ");
+
   const dataCards = resData.map(function (d) {
     const type = (d.tags || [])[1] || "Resource";
-    return '<a class="collab-card res-data-card" data-tab="' + esc(d.tab) + '" href="' + esc(d.url) + '" target="_blank" rel="noopener">\n' +
-      '  <div class="collab-topline"><span class="collab-cat">' + esc(type) + "</span></div>\n" +
+    return '<a class="collab-card res-data-card" data-tab="' + esc(d.tab) + '" data-type="' + esc(type) + '" href="' + esc(d.url) + '" target="_blank" rel="noopener">\n' +
+      '  <div class="collab-topline"><span class="res-type">' + (TYPE_ICONS[type] || DEFAULT_TYPE_ICON) + esc(type) + "</span></div>\n" +
       '  <span class="collab-title">' + esc(d.title) + "</span>\n" +
       '  <span class="collab-summary">' + esc(d.desc) + "</span>\n" +
-      '  <ul class="collab-chips">' + (d.tags || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>\n" +
       '  <div class="collab-foot"><span class="collab-btn">Open resource</span></div>\n' +
       "</a>";
   }).join("\n");
@@ -610,8 +637,10 @@ blogTags.map(function (t) { return '      <button type="button" class="res-tab" 
 '    <p class="beat-eyebrow">Data, Policy, Research and more</p>\n' +
 '    <h2 class="collab-title-main">An open body of knowledge.</h2>\n' +
 "  </div>\n" +
-'  <div class="res-tagbar" id="dataTabs">\n      ' + tabBtns + "\n  </div>\n" +
+'  <div class="res-tabbar" id="dataTabs" role="tablist">\n      ' + tabBtns + "\n  </div>\n" +
 '  <p class="res-tab-desc" id="dataTabDesc">' + esc(TABS[0].desc) + "</p>\n" +
+'  <div class="res-tagbar res-typebar" id="dataTypebar">\n' +
+'      <button type="button" class="res-tab res-type-pill is-active" data-type="all">All types</button>\n      ' + typeBtns + "\n  </div>\n" +
 '  <div class="collab-grid res-grid" id="dataGrid">\n' + dataCards + "\n  </div>\n" +
 "</section>\n" +
 

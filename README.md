@@ -1409,12 +1409,25 @@ YouTube playlist in July 2026.
   thumbnails (assets/blog/<slug>) and a topic pill filter (.res-tagbar).
   Whole card links out. NO list view (explicit).
 - DATA, POLICY, RESEARCH AND MORE (#data-resources): 26 items tagged by
-  initiative. Tabs (All / People Centric Courts / Court Performance Metrics
-  / Online Dispute Resolution (ODR)) swap a description pulled from each
-  initiative page's own hero copy, and filter cards via data-tab. Has the
-  cards/list VIEW TOGGLE (dataGrid registered in js/view-toggle.js; the
-  toggle mounts into the #dataTabs bar). Tags are topical and small:
-  initiative + type (Dataset/Presentation/Article/Code/Policy/...).
+  initiative. The initiative switcher is styled as REAL TABS (.res-tabbar:
+  shared baseline track, green underline marks the active tab) and swaps a
+  description pulled from each initiative page's own hero copy. BELOW the
+  description sits a second row of TYPE FILTERS (#dataTypebar, pill-styled,
+  each with its type's icon); tab + type combine (AND) in js/resources.js.
+  refreshTypePills() hides type pills that don't exist inside the current
+  tab (a "Policy" pill under ODR could only give an empty grid) and falls
+  back to "All types" if the active one vanishes -- note the
+  .res-type-pill[hidden]{display:none} guard, the display:inline-flex vs
+  [hidden] gotcha again. Cards carry the type as data-type and render it
+  as an ICON + quiet uppercase green label (.res-type, same voice as the
+  blog cards' .res-outlet) instead of the old pill; the chips row is GONE
+  from data cards (tab covers the initiative, icon label + filter bar
+  cover the type -- the pills were pure duplication). Icons are inline
+  Lucide-style strokes in TYPE_ICONS (scripts/build-jobs.js), one per type
+  (Policy/Dataset/Courts/Open Source/Code/Presentation/Article/Research/
+  Dashboard/Handbook) plus a default file icon. Has the cards/list VIEW
+  TOGGLE (dataGrid registered in js/view-toggle.js; the toggle mounts into
+  the #dataTabs bar).
 - LEARNING CIRCLES (#learning-circles): 9 videos (LC #5 is not in the
   playlist) as thumbnail cards (assets/circles/<id>.jpg, play overlay);
   clicking opens #videoModal -- job-modal chrome with ONLY a
