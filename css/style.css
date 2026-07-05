@@ -4374,7 +4374,7 @@ button.circle-card{
 .dristi-main{
   max-width:1240px; /* keeps job-main's own side padding */
 }
-.dristi-main .job-body{ max-width:74ch; }
+.dristi-main .job-body{ max-width:none; } /* paragraphs span the full column, like the title */
 
 /* ---------------- /dristi/ page ----------------
    Intro + five levers reuse the About page components (.about-stats,
@@ -4385,12 +4385,11 @@ button.circle-card{
 /* intro stat strip: three columns split by hairlines, not the stacked
    left-aligned column the flex default produced with sentence-length labels */
 .dristi-hero-stats{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:clamp(22px,3.5vw,48px);
+  display:grid;
+  grid-template-columns:repeat(3, 1fr); /* three EQUAL thirds, full width */
+  gap:clamp(24px,4vw,56px);
+  align-items:start;
 }
-.dristi-hero-stats .about-stat{ flex:1 1 0; max-width:30ch; }
 .dristi-hero-stats .about-stat-num{ white-space:nowrap; }
 .dristi-hero-stats .about-stat + .about-stat{
   padding-left:clamp(22px,3.5vw,48px);
@@ -4401,10 +4400,11 @@ button.circle-card{
 .dristi-hero-stats .about-stat-label{
   text-transform:none;
   letter-spacing:0;
-  font-size:.92rem;
+  font-size:.95rem;
   font-weight:500;
   line-height:1.5;
   color:rgba(251,248,242,.72);
+  max-width:34ch;
 }
 .dristi-hero-stats .about-stat-label::first-letter{ text-transform:uppercase; }
 @media (max-width: 760px){
