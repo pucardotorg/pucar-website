@@ -2696,7 +2696,8 @@ body.scroll-locked{ overflow:hidden; }
    rhythm, and headings set in the display face with a short rule. */
 /* editorial pages get a wider column than job pages (the site already
    leans on :has() elsewhere, so this is safe) */
-.job-main:has(.job-body.prose){ max-width:880px; }
+.job-main:has(.job-body.prose),
+.job-main:has(.about-what){ max-width:880px; } /* About's top main lost its .prose block in the mission-statement redesign and collapsed to 720px ("too crammed") */
 .job-body.prose{ max-width:none; }
 .job-body.prose p{
   font-size:1.05rem;
@@ -2790,7 +2791,8 @@ body.scroll-locked{ overflow:hidden; }
   font-size:clamp(1.45rem,3vw,2.05rem);
   line-height:1.42;
   color:var(--ink);
-  max-width:26ch;
+  /* fills the 880px column: the earlier 26ch cap broke lines every few
+     words and read cramped */
 }
 .about-what-statement em{
   font-style:normal;
@@ -2805,7 +2807,7 @@ body.scroll-locked{ overflow:hidden; }
   font-size:1.05rem;
   line-height:1.75;
   color:var(--ink-soft);
-  max-width:58ch;
+  max-width:66ch;
 }
 
 /* full-bleed "Why PUCAR?" band: cream<->forest rhythm for the About page */
