@@ -1410,6 +1410,13 @@ unless document.referrer is same-origin (compared against location.origin
 dynamically, so it works on the netlify subdomain now and pucar.org later):
 arriving from Google/another site or directly means no back pill.
 
+### Footer: single source of truth
+
+pageShell no longer carries its own footer markup: the build script extracts
+<footer class="site-footer">...</footer> VERBATIM from index.html at build
+time (const FOOTER) and injects it into every generated page. To change any
+footer anywhere, edit index.html's footer and re-run the build.
+
 ### 6.4 The build script — scripts/build-jobs.js
 
 Run by Netlify (`netlify.toml` command) and locally. Zero deps. It:

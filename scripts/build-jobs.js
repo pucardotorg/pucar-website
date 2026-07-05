@@ -125,6 +125,17 @@ const boardJobs = jobs.filter(function (j) { return j.status === "Open" && j.exp
 
 /* ---------------- shared page chrome ---------------- */
 
+/* THE footer: extracted verbatim from index.html at build time, so the
+   homepage is the single source of truth and every generated page's footer
+   can never drift again ("make all footers consistent and dynamic with the
+   home page"). Edit the footer in index.html only. */
+const FOOTER = (function () {
+  const src = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  const m = src.match(/<footer class="site-footer">[\s\S]*?<\/footer>/);
+  if (!m) throw new Error("site-footer not found in index.html — pageShell needs it");
+  return m[0];
+})();
+
 function pageShell(opts) {
   return "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n" +
 '<meta charset="UTF-8" />\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />\n' +
@@ -159,11 +170,7 @@ function pageShell(opts) {
 '<a href="/contributors/">View all Collaborators</a>' +
 "</nav>\n</header>\n" +
 '<main class="job-main">\n' + opts.main + "\n</main>\n" +
-'<footer class="site-footer">\n  <div class="footer-top">' +
-'<img class="logo logo-long" src="/assets/pucar-white-expanded.avif" alt="PUCAR: Public Collective for Avoidance and Resolution of Disputes" width="835" height="100" />' +
-'<img class="logo logo-short" src="/assets/pucar-white-short.png" alt="PUCAR" width="379" height="87" />\n' +
-"    <p>PUCAR is an unregistered non-profit public mission facilitating a collective of individuals and organizations to contribute their experience and expertise to advance new ideas and approaches in dispute resolution systems.</p>\n" +
-'  </div>\n  <p class="footer-copy">© 2026 PUCAR. All rights reserved.</p>\n</footer>\n</body>\n</html>\n';
+FOOTER + "\n</body>\n</html>\n";
 }
 
 /* ---------------- job pieces ---------------- */
