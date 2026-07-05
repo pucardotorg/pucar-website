@@ -1218,8 +1218,12 @@
     b.style.top = (66 + Math.random() * 20) + "%";
     stream.appendChild(b);
     var anim = b.animate([
+      // SLOW fade-in: the heads stay ghosted while crossing the text on
+      // the left half and only reach full opacity past ~60vw, clear of
+      // the main content ("otherwise they distract and cover the content")
       { transform: "translateX(-120px) scale(.12)", opacity: 0 },
-      { transform: "translateX(16vw) scale(.32)", opacity: 1, offset: .16 },
+      { transform: "translateX(16vw) scale(.32)", opacity: .18, offset: .16 },
+      { transform: "translateX(42vw) scale(.55)", opacity: .38, offset: .4 },
       { transform: "translateX(60vw) scale(.72)", opacity: 1, offset: .6 },
       { transform: "translateX(105vw) scale(1)", opacity: 1 }
     ], { duration: 9000 + Math.random() * 8000, easing: "linear" });
