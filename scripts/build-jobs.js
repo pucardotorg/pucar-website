@@ -496,6 +496,36 @@ FUNDERS.map(function (f) {
   });
 }
 
+function resourcesPage() {
+  /* PLACEHOLDER content -- the three anchors (#blog, #data-resources,
+     #learning-circles) are what the Community nav dropdown links to. */
+  const main =
+'  <p class="beat-eyebrow">Resources</p>\n' +
+'  <h1 class="job-title">Things worth keeping open in a tab.</h1>\n' +
+'  <article class="job-body prose no-cap">\n' +
+"    <p>Writing, data, and shared learning from the PUCAR collective. This page is just getting started, each section below will fill out as the community publishes.</p>\n" +
+"  </article>\n" +
+'  <article class="job-body prose no-cap" id="blog">\n' +
+"    <h2>Blog</h2>\n" +
+"    <p>Essays and field notes from contributors on courts, dispute resolution, and building public goods. First posts are on their way.</p>\n" +
+"  </article>\n" +
+'  <article class="job-body prose no-cap" id="data-resources">\n' +
+"    <h2>Data Resources</h2>\n" +
+"    <p>Open datasets, dashboards, and measurement tooling around court performance. Links will appear here as they are cleaned up for public use.</p>\n" +
+"  </article>\n" +
+'  <article class="job-body prose no-cap" id="learning-circles">\n' +
+"    <h2>Learning Circles</h2>\n" +
+"    <p>Small reading and discussion groups the collective runs around justice-system questions. Details on joining the next circle will be posted here.</p>\n" +
+"  </article>";
+  return pageShell({
+    title: "Resources | PUCAR",
+    desc: "Writing, open data, and learning circles from the PUCAR collective.",
+    url: "/resources/",
+    jsonLd: { "@context": "https://schema.org", "@type": "CollectionPage", name: "PUCAR resources" },
+    backHref: "/", backLabel: "\u2190 Home", main: main
+  });
+}
+
 function teamPage() {
   /* PLACEHOLDER members -- replace with the real team before launch. */
   const placeholders = [
@@ -686,7 +716,7 @@ scEvents.map(eventCard).join("\n") + "\n" +
 
 /* ---------------- write everything ---------------- */
 
-["collaborate", "contributors", "sc-ai-policy", "about", "team"].forEach(function (d) {
+["collaborate", "contributors", "sc-ai-policy", "about", "team", "resources"].forEach(function (d) {
   fs.rmSync(path.join(ROOT, d), { recursive: true, force: true });
 });
 fs.mkdirSync(path.join(ROOT, "collaborate"), { recursive: true });
@@ -728,6 +758,8 @@ fs.mkdirSync(path.join(ROOT, "about"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, "about", "index.html"), aboutPage());
 fs.mkdirSync(path.join(ROOT, "team"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, "team", "index.html"), teamPage());
+fs.mkdirSync(path.join(ROOT, "resources"), { recursive: true });
+fs.writeFileSync(path.join(ROOT, "resources", "index.html"), resourcesPage());
 
 fs.writeFileSync(path.join(ROOT, "collaborate", "jobs.json"), JSON.stringify(jobs.map(function (j) {
   return {
@@ -758,7 +790,7 @@ html = html.slice(0, s + START.length) + "\n" +
 fs.writeFileSync(indexPath, html);
 
 /* sitemap */
-const urls = [SITE + "/", SITE + "/sc-ai-policy/", SITE + "/contributors/", SITE + "/about/", SITE + "/team/"]
+const urls = [SITE + "/", SITE + "/sc-ai-policy/", SITE + "/contributors/", SITE + "/about/", SITE + "/team/", SITE + "/resources/"]
   .concat(jobs.map(function (j) { return SITE + j.url; }))
   .concat(contributors.map(function (c) { return SITE + c.url; }));
 fs.writeFileSync(path.join(ROOT, "sitemap.xml"),

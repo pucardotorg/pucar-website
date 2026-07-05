@@ -1063,8 +1063,9 @@ framerusercontent.com.
 
 ### Header nav: dropdowns, glass pill, gliders, dark-half flip
 
-The homepage nav is now: The Journey · About (dropdown) · Collaborate
-(dropdown), plus the Get in touch CTA. Both dropdowns use `.nav-drop` +
+The homepage nav is now: The Journey · About (dropdown) · Community
+(dropdown, renamed from "Collaborate" July 2026; trigger still jumps to
+#collaborate), plus the Get in touch CTA. Both dropdowns use `.nav-drop` +
 `.nav-menu` (hover / focus-within, opening is pure CSS) with a caret SVG
 (`.nav-caret`) that rotates 180° when open. A ::before bridge covers the 8px
 gap so the menu survives the mouse travelling to it. Nav is display:none
@@ -1152,6 +1153,13 @@ any copy:
   `about/index.html` was the only file that actually changed before copying
   it back by hand. If the script is ever run from a real machine, both will
   already match.
+
+### Resources page
+
+resourcesPage() in the build script generates /resources/: PLACEHOLDER
+intro + three anchored sections (#blog, #data-resources, #learning-circles)
+matching the Community nav dropdown's Resources group. All copy is
+holding text to replace as the community publishes. In the sitemap.
 
 ### Beat 8 syncs with the bulletin board
 
