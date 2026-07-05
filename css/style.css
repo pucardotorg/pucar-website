@@ -3071,13 +3071,14 @@ a.event-card{ text-decoration:none; }
   .site-footer{ grid-template-columns:1fr; }
 }
 .footer-copy{ grid-column:1 / -1; }
+/* a real 2x2 GRID, not flex-wrap: wrapped flex rows re-centre themselves,
+   so the second row's columns didn't line up with the first's */
 .footer-map{
-  display:flex;
-  flex-wrap:wrap;
-  gap:28px clamp(28px,4vw,56px);
-  justify-content:flex-end;
+  display:grid;
+  grid-template-columns:repeat(2, minmax(150px, 1fr));
+  gap:34px clamp(28px,4vw,56px);
 }
-@media (max-width:860px){ .footer-map{ justify-content:flex-start; } }
+@media (max-width:480px){ .footer-map{ grid-template-columns:1fr; } }
 .footer-col{ display:flex; flex-direction:column; gap:9px; min-width:130px; }
 .footer-col-title{
   margin:0 0 4px;
@@ -3102,6 +3103,24 @@ a.event-card{ text-decoration:none; }
   .footer-top .logo-short{ display:block; }
 }
 .footer-top p{ margin-top:14px; font-size:.92rem; line-height:1.6; color:rgba(251,248,242,.6); }
+/* social icons under the blurb: GitHub / YouTube / LinkedIn */
+.footer-social{ display:flex; gap:10px; margin-top:20px; }
+.footer-social a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  border:1px solid rgba(251,248,242,.22);
+  color:rgba(251,248,242,.72);
+  transition:background .2s ease, color .2s ease, border-color .2s ease;
+}
+.footer-social a:hover{
+  background:var(--green);
+  border-color:var(--green);
+  color:var(--ink);
+}
 /* .footer-links retired: replaced by the categorised .footer-map sitemap */
 .footer-links a:hover{ color:var(--gold); }
 .footer-copy{ font-size:.75rem; color:rgba(251,248,242,.4); border-top:1px solid rgba(251,248,242,.12); padding-top:20px; }
