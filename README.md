@@ -1234,6 +1234,9 @@ Structure: title -> stat panel -> "What we do" MISSION STATEMENT
 (.about-what: eyebrow + display-type first paragraph with 'unstucks'
 green-underlined, supporting second paragraph, NO drop cap -- "key
 information about us, don't treat like other pages") ->
+full-bleed PARALLAX band (assets/pucar-drawing.jpg; layer has 20% vertical
+headroom, js/nav.js translates it with scroll progress, rAF-throttled,
+skipped under reduced motion, plain cover image without JS) ->
 FULL-BLEED dark "Why PUCAR?" band -> How we work 3-card grid -> How we
 organise -> photo strip -> CTAs. The stat panel is a forest gradient card
 (paper numbers, green uppercase labels; open-roles count computed from

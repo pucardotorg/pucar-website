@@ -437,6 +437,12 @@ function aboutPage() {
 
 "  </div>\n" +
 "</main>\n" +
+/* full-bleed parallax drawing between "What we do" and the Why band.
+   The actual parallax translate lives in js/nav.js (About page loads it
+   like every generated page); pure decoration, hidden from AT. */
+'<section class="about-parallax" aria-hidden="true">\n' +
+'  <div class="about-parallax-img" id="aboutParallax" style="background-image:url(/assets/pucar-drawing.jpg)"></div>\n' +
+"</section>\n" +
 /* full-bleed dark band: the About page finally gets the cream<->forest
    rhythm the rest of the site runs on. Same copy, elevated: first para as
    a lede, the "Born in 2023" line as a display pull-quote. */

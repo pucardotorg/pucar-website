@@ -73,6 +73,28 @@
      rather than waiting on a scroll threshold that made no sense here. */
   nav.classList.add("show-home");
 
+  /* ---- About page: parallax drawing (scroll-driven translate) ---- */
+  var para = document.getElementById("aboutParallax");
+  var reduceMotion = window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (para && !reduceMotion) {
+    var pTick = false;
+    var paraUpdate = function () {
+      pTick = false;
+      var r = para.parentElement.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > window.innerHeight) return; // off-screen
+      // -1 (band at bottom of viewport) .. +1 (band at top)
+      var progress = 1 - 2 * ((r.top + r.height / 2) / window.innerHeight);
+      // the layer has 20% headroom either side; use most of it
+      para.style.transform = "translateY(" + (progress * r.height * 0.16) + "px)";
+    };
+    window.addEventListener("scroll", function () {
+      if (!pTick) { pTick = true; requestAnimationFrame(paraUpdate); }
+    }, { passive: true });
+    window.addEventListener("resize", paraUpdate);
+    paraUpdate();
+  }
+
   /* ---- dark-section detection ---- */
   var darkSections = document.querySelectorAll(".collaborate, .site-footer");
   if (!darkSections.length) return;
