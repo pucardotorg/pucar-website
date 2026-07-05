@@ -4372,9 +4372,7 @@ button.circle-card{
    below it (revised: widening only the stat panel looked inconsistent);
    prose paragraphs stay capped at a readable measure inside it */
 .dristi-main{
-  max-width:min(1240px, calc(100vw - 2 * clamp(20px, 5vw, 72px)));
-  padding-left:0;
-  padding-right:0;
+  max-width:1240px; /* keeps job-main's own side padding */
 }
 .dristi-main .job-body{ max-width:74ch; }
 
@@ -4387,22 +4385,28 @@ button.circle-card{
 /* intro stat strip: three columns split by hairlines, not the stacked
    left-aligned column the flex default produced with sentence-length labels */
 .dristi-hero-stats{
-  display:grid;
-  grid-template-columns:repeat(3, 1fr);
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
   gap:clamp(22px,3.5vw,48px);
-  align-items:start;
 }
+.dristi-hero-stats .about-stat{ flex:1 1 0; max-width:30ch; }
 .dristi-hero-stats .about-stat-num{ white-space:nowrap; }
 .dristi-hero-stats .about-stat + .about-stat{
   padding-left:clamp(22px,3.5vw,48px);
   border-left:1px solid rgba(251,248,242,.18);
 }
+/* sentence-case labels: the uppercase micro-type wrapped into ugly
+   four-line stacks with sentence-length copy */
 .dristi-hero-stats .about-stat-label{
-  line-height:1.6;
-  letter-spacing:.06em;
-  font-size:.8rem;
-  padding-right:clamp(8px,2vw,28px); /* breathe before the divider */
+  text-transform:none;
+  letter-spacing:0;
+  font-size:.92rem;
+  font-weight:500;
+  line-height:1.5;
+  color:rgba(251,248,242,.72);
 }
+.dristi-hero-stats .about-stat-label::first-letter{ text-transform:uppercase; }
 @media (max-width: 760px){
   .dristi-hero-stats{ grid-template-columns:1fr; }
   .dristi-hero-stats .about-stat + .about-stat{
