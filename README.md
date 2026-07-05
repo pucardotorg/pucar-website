@@ -373,18 +373,22 @@ notification emails can be configured there.
   the exit — the sign flip happens while parked, never visible). All
   settled deliberately BEFORE the 6.5 boundary so her stage is in
   position when the beat-7 walk-in (with its scroll freeze) fires. At
-  curtain==1 on a FORWARD approach with a playable file (`canplay` sets
-  `filmUsable`; missing file shows `.video-missing` and never traps),
-  playback starts **with audio** and **NO scroll lock** (v3 revision:
-  "don't lock scroll on the video. Let people scroll to move on" — the
-  earlier skip button and bottom gradient are REMOVED). `updateFilm`
-  toggles `filmActive` at curtain==1: entering the zone plays
-  (`tryPlayFilm()` attempts unmuted first; if autoplay policy refuses —
-  scroll isn't a click-grade gesture — it falls back to muted + a one-tap
-  "Tap for sound" pill), **leaving the zone in either direction pauses
-  the video** and restores the chrome; re-entering RESUMES (it only
-  restarts from 0 after a completed watch, so a wobble at the zone edge
-  doesn't restart it). Native `controls` are on. While the film is the
+  curtain==1 with a playable file (`canplay` sets `filmUsable`; missing
+  file shows `.video-missing` and never traps), **the film does NOT
+  autoplay** (v5 revision, Jul 2026: "let it say click to watch, and the
+  video should open full screen"): `.film-ready` on #videoBreak reveals a
+  centred "Click to watch the film" pill (`#videoWatch`, white pill +
+  green play circle, springs in). Clicking plays WITH sound (real click,
+  no autoplay-policy dance) and calls `enterFullscreen()` on the <video>
+  (requestFullscreen with webkit fallbacks incl. iPhone's
+  webkitEnterFullscreen); `.film-watching` hides the pill. On `ended`:
+  exit fullscreen, chrome returns, and the pill comes back reading
+  "Watch again". The old muted-autoplay + "Tap for sound" flow is GONE.
+  Still **NO scroll lock** beyond the 700ms arrival hold; **leaving the
+  zone in either direction pauses the video** and restores the chrome;
+  re-entering RESUMES (it only restarts from 0 after a completed watch,
+  so a wobble at the zone edge doesn't restart it). Native `controls`
+  are on. While the film is the
   centrepiece, `body.film-playing` slides the fixed header UP out of
   frame and the `.progress-rail` DOWN, both gliding back on scroll-away
   (or on `ended`). Scrolling onward crosses into beat 7, whose walk-in

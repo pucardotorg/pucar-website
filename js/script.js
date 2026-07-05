@@ -559,33 +559,41 @@
   // beat 7's zone, whose 6->7 transition then runs her usual walk-in.
   var filmVideo = document.getElementById("onCourtsVideo");
   var filmBreak = document.getElementById("videoBreak");
-  var filmSound = document.getElementById("videoSound");
+  var filmWatch = document.getElementById("videoWatch");
   var filmUsable = false;
 
-  // Play WITH audio instantly; if the browser's autoplay policy refuses
-  // unmuted playback started from a scroll (no click-grade gesture), fall
-  // back to muted playback and surface a one-tap "Tap for sound" button
-  // (a real click, so unmuting always succeeds).
-  function tryPlayFilm() {
+  // NO autoplay (revised): arriving at the film shows a centred
+  // "Click to watch the film" prompt instead, and clicking it plays WITH
+  // sound (a real click, so no autoplay-policy dance) and takes the video
+  // FULLSCREEN. The old muted-autoplay + "Tap for sound" flow is gone.
+  function enterFullscreen(el) {
+    var fn = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+    if (fn) {
+      try { var p = fn.call(el); if (p && p.catch) p.catch(function () {}); } catch (e) { /* inline fallback */ }
+    } else if (el.webkitEnterFullscreen) {
+      try { el.webkitEnterFullscreen(); } catch (e) { /* iPhone <video> */ }
+    }
+  }
+  function exitFullscreen() {
+    try {
+      if (document.fullscreenElement && document.exitFullscreen) {
+        var p = document.exitFullscreen(); if (p && p.catch) p.catch(function () {});
+      } else if (document.webkitFullscreenElement && document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
+    } catch (e) { /* already out */ }
+  }
+  if (filmWatch) filmWatch.addEventListener("click", function () {
     if (!filmVideo) return;
-    // restart only after a complete watch; a scroll wobble at the zone's
-    // edge should RESUME, not restart
     if (filmVideo.ended) {
       try { filmVideo.currentTime = 0; } catch (e) { /* not seekable yet */ }
     }
     filmVideo.muted = false;
     filmVideo.volume = 1;
     var p = filmVideo.play();
-    if (p && p.catch) p.catch(function () {
-      filmVideo.muted = true;
-      var p2 = filmVideo.play();
-      if (p2 && p2.catch) p2.catch(function () {});
-      if (filmSound) filmSound.hidden = false;
-    });
-  }
-  if (filmSound) filmSound.addEventListener("click", function () {
-    filmVideo.muted = false;
-    filmSound.hidden = true;
+    if (p && p.catch) p.catch(function () {});
+    enterFullscreen(filmVideo);
+    filmBreak.classList.add("film-watching"); // hides the prompt
   });
   if (filmVideo) {
     filmVideo.addEventListener("canplay", function () { filmUsable = true; });
@@ -598,9 +606,12 @@
       filmUsable = false;
       if (filmBreak) filmBreak.classList.add("video-missing");
     });
-    // once the film has fully played out, bring the page chrome back
-    // while the visitor is still sitting on the section
+    // film over: leave fullscreen, bring the page chrome back, and offer
+    // a replay from the same prompt
     filmVideo.addEventListener("ended", function () {
+      exitFullscreen();
+      filmBreak.classList.remove("film-watching");
+      if (filmWatch) filmWatch.lastChild.textContent = "Watch again";
       document.body.classList.remove("film-playing");
     });
   }
@@ -651,11 +662,11 @@
     pin.style.setProperty("--curtain-exit", exit.toFixed(4));
     pin.style.setProperty("--content-shift", filmShiftAt(beatFloat).toFixed(2));
 
-    var shouldPlay = entry >= 0.999 && exit <= 0.001 && filmUsable && !isJumpingToSection;
-    if (shouldPlay && !filmActive) {
+    var inZone = entry >= 0.999 && exit <= 0.001 && filmUsable && !isJumpingToSection;
+    if (inZone && !filmActive) {
       filmActive = true;
       document.body.classList.add("film-playing"); // header up, progress rail down
-      tryPlayFilm();
+      filmBreak.classList.add("film-ready");       // show the watch prompt (no autoplay)
       // a brief 700ms hold on EVERY arrival (either scroll direction): scroll
       // momentum tends to carry people straight past the film, so give it a
       // moment to register. Scoped by filmLockActive so releasing it can
@@ -668,10 +679,10 @@
           if (filmLockActive) { unlockScroll(); filmLockActive = false; }
         }, 700);
       }
-    } else if (!shouldPlay && filmActive) {
+    } else if (!inZone && filmActive) {
       filmActive = false;
       document.body.classList.remove("film-playing"); // chrome glides back
-      if (filmSound) filmSound.hidden = true;
+      filmBreak.classList.remove("film-ready", "film-watching");
       if (filmVideo && !filmVideo.paused) filmVideo.pause();
     }
   }
