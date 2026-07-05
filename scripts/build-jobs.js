@@ -725,16 +725,16 @@ function teamPage() {
 
   const main =
 '  <p class="beat-eyebrow">The team</p>\n' +
-'  <h1 class="job-title">The people who hold it together.</h1>\n' +
+'  <h1 class="job-title">A small team with an outsized brief.</h1>\n' +
 '  <article class="job-body prose no-cap">\n' +
-"    <p>PUCAR is powered by a small anchor team and a wide collective of contributors. These are the people keeping the engines running day to day. Tap anyone to read who they are.</p>\n" +
+"    <p>PUCAR runs on a wide collective, but a small crew keeps it moving every day: lawyers, product builders, designers and policy minds rethinking how India resolves disputes. Meet them below, and tap any card for the longer story.</p>\n" +
 "  </article>\n" +
 "</main>\n" +
 '<section class="collaborate team-section" id="team">\n' +
 '  <div class="collab-head">\n' +
 '    <p class="beat-eyebrow">Core team</p>\n' +
-'    <h2 class="collab-title-main">Meet the anchors.</h2>\n' +
-'    <p class="collab-sub">Ten people anchoring a collective of many more. The wider circle lives on the contributors page.</p>\n' +
+'    <h2 class="collab-title-main">The anchors.</h2>\n' +
+'    <p class="collab-sub">The full-time crew behind DRISTI, the ON Courts, and everything in between. The far wider circle they work with lives on the contributors page.</p>\n' +
 "  </div>\n" +
 '  <div class="team-grid" id="teamGrid">\n' + cards + "\n  </div>\n" +
 '  <div class="cta-row" style="justify-content:center; margin-top:34px;">\n' +

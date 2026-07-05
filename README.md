@@ -1609,8 +1609,8 @@ the contributors' LinkedIn-sourced copy; Varun/Ayushi/Sathyajith/Abhiram/
 Garvita were scraped fresh from LinkedIn via the user's Chrome (roles:
 Senior Curator / Co-lead / Program Associate / Design Researcher / Program
 Team). Photos live in assets/team/: five copied from assets/contributors,
-five downloaded by scripts/mirror-team-photos.js (RUN LOCALLY; licdn URLs
-are signed + expiring; Varun's comes from v4.run/images/varun.jpg).
+five pulled from LinkedIn through the user's Chrome (see TODO section
+note on the download-button trick; all committed, no script needed).
 
 Layout is modelled on opennyai.org/about's team wall, PUCAR-skinned:
 .team-grid of 3:4 portrait .team-cards on the dark band; photos grayscale
@@ -1862,11 +1862,12 @@ and run `npx decap-server` next to the static server.
 
 - /about-contributing/ DOES NOT EXIST yet but is linked from the Collaborate
   nav dropdown ("About Contributing") — build it next or the link 404s.
-- /team/ shows the real 10-person team (Jul 2026). REMAINING: run
-  `node scripts/mirror-team-photos.js` locally — five headshots (ayushi,
-  varun, sathyajith, abhiram, garvita) aren't committed yet (sandbox can't
-  reach media.licdn.com / v4.run; the licdn URLs are SIGNED and EXPIRE, so
-  run it soon or re-grab). Old note —
+- /team/ shows the real 10-person team (Jul 2026); all ten headshots are
+  committed in assets/team/ (mirror script retired -- the LinkedIn photos
+  were pulled through the user's Chrome instead: scripted a.click()
+  downloads get silently dropped without user activation, so the working
+  path was blob-URL download BUTTONS on a scratch page that the user
+  clicked, landing files in ~/Downloads for pickup). Old note —
   swap in real people (teamPage() in the build script).
 - The two sc-ai-policy events (content/sc-events/) carry REALISTIC DUMMY
   details (8 and 11 July 2026, BIC Domlur venue) — confirm or correct real
