@@ -3633,7 +3633,7 @@ a.event-card{ text-decoration:none; }
   font-size:22px;
   color:#fff;
   background:rgba(10,21,26,.25);
-  border-radius:22px 22px 0 0;
+  border-radius:inherit;
   transition:background .2s ease, font-size .2s ease;
 }
 .circle-card:hover .circle-play{ background:rgba(10,21,26,.45); font-size:28px; }
@@ -3745,7 +3745,41 @@ button.circle-card{
 /* tags hug the bottom divider */
 .res-card .collab-chips{ margin-top:auto; }
 /* shimmer: a light band sweeps across the thumbnail on hover */
-.res-thumb-wrap{ overflow:hidden; border-radius:22px 22px 0 0; }
+/* the reflection needs to escape below the image, so the wrap stays open
+   and the SHINE clips inside .res-thumb-clip instead */
+.res-thumb-wrap{ overflow:visible; }
+.res-thumb-clip{
+  display:block;
+  position:relative;
+  overflow:hidden;
+  border-radius:22px 22px 12px 12px; /* softly rounded bottom over the glow */
+}
+.res-thumb-clip .res-thumb{
+  width:100%;
+  margin:0;
+  border-radius:0;
+}
+/* the reflection: the same image mirrored, blurred and bled into the card
+   body -- tints the card with the thumbnail's own colours, soft edge */
+.res-thumb-glow{
+  position:absolute;
+  left:6%;
+  right:6%;
+  bottom:-30px;
+  height:64px;
+  width:88%;
+  object-fit:cover;
+  transform:scaleY(-1);
+  filter:blur(24px) saturate(1.7);
+  opacity:.4;
+  pointer-events:none;
+  transition:opacity .35s ease;
+}
+.res-card:hover .res-thumb-glow,
+.circle-card:hover .res-thumb-glow{ opacity:.65; }
+/* keep card text above the glow bleed */
+.res-card > *:not(.res-thumb-wrap),
+.circle-card > *:not(.res-thumb-wrap){ position:relative; z-index:1; }
 .res-shine{
   position:absolute;
   inset:0;
