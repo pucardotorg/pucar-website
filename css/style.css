@@ -4598,6 +4598,28 @@ button.circle-card{
   background:rgba(251,248,242,.06);
   border:1px solid rgba(251,248,242,.14);
 }
+/* icon chip above the number: same stroke language as the resources icons */
+.dristi-stat-ico{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  background:rgba(251,248,242,.08);
+  border:1px solid rgba(251,248,242,.16);
+  color:rgba(251,248,242,.75);
+  margin-bottom:6px;
+}
+.dristi-stat.is-big .dristi-stat-ico{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  background:rgba(48,207,140,.14);
+  border-color:rgba(48,207,140,.4);
+  color:var(--green);
+}
+.dristi-stat.is-big .dristi-stat-ico svg{ width:21px; height:21px; }
 .dristi-stat.is-big{
   grid-column:span 2;
   padding:30px 30px 24px;
