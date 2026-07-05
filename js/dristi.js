@@ -124,12 +124,16 @@
           { type: "line", x0: 297, x1: 410, y0: 38.26, y1: 38.26, line: { color: "rgba(218,110,170,.2)", width: 1, dash: "dot" } }
         ],
         annotations: [
-          { x: 359, y: 38.4, text: "ON Court overtakes<br>Malappuram ~day 359", showarrow: true, arrowhead: 0,
-            arrowcolor: GREEN, arrowwidth: 1.5, ax: 80, ay: -32, font: { size: 11, color: GREEN, family: FONT },
+          // xanchor:right keeps every label INSIDE the plot area (they used
+          // to hang off the right edge of the chart)
+          { x: 350, y: 44, text: "ON Court overtakes<br>Malappuram ~day 359", showarrow: false, xanchor: "right",
+            font: { size: 11, color: GREEN, family: FONT },
             bgcolor: "rgba(17,31,38,.92)", bordercolor: GREEN, borderwidth: 1, borderpad: 5 },
-          { x: 405, y: 44.5, text: "<b>ON Court</b><br>44.5%", showarrow: false, font: { size: 11, color: GREEN, family: FONT },
+          { x: 400, y: 47.5, text: "<b>ON Court</b> 44.5%", showarrow: false, xanchor: "right",
+            font: { size: 11, color: GREEN, family: FONT },
             bgcolor: "rgba(48,207,140,.1)", bordercolor: "rgba(48,207,140,.3)", borderwidth: 1, borderpad: 4 },
-          { x: 405, y: 38.26, text: "<b>Malappuram</b><br>38.3% (plateau)", showarrow: false, font: { size: 11, color: PINK, family: FONT },
+          { x: 400, y: 34.5, text: "<b>Malappuram</b> 38.3% (plateau)", showarrow: false, xanchor: "right",
+            font: { size: 11, color: PINK, family: FONT },
             bgcolor: "rgba(218,110,170,.08)", bordercolor: "rgba(218,110,170,.25)", borderwidth: 1, borderpad: 4 }
         ]
       });
@@ -148,18 +152,19 @@
     var btn = document.getElementById("raceBtn");
     var flash = document.getElementById("raceFlash");
     var animating = false;
-    btn.addEventListener("click", function () {
+
+    function runRace() {
       if (animating) return;
       animating = true;
       var flashFired = false;
       btn.textContent = "Racing…";
       btn.disabled = true;
       Plotly.relayout("raceChart", { shapes: [], annotations: [] });
-      names.forEach(function (_, i) { Plotly.restyle("raceChart", { x: [[]], y: [[]] }, [i]); });
       updateRank(0);
 
       var totalMs = 5000;
       var start = performance.now();
+      var allIdx = names.map(function (_, i) { return i; });
       function ease(t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
 
       (function step(now) {
@@ -169,7 +174,10 @@
         for (var j = 0; j < DAYS.length; j++) if (DAYS[j] <= currentDay) dayIdx = j;
         updateRank(dayIdx);
 
-        names.forEach(function (name, i) {
+        // ONE restyle per frame for ALL traces (it was one call per trace
+        // per frame, 16 relayouts a frame, which is what made it jitter)
+        var xAll = [], yAll = [];
+        names.forEach(function (name) {
           var xs = [], ys = [];
           for (var j = 0; j < DAYS.length; j++) {
             if (DAYS[j] <= currentDay) { xs.push(DAYS[j]); ys.push(RAW[name][j]); }
@@ -180,8 +188,10 @@
             xs.push(currentDay);
             ys.push(RAW[name][lastJ] + t * (RAW[name][nextJ] - RAW[name][lastJ]));
           }
-          Plotly.restyle("raceChart", { x: [xs], y: [ys] }, [i]);
+          xAll.push(xs);
+          yAll.push(ys);
         });
+        Plotly.restyle("raceChart", { x: xAll, y: yAll }, allIdx);
 
         if (!flashFired && currentDay >= 355) {
           flashFired = true;
@@ -199,6 +209,22 @@
           btn.disabled = false;
         }
       })(performance.now());
-    });
+    }
+    btn.addEventListener("click", runRace);
+
+    /* auto-play ONCE when the race scrolls into view (button = replay) */
+    var played = false;
+    if (window.IntersectionObserver) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting && !played) {
+            played = true;
+            io.disconnect();
+            setTimeout(runRace, 350); // settle first, then race
+          }
+        });
+      }, { threshold: 0.45 });
+      io.observe(document.getElementById("race"));
+    }
   }
 })();

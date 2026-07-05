@@ -337,6 +337,58 @@ function contributorIndexCard(person) {
     "</span></a>";
 }
 
+/* the SHARED open-work board body (filters + grid + job modal +
+   js/collaborate.js). Rendered from the same boardJobs/card() everywhere it
+   appears (homepage, /contributors/, /dristi/), so the three can never
+   drift out of sync. Ids are fixed; collaborate.js works by id. */
+function collabBoardHtml() {
+  const cards = boardJobs.length ? boardJobs.map(card).join("\n")
+    : '<p class="collab-filter-empty">No open work right now -- check back soon, or write to us.</p>';
+  return '  <div class="collab-filters" id="collabFilters" hidden>\n' +
+'    <select data-filter="stream" aria-label="Filter by stream">\n' +
+'      <option value="">All streams</option>\n' +
+"      <option>Volunteer</option>\n" +
+"      <option>Paid</option>\n" +
+"    </select>\n" +
+'    <select data-filter="category" aria-label="Filter by type of work">\n' +
+'      <option value="">All types</option>\n' +
+"    </select>\n" +
+'    <select data-filter="difficulty" aria-label="Filter by difficulty">\n' +
+'      <option value="">Any difficulty</option>\n' +
+"      <option>Low Difficulty</option>\n" +
+"      <option>Moderate</option>\n" +
+"      <option>High</option>\n" +
+"    </select>\n" +
+'    <select data-filter="deadline" aria-label="Filter by deadline">\n' +
+'      <option value="">Any deadline</option>\n' +
+'      <option value="7">Due within a week</option>\n' +
+'      <option value="14">Due within 2 weeks</option>\n' +
+'      <option value="30">Due within a month</option>\n' +
+'      <option value="90">Due within 3 months</option>\n' +
+"    </select>\n" +
+'    <div class="collab-tagbar" id="collabTagbar" role="group" aria-label="Filter by tag"></div>\n' +
+'    <button class="collab-clear" id="collabClear" type="button" hidden>Clear filters ×</button>\n' +
+"  </div>\n" +
+'  <p class="collab-count" id="collabCount" hidden></p>\n' +
+'  <div class="collab-grid" id="collabGrid">\n' + cards + "\n" +
+'    <div class="collab-filter-empty" id="collabEmpty" hidden>No work matches these filters right now. Try widening them.</div>\n' +
+"  </div>\n" +
+"</section>\n" +
+'<div class="job-modal" id="jobModal" hidden>\n' +
+'  <div class="job-modal-backdrop" data-close></div>\n' +
+'  <div class="job-modal-panel" role="dialog" aria-modal="true" aria-labelledby="jobModalTitle">\n' +
+'    <button class="job-modal-close" type="button" data-close aria-label="Close">×</button>\n' +
+'    <p class="beat-eyebrow" id="jobModalType"></p>\n' +
+'    <h2 class="job-title" id="jobModalTitle"></h2>\n' +
+'    <div class="job-meta" id="jobModalMeta"></div>\n' +
+'    <ul class="job-chips" id="jobModalChips"></ul>\n' +
+'    <article class="job-body" id="jobModalBody"></article>\n' +
+'    <div class="cta-row">\n' +
+'      <a class="btn btn-primary" id="jobModalApply" href="#" target="_blank" rel="noopener">Read the original</a>\n' +
+"    </div>\n  </div>\n</div>\n" +
+'<script src="/js/collaborate.js"></script>\n';
+}
+
 function contributorsSection() {
   /* Extracted for reuse: this used to be the whole standalone page (see
      contributorsPage() below, which now folds this into a bigger
@@ -398,8 +450,6 @@ function contributorsPage() {
      to work by id, not by page -- runs here unmodified. Policy gets a
      short summary (adapted from scPolicyPage's intro) plus a link through
      to the full /sc-ai-policy/ page, which stays exactly as it is. */
-  const dristiCards = boardJobs.length ? boardJobs.map(card).join("\n")
-    : '<p class="collab-filter-empty">No open work right now -- check back soon, or write to us.</p>';
 
   const main =
 '  <p class="beat-eyebrow">About Contributing</p>\n' +
@@ -413,51 +463,9 @@ function contributorsPage() {
 '  <div class="collab-head">\n' +
 '    <p class="beat-eyebrow">DRISTI 2.0</p>\n' +
 '    <h2 class="collab-title-main">Advance the DRISTI 2.0 stack.</h2>\n' +
-'    <p class="collab-sub">Open work on the people-centric courts platform -- some volunteer, some paid (permanent or temporary). This is what’s open right now.</p>\n' +
+'    <p class="collab-sub">Open work on the people-centric courts platform -- some volunteer, some paid (permanent or temporary). This is what’s open right now. <a class="collab-dristi-link" href="/dristi/">About the DRISTI platform &rarr;</a></p>\n' +
 "  </div>\n" +
-'  <div class="collab-filters" id="collabFilters" hidden>\n' +
-'    <select data-filter="stream" aria-label="Filter by stream">\n' +
-'      <option value="">All streams</option>\n' +
-"      <option>Volunteer</option>\n" +
-"      <option>Paid</option>\n" +
-"    </select>\n" +
-'    <select data-filter="category" aria-label="Filter by type of work">\n' +
-'      <option value="">All types</option>\n' +
-"    </select>\n" +
-'    <select data-filter="difficulty" aria-label="Filter by difficulty">\n' +
-'      <option value="">Any difficulty</option>\n' +
-"      <option>Low Difficulty</option>\n" +
-"      <option>Moderate</option>\n" +
-"      <option>High</option>\n" +
-"    </select>\n" +
-'    <select data-filter="deadline" aria-label="Filter by deadline">\n' +
-'      <option value="">Any deadline</option>\n' +
-'      <option value="7">Due within a week</option>\n' +
-'      <option value="14">Due within 2 weeks</option>\n' +
-'      <option value="30">Due within a month</option>\n' +
-'      <option value="90">Due within 3 months</option>\n' +
-"    </select>\n" +
-'    <div class="collab-tagbar" id="collabTagbar" role="group" aria-label="Filter by tag"></div>\n' +
-'    <button class="collab-clear" id="collabClear" type="button" hidden>Clear filters ×</button>\n' +
-"  </div>\n" +
-'  <p class="collab-count" id="collabCount" hidden></p>\n' +
-'  <div class="collab-grid" id="collabGrid">\n' + dristiCards + "\n" +
-'    <div class="collab-filter-empty" id="collabEmpty" hidden>No work matches these filters right now. Try widening them.</div>\n' +
-"  </div>\n" +
-"</section>\n" +
-'<div class="job-modal" id="jobModal" hidden>\n' +
-'  <div class="job-modal-backdrop" data-close></div>\n' +
-'  <div class="job-modal-panel" role="dialog" aria-modal="true" aria-labelledby="jobModalTitle">\n' +
-'    <button class="job-modal-close" type="button" data-close aria-label="Close">×</button>\n' +
-'    <p class="beat-eyebrow" id="jobModalType"></p>\n' +
-'    <h2 class="job-title" id="jobModalTitle"></h2>\n' +
-'    <div class="job-meta" id="jobModalMeta"></div>\n' +
-'    <ul class="job-chips" id="jobModalChips"></ul>\n' +
-'    <article class="job-body" id="jobModalBody"></article>\n' +
-'    <div class="cta-row">\n' +
-'      <a class="btn btn-primary" id="jobModalApply" href="#" target="_blank" rel="noopener">Read the original</a>\n' +
-"    </div>\n  </div>\n</div>\n" +
-'<script src="/js/collaborate.js"></script>\n' +
+collabBoardHtml() +
 
 '<section class="policy-band" id="policy">\n' +
 '  <div class="policy-callout">\n' +
@@ -901,17 +909,15 @@ function dristiPage() {
       '<span class="dj-new">' + esc(r[2]) + "</span></div>";
   }).join("\n");
 
-  const KSTATS = [
-    ["1,920", "Cases filed"],
-    ["402", "Cases disposed"],
-    ["851", "Advocates on the platform"],
-    ["1,757", "Litigants using it"],
-    ["~5 months", "Average disposal (was ~2 years)"],
-    ["98%", "Hearings held as scheduled"]
-  ];
-  const kstatsHtml = KSTATS.map(function (s) {
-    return '      <div class="dristi-stat"><span class="dristi-stat-num">' + esc(s[0]) + '</span><span class="dristi-stat-label">' + esc(s[1]) + "</span></div>";
-  }).join("\n");
+  /* two HERO stats up front, four supporting below (revised: six equal
+     cards in one row read as noise; the story is volume + speed) */
+  const kstatsHtml =
+'      <div class="dristi-stat is-big"><span class="dristi-stat-num">1,920</span><span class="dristi-stat-label">cases filed in a court that did not exist two years ago</span></div>\n' +
+'      <div class="dristi-stat is-big"><span class="dristi-stat-num">~5 <em>months</em></span><span class="dristi-stat-label">average time to disposal. The conventional baseline: about 2 years</span></div>\n' +
+'      <div class="dristi-stat"><span class="dristi-stat-num">402</span><span class="dristi-stat-label">Cases disposed</span></div>\n' +
+'      <div class="dristi-stat"><span class="dristi-stat-num">98%</span><span class="dristi-stat-label">Hearings held as scheduled</span></div>\n' +
+'      <div class="dristi-stat"><span class="dristi-stat-num">851</span><span class="dristi-stat-label">Advocates on the platform</span></div>\n' +
+'      <div class="dristi-stat"><span class="dristi-stat-num">1,757</span><span class="dristi-stat-label">Litigants using it</span></div>';
 
   const main =
 '  <p class="beat-eyebrow">DRISTI</p>\n' +
@@ -933,22 +939,35 @@ function dristiPage() {
 '  <div class="collab-head">\n' +
 '    <p class="beat-eyebrow">The platform</p>\n' +
 '    <h2 class="collab-title-main">From 1.0 to 2.0.</h2>\n' +
-'    <p class="collab-sub">The first generation proved the model in a real court. The second generation is being rebuilt around what that court taught us.</p>\n' +
+'    <p class="collab-sub">The first generation proved the model in a real court. The second is being rebuilt around everything that court taught us.</p>\n' +
 "  </div>\n" +
-'  <div class="collab-grid dristi-version-grid">\n' +
-'    <article class="collab-card version-card">\n' +
-'      <div class="collab-topline"><span class="res-type">DRISTI 1.0 \u00b7 Live in Kollam</span></div>\n' +
-'      <span class="collab-title">The proven foundation.</span>\n' +
-'      <span class="collab-summary">Built as a Digital Public Good on the DIGIT platform, 1.0 is a rules-based system: modular services, shared registries and data standards, and workflows separated from data so new case types can be added without redesigning the core. It runs the live 24x7 ON Court today, integrated with police, post, treasury and SMS.</span>\n' +
-'      <ul class="collab-chips"><li>Rules-based</li><li>Built on DIGIT</li><li>Open source</li><li>Registries and standards</li></ul>\n' +
-'      <div class="collab-foot"><a class="collab-btn" href="https://github.com/pucardotorg/dristi" target="_blank" rel="noopener">See the code</a></div>\n' +
+'  <div class="ver-grid">\n' +
+'    <article class="ver-card ver-one">\n' +
+'      <span class="ver-num" aria-hidden="true">1.0</span>\n' +
+'      <span class="ver-status"><i class="ver-dot"></i>Live in Kollam</span>\n' +
+'      <h3 class="ver-title">The proven foundation.</h3>\n' +
+'      <p class="ver-body">Built as a Digital Public Good on the DIGIT platform: a rules-based system that runs the 24x7 ON Court today, wired into police, post, treasury and SMS.</p>\n' +
+'      <ul class="ver-list">\n' +
+'        <li>Rules-based workflows, end to end</li>\n' +
+'        <li>Shared registries and open data standards</li>\n' +
+'        <li>Modular services on DIGIT</li>\n' +
+'        <li>Open source, in the commons</li>\n' +
+"      </ul>\n" +
+'      <a class="ver-link" href="https://github.com/pucardotorg/dristi" target="_blank" rel="noopener">See the code<span aria-hidden="true"> &rarr;</span></a>\n' +
 "    </article>\n" +
-'    <article class="collab-card version-card">\n' +
-'      <div class="collab-topline"><span class="res-type res-circle-type">DRISTI 2.0 \u00b7 In build</span></div>\n' +
-'      <span class="collab-title">The AI-native rebuild.</span>\n' +
-'      <span class="collab-summary">2.0 starts from the lessons of running a real court: AI-native rather than rules-bolted-on, more standards-compliant, and radically lighter, a single deployable that runs on the court\u2019s own infrastructure. Above all it is bespoke: shaped to the needs and context of each specific court, with roles and processes courts can configure themselves.</span>\n' +
-'      <ul class="collab-chips"><li>AI-native</li><li>Standards-compliant</li><li>Lightweight</li><li>Bespoke per court</li><li>Self-configurable</li></ul>\n' +
-'      <div class="collab-foot"><a class="collab-btn" href="/#collaborate">Help build it</a></div>\n' +
+'    <span class="ver-bridge" aria-hidden="true"><svg viewBox="0 0 40 16" width="40" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h34M30 2l6 6-6 6"/></svg></span>\n' +
+'    <article class="ver-card ver-two">\n' +
+'      <span class="ver-num" aria-hidden="true">2.0</span>\n' +
+'      <span class="ver-status is-build"><i class="ver-dot"></i>In build</span>\n' +
+'      <h3 class="ver-title">The AI-native rebuild.</h3>\n' +
+'      <p class="ver-body">2.0 starts from the lessons of running a real court: intelligence woven through the platform rather than rules bolted on, and a system light enough to live on the court\u2019s own hardware.</p>\n' +
+'      <ul class="ver-list">\n' +
+'        <li>AI-native from the first line of code</li>\n' +
+'        <li>Standards-compliant by default</li>\n' +
+'        <li>Lightweight: one deployable, on-premise</li>\n' +
+'        <li>Bespoke to each court, configurable by its own staff</li>\n' +
+"      </ul>\n" +
+'      <a class="ver-link" href="/#collaborate">Help build it<span aria-hidden="true"> &rarr;</span></a>\n' +
 "    </article>\n" +
 "  </div>\n" +
 "</section>\n" +
@@ -960,13 +979,13 @@ function dristiPage() {
 '    <p class="collab-sub">ON Courts in Kollam is the first running instance of DRISTI. Work with new High Courts is underway; each state lights up here as it goes live.</p>\n' +
 "  </div>\n" +
 '  <div class="res-tabbar state-tabbar" role="tablist" aria-label="States">\n' +
-'    <button type="button" class="res-tab is-active" data-state="kerala">Kerala</button>\n' +
+'    <button type="button" class="res-tab is-active" data-state="kerala"><span class="board-live" aria-hidden="true"></span>Kerala</button>\n' +
 '    <button type="button" class="res-tab tab-soon" disabled>Punjab<span class="soon-chip">Coming soon</span></button>\n' +
 '    <button type="button" class="res-tab tab-soon" disabled>Haryana<span class="soon-chip">Coming soon</span></button>\n' +
 '    <button type="button" class="res-tab tab-soon" disabled>Gujarat<span class="soon-chip">Coming soon</span></button>\n' +
 "  </div>\n" +
 '  <div class="res-tagbar district-tagbar" aria-label="Districts">\n' +
-'    <button type="button" class="res-tab is-active" data-district="kollam">Kollam</button>\n' +
+'    <button type="button" class="res-tab is-active" data-district="kollam"><span class="board-live" aria-hidden="true"></span>Kollam</button>\n' +
 '    <button type="button" class="res-tab tab-soon" disabled>More districts<span class="soon-chip">Coming soon</span></button>\n' +
 "  </div>\n" +
 
@@ -1010,8 +1029,8 @@ journeyHtml + "\n" +
 "    </div>\n" +
 
 '    <div class="dristi-voices">\n' +
-'      <blockquote class="dristi-voice"><p>\u201cIn my experience, the court is completely paperless and filing is very easy. Now it only takes me 10 to 20 minutes to file a case.\u201d</p><cite>Asha G.V, Advocate, first filer at the ON Court</cite></blockquote>\n' +
-'      <blockquote class="dristi-voice"><p>\u201cThe launch is just the beginning of the journey. Progress is not a destination, it is an ongoing journey of knowledge, debate, community and continuous refinement.\u201d</p><cite>Justice Raja Vijayaraghavan, Computer Committee, High Court of Kerala</cite></blockquote>\n' +
+'      <blockquote class="dristi-voice"><p>\u201cIn my experience, the court is completely paperless and filing is very easy. Now it only takes me 10 to 20 minutes to file a case.\u201d</p><cite data-initial="A">Asha G.V<br />Advocate, the first filer at the ON Court</cite></blockquote>\n' +
+'      <blockquote class="dristi-voice"><p>\u201cThe launch is just the beginning of the journey. Progress is not a destination, it is an ongoing journey of knowledge, debate, community and continuous refinement.\u201d</p><cite data-initial="J">Justice Raja Vijayaraghavan<br />Computer Committee, High Court of Kerala</cite></blockquote>\n' +
 "    </div>\n" +
 '    <div class="cta-row dristi-links">\n' +
 '      <a class="btn btn-primary" href="https://oncourts.kerala.gov.in/" target="_blank" rel="noopener">Visit ON Courts</a>\n' +
@@ -1020,6 +1039,15 @@ journeyHtml + "\n" +
 "    </div>\n" +
 "  </div>\n" +
 "</section>\n" +
+
+'<section class="collaborate dristi-board" id="collaborate">\n' +
+'  <div class="collab-head">\n' +
+'    <p class="beat-eyebrow">Collaborate</p>\n' +
+'    <h2 class="collab-title-main">Citizen tools should be citizen-shaped.</h2>\n' +
+'    <p class="collab-sub">DRISTI is the tool citizens will meet on the hardest days of their lives, so it is built in the open, by the people it serves: lawyers, judges, court staff, engineers, designers, researchers. This is the live board of open work on the platform. Pick up a piece of it.</p>\n' +
+"  </div>\n" +
+collabBoardHtml() +
+'<script src="/js/view-toggle.js"></script>\n' +
 '<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" defer></script>\n' +
 '<script src="/js/dristi.js" defer></script>\n<main hidden>';
 

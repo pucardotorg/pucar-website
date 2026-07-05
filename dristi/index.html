@@ -55,9 +55,9 @@
         <a class="nav-drop-trigger" href="/#collaborate" aria-haspopup="true" aria-expanded="false">Community<svg class="nav-caret" aria-hidden="true" viewBox="0 0 10 6" width="10" height="6"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <div class="nav-menu" role="menu" aria-label="Collaborate">
           <p class="nav-menu-label">Active Collaborations</p>
-          <a class="nav-menu-item" role="menuitem" href="/contributors/#dristi">
-            <span class="nav-menu-title">Advance the DRISTI 2.0 stack</span>
-            <span class="nav-menu-sub">Open work on the people-centric courts platform</span>
+          <a class="nav-menu-item" role="menuitem" href="/dristi/">
+            <span class="nav-menu-title">DRISTI</span>
+            <span class="nav-menu-sub">The platform behind the 24x7 ON Courts, and its open board</span>
           </a>
           <a class="nav-menu-item" role="menuitem" href="/contributors/#policy">
             <span class="nav-menu-title">Explore the Supreme Court's AI policy</span>
@@ -129,22 +129,35 @@
   <div class="collab-head">
     <p class="beat-eyebrow">The platform</p>
     <h2 class="collab-title-main">From 1.0 to 2.0.</h2>
-    <p class="collab-sub">The first generation proved the model in a real court. The second generation is being rebuilt around what that court taught us.</p>
+    <p class="collab-sub">The first generation proved the model in a real court. The second is being rebuilt around everything that court taught us.</p>
   </div>
-  <div class="collab-grid dristi-version-grid">
-    <article class="collab-card version-card">
-      <div class="collab-topline"><span class="res-type">DRISTI 1.0 · Live in Kollam</span></div>
-      <span class="collab-title">The proven foundation.</span>
-      <span class="collab-summary">Built as a Digital Public Good on the DIGIT platform, 1.0 is a rules-based system: modular services, shared registries and data standards, and workflows separated from data so new case types can be added without redesigning the core. It runs the live 24x7 ON Court today, integrated with police, post, treasury and SMS.</span>
-      <ul class="collab-chips"><li>Rules-based</li><li>Built on DIGIT</li><li>Open source</li><li>Registries and standards</li></ul>
-      <div class="collab-foot"><a class="collab-btn" href="https://github.com/pucardotorg/dristi" target="_blank" rel="noopener">See the code</a></div>
+  <div class="ver-grid">
+    <article class="ver-card ver-one">
+      <span class="ver-num" aria-hidden="true">1.0</span>
+      <span class="ver-status"><i class="ver-dot"></i>Live in Kollam</span>
+      <h3 class="ver-title">The proven foundation.</h3>
+      <p class="ver-body">Built as a Digital Public Good on the DIGIT platform: a rules-based system that runs the 24x7 ON Court today, wired into police, post, treasury and SMS.</p>
+      <ul class="ver-list">
+        <li>Rules-based workflows, end to end</li>
+        <li>Shared registries and open data standards</li>
+        <li>Modular services on DIGIT</li>
+        <li>Open source, in the commons</li>
+      </ul>
+      <a class="ver-link" href="https://github.com/pucardotorg/dristi" target="_blank" rel="noopener">See the code<span aria-hidden="true"> &rarr;</span></a>
     </article>
-    <article class="collab-card version-card">
-      <div class="collab-topline"><span class="res-type res-circle-type">DRISTI 2.0 · In build</span></div>
-      <span class="collab-title">The AI-native rebuild.</span>
-      <span class="collab-summary">2.0 starts from the lessons of running a real court: AI-native rather than rules-bolted-on, more standards-compliant, and radically lighter, a single deployable that runs on the court’s own infrastructure. Above all it is bespoke: shaped to the needs and context of each specific court, with roles and processes courts can configure themselves.</span>
-      <ul class="collab-chips"><li>AI-native</li><li>Standards-compliant</li><li>Lightweight</li><li>Bespoke per court</li><li>Self-configurable</li></ul>
-      <div class="collab-foot"><a class="collab-btn" href="/#collaborate">Help build it</a></div>
+    <span class="ver-bridge" aria-hidden="true"><svg viewBox="0 0 40 16" width="40" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h34M30 2l6 6-6 6"/></svg></span>
+    <article class="ver-card ver-two">
+      <span class="ver-num" aria-hidden="true">2.0</span>
+      <span class="ver-status is-build"><i class="ver-dot"></i>In build</span>
+      <h3 class="ver-title">The AI-native rebuild.</h3>
+      <p class="ver-body">2.0 starts from the lessons of running a real court: intelligence woven through the platform rather than rules bolted on, and a system light enough to live on the court’s own hardware.</p>
+      <ul class="ver-list">
+        <li>AI-native from the first line of code</li>
+        <li>Standards-compliant by default</li>
+        <li>Lightweight: one deployable, on-premise</li>
+        <li>Bespoke to each court, configurable by its own staff</li>
+      </ul>
+      <a class="ver-link" href="/#collaborate">Help build it<span aria-hidden="true"> &rarr;</span></a>
     </article>
   </div>
 </section>
@@ -155,13 +168,13 @@
     <p class="collab-sub">ON Courts in Kollam is the first running instance of DRISTI. Work with new High Courts is underway; each state lights up here as it goes live.</p>
   </div>
   <div class="res-tabbar state-tabbar" role="tablist" aria-label="States">
-    <button type="button" class="res-tab is-active" data-state="kerala">Kerala</button>
+    <button type="button" class="res-tab is-active" data-state="kerala"><span class="board-live" aria-hidden="true"></span>Kerala</button>
     <button type="button" class="res-tab tab-soon" disabled>Punjab<span class="soon-chip">Coming soon</span></button>
     <button type="button" class="res-tab tab-soon" disabled>Haryana<span class="soon-chip">Coming soon</span></button>
     <button type="button" class="res-tab tab-soon" disabled>Gujarat<span class="soon-chip">Coming soon</span></button>
   </div>
   <div class="res-tagbar district-tagbar" aria-label="Districts">
-    <button type="button" class="res-tab is-active" data-district="kollam">Kollam</button>
+    <button type="button" class="res-tab is-active" data-district="kollam"><span class="board-live" aria-hidden="true"></span>Kollam</button>
     <button type="button" class="res-tab tab-soon" disabled>More districts<span class="soon-chip">Coming soon</span></button>
   </div>
   <div class="dristi-panel" id="panelKollam">
@@ -170,12 +183,12 @@
       <p class="dristi-panel-sub">Live since 20 November 2024 under the High Court of Kerala. It accepts cheque dishonour cases under Section 138 of the Negotiable Instruments Act arising from nine police stations in Kollam district, and it never closes: a court that goes to people, instead of people going to courts.</p>
     </div>
     <div class="dristi-stat-grid">
-      <div class="dristi-stat"><span class="dristi-stat-num">1,920</span><span class="dristi-stat-label">Cases filed</span></div>
+      <div class="dristi-stat is-big"><span class="dristi-stat-num">1,920</span><span class="dristi-stat-label">cases filed in a court that did not exist two years ago</span></div>
+      <div class="dristi-stat is-big"><span class="dristi-stat-num">~5 <em>months</em></span><span class="dristi-stat-label">average time to disposal. The conventional baseline: about 2 years</span></div>
       <div class="dristi-stat"><span class="dristi-stat-num">402</span><span class="dristi-stat-label">Cases disposed</span></div>
+      <div class="dristi-stat"><span class="dristi-stat-num">98%</span><span class="dristi-stat-label">Hearings held as scheduled</span></div>
       <div class="dristi-stat"><span class="dristi-stat-num">851</span><span class="dristi-stat-label">Advocates on the platform</span></div>
       <div class="dristi-stat"><span class="dristi-stat-num">1,757</span><span class="dristi-stat-label">Litigants using it</span></div>
-      <div class="dristi-stat"><span class="dristi-stat-num">~5 months</span><span class="dristi-stat-label">Average disposal (was ~2 years)</span></div>
-      <div class="dristi-stat"><span class="dristi-stat-num">98%</span><span class="dristi-stat-label">Hearings held as scheduled</span></div>
     </div>
     <p class="dristi-source">Figures from the <a href="https://oncourts.kerala.gov.in/dashboard" target="_blank" rel="noopener">public ON Courts dashboard</a>, July 2026. 80% of disposed cases end in withdrawal: parties settle directly once the process is credible and predictable.</p>
     <div class="dristi-journey">
@@ -211,8 +224,8 @@
       <p class="race-note">Kaplan-Meier estimates, January 2025 filing cohort, tracked through day 417. "Rest of Kollam" is the district excluding the ON Court.</p>
     </div>
     <div class="dristi-voices">
-      <blockquote class="dristi-voice"><p>“In my experience, the court is completely paperless and filing is very easy. Now it only takes me 10 to 20 minutes to file a case.”</p><cite>Asha G.V, Advocate, first filer at the ON Court</cite></blockquote>
-      <blockquote class="dristi-voice"><p>“The launch is just the beginning of the journey. Progress is not a destination, it is an ongoing journey of knowledge, debate, community and continuous refinement.”</p><cite>Justice Raja Vijayaraghavan, Computer Committee, High Court of Kerala</cite></blockquote>
+      <blockquote class="dristi-voice"><p>“In my experience, the court is completely paperless and filing is very easy. Now it only takes me 10 to 20 minutes to file a case.”</p><cite data-initial="A">Asha G.V<br />Advocate, the first filer at the ON Court</cite></blockquote>
+      <blockquote class="dristi-voice"><p>“The launch is just the beginning of the journey. Progress is not a destination, it is an ongoing journey of knowledge, debate, community and continuous refinement.”</p><cite data-initial="J">Justice Raja Vijayaraghavan<br />Computer Committee, High Court of Kerala</cite></blockquote>
     </div>
     <div class="cta-row dristi-links">
       <a class="btn btn-primary" href="https://oncourts.kerala.gov.in/" target="_blank" rel="noopener">Visit ON Courts</a>
@@ -221,6 +234,110 @@
     </div>
   </div>
 </section>
+<section class="collaborate dristi-board" id="collaborate">
+  <div class="collab-head">
+    <p class="beat-eyebrow">Collaborate</p>
+    <h2 class="collab-title-main">Citizen tools should be citizen-shaped.</h2>
+    <p class="collab-sub">DRISTI is the tool citizens will meet on the hardest days of their lives, so it is built in the open, by the people it serves: lawyers, judges, court staff, engineers, designers, researchers. This is the live board of open work on the platform. Pick up a piece of it.</p>
+  </div>
+  <div class="collab-filters" id="collabFilters" hidden>
+    <select data-filter="stream" aria-label="Filter by stream">
+      <option value="">All streams</option>
+      <option>Volunteer</option>
+      <option>Paid</option>
+    </select>
+    <select data-filter="category" aria-label="Filter by type of work">
+      <option value="">All types</option>
+    </select>
+    <select data-filter="difficulty" aria-label="Filter by difficulty">
+      <option value="">Any difficulty</option>
+      <option>Low Difficulty</option>
+      <option>Moderate</option>
+      <option>High</option>
+    </select>
+    <select data-filter="deadline" aria-label="Filter by deadline">
+      <option value="">Any deadline</option>
+      <option value="7">Due within a week</option>
+      <option value="14">Due within 2 weeks</option>
+      <option value="30">Due within a month</option>
+      <option value="90">Due within 3 months</option>
+    </select>
+    <div class="collab-tagbar" id="collabTagbar" role="group" aria-label="Filter by tag"></div>
+    <button class="collab-clear" id="collabClear" type="button" hidden>Clear filters ×</button>
+  </div>
+  <p class="collab-count" id="collabCount" hidden></p>
+  <div class="collab-grid" id="collabGrid">
+<article class="collab-card" data-slug="frontend-engineer-odr-platform" data-stream="Paid" data-category="Development" data-difficulty="High" data-deadline="2026-08-01" data-expiry="2026-07-31" data-tags="React|Accessibility|Open source">
+  <a class="collab-cover" href="/collaborate/frontend-engineer-odr-platform/" aria-label="How might we make DRISTI 2.0 work for a litigant on a 2G phone?"></a>
+  <div class="collab-topline"><span class="collab-cat">Development</span><span class="collab-diff diff-high">High</span></div>
+  <span class="collab-type">Paid · Permanent</span>
+  <span class="collab-title">How might we make DRISTI 2.0 work for a litigant on a 2G phone?</span>
+  <span class="collab-summary">Own the litigant-facing web experience of the open-source Online Dispute Resolution platform: accessibility-first, multilingual, low-bandwidth.</span>
+  <ul class="collab-chips"><li title="Full-time">Full-time</li><li title="Remote (India) · quarterly meetups">Remote (India) · quarterly meetups</li><li title="React">React</li><li title="Accessibility">Accessibility</li><li title="Open source">Open source</li></ul>
+  <div class="collab-meta"><span>Deadline 1 Aug 2026</span><span class="collab-closes" data-expiry="2026-07-31">Closes 31 Jul 2026</span></div>
+  <div class="collab-foot">
+    <a class="collab-poster " href="/contributors/varun-h/"><img class="avatar " src="/assets/team/varun-hemachandran.jpg" alt="Varun Hemachandran" loading="lazy" /><span class="poster-meta"><span class="poster-label">Posted by</span><span class="poster-name">Varun Hemachandran</span></span></a>
+    <span class="collab-btn">View</span>
+  </div>
+</article>
+<article class="collab-card" data-slug="design-researcher-litigant-experience" data-stream="Volunteer" data-category="Design" data-difficulty="Moderate" data-deadline="2026-09-30" data-expiry="2026-08-12" data-tags="Research|Interviews">
+  <a class="collab-cover" href="/collaborate/design-researcher-litigant-experience/" aria-label="How might we make DRISTI 2.0 reflect the litigant&#39;s real journey?"></a>
+  <div class="collab-topline"><span class="collab-cat">Design</span><span class="collab-diff diff-moderate">Moderate</span></div>
+  <span class="collab-type">Volunteer</span>
+  <span class="collab-title">How might we make DRISTI 2.0 reflect the litigant&#39;s real journey?</span>
+  <span class="collab-summary">Interview litigants, lawyers, and court staff to map the real experience of navigating an Indian court, and turn it into insights the ecosystem can act on.</span>
+  <ul class="collab-chips"><li title="6–8 hrs/week · 3 months">6–8 hrs/week · 3 months</li><li title="Remote (India)">Remote (India)</li><li title="Research">Research</li><li title="Interviews">Interviews</li></ul>
+  <div class="collab-meta"><span>Deadline 30 Sep 2026</span><span class="collab-closes" data-expiry="2026-08-12">Closes 12 Aug 2026</span></div>
+  <div class="collab-foot">
+    <span></span>
+    <span class="collab-btn">View</span>
+  </div>
+</article>
+<article class="collab-card" data-slug="open-source-contributor-court-data" data-stream="Volunteer" data-category="Development" data-difficulty="Low Difficulty" data-deadline="2026-12-31" data-expiry="2026-09-18" data-tags="Open source|Data">
+  <a class="collab-cover" href="/collaborate/open-source-contributor-court-data/" aria-label="How might we make court performance visible to everyone in DRISTI 2.0?"></a>
+  <div class="collab-topline"><span class="collab-cat">Development</span><span class="collab-diff diff-low">Low Difficulty</span></div>
+  <span class="collab-type">Volunteer</span>
+  <span class="collab-title">How might we make court performance visible to everyone in DRISTI 2.0?</span>
+  <span class="collab-summary">Help build open dashboards that make court performance legible (pendency, disposal rates, hearing patterns) on top of public judicial data.</span>
+  <ul class="collab-chips"><li title="Flexible · ongoing">Flexible · ongoing</li><li title="Remote">Remote</li><li title="Open source">Open source</li><li title="Data">Data</li></ul>
+  <div class="collab-meta"><span>Deadline 31 Dec 2026</span><span class="collab-closes" data-expiry="2026-09-18">Closes 18 Sep 2026</span></div>
+  <div class="collab-foot">
+    <span></span>
+    <span class="collab-btn">View</span>
+  </div>
+</article>
+<article class="collab-card" data-slug="legal-process-fellow" data-stream="Paid" data-category="Legal" data-difficulty="High" data-deadline="2026-08-15" data-expiry="2026-08-11" data-tags="Process design|Fieldwork">
+  <a class="collab-cover" href="/collaborate/legal-process-fellow/" aria-label="How might we redesign summons and cause lists around DRISTI 2.0?"></a>
+  <div class="collab-topline"><span class="collab-cat">Legal</span><span class="collab-diff diff-high">High</span></div>
+  <span class="collab-type">Paid · Temporary</span>
+  <span class="collab-title">How might we redesign summons and cause lists around DRISTI 2.0?</span>
+  <span class="collab-summary">Work with a partner court to redesign one high-friction process (summons, cause lists, or adjournments) from the litigant&#39;s point of view.</span>
+  <ul class="collab-chips"><li title="Full-time · 12 months">Full-time · 12 months</li><li title="Hybrid · partner court city">Hybrid · partner court city</li><li title="Process design">Process design</li><li title="Fieldwork">Fieldwork</li></ul>
+  <div class="collab-meta"><span>Deadline 15 Aug 2026</span><span class="collab-closes" data-expiry="2026-08-11">Closes 11 Aug 2026</span></div>
+  <div class="collab-foot">
+    <a class="collab-poster " href="/contributors/varun-h/"><img class="avatar " src="/assets/team/varun-hemachandran.jpg" alt="Varun Hemachandran" loading="lazy" /><span class="poster-meta"><span class="poster-label">Posted by</span><span class="poster-name">Varun Hemachandran</span></span></a>
+    <span class="collab-btn">View</span>
+  </div>
+</article>
+    <div class="collab-filter-empty" id="collabEmpty" hidden>No work matches these filters right now. Try widening them.</div>
+  </div>
+</section>
+<div class="job-modal" id="jobModal" hidden>
+  <div class="job-modal-backdrop" data-close></div>
+  <div class="job-modal-panel" role="dialog" aria-modal="true" aria-labelledby="jobModalTitle">
+    <button class="job-modal-close" type="button" data-close aria-label="Close">×</button>
+    <p class="beat-eyebrow" id="jobModalType"></p>
+    <h2 class="job-title" id="jobModalTitle"></h2>
+    <div class="job-meta" id="jobModalMeta"></div>
+    <ul class="job-chips" id="jobModalChips"></ul>
+    <article class="job-body" id="jobModalBody"></article>
+    <div class="cta-row">
+      <a class="btn btn-primary" id="jobModalApply" href="#" target="_blank" rel="noopener">Read the original</a>
+    </div>
+  </div>
+</div>
+<script src="/js/collaborate.js"></script>
+<script src="/js/view-toggle.js"></script>
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" defer></script>
 <script src="/js/dristi.js" defer></script>
 <main hidden>
@@ -246,7 +363,7 @@
     </div>
     <div class="footer-col">
       <p class="footer-col-title">Active Collaborations</p>
-      <a href="/#collaborate">DRISTI 2.0 work</a>
+      <a href="/dristi/">DRISTI</a>
       <a href="/sc-ai-policy/">Supreme Court AI policy</a>
     </div>
     <div class="footer-col">

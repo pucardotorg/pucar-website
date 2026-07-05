@@ -1746,8 +1746,30 @@ for the rest; Fraunces numbers, Source Sans axes. Plotly 2.35 from CDN
 on THIS PAGE ONLY (deferred; js/dristi.js polls for window.Plotly ~10s
 and degrades to static copy if the CDN fails). Play button animates a
 5s eased race with a rank-pip strip and a green overtake flash at ~day
-359. Data lives inline in js/dristi.js. Page is in the sitemap; NOT
-yet linked from the nav (user said "I'll share more soon").
+359 (revised: annotations are xanchor:right so labels stay INSIDE the
+plot; the per-frame update is ONE batched Plotly.restyle across all 16
+traces, not 16 calls, which killed the jitter; and an
+IntersectionObserver auto-plays the race once at 45% visibility, the
+button becoming Replay). Data lives inline in js/dristi.js.
+
+Later same day: stats grid became 2 HERO stats (1,920 filed; ~5 months
+vs ~2 years, green aura, span-2) over 4 quiet ones; testimonials became
+.dristi-voice cards (giant drawn quote glyph, display-serif pull-quote,
+initial medallion via cite[data-initial], hover lift) with glowing
+green primary + fill-on-hover ghost CTAs; the 1.0->2.0 band became
+.ver-grid (giant translucent version numerals, live/in-build status
+pills with the pulsing dot, ticked feature lists, 2.0 as the green-aura
+hero, an arrow bridge between them on desktop). Kerala/Kollam tabs
+carry the homepage's throbbing .board-live orb. The page ends with
+#collaborate: "Citizen tools should be citizen-shaped." + THE SHARED
+OPEN-WORK BOARD -- collabBoardHtml() in the build script now renders
+the identical filters/grid/job-modal on /contributors/ AND /dristi/
+from the same boardJobs as the homepage, so all three boards are in
+sync by construction; the homepage and /contributors/ board intros link
+back via .collab-dristi-link ("About the DRISTI platform ->"). NAV: the
+Community dropdown's Active Collaborations first item is now "DRISTI"
+-> /dristi/ (was Advance-the-stack -> /contributors/#dristi); the
+footer's Active Collaborations column matches.
 
 ### Footer: single source of truth
 
