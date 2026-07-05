@@ -2779,6 +2779,35 @@ body.scroll-locked{ overflow:hidden; }
   color:var(--green);
 }
 
+/* "What we do" mission statement: display type, no drop cap, distinct from
+   every other page's article prose */
+.about-what{ margin:14px 0 8px; }
+.about-what .beat-eyebrow{ color:var(--forest); }
+.about-what-statement{
+  margin:14px 0 22px;
+  font-family:var(--font-display);
+  font-weight:500;
+  font-size:clamp(1.45rem,3vw,2.05rem);
+  line-height:1.42;
+  color:var(--ink);
+  max-width:26ch;
+}
+.about-what-statement em{
+  font-style:normal;
+  color:var(--forest);
+  text-decoration:underline;
+  text-decoration-color:var(--green);
+  text-decoration-thickness:3px;
+  text-underline-offset:5px;
+}
+.about-what-support{
+  margin:0;
+  font-size:1.05rem;
+  line-height:1.75;
+  color:var(--ink-soft);
+  max-width:58ch;
+}
+
 /* full-bleed "Why PUCAR?" band: cream<->forest rhythm for the About page */
 .about-why{
   background:

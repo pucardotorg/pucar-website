@@ -1230,7 +1230,10 @@ points. Short bios/job pages are untouched (opt-in class).
 
 ### About page layout (v3, July 2026)
 
-Structure: title -> stat panel -> "What we do" prose (drop cap) ->
+Structure: title -> stat panel -> "What we do" MISSION STATEMENT
+(.about-what: eyebrow + display-type first paragraph with 'unstucks'
+green-underlined, supporting second paragraph, NO drop cap -- "key
+information about us, don't treat like other pages") ->
 FULL-BLEED dark "Why PUCAR?" band -> How we work 3-card grid -> How we
 organise -> photo strip -> CTAs. The stat panel is a forest gradient card
 (paper numbers, green uppercase labels; open-roles count computed from

@@ -380,11 +380,15 @@ function aboutPage() {
 '    <div class="about-stat"><span class="about-stat-num">2023</span><span class="about-stat-label">Founded</span></div>\n' +
 (openRoles ? '    <div class="about-stat"><span class="about-stat-num">' + openRoles + '</span><span class="about-stat-label">Open ' + (openRoles === 1 ? "role" : "roles") + ' right now</span></div>\n' : "") +
 '  </div>\n' +
-'  <article class="job-body prose">\n' +
-"    <h2>What we do</h2>\n" +
-"    <p>We are building an ecosystem that continuously fuels innovation. PUCAR 'unstucks' the dispute resolution system by inspiring imagination and harnessing capacities to create new possibilities.</p>\n" +
-"    <p>We orchestrate key connections, foster collaboration, and develop foundational ideas. We build a vibrant community of innovators who create and ensure the adoption of public goods that can create a multiplier effect.</p>\n" +
-"  </article>\n" +
+/* "What we do" is set as a MISSION STATEMENT, not article prose ("this is
+   key information about us, don't treat like other pages"): eyebrow label,
+   the full first paragraph as display type with 'unstucks' accented, and
+   the second as supporting text. No drop cap here. */
+'  <div class="about-what">\n' +
+'    <p class="beat-eyebrow">What we do</p>\n' +
+'    <p class="about-what-statement">We are building an ecosystem that continuously fuels innovation. PUCAR <em>\u2018unstucks\u2019</em> the dispute resolution system by inspiring imagination and harnessing capacities to create new possibilities.</p>\n' +
+'    <p class="about-what-support">We orchestrate key connections, foster collaboration, and develop foundational ideas. We build a vibrant community of innovators who create and ensure the adoption of public goods that can create a multiplier effect.</p>\n' +
+"  </div>\n" +
 "</main>\n" +
 /* full-bleed dark band: the About page finally gets the cream<->forest
    rhythm the rest of the site runs on. Same copy, elevated: first para as
