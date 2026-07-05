@@ -378,16 +378,12 @@ notification emails can be configured there.
   settled deliberately BEFORE the 6.5 boundary so her stage is in
   position when the beat-7 walk-in (with its scroll freeze) fires. At
   curtain==1 with a playable file (`canplay` sets `filmUsable`; missing
-  file shows `.video-missing` and never traps), **the film does NOT
-  autoplay** (v5 revision, Jul 2026: "let it say click to watch, and the
-  video should open full screen"): `.film-ready` on #videoBreak reveals a
-  centred "Click to watch the film" pill (`#videoWatch`, white pill +
-  green play circle, springs in). Clicking plays WITH sound (real click,
-  no autoplay-policy dance) and calls `enterFullscreen()` on the <video>
-  (requestFullscreen with webkit fallbacks incl. iPhone's
-  webkitEnterFullscreen); `.film-watching` hides the pill. On `ended`:
-  exit fullscreen, chrome returns, and the pill comes back reading
-  "Watch again". The old muted-autoplay + "Tap for sound" flow is GONE.
+  file shows `.video-missing` and never traps), the film AUTOPLAYS
+  (v6, Jul 2026: "just autoplay the video and remove this button" --
+  the v5 click-to-watch pill + fullscreen flow was built and then
+  removed). tryPlayFilm() attempts unmuted, falls back to MUTED
+  SILENTLY (no "Tap for sound" pill either); native controls carry the
+  unmute.
   Still **NO scroll lock** beyond the 700ms arrival hold; **leaving the
   zone in either direction pauses the video** and restores the chrome;
   re-entering RESUMES (it only restarts from 0 after a completed watch,

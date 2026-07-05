@@ -1942,57 +1942,6 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
 }
 .video-break.video-missing .video-note{ display:block; }
 .video-break.video-missing video{ display:none; }
-/* the watch prompt: the film NEVER autoplays -- arriving shows this
-   centred pill (.film-ready), clicking plays with sound and goes
-   fullscreen (.film-watching hides the pill; it returns saying
-   "Watch again" once the film ends) */
-.video-watch{
-  position:absolute;
-  left:50%;
-  top:50%;
-  translate:-50% -50%;
-  z-index:2;
-  display:inline-flex;
-  align-items:center;
-  gap:12px;
-  padding:14px 26px 14px 16px;
-  border:0;
-  border-radius:999px;
-  background:rgba(251,248,242,.94);
-  color:var(--ink);
-  font:700 .98rem var(--font-body);
-  cursor:pointer;
-  box-shadow:0 24px 70px rgba(0,0,0,.5);
-  opacity:0;
-  scale:.92;
-  pointer-events:none;
-  transition:opacity .35s ease, scale .35s cubic-bezier(.34,1.4,.44,1), background .2s ease;
-}
-.video-break.film-ready .video-watch{
-  opacity:1;
-  scale:1;
-  pointer-events:auto;
-}
-.video-break.film-watching .video-watch{
-  opacity:0;
-  scale:.92;
-  pointer-events:none;
-}
-.video-watch:hover{ background:#fff; }
-.video-watch:hover .video-watch-play{ background:#51D79E; }
-.video-watch-play{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  background:var(--green);
-  color:var(--ink);
-  font-size:.8rem;
-  transition:background .2s ease;
-}
-
 .visually-hidden{
   position:absolute;
   width:1px; height:1px;
