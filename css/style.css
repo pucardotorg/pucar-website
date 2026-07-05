@@ -3769,39 +3769,50 @@ button.circle-card{
 /* tags hug the bottom divider */
 .res-card .collab-chips{ margin-top:auto; }
 /* shimmer: a light band sweeps across the thumbnail on hover */
-/* the reflection needs to escape below the image, so the wrap stays open
-   and the SHINE clips inside .res-thumb-clip instead */
-.res-thumb-wrap{ overflow:visible; }
+/* the reflection anchors to the CARD (wrap stays static) and the card
+   clips it at its own rounded edges */
+.res-card, .circle-card{ overflow:hidden; }
+.res-thumb-wrap{ position:static; overflow:visible; }
 .res-thumb-clip{
   display:block;
   position:relative;
+  z-index:1;
   overflow:hidden;
-  border-radius:22px 22px 12px 12px; /* softly rounded bottom over the glow */
+  border-radius:22px 22px 0 0; /* square bottom: the mask feathers it instead */
+  /* HEAVY feather: the photo's bottom ~30% dissolves into the card, no
+     hard seam ("rounded bottom looked bad") */
+  -webkit-mask-image:linear-gradient(to bottom, #000 68%, transparent 100%);
+  mask-image:linear-gradient(to bottom, #000 68%, transparent 100%);
 }
 .res-thumb-clip .res-thumb{
   width:100%;
   margin:0;
   border-radius:0;
 }
-/* the reflection: the same image mirrored, blurred and bled into the card
-   body -- tints the card with the thumbnail's own colours, soft edge */
+/* the reflection: the same image mirrored + heavily blurred, stretched
+   from under the photo to the BOTTOM of the card -- a notable ambient
+   tint across the whole card that fades out downward */
 .res-thumb-glow{
   position:absolute;
-  left:6%;
-  right:6%;
-  bottom:-30px;
-  height:64px;
-  width:88%;
+  left:0;
+  right:0;
+  top:110px;
+  bottom:0;
+  width:100%;
+  height:auto;
   object-fit:cover;
   transform:scaleY(-1);
-  filter:blur(24px) saturate(1.7);
-  opacity:.4;
+  filter:blur(36px) saturate(1.5);
+  opacity:.34;
+  z-index:0;
   pointer-events:none;
+  -webkit-mask-image:linear-gradient(to bottom, #000 0%, rgba(0,0,0,.55) 55%, transparent 100%);
+  mask-image:linear-gradient(to bottom, #000 0%, rgba(0,0,0,.55) 55%, transparent 100%);
   transition:opacity .35s ease;
 }
 .res-card:hover .res-thumb-glow,
-.circle-card:hover .res-thumb-glow{ opacity:.65; }
-/* keep card text above the glow bleed */
+.circle-card:hover .res-thumb-glow{ opacity:.5; }
+/* keep card text above the glow */
 .res-card > *:not(.res-thumb-wrap),
 .circle-card > *:not(.res-thumb-wrap){ position:relative; z-index:1; }
 .res-shine{
