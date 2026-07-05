@@ -207,8 +207,8 @@ function pageShell(opts) {
 '    <button class="brand-switch-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Visit Agami and OpenNyAI"><svg viewBox="0 0 10 6" width="11" height="7" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>\n' +
 '    <div class="brand-menu" role="menu" aria-label="Agami missions">\n' +
 '      <p class="brand-menu-label">Also visit</p>\n' +
-'      <a class="brand-menu-item" role="menuitem" href="https://www.agami.in" target="_blank" rel="noopener"><img src="/assets/agami-logo.svg" alt="Agami" width="692" height="162" /></a>\n' +
-'      <a class="brand-menu-item" role="menuitem" href="https://opennyai.org" target="_blank" rel="noopener"><img src="/assets/opennyai-logo.svg" alt="OpenNyAI" width="506" height="101" /></a>\n' +
+'      <a class="brand-menu-item" role="menuitem" href="https://www.agami.in" target="_blank" rel="noopener"><img src="/assets/agami-logo.svg" alt="Agami" width="692" height="162" /><span class="brand-menu-desc">A movement of ideas and people reshaping law and justice in India. PUCAR is one of its collaborative missions.</span></a>\n' +
+'      <a class="brand-menu-item" role="menuitem" href="https://opennyai.org" target="_blank" rel="noopener"><img src="/assets/opennyai-logo.svg" alt="OpenNyAI" width="506" height="101" /><span class="brand-menu-desc">A sibling Agami mission building open AI public goods to transform how India accesses justice.</span></a>\n' +
 "    </div>\n  </div>\n" +
 /* SAME navbar as the homepage (extracted at build time); pages can add a
    sub-nav via opts.subnav which collapses the main nav behind a burger */

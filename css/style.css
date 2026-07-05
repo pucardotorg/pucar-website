@@ -173,6 +173,28 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
 }
 .brand-menu-item:hover img,
 .brand-menu-item:focus-visible img{ opacity:1; transform:translateX(2px); }
+/* two-line blurb slides open under the hovered logo */
+.brand-menu-desc{
+  display:block;
+  max-width:24ch;
+  font-size:.78rem;
+  line-height:1.45;
+  color:rgba(251,248,242,.65);
+  max-height:0;
+  opacity:0;
+  overflow:hidden;
+  margin-top:0;
+  /* EXIT: text fades first, then the space closes smoothly under it */
+  transition:max-height .32s cubic-bezier(.4,.1,.2,1) .05s, opacity .16s ease, margin-top .32s cubic-bezier(.4,.1,.2,1) .05s;
+}
+.brand-menu-item:hover .brand-menu-desc,
+.brand-menu-item:focus-visible .brand-menu-desc{
+  max-height:4.5em;
+  opacity:1;
+  margin-top:9px;
+  /* ENTER: space opens first, text fades in as it lands */
+  transition:max-height .3s cubic-bezier(.4,.1,.2,1), opacity .24s ease .1s, margin-top .3s cubic-bezier(.4,.1,.2,1);
+}
 @media (max-width: 640px){
   .brand-switch{ display:none; } /* not needed on phones (explicit) */
 }
