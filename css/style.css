@@ -3678,6 +3678,39 @@ button.circle-card{
    slack and float the chips mid-card */
 .res-card .collab-foot, .res-data-card .collab-foot{ margin-top:0; }
 .res-data-card .collab-chips{ margin-top:auto; }
+/* circle cards have NO chips, so the foot (divider + Watch) takes the auto
+   margin back and pins to the card bottom (this must come after the
+   margin-top:0 above -- circle cards are also .res-card) */
+.circle-card .collab-foot{ margin-top:auto; }
+/* "Learning Circle #N": out of its pill -- icon + uppercase label like the
+   data cards' type, but in gold so the video sections read differently */
+.res-circle-type{ color:var(--gold); }
+.res-circle-type svg{ opacity:.85; }
+
+/* ---- show more: sections cap at 2 card-rows (5 rows in list view), the
+   rest hide behind a centered ghost button (js/resources.js) ---- */
+.res-more{
+  display:flex;
+  justify-content:center;
+  margin:26px 0 0;
+}
+/* display:flex vs [hidden], again */
+.res-more[hidden]{ display:none; }
+.res-more-btn{
+  padding:11px 26px;
+  border-radius:999px;
+  border:1px solid rgba(251,248,242,.3);
+  background:transparent;
+  color:var(--paper);
+  font:600 .88rem var(--font-body);
+  cursor:pointer;
+  transition:background .2s ease, border-color .2s ease, color .2s ease;
+}
+.res-more-btn:hover{
+  background:var(--paper);
+  border-color:var(--paper);
+  color:var(--forest);
+}
 /* one-line clamp support: while collapsed, overflowing chips hide and a
    +N chip stands in; hovering it reveals the full set (ul wraps open) */
 .res-section .collab-chips .chip-more{

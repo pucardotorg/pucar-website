@@ -1432,7 +1432,24 @@ YouTube playlist in July 2026.
   playlist) as thumbnail cards (assets/circles/<id>.jpg, play overlay);
   clicking opens #videoModal -- job-modal chrome with ONLY a
   youtube-nocookie iframe (autoplay) and the description below. Closing
-  resets the iframe src to stop playback. No list view.
+  resets the iframe src to stop playback. No list view. "Learning Circle
+  #N" is NOT a pill: it's a video icon + uppercase label (.res-circle-type,
+  gold to set it apart from the data cards' green type labels). The foot
+  (divider + Watch) pins to the card bottom via .circle-card .collab-foot
+  margin-top:auto -- placed AFTER the .res-card margin-top:0 rule, since
+  circle cards are also .res-card.
+- SORTING: everything renders newest-first at build time (blog by parsed
+  date desc, circles by circle number desc).
+- SHOW MORE: every section caps at 2 rows of cards (5 rows in list view);
+  the rest of the current filter match hides behind a centered "Show N
+  more" ghost button (.res-more, injected by js/resources.js after each
+  grid; toggles to "Show less"). The cap tracks the grid's RESOLVED column
+  count from getComputedStyle gridTemplateColumns (px track list; falls
+  back to 3 when unresolved, e.g. "none"/repeat() in jsdom), re-applies on
+  filter change, on resize (debounced), and on the cards/list toggle via a
+  MutationObserver on the grid's class. Expansion reveals animate through
+  the same FLIP filter. Note .res-more[hidden]{display:none} -- the
+  display:flex vs [hidden] gotcha yet again.
 - Nav: Collaborate dropdown is now titled "Community"; the Resources group
   links to the three anchors, and the middle item is titled "Data, Policy,
   Research and more".
@@ -1551,8 +1568,12 @@ script.js) so inner-page dropdowns behave identically to the homepage.
 ### Footer: single source of truth
 
 The footer's right side is a categorised sitemap (.footer-map: Explore /
-Community / Active right now columns, green uppercase titles); blurb sits
-left, copyright spans below (grid, stacks under 860px).
+Active Collaborations / Resources / Community columns, green uppercase
+titles); blurb sits left, copyright spans below (grid, stacks under 860px).
+The sitemap MIRRORS THE MAIN NAV (every dropdown item appears, grouped the
+same way, plus Participate/GitHub externals) and must NEVER include any
+page's sub-nav links -- page navigation stays in the page's own sub-nav
+pill only.
 
 pageShell no longer carries its own footer markup: the build script extracts
 <footer class="site-footer">...</footer> VERBATIM from index.html at build

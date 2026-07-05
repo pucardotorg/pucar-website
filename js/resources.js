@@ -103,21 +103,98 @@
     clampAll(); // newly-revealed cards need their chip rows measured
   }
 
+  /* ---- show-more capping ----
+     Every section shows at most 2 rows of cards (5 rows in list view); the
+     rest of the CURRENT FILTER MATCH hides behind a centered "Show N more"
+     button injected after the grid (toggles to "Show less"). The cap is
+     recomputed from the grid's resolved column count, so it tracks the
+     responsive layout; filters and the cards/list toggle re-apply it. */
+  var CARD_ROWS = 2, LIST_ROWS = 5;
+  var sections = [];
+
+  function gridCols(grid) {
+    var t = (getComputedStyle(grid).gridTemplateColumns || "").trim();
+    // browsers resolve to a px track list ("331px 331px 331px"); anything
+    // else ("none", authored repeat() in jsdom) falls back to 3
+    if (t.indexOf("px") !== -1 && t.indexOf("repeat") === -1) {
+      var n = t.split(/\s+/).length;
+      if (n > 0) return n;
+    }
+    return 3;
+  }
+  function capFor(sec) {
+    return sec.grid.classList.contains("is-list") ? LIST_ROWS : gridCols(sec.grid) * CARD_ROWS;
+  }
+  function renderSection(sec, animate) {
+    var matched = sec.cards.filter(sec.match);
+    var cap = capFor(sec);
+    var visible = sec.expanded ? matched : matched.slice(0, cap);
+    var allow = new Set(visible);
+    var pred = function (c) { return allow.has(c); };
+    if (animate) {
+      animateFilter(sec.grid, sec.cards, pred);
+    } else {
+      sec.cards.forEach(function (c) { c.hidden = !allow.has(c); });
+      clampAll();
+    }
+    if (!sec.btn) {
+      sec.btnWrap = document.createElement("div");
+      sec.btnWrap.className = "res-more";
+      sec.btn = document.createElement("button");
+      sec.btn.type = "button";
+      sec.btn.className = "res-more-btn";
+      sec.btnWrap.appendChild(sec.btn);
+      sec.grid.parentNode.insertBefore(sec.btnWrap, sec.grid.nextSibling);
+      sec.btn.addEventListener("click", function () {
+        sec.expanded = !sec.expanded;
+        renderSection(sec, true);
+      });
+    }
+    if (sec.expanded) {
+      sec.btnWrap.hidden = matched.length <= cap; // nothing left to collapse
+      sec.btn.textContent = "Show less";
+    } else {
+      var extra = matched.length - visible.length;
+      sec.btnWrap.hidden = extra <= 0;
+      sec.btn.textContent = "Show " + extra + " more";
+    }
+  }
+  function registerSection(grid, cards, match) {
+    var sec = { grid: grid, cards: cards, match: match, expanded: false, btn: null };
+    sections.push(sec);
+    renderSection(sec, false);
+    // the cards/list toggle flips .is-list on the grid: re-cap when it does
+    if (window.MutationObserver) {
+      new MutationObserver(function () { renderSection(sec, false); })
+        .observe(grid, { attributes: true, attributeFilter: ["class"] });
+    }
+    return sec;
+  }
+  var moreT;
+  window.addEventListener("resize", function () { // column count can change
+    clearTimeout(moreT);
+    moreT = setTimeout(function () {
+      sections.forEach(function (s) { renderSection(s, false); });
+    }, 250);
+  });
+
   /* ---- blog topic filter ---- */
   var tagbar = document.getElementById("blogTagbar");
   var blogGrid = document.getElementById("blogGrid");
   if (tagbar && blogGrid) {
     var blogCards = Array.prototype.slice.call(blogGrid.querySelectorAll(".res-card"));
+    var blogTag = "all";
+    var blogSec = registerSection(blogGrid, blogCards, function (card) {
+      var tags = (card.getAttribute("data-tags") || "").split("|");
+      return blogTag === "all" || tags.indexOf(blogTag) !== -1;
+    });
     tagbar.addEventListener("click", function (e) {
       var btn = e.target.closest(".res-tab");
       if (!btn) return;
       tagbar.querySelectorAll(".res-tab").forEach(function (b) { b.classList.remove("is-active"); });
       btn.classList.add("is-active");
-      var tag = btn.getAttribute("data-tag");
-      animateFilter(blogGrid, blogCards, function (card) {
-        var tags = (card.getAttribute("data-tags") || "").split("|");
-        return tag === "all" || tags.indexOf(tag) !== -1;
-      });
+      blogTag = btn.getAttribute("data-tag");
+      renderSection(blogSec, true);
     });
   }
 
@@ -192,13 +269,12 @@
   if (tabs && dataGrid) {
     var dataCards = Array.prototype.slice.call(dataGrid.querySelectorAll(".res-data-card"));
     var dataState = { tab: "all", type: "all" };
+    var dataSec = registerSection(dataGrid, dataCards, function (card) {
+      return (dataState.tab === "all" || card.getAttribute("data-tab") === dataState.tab) &&
+        (dataState.type === "all" || card.getAttribute("data-type") === dataState.type);
+    });
 
-    function applyData() {
-      animateFilter(dataGrid, dataCards, function (card) {
-        return (dataState.tab === "all" || card.getAttribute("data-tab") === dataState.tab) &&
-          (dataState.type === "all" || card.getAttribute("data-type") === dataState.type);
-      });
-    }
+    function applyData() { renderSection(dataSec, true); }
 
     /* only offer type pills that exist inside the current tab (a "Policy"
        pill under the ODR tab could only ever produce an empty grid); if the
@@ -246,9 +322,18 @@
     }
   }
 
+  /* ---- learning circles: no filter, but still capped at 2 rows ---- */
+  var circleGrid = document.getElementById("circleGrid");
+  if (circleGrid) {
+    registerSection(
+      circleGrid,
+      Array.prototype.slice.call(circleGrid.querySelectorAll(".circle-card")),
+      function () { return true; }
+    );
+  }
+
   /* ---- learning circle video modal ---- */
   var modal = document.getElementById("videoModal");
-  var circleGrid = document.getElementById("circleGrid");
   if (modal && circleGrid) {
     var frame = document.getElementById("vmFrame");
     var title = document.getElementById("vmTitle");

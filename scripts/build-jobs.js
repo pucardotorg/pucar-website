@@ -543,6 +543,7 @@ function resourcesPage() {
   const blogTags = Array.from(new Set(resBlog.reduce(function (a, b) { return a.concat(b.tags || []); }, []))).sort();
 
   const CAL_SVG = '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="1.5" y="2.5" width="13" height="12" rx="2"/><path d="M1.5 6h13M5 1v3M11 1v3"/></svg>';
+  resBlog.sort(function (a, b) { return new Date(b.date) - new Date(a.date); }); // newest first
   const blogCards = resBlog.map(function (b) {
     return '<a class="collab-card res-card" data-tags="' + esc((b.tags || []).join("|")) + '" href="' + esc(b.url) + '" target="_blank" rel="noopener">\n' +
       '  <span class="res-thumb-wrap"><span class="res-thumb-clip"><img class="res-thumb" src="' + esc(b.thumb) + '" alt="" loading="lazy" /><span class="res-shine" aria-hidden="true"></span></span><img class="res-thumb-glow" src="' + esc(b.thumb) + '" alt="" aria-hidden="true" loading="lazy" /></span>\n' +
@@ -602,14 +603,17 @@ function resourcesPage() {
       "</a>";
   }).join("\n");
 
-  const circleCards = resCircles.map(function (c) {
-    return '<button type="button" class="collab-card res-card circle-card" data-id="' + esc(c.id) + '" data-title="' + esc(c.title) + '" data-desc="' + esc(c.desc) + '">\n' +
-      '  <span class="res-thumb-wrap"><span class="res-thumb-clip"><img class="res-thumb" src="' + esc(c.thumb) + '" alt="" loading="lazy" /><span class="circle-play" aria-hidden="true">▶</span></span><img class="res-thumb-glow" src="' + esc(c.thumb) + '" alt="" aria-hidden="true" loading="lazy" /></span>\n' +
-      '  <div class="collab-topline"><span class="collab-cat">Learning Circle #' + c.n + "</span></div>\n" +
-      '  <span class="collab-title">' + esc(c.title) + "</span>\n" +
-      '  <div class="collab-foot"><span class="collab-btn">Watch</span></div>\n' +
-      "</button>";
-  }).join("\n");
+  const VIDEO_ICON = typeIcon('<rect x="1.5" y="4" width="9.5" height="8" rx="1.8"/><path d="M11 8l3.5-2.3v4.6L11 8z"/>');
+  const circleCards = resCircles
+    .slice().sort(function (a, b) { return b.n - a.n; }) // newest circle first
+    .map(function (c) {
+      return '<button type="button" class="collab-card res-card circle-card" data-id="' + esc(c.id) + '" data-title="' + esc(c.title) + '" data-desc="' + esc(c.desc) + '">\n' +
+        '  <span class="res-thumb-wrap"><span class="res-thumb-clip"><img class="res-thumb" src="' + esc(c.thumb) + '" alt="" loading="lazy" /><span class="circle-play" aria-hidden="true">▶</span></span><img class="res-thumb-glow" src="' + esc(c.thumb) + '" alt="" aria-hidden="true" loading="lazy" /></span>\n' +
+        '  <div class="collab-topline"><span class="res-type res-circle-type">' + VIDEO_ICON + "Learning Circle #" + c.n + "</span></div>\n" +
+        '  <span class="collab-title">' + esc(c.title) + "</span>\n" +
+        '  <div class="collab-foot"><span class="collab-btn">Watch</span></div>\n' +
+        "</button>";
+    }).join("\n");
 
   const main =
 '  <p class="beat-eyebrow">Resources</p>\n' +
