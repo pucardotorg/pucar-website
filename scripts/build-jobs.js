@@ -155,7 +155,7 @@ function pageShell(opts) {
    visitors and crawlers); the second pill always offers the contributors list */
 '  <nav class="site-nav">' +
 '<a class="nav-home" href="/" aria-label="Home" data-tip="Home"><svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7.5 8 2.5l5.5 5v6h-4v-3.5h-3V13.5h-4z"/></svg></a>' +
-'<a href="' + opts.backHref + '" onclick="if(history.length>1){history.back();return false;}">← Back</a>' +
+'<a class="nav-back" href="' + opts.backHref + '" onclick="if(history.length>1){history.back();return false;}">← Back</a>' +
 '<a href="/contributors/">View all Collaborators</a>' +
 "</nav>\n</header>\n" +
 '<main class="job-main">\n' + opts.main + "\n</main>\n" +

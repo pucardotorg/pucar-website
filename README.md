@@ -1399,10 +1399,13 @@ no-JS page is a plain crawlable list). The section reuses the `.collaborate`
 dark-indigo shell with `.contrib-grid` / `.contrib-card` styles in style.css.
 Linked from the homepage footer; included in sitemap.xml.
 
-Every generated page's header nav (pageShell) shows two pills: "← Back",
-which calls history.back() when there is history (href falls back to the
-page's backHref for crawlers/no-JS), and "View all Collaborators" linking to
-/contributors/.
+Every generated page's header nav (pageShell) shows two pills: "← Back"
+(.nav-back), which calls history.back() when there is history (href falls
+back to the page's backHref for crawlers/no-JS), and "View all
+Collaborators" linking to /contributors/. js/nav.js REMOVES the back pill
+unless document.referrer is same-origin (compared against location.origin
+dynamically, so it works on the netlify subdomain now and pucar.org later):
+arriving from Google/another site or directly means no back pill.
 
 ### 6.4 The build script — scripts/build-jobs.js
 

@@ -14,6 +14,22 @@
   var nav = document.querySelector(".site-header .site-nav");
   if (!nav) return;
 
+  /* ---- back pill: only when it actually goes somewhere on THIS site ----
+     history.back() from a Google result / external link would bounce the
+     visitor off the site, so the pill is removed unless the referrer is
+     same-origin (works on the netlify subdomain today and pucar.org later,
+     since it compares against location.origin dynamically). Direct visits
+     (empty referrer) also drop it. Runs BEFORE the glider wires links. */
+  var back = nav.querySelector(".nav-back");
+  if (back) {
+    var sameOrigin = false;
+    try {
+      sameOrigin = !!document.referrer &&
+        new URL(document.referrer).origin === window.location.origin;
+    } catch (e) { /* malformed referrer: treat as external */ }
+    if (!sameOrigin) back.parentNode.removeChild(back);
+  }
+
   /* ---- glider ---- */
   var links = Array.prototype.slice.call(
     nav.querySelectorAll(":scope > a, :scope > .nav-drop > a")
