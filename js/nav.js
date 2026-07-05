@@ -32,6 +32,13 @@
       // pointer-events + gliders in CSS) so a highlight can't land on a
       // link that hasn't reached its final position yet
       cluster.classList.add("is-swapping");
+      // belt-and-braces: onfinish never fires for CANCELLED animations
+      // (e.g. rapid re-swaps), and a stuck is-swapping hides the gliders
+      // with !important forever -- always release shortly after the FLIP
+      clearTimeout(cluster.__swapT);
+      cluster.__swapT = setTimeout(function () {
+        cluster.classList.remove("is-swapping");
+      }, 400);
       var pending = 2;
       [ [expand, e0, e1], [collapse, c0, c1] ].forEach(function (job) {
         var el = job[0];
@@ -148,17 +155,30 @@
     // menu swap) slide the links sideways under a glider parked at stale
     // pixel coordinates -- lit link turns into bare white text. Ride the
     // glider along for the transition's duration.
+    var rideT = null;
+    var ride = function () {
+      var t0 = performance.now();
+      cancelAnimationFrame(rideT);
+      (function step() {
+        if (lit) move(lit);
+        if (performance.now() - t0 < 650) {
+          rideT = requestAnimationFrame(step);
+        } else if (lit && getComputedStyle(glider).opacity === "0") {
+          // FAIL-SAFE: whatever hid the pill (lost transition, a stuck
+          // is-swapping, anything unforeseen), a lit link with no pill
+          // under it is unreadable -- drop the lit state entirely.
+          clear();
+        }
+      })();
+    };
     if (window.MutationObserver) {
-      var rideT = null;
-      new MutationObserver(function () {
-        var t0 = performance.now();
-        cancelAnimationFrame(rideT);
-        (function ride() {
-          if (lit) move(lit);
-          if (performance.now() - t0 < 600) rideT = requestAnimationFrame(ride);
-        })();
-      }).observe(n, { attributes: true, attributeFilter: ["class"] });
+      new MutationObserver(ride).observe(n, { attributes: true, attributeFilter: ["class"] });
     }
+    // clicking a link (same-page anchors jump the scroll, which toggles
+    // show-home and shifts every link) re-tracks + fail-safes too
+    n.addEventListener("click", function (e) {
+      if (e.target.closest("a")) ride();
+    });
     // body.nav-dark (the dark-section colour flip) is set on <body>, not on
     // `n` -- the class-attribute observer just above never sees it, so a
     // link lit right as the page scrolls across a dark-section boundary

@@ -1087,17 +1087,25 @@
   // sideways while the glider sits at stale pixel coordinates -- the lit
   // link ends up white text with no pill under it. Watch the nav's class
   // and ride the glider along for the ~450ms slot transition.
+  var rideT = null;
+  var ride = function () {
+    var t0 = performance.now();
+    cancelAnimationFrame(rideT);
+    (function step() {
+      if (lit) move(lit);
+      if (performance.now() - t0 < 650) {
+        rideT = requestAnimationFrame(step);
+      } else if (lit && getComputedStyle(glider).opacity === "0") {
+        clear(); // fail-safe: a lit link with no pill under it is unreadable
+      }
+    })();
+  };
   if (window.MutationObserver) {
-    var rideT = null;
-    new MutationObserver(function () {
-      var t0 = performance.now();
-      cancelAnimationFrame(rideT);
-      (function ride() {
-        if (lit) move(lit);
-        if (performance.now() - t0 < 600) rideT = requestAnimationFrame(ride);
-      })();
-    }).observe(nav, { attributes: true, attributeFilter: ["class"] });
+    new MutationObserver(ride).observe(nav, { attributes: true, attributeFilter: ["class"] });
   }
+  nav.addEventListener("click", function (e) {
+    if (e.target.closest("a")) ride();
+  });
 
   // same sliding pill inside each dropdown menu
   Array.prototype.forEach.call(nav.querySelectorAll(".nav-menu"), function (menu) {

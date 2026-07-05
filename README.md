@@ -1600,7 +1600,16 @@ navItemsIn keyframe with a 160ms delay, i.e. AFTER the width FLIP lands
 (the GLIDER is excluded from that selector -- :not(.nav-glider): the
 animation's backwards fill forced opacity:0 over the glider's inline
 opacity whenever it restarted, which read as "hover pill vanishes on
-click, lit text unreadable" on sub-nav pages)
+click, lit text unreadable" on sub-nav pages). On top of that, gliders
+now re-track on any nav-link CLICK and carry a FAIL-SAFE: after each
+650ms ride, if the pill's computed opacity is still 0 while a link is
+lit, clear() runs -- a lit link with no pill can never be stranded
+unreadable, whatever hid the pill. swapNavs also force-releases
+is-swapping after 400ms (onfinish never fires for cancelled animations,
+and a stuck is-swapping hides gliders with !important). NOTE for future
+debugging: browser-automation tabs in a hidden/occluded window FREEZE
+document.timeline, so every CSS animation/transition reads as stuck at
+currentTime 0 -- do not diagnose glider bugs from such a tab
 (flex-wrap:nowrap/white-space:nowrap on .nav-cluster .site-nav stop the
 labels wrapping mid-animation, which used to balloon the pill's height).
 While the FLIP runs the cluster carries .is-swapping, which kills
