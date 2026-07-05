@@ -714,13 +714,11 @@ function teamPage() {
      bottom gradient, a LinkedIn chip mid-card, PUCAR chrome throughout.
      Clicking a card opens the shared job-modal with the bio. */
   const team = JSON.parse(fs.readFileSync(path.join(ROOT, "content/team/team.json"), "utf8"));
-  const LN_ICON = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="currentColor"><path d="M13.63 13.63h-2.37V9.92c0-.89-.02-2.03-1.24-2.03-1.24 0-1.43.97-1.43 1.96v3.78H6.22V6h2.28v1.04h.03a2.5 2.5 0 0 1 2.25-1.23c2.4 0 2.85 1.58 2.85 3.64v4.18zM3.55 4.95a1.38 1.38 0 1 1 0-2.75 1.38 1.38 0 0 1 0 2.75zM4.73 13.63H2.36V6h2.37v7.63zM14.82 0H1.18C.53 0 0 .52 0 1.15v13.7C0 15.48.53 16 1.18 16h13.64c.65 0 1.18-.52 1.18-1.15V1.15C16 .52 15.47 0 14.82 0z"/></svg>';
 
   const cards = team.map(function (p) {
     return '<article class="team-card" data-slug="' + esc(p.slug) + '" tabindex="0" role="button" aria-label="' + esc(p.name) + ', ' + esc(p.role) + '">\n' +
       '  <img class="team-photo" src="' + esc(p.photo) + '" alt="' + esc(p.name) + '" loading="lazy" />\n' +
       '  <span class="team-veil" aria-hidden="true"></span>\n' +
-      '  <a class="team-ln" href="' + esc(p.linkedin) + '" target="_blank" rel="noopener" aria-label="' + esc(p.name) + ' on LinkedIn">' + LN_ICON + 'LinkedIn</a>\n' +
       '  <span class="team-meta"><span class="team-name">' + esc(p.name) + '</span><span class="team-role">' + esc(p.role) + '</span></span>\n' +
       "</article>";
   }).join("\n");

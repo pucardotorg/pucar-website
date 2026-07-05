@@ -1615,12 +1615,12 @@ are signed + expiring; Varun's comes from v4.run/images/varun.jpg).
 Layout is modelled on opennyai.org/about's team wall, PUCAR-skinned:
 .team-grid of 3:4 portrait .team-cards on the dark band; photos grayscale
 -> colour on hover while name/role rise over a bottom gradient
-(.team-veil/.team-meta) and a frosted LinkedIn chip (.team-ln) fades in
-mid-card. @media (hover:none) shows colour + names permanently and hides
-the chip. Clicking a card opens the shared job-modal with the bio
-(js/team.js; data inlined in a #teamData JSON script tag at build time --
-no fetch). The chip is a real <a>; team.js ignores clicks that pass
-through an anchor so it navigates instead of opening the modal.
+(.team-veil/.team-meta). The mid-card LinkedIn chip was REMOVED (user:
+"Remove this linkedin button from people's faces. Let it just open the
+modal") -- the modal carries the LinkedIn/Website buttons instead.
+@media (hover:none) shows colour + names permanently. Clicking a card
+opens the shared job-modal with the bio (js/team.js; data inlined in a
+#teamData JSON script tag at build time -- no fetch).
 varun-h's contributor entry was also upgraded from placeholder to real
 (published:true, so contributor pages count went 77 -> 78).
 

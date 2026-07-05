@@ -4318,35 +4318,10 @@ button.circle-card{
   text-transform:uppercase;
   color:var(--green);
 }
-.team-ln{
-  position:absolute;
-  top:44%;
-  left:50%;
-  translate:-50% -50%;
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:9px 16px;
-  border-radius:999px;
-  background:rgba(10,21,26,.6);
-  border:1px solid rgba(251,248,242,.35);
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
-  color:var(--paper);
-  font-size:.8rem;
-  font-weight:600;
-  text-decoration:none;
-  opacity:0;
-  scale:.9;
-  transition:opacity .25s ease, scale .25s ease, background .2s ease;
-}
-.team-card:hover .team-ln, .team-card:focus-visible .team-ln{ opacity:1; scale:1; }
-.team-ln:hover{ background:var(--green); color:var(--ink); border-color:var(--green); }
 @media (hover:none){
   /* no hover states on touch: colour photos, names always on */
   .team-photo{ filter:none; }
   .team-veil, .team-meta{ opacity:1; translate:0 0; }
-  .team-ln{ display:none; } /* the modal carries the link */
 }
 
 /* leave-site warning: deliberately NOT the house modal look -- a compact
