@@ -4421,16 +4421,14 @@ button.circle-card{
   gap:9px;
 }
 .state-tabbar .board-live, .district-tagbar .board-live{ flex:none; }
-/* on the ACTIVE pill the background IS --green, so the orb flips to the
-   dark forest ink with a matching dark pulse ring to stay visible */
-.state-tabbar .res-tab.is-active .board-live,
-.district-tagbar .res-tab.is-active .board-live{
-  background:var(--forest);
-  animation-name:boardPulseDark;
-}
-@keyframes boardPulseDark{
-  0%,100%{ box-shadow:0 0 0 0 rgba(17,31,38,.45); }
-  55%    { box-shadow:0 0 0 7px rgba(17,31,38,0); }
+/* the orb stays GREEN everywhere; instead of a solid green active pill
+   (which swallowed the orb), the active district is a green-tinted
+   OUTLINE pill: green border + green text + visible green orb */
+.district-tagbar .res-tab.is-active{
+  background:rgba(48,207,140,.12);
+  border-color:var(--green);
+  color:var(--green);
+  font-weight:700;
 }
 
 /* ---- 1.0 -> 2.0: a hand-off, not two grey boxes. Each card carries a
