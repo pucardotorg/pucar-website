@@ -3317,7 +3317,7 @@ a.event-card{ text-decoration:none; }
     align-self:start;
     /* pushed DOWN so his balloon has real headroom above him instead of
        being squashed into (and behind) his head */
-    margin-top:72px;
+    margin-top:104px;
   }
   /* single column on mobile: keep the litigant put, no side→centre slide,
      and no desktop midline lift. NOTE: only `translate` is force-reset on
@@ -3355,12 +3355,18 @@ a.event-card{ text-decoration:none; }
      and the type goes back up to something readable */
   .judge-bubble{
     left:50%;
-    bottom:calc(100% + 10px);
+    bottom:calc(100% + 12px);
     translate:-50% 10px;
-    max-width:min(220px, calc(100vw - 48px));
+    /* FIXED width, not max-content: his line is hard-coded, and iOS was
+       rendering the max-content box at one-line height while the text
+       wrapped past the drawn ::before strip. An explicit width keeps the
+       box, the text, and the sketched balloon background in agreement. */
+    width:200px;
+    max-width:calc(100vw - 48px);
     font-size:.95rem;
     padding:12px 16px;
     text-align:center;
+    text-wrap:balance;
   }
   .pin[data-beat="3"] .judge-bubble{ translate:-50% 0; }
   .beats{
