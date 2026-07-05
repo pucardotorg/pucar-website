@@ -579,11 +579,15 @@
     document.addEventListener("pointerdown", unmute, true);
     document.addEventListener("keydown", unmute, true);
   }
+  var filmLeftAt = 0; // when the visitor last scrolled away from the film
   function tryPlayFilm() {
     if (!filmVideo) return;
-    if (filmVideo.ended) {
+    // restart from the top after a completed watch OR after being away
+    // for more than 5 seconds; a quick wobble at the zone edge resumes
+    if (filmVideo.ended || (filmLeftAt && performance.now() - filmLeftAt > 5000)) {
       try { filmVideo.currentTime = 0; } catch (e) { /* not seekable yet */ }
     }
+    filmLeftAt = 0;
     filmVideo.muted = false;
     filmVideo.volume = 1;
     var p = filmVideo.play();
@@ -677,6 +681,7 @@
     } else if (!inZone && filmActive) {
       filmActive = false;
       document.body.classList.remove("film-playing"); // chrome glides back
+      filmLeftAt = performance.now(); // >5s away = restart on return
       if (filmVideo && !filmVideo.paused) filmVideo.pause();
     }
   }

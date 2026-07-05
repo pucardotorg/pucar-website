@@ -389,8 +389,9 @@ notification emails can be configured there.
   first click onward; that is the ceiling the platform allows.
   Still **NO scroll lock** beyond the 700ms arrival hold; **leaving the
   zone in either direction pauses the video** and restores the chrome;
-  re-entering RESUMES (it only restarts from 0 after a completed watch,
-  so a wobble at the zone edge doesn't restart it). Native `controls`
+  re-entering within 5 seconds RESUMES, but after MORE than 5 seconds
+  away (or a completed watch) it RESTARTS from the top -- a wobble at
+  the zone edge still just resumes. Native `controls`
   are on. While the film is the
   centrepiece, `body.film-playing` slides the fixed header UP out of
   frame and the `.progress-rail` DOWN, both gliding back on scroll-away
