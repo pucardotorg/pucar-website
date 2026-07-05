@@ -255,7 +255,10 @@ function contributorPage(person) {
     '<div><p class="beat-eyebrow">Contributor</p>' +
     '<h1 class="job-title">' + esc(person.name) + "</h1>" +
     ((person.role || person.organisation) ? '<p class="job-summary">' +
-      esc([person.role, person.organisation].filter(Boolean).join(" · ")) + "</p>" : "") +
+      esc([person.role,
+        (person.role && person.organisation &&
+          person.role.toLowerCase().indexOf(person.organisation.toLowerCase()) !== -1)
+          ? "" : person.organisation].filter(Boolean).join(" · ")) + "</p>" : "") +
     "</div></div>\n" +
     '  <article class="job-body">\n' + mdToHtml(person.body || "") + "\n  </article>\n" +
     (links ? '  <div class="cta-row">\n    ' + links + "\n  </div>\n" : "") +
@@ -322,6 +325,20 @@ orgs.map(function (o) { return "      <option>" + esc(o) + "</option>"; }).join(
 people.map(contributorIndexCard).join("\n") + "\n" +
 "  </div>\n" +
 "</section>\n" +
+'<div class="job-modal" id="contribModal" hidden>\n' +
+'  <div class="job-modal-backdrop" data-close></div>\n' +
+'  <div class="job-modal-panel" role="dialog" aria-modal="true" aria-labelledby="cmName">\n' +
+'    <button class="job-modal-close" type="button" data-close aria-label="Close">\u00d7</button>\n' +
+'    <div class="contrib-head">\n' +
+'      <img class="avatar avatar-xl" id="cmPhoto" src="" alt="" />\n' +
+'      <div><p class="beat-eyebrow">Contributor</p>\n' +
+'      <h2 class="job-title" id="cmName"></h2>\n' +
+'      <p class="job-summary" id="cmRole"></p></div>\n' +
+"    </div>\n" +
+'    <article class="job-body" id="cmBody"></article>\n' +
+'    <div class="cta-row" id="cmLinks"></div>\n' +
+"  </div>\n" +
+"</div>\n" +
 '<script src="/js/contributors-page.js"></script>\n<script src="/js/view-toggle.js"></script>\n<main hidden>';
   return pageShell({
     title: "Contributors | PUCAR",
@@ -690,6 +707,13 @@ contributors.forEach(function (person) {
   fs.writeFileSync(path.join(dir, "index.html"), contributorPage(person));
 });
 fs.writeFileSync(path.join(ROOT, "contributors", "index.html"), contributorsIndexPage());
+/* full profile payloads for the contributors-page modal */
+fs.writeFileSync(path.join(ROOT, "contributors", "profiles.json"),
+  JSON.stringify(contributors.map(function (c) {
+    return { slug: c.slug, url: c.url, name: c.name, role: c.role || "",
+      organisation: c.organisation || "", photo: c.photo || "",
+      links: c.links || [], html: mdToHtml(c.body || "") };
+  })));
 /* photo list for the homepage's beat-9 "waving heads" stream */
 fs.writeFileSync(path.join(ROOT, "contributors", "photos.json"),
   JSON.stringify(contributors.filter(function (c) { return c.photo; })

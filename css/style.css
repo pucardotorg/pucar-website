@@ -2820,19 +2820,22 @@ body.scroll-locked{ overflow:hidden; }
   margin-top:48px;
 }
 .about-why-inner{ max-width:880px; margin:0 auto; }
+/* one deliberate hierarchy instead of two competing treatments ("text is
+   treated differently for 2 paragraphs, looks odd"): the problem statement
+   is a muted lede sharing the same full measure as the quote below, and the
+   "Born in 2023" line is the band's single display moment. */
 .about-why-lede{
-  margin:14px 0 26px;
-  font-size:1.08rem;
+  margin:18px 0 30px;
+  font-size:clamp(1.05rem,1.6vw,1.2rem);
   line-height:1.75;
-  color:rgba(251,248,242,.82);
-  max-width:64ch;
+  color:rgba(251,248,242,.78);
 }
 .about-why-pull{
   margin:0;
   font-family:var(--font-display);
   font-weight:500;
-  font-size:clamp(1.4rem,3vw,2rem);
-  line-height:1.4;
+  font-size:clamp(1.35rem,2.6vw,1.85rem);
+  line-height:1.45;
 }
 .about-why-pull em{
   font-style:normal;

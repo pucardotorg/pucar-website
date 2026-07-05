@@ -125,3 +125,88 @@
   });
   apply();
 })();
+
+/* ---- profile modal: cards open in the shared job-modal chrome (same as
+   the contact modal) instead of navigating. Deep links stay intact: the
+   per-person pages still exist and are crawlable, plain clicks pushState to
+   the profile URL while the modal is open, and closing goes back. Modified
+   clicks (cmd/ctrl/middle) still open the real page. ---- */
+(function () {
+  "use strict";
+  var modal = document.getElementById("contribModal");
+  var grid = document.getElementById("contribGrid");
+  if (!modal || !grid || !window.fetch) return;
+  var photoEl = document.getElementById("cmPhoto");
+  var nameEl = document.getElementById("cmName");
+  var roleEl = document.getElementById("cmRole");
+  var bodyEl = document.getElementById("cmBody");
+  var linksEl = document.getElementById("cmLinks");
+  var profiles = null, loading = false, pushed = false;
+
+  function load(then) {
+    if (profiles) { then(); return; }
+    if (loading) return;
+    loading = true;
+    fetch("/contributors/profiles.json")
+      .then(function (r) { return r.json(); })
+      .then(function (p) { profiles = p; loading = false; then(); })
+      .catch(function () { loading = false; });
+  }
+
+  function openModal(slug, push) {
+    var p = null;
+    for (var i = 0; i < profiles.length; i++) if (profiles[i].slug === slug) { p = profiles[i]; break; }
+    if (!p) return;
+    if (p.photo) { photoEl.src = p.photo; photoEl.hidden = false; } else { photoEl.hidden = true; }
+    photoEl.alt = p.name;
+    nameEl.textContent = p.name;
+    // skip the org when the role already names it ("CTO, Zerodha · Zerodha")
+    var dupe = p.role && p.organisation &&
+      p.role.toLowerCase().indexOf(p.organisation.toLowerCase()) !== -1;
+    roleEl.textContent = [p.role, dupe ? "" : p.organisation].filter(Boolean).join(" · ");
+    bodyEl.innerHTML = p.html || "";
+    linksEl.textContent = "";
+    (p.links || []).forEach(function (l) {
+      if (!l || !l.url) return;
+      var a = document.createElement("a");
+      a.className = "btn btn-outline";
+      a.href = l.url;
+      a.rel = "noopener";
+      a.target = "_blank";
+      a.textContent = l.label || "Link";
+      linksEl.appendChild(a);
+    });
+    modal.hidden = false;
+    document.body.classList.add("modal-open");
+    if (push) {
+      history.pushState({ contribModal: slug }, "", p.url);
+      pushed = true;
+    }
+  }
+
+  function closeModal(viaHistory) {
+    modal.hidden = true;
+    document.body.classList.remove("modal-open");
+    if (pushed && !viaHistory) history.back();
+    pushed = false;
+  }
+
+  grid.addEventListener("click", function (e) {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    var card = e.target.closest(".contrib-card");
+    if (!card) return;
+    e.preventDefault();
+    var slug = card.getAttribute("data-slug") ||
+      (card.getAttribute("href") || "").replace(/\/$/, "").split("/").pop();
+    load(function () { openModal(slug, true); });
+  });
+  modal.addEventListener("click", function (e) {
+    if (e.target.hasAttribute && e.target.hasAttribute("data-close")) closeModal(false);
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !modal.hidden) closeModal(false);
+  });
+  window.addEventListener("popstate", function () {
+    if (!modal.hidden) closeModal(true);
+  });
+})();

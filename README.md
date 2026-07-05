@@ -1407,7 +1407,12 @@ link to each profile page. A filter bar offers free-text search (name, role,
 org) and an organisation dropdown built from the distinct `organisation`
 values. Filtering lives in `js/contributors-page.js` (same custom `.dd`
 dropdown pattern as collaborate; the bar is `hidden` until JS runs, so the
-no-JS page is a plain crawlable list). The section reuses the `.collaborate`
+no-JS page is a plain crawlable list). Cards open a PROFILE MODAL (shared
+job-modal chrome, same as the contact modal; data from
+contributors/profiles.json emitted by the build) with pushState to the
+person's real URL and history-back on close, so deep links and crawlable
+per-person pages are untouched; cmd/ctrl/middle-clicks still open the full
+page. The role line skips the organisation when the role already names it. The section reuses the `.collaborate`
 dark-indigo shell with `.contrib-grid` / `.contrib-card` styles in style.css.
 Linked from the homepage footer; included in sitemap.xml.
 
