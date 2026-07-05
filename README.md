@@ -1710,7 +1710,12 @@ varun-h's contributor entry was also upgraded from placeholder to real
 A small caret beside the PUCAR logo (every page; index.html and pageShell
 carry identical markup) opens a dark forest panel titled ALSO VISIT with
 the Agami and OpenNyAI logos linking out -- modelled on opennyai.org's
-own switcher. Pure CSS (hover + :focus-within, an ::after bridge keeps
+own switcher. Hovering (or focusing) a logo slides open a two-line
+.brand-menu-desc blurb beneath it explaining what each org is; the
+choreography is asymmetric on purpose (enter: space opens, then text
+fades in; exit: text fades first, then the space closes -- explicit
+"smoothly animate in and out"). Panel is 282px min-width with blurbs at
+30ch/6.5em open height so neither blurb ever clips. Pure CSS (hover + :focus-within, an ::after bridge keeps
 the pointer path alive between caret and panel); caret colour flips with
 the dark-half selectors like the logo. display:none under 640px (explicit:
 not needed on mobile). The logos are SELF-HOSTED SVGs
@@ -1781,7 +1786,33 @@ sync by construction; the homepage and /contributors/ board intros link
 back via .collab-dristi-link ("About the DRISTI platform ->"). NAV: the
 Community dropdown's Active Collaborations first item is now "DRISTI"
 -> /dristi/ (was Advance-the-stack -> /contributors/#dristi); the
-footer's Active Collaborations column matches.
+footer's Active Collaborations column matches. LATER (same day, explicit
+request): the dropdown holds TWO groups only -- Active Collaborations
+(DRISTI, SC AI policy, About Contributing, Meet the Contributors, in
+that order: contribution links above resources) and Resources (Blog /
+Data, Policy, Research and more / Learning Circles). The "More" label
+is gone.
+
+### /dristi/ layout notes (post-launch tuning, July 2026)
+
+- The whole intro <main> runs WIDE: pageShell now takes opts.mainClass;
+  dristiPage passes "dristi-main" (max-width 1240px, keeps job-main's
+  own side padding). Prose paragraphs span the full column ("expand the
+  paragraphs so they span the same size"), max-width:none.
+- The intro stat panel (.dristi-hero-stats) is three EQUAL thirds with
+  hairline dividers; labels are SENTENCE-CASE at .95rem (the uppercase
+  letterspaced micro-labels wrapped into ugly 4-line stacks with
+  sentence-length copy -- rejected), capped 34ch, numerals nowrap.
+  History: stacked flex -> hairline columns -> full-bleed breakout ->
+  content-sized flex -> equal thirds. Equal thirds + sentence labels is
+  the accepted end state.
+- Kerala stat cards: icons were added (six inline stroke glyphs) and
+  REMOVED on sight ("these icons look bad") -- do not reintroduce.
+- Kerala/Kollam tabs carry .board-live orbs (green everywhere; the
+  ACTIVE district pill is a green-tinted OUTLINE style specifically so
+  the green orb never sits on a solid green fill).
+- The race auto-plays once when the CHART is centred (rootMargin -32%)
+  with a 3-2-1-GO countdown; button replays.
 
 ### Footer: single source of truth
 
