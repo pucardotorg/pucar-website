@@ -141,15 +141,20 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
   box-shadow:0 24px 60px rgba(17,31,38,.4);
   opacity:0;
   translate:0 8px;
-  pointer-events:none;
-  transition:opacity .22s ease, translate .22s ease;
+  /* GRACE PERIOD on close: the panel lingers ~0.55s after the pointer
+     leaves (visibility waits even longer), so drifting off the caret and
+     back doesn't force a re-engage. Hit-testing stays on while visible,
+     so re-entering the panel during the grace cancels the close. */
+  visibility:hidden;
+  transition:opacity .25s ease .55s, translate .25s ease .55s, visibility 0s linear .8s;
   z-index:60;
 }
 .brand-switch:hover .brand-menu,
 .brand-switch:focus-within .brand-menu{
   opacity:1;
   translate:0 0;
-  pointer-events:auto;
+  visibility:visible;
+  transition:opacity .22s ease, translate .22s ease, visibility 0s;
 }
 .brand-menu-label{
   margin:0 0 4px;

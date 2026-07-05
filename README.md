@@ -1715,7 +1715,11 @@ own switcher. Hovering (or focusing) a logo slides open a two-line
 choreography is asymmetric on purpose (enter: space opens, then text
 fades in; exit: text fades first, then the space closes -- explicit
 "smoothly animate in and out"). Panel is 282px min-width with blurbs at
-30ch/6.5em open height so neither blurb ever clips. Pure CSS (hover + :focus-within, an ::after bridge keeps
+30ch/6.5em open height so neither blurb ever clips. CLOSE GRACE: the
+panel lingers ~0.55s after mouseout (visibility flips at 0.8s) and stays
+hit-testable meanwhile, so re-entering it cancels the close -- the old
+instant close forced constant re-engaging. pointer-events was swapped
+for the visibility technique because pointer-events doesn't transition. Pure CSS (hover + :focus-within, an ::after bridge keeps
 the pointer path alive between caret and panel); caret colour flips with
 the dark-half selectors like the logo. display:none under 640px (explicit:
 not needed on mobile). The logos are SELF-HOSTED SVGs
