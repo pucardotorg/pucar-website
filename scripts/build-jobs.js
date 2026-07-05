@@ -222,7 +222,7 @@ FOOTER + "\n</body>\n</html>\n";
 function jobMetaHtml(job) {
   return '<div class="job-meta">' +
     '<span class="collab-cat">' + esc(job.category || "Work") + "</span>" +
-    '<span class="collab-diff ' + diffClass(job.difficulty) + '">' + esc(job.difficulty || "Moderate") + "</span>" +
+    '<span class="collab-diff ' + diffClass(job.difficulty) + '">' + '<svg class="diff-bars" viewBox="0 0 14 12" width="13" height="11" aria-hidden="true"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5.5" y="3.5" width="3" height="8.5" rx="1"/><rect x="11" y="0" width="3" height="12" rx="1"/></svg>' + esc(job.difficulty || "Moderate") + "</span>" +
     '<span class="collab-stream">' + esc(streamLabel(job)) + "</span>" +
     (job.status !== "Open" ? '<span class="collab-status">' + esc(job.status) + "</span>" : "") +
     "</div>";
@@ -1083,7 +1083,7 @@ function card(job) {
     ' data-tags="' + esc(job.tags.join("|")) + '">\n' +
     '  <a class="collab-cover" href="' + job.url + '" aria-label="' + esc(job.title) + '"></a>\n' +
     '  <div class="collab-topline"><span class="collab-cat">' + esc(job.category || "Work") + "</span>" +
-    '<span class="collab-diff ' + diffClass(job.difficulty) + '">' + esc(job.difficulty || "Moderate") + "</span></div>\n" +
+    '<span class="collab-diff ' + diffClass(job.difficulty) + '">' + '<svg class="diff-bars" viewBox="0 0 14 12" width="13" height="11" aria-hidden="true"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5.5" y="3.5" width="3" height="8.5" rx="1"/><rect x="11" y="0" width="3" height="12" rx="1"/></svg>' + esc(job.difficulty || "Moderate") + "</span></div>\n" +
     '  <span class="collab-type">' + esc(streamLabel(job)) + "</span>\n" +
     '  <span class="collab-title">' + esc(job.title) + "</span>\n" +
     '  <span class="collab-summary">' + esc(job.summary) + "</span>\n" +

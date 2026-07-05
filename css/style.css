@@ -2411,17 +2411,46 @@ button.btn.btn-outline{ border:1px solid var(--line); }
    same reasoning as the text colour above -- a dimmed icon read as washed
    out next to genuinely bright UI elements elsewhere on the page. */
 .tag-icon{ flex-shrink:0; }
+/* difficulty: quiet tinted OUTLINE pill with a three-bar signal gauge
+   (1 bar lit = low, 2 = moderate, 3 = high) instead of the loud solid
+   traffic-light pills ("make them look sexier") */
 .collab-diff{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
   font-size:.7rem;
   font-weight:700;
-  letter-spacing:.04em;
-  padding:5px 10px;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  padding:5px 11px;
   border-radius:999px;
-  color:#fff;
+  border:1px solid;
 }
-.diff-low{ background:#3F7D4E; }
-.diff-moderate{ background:#C98A2E; color:#241E1A; }
-.diff-high{ background:#B0402F; }
+.diff-bars{ flex:none; }
+.diff-bars rect{ fill:currentColor; opacity:.25; }
+.diff-low{
+  color:#7BD8A0;
+  border-color:rgba(123,216,160,.4);
+  background:rgba(123,216,160,.08);
+}
+.diff-low .diff-bars rect:nth-child(1){ opacity:1; }
+.diff-moderate{
+  color:#E8B45C;
+  border-color:rgba(232,180,92,.4);
+  background:rgba(232,180,92,.08);
+}
+.diff-moderate .diff-bars rect:nth-child(-n+2){ opacity:1; }
+.diff-high{
+  color:#F0937B;
+  border-color:rgba(240,147,123,.45);
+  background:rgba(240,147,123,.08);
+}
+.diff-high .diff-bars rect{ opacity:1; }
+/* on LIGHT surfaces (job pages + job modal, both render jobMetaHtml into
+   .job-meta on paper) the pale dark-band tints wash out: darker inks */
+.job-meta .diff-low{ color:#2E7D4F; border-color:rgba(46,125,79,.45); background:rgba(46,125,79,.07); }
+.job-meta .diff-moderate{ color:#9A6A1B; border-color:rgba(154,106,27,.45); background:rgba(154,106,27,.07); }
+.job-meta .diff-high{ color:#B0402F; border-color:rgba(176,64,47,.45); background:rgba(176,64,47,.07); }
 .collab-status{
   display:inline-flex;
   align-items:center;
