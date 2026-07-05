@@ -26,6 +26,39 @@
     });
   }
 
+  /* ---- leaving-site warning for blog links (new tab, themed modal) ---- */
+  var leave = document.getElementById("leaveModal");
+  if (leave && blogGrid) {
+    var lmHost = document.getElementById("lmHost");
+    var lmGo = document.getElementById("lmGo");
+    var pendingUrl = "";
+    blogGrid.addEventListener("click", function (e) {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; // power users skip the prompt
+      var card = e.target.closest("a.res-card");
+      if (!card) return;
+      e.preventDefault();
+      pendingUrl = card.href;
+      try { lmHost.textContent = new URL(pendingUrl).hostname.replace(/^www\./, ""); }
+      catch (err) { lmHost.textContent = "another site"; }
+      leave.hidden = false;
+      document.body.classList.add("modal-open");
+    });
+    function closeLeave() {
+      leave.hidden = true;
+      document.body.classList.remove("modal-open");
+    }
+    lmGo.addEventListener("click", function () {
+      window.open(pendingUrl, "_blank", "noopener");
+      closeLeave();
+    });
+    leave.addEventListener("click", function (e) {
+      if (e.target.hasAttribute && e.target.hasAttribute("data-close")) closeLeave();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !leave.hidden) closeLeave();
+    });
+  }
+
   /* ---- data tabs ---- */
   var tabs = document.getElementById("dataTabs");
   var dataGrid = document.getElementById("dataGrid");

@@ -3682,3 +3682,51 @@ button.circle-card{
   line-height:1.65;
   color:var(--ink-soft);
 }
+
+/* ---- blog card refinements ---- */
+/* long summaries curtail with an ellipsis */
+.res-card .collab-summary{
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+/* outlet: quiet uppercase text, not a pill */
+.res-outlet{
+  font-size:.7rem;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--green);
+}
+/* date: plain text with a calendar glyph, not a pill */
+.res-date{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:.78rem;
+  color:rgba(251,248,242,.65);
+}
+/* tags hug the bottom divider */
+.res-card .collab-chips{ margin-top:auto; }
+/* shimmer: a light band sweeps across the thumbnail on hover */
+.res-thumb-wrap{ overflow:hidden; border-radius:22px 22px 0 0; }
+.res-shine{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(105deg, transparent 38%, rgba(255,255,255,.32) 50%, transparent 62%);
+  transform:translateX(-130%);
+  pointer-events:none;
+}
+.res-card:hover .res-shine{
+  transform:translateX(130%);
+  transition:transform .85s ease;
+}
+.leave-panel{ max-width:520px; }
+.leave-text{
+  font-size:1rem;
+  line-height:1.65;
+  color:var(--ink-soft);
+  margin:8px 0 6px;
+}
+.leave-text strong{ color:var(--ink); }

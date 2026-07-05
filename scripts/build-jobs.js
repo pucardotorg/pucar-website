@@ -507,10 +507,11 @@ function resourcesPage() {
 
   const blogTags = Array.from(new Set(resBlog.reduce(function (a, b) { return a.concat(b.tags || []); }, []))).sort();
 
+  const CAL_SVG = '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="1.5" y="2.5" width="13" height="12" rx="2"/><path d="M1.5 6h13M5 1v3M11 1v3"/></svg>';
   const blogCards = resBlog.map(function (b) {
     return '<a class="collab-card res-card" data-tags="' + esc((b.tags || []).join("|")) + '" href="' + esc(b.url) + '" target="_blank" rel="noopener">\n' +
-      '  <img class="res-thumb" src="' + esc(b.thumb) + '" alt="" loading="lazy" />\n' +
-      '  <div class="collab-topline"><span class="collab-cat">' + esc(b.outlet) + '</span><span class="collab-status">' + esc(b.date) + "</span></div>\n" +
+      '  <span class="res-thumb-wrap"><img class="res-thumb" src="' + esc(b.thumb) + '" alt="" loading="lazy" /><span class="res-shine" aria-hidden="true"></span></span>\n' +
+      '  <div class="collab-topline"><span class="res-outlet">' + esc(b.outlet) + '</span><span class="res-date">' + CAL_SVG + esc(b.date) + "</span></div>\n" +
       '  <span class="collab-title">' + esc(b.title) + "</span>\n" +
       '  <span class="collab-summary">' + esc(b.summary) + "</span>\n" +
       '  <ul class="collab-chips">' + (b.tags || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>\n" +
@@ -588,6 +589,19 @@ blogTags.map(function (t) { return '      <button type="button" class="res-tab" 
 '  <div class="collab-grid res-grid" id="circleGrid">\n' + circleCards + "\n  </div>\n" +
 "</section>\n" +
 
+'<div class="job-modal" id="leaveModal" hidden>\n' +
+'  <div class="job-modal-backdrop" data-close></div>\n' +
+'  <div class="job-modal-panel leave-panel" role="dialog" aria-modal="true" aria-labelledby="lmTitle">\n' +
+'    <button class="job-modal-close" type="button" data-close aria-label="Close">\u00d7</button>\n' +
+'    <p class="beat-eyebrow">Heads up</p>\n' +
+'    <h2 class="job-title" id="lmTitle">You\u2019re about to leave PUCAR.</h2>\n' +
+'    <p class="leave-text">This article lives on <strong id="lmHost"></strong>. It\u2019s a link we curated, safe to follow, and it will open in a new tab.</p>\n' +
+'    <div class="cta-row">\n' +
+'      <button class="btn btn-primary" type="button" id="lmGo">Continue to article</button>\n' +
+'      <button class="btn btn-outline" type="button" data-close>Stay here</button>\n' +
+"    </div>\n" +
+"  </div>\n" +
+"</div>\n" +
 '<div class="job-modal" id="videoModal" hidden>\n' +
 '  <div class="job-modal-backdrop" data-close></div>\n' +
 '  <div class="job-modal-panel video-panel" role="dialog" aria-modal="true" aria-labelledby="vmTitle">\n' +
