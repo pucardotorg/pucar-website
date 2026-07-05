@@ -4368,6 +4368,33 @@ button.circle-card{
    State tabs reuse .res-tabbar; disabled states are .tab-soon with a
    "Coming soon" chip. The race is the user-supplied Kaplan-Meier
    visualisation re-themed to the site palette (Plotly, this page only). */
+/* intro stat strip: three columns split by hairlines, not the stacked
+   left-aligned column the flex default produced with sentence-length labels */
+.dristi-hero-stats{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:clamp(22px,3.5vw,48px);
+  align-items:start;
+}
+.dristi-hero-stats .about-stat + .about-stat{
+  padding-left:clamp(22px,3.5vw,48px);
+  border-left:1px solid rgba(251,248,242,.18);
+}
+.dristi-hero-stats .about-stat-label{
+  max-width:26ch;
+  line-height:1.55;
+  letter-spacing:.06em;
+}
+@media (max-width: 760px){
+  .dristi-hero-stats{ grid-template-columns:1fr; }
+  .dristi-hero-stats .about-stat + .about-stat{
+    padding-left:0;
+    border-left:0;
+    padding-top:20px;
+    border-top:1px solid rgba(251,248,242,.18);
+  }
+}
+
 .res-tab.tab-soon{
   opacity:.42;
   cursor:not-allowed;
