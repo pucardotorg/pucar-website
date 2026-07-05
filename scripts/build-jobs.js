@@ -430,17 +430,6 @@ function aboutPage() {
        3. a real photo strip of the collective (reusing the homepage's
           .collab-strip component) right before the CTAs, so "100+
           contributors" ends on actual faces, not just a sentence. */
-  const withPhotos = contributors.filter(function (c) { return c.photo; });
-  const stripCount = Math.min(6, withPhotos.length);
-  const stripStep = Math.max(1, Math.floor(withPhotos.length / (stripCount || 1)));
-  const stripPicks = [];
-  for (let i = 0; i < withPhotos.length && stripPicks.length < stripCount; i += stripStep) stripPicks.push(withPhotos[i]);
-  const stripHeads = stripPicks.map(function (c, i) {
-    /* same waving 👋 as the homepage strip, staggered so the greeting
-       ripples down the line on hover */
-    return '<span class="strip-head"><img src="' + esc(c.photo) + '" alt="' + esc(c.name) + '" loading="lazy" />' +
-      '<span class="strip-wave" style="animation-delay:' + (i * 0.12).toFixed(2) + 's">\ud83d\udc4b</span></span>';
-  }).join("");
   const openRoles = boardJobs.length;
 
   const steps = [
@@ -513,18 +502,14 @@ function aboutPage() {
 "    <h2>How we organise</h2>\n" +
 "    <p>We self-organise and raise resources around different opportunities that can contribute to the mission. We evolve roles, responsibilities, and processes within each opportunity to guide our efforts and invite participation from the public. Guided by the mission and values, all contributors have the autonomy and flexibility to create and manage opportunities.</p>\n" +
 "  </article>\n" +
-(stripHeads
-  ? '  <a class="collab-strip about-strip" href="/contributors/">\n' +
-    '    <span class="strip-text">Meet the <strong>100+ collaborators</strong> behind PUCAR</span>\n' +
-    '    <span class="strip-group">\n' +
-    '      <span class="strip-stack" aria-hidden="true">' + stripHeads + "</span>\n" +
-    '      <span class="strip-btn">See everyone<span class="strip-arrow" aria-hidden="true">&rarr;</span></span>\n' +
-    "    </span>\n" +
-    "  </a>\n"
-  : "") +
+"</div>\n" +
+/* the CORE TEAM band (moved here from the old /team/ page) + the single
+   contributors strip -- the old about-strip and the "Meet the
+   contributors" outline button are gone (they duplicated it) */
+teamSection() +
+'<div class="job-main about-lower">\n' +
 '  <div class="cta-row">\n' +
 '    <a class="btn btn-primary" href="/#collaborate">See open work</a>\n' +
-'    <a class="btn btn-outline" href="/contributors/">Meet the contributors</a>\n' +
 "  </div>\n" +
 '  <div class="about-funders">\n' +
 '    <p class="beat-eyebrow">Funding Contributors</p>\n' +
@@ -704,15 +689,18 @@ blogTags.map(function (t) { return '      <button type="button" class="res-tab" 
   });
 }
 
-function teamPage() {
+function teamSection() {
   /* Real team (July 2026): content/team/team.json -- name, PUCAR role,
-     3rd-person bio (sourced from LinkedIn + existing contributor bios),
-     photo in assets/team/ (five copied from assets/contributors, five
-     mirrored via scripts/mirror-team-photos.js -- run locally, licdn URLs
-     are signed + expiring). Layout modelled on opennyai.org/about's team
-     wall: portrait cards, grayscale until hover, name/role rising over a
-     bottom gradient, a LinkedIn chip mid-card, PUCAR chrome throughout.
-     Clicking a card opens the shared job-modal with the bio. */
+     3rd-person bio (LinkedIn-sourced), headshot in assets/team/ (all ten
+     committed). Rendered as a SECTION at the bottom of /about/ (Jul 2026
+     revision: "move the whole team section to the About page... go to
+     this anchor"), not a standalone page. Layout modelled on
+     opennyai.org/about's team wall: 3:4 portrait cards, grayscale until
+     hover, name/role rising over a bottom gradient; click opens the
+     shared job-modal with the bio (js/team.js, data inlined in
+     #teamData). The contributors strip lives HERE (it replaced the About
+     page's old about-strip AND the "Meet the contributors" outline
+     button -- one contributors CTA on the page, not three). */
   const team = JSON.parse(fs.readFileSync(path.join(ROOT, "content/team/team.json"), "utf8"));
 
   const cards = team.map(function (p) {
@@ -723,23 +711,16 @@ function teamPage() {
       "</article>";
   }).join("\n");
 
-  const main =
-'  <p class="beat-eyebrow">The team</p>\n' +
-'  <h1 class="job-title">A small team with an outsized brief.</h1>\n' +
-'  <article class="job-body prose no-cap">\n' +
-"    <p>PUCAR runs on a wide collective, but a small crew keeps it moving every day: lawyers, product builders, designers and policy minds rethinking how India resolves disputes. Meet them below, and tap any card for the longer story.</p>\n" +
-"  </article>\n" +
-"</main>\n" +
-'<section class="collaborate team-section" id="team">\n' +
+  return '<section class="collaborate team-section" id="team">\n' +
 '  <div class="collab-head">\n' +
 '    <p class="beat-eyebrow">Core team</p>\n' +
 '    <h2 class="collab-title-main">The anchors.</h2>\n' +
-'    <p class="collab-sub">The full-time crew behind DRISTI, the ON Courts, and everything in between. The far wider circle they work with lives on the contributors page.</p>\n' +
+'    <p class="collab-sub">A small team with an outsized brief: lawyers, product builders, designers and policy minds who lead the mission day to day. Tap any card for the longer story.</p>\n' +
 "  </div>\n" +
 '  <div class="team-grid" id="teamGrid">\n' + cards + "\n  </div>\n" +
 "</section>\n" +
-/* contributors bridge: same stylised strip as the homepage/about (heads
-   filled by js/team.js from /contributors/photos.json, waves on hover) */
+/* contributors bridge: same stylised strip as the homepage (heads filled
+   by js/team.js from /contributors/photos.json, waves on hover) */
 '<div class="collab-strip team-strip" id="collabStrip">\n' +
 '  <span class="strip-text">The anchor team leads the mission day to day, but none of it would be possible without <strong>100+ contributors</strong> across the ecosystem</span>\n' +
 '  <span class="strip-group">\n' +
@@ -762,14 +743,20 @@ function teamPage() {
 "  </div>\n" +
 "</div>\n" +
 '<script type="application/json" id="teamData">' + JSON.stringify(team) + "</script>\n" +
-'<script src="/js/team.js"></script>\n<main hidden>';
-  return pageShell({
-    title: "Meet the Team | PUCAR",
-    desc: "The core team behind PUCAR, the public collective for avoidance and resolution of disputes.",
-    url: "/team/",
-    jsonLd: { "@context": "https://schema.org", "@type": "AboutPage", name: "PUCAR team" },
-    backHref: "/", backLabel: "\u2190 Home", main: main
-  });
+'<script src="/js/team.js"></script>\n';
+}
+
+function teamPage() {
+  /* /team/ is a REDIRECT STUB now: the team lives at /about/#team. Kept so
+     old links and the pushed nav keep working; excluded from sitemap. */
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8" />\n' +
+    '<meta http-equiv="refresh" content="0; url=/about/#team" />\n' +
+    '<link rel="canonical" href="' + SITE + '/about/" />\n' +
+    '<meta name="robots" content="noindex" />\n' +
+    "<title>Meet the Team | PUCAR</title>\n</head>\n<body>\n" +
+    '<p>The team has moved to <a href="/about/#team">the About page</a>.</p>\n' +
+    '<script>location.replace("/about/#team");</script>\n' +
+    "</body>\n</html>\n";
 }
 
 /* ---------------- homepage cards ---------------- */
@@ -990,7 +977,7 @@ html = html.slice(0, s + START.length) + "\n" +
 fs.writeFileSync(indexPath, html);
 
 /* sitemap */
-const urls = [SITE + "/", SITE + "/sc-ai-policy/", SITE + "/contributors/", SITE + "/about/", SITE + "/team/", SITE + "/resources/"]
+const urls = [SITE + "/", SITE + "/sc-ai-policy/", SITE + "/contributors/", SITE + "/about/", SITE + "/resources/"]
   .concat(jobs.map(function (j) { return SITE + j.url; }))
   .concat(contributors.map(function (c) { return SITE + c.url; }));
 fs.writeFileSync(path.join(ROOT, "sitemap.xml"),

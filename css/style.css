@@ -3865,6 +3865,9 @@ a.event-card{ text-decoration:none; }
   color:var(--green);
   font-weight:700;
 }
+/* the team strip's longer copy: cap the measure so the fanned-out heads
+   never crowd the text -- wraps onto a second line well clear of them */
+.team-strip .strip-text{ max-width:44ch; }
 .strip-group{
   display:inline-flex;
   align-items:center;

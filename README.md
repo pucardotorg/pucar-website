@@ -1601,7 +1601,20 @@ button that closes the overlay and opens the contact modal. Closes on ×,
 Esc, or any link tap (needed for same-page anchors). The overlay markup
 exists on desktop too; only its trigger is media-queried away.
 
-### /team/ page (real team, July 2026)
+### Core team section on /about/ (July 2026; /team/ is a redirect)
+
+The team was FOLDED INTO /about/ ("move the whole team section to the
+About page... just go to this anchor"): the #team band (Core team / The
+anchors.) sits at the bottom of About, after How we organise, followed by
+the single contributors strip, then See open work + the funders wall.
+DE-DUPED: the old about-strip and the "Meet the contributors" outline
+button were both removed (the team strip carries that CTA now -- one
+contributors CTA on the page). Nav + footer "Meet the Team" point to
+/about/#team; /team/ writes a noindex meta-refresh redirect stub and is
+out of the sitemap. teamSection() in the build script renders the band;
+the notes below still apply.
+
+### Team wall details (formerly the /team/ page)
 
 content/team/team.json holds the 10 anchors (slug, name, PUCAR role,
 photo, linkedin, optional site, 3rd-person bio). Sources: five bios reuse
@@ -1625,7 +1638,8 @@ the same .collab-strip contributors bridge as the homepage/about (heads
 filled by js/team.js from /contributors/photos.json, hover waves): "The
 anchor team leads the mission day to day, but none of it would be
 possible without 100+ contributors across the ecosystem" + Meet the
-contributors CTA. Designation notes (explicit, Jul 2026): Ayushi is
+contributors CTA. Its copy is capped at 44ch (.team-strip .strip-text)
+so the fanned heads never crowd the text. Designation notes (explicit, Jul 2026): Ayushi is
 "Curator" (NOT Co-lead), Atul is "Tech Consultant" (NOT CTO) -- team.json
 and his contributor entry both say so.
 varun-h's contributor entry was also upgraded from placeholder to real
