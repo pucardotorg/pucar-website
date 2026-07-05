@@ -1754,8 +1754,11 @@ and degrades to static copy if the CDN fails). Play button animates a
 359 (revised: annotations are xanchor:right so labels stay INSIDE the
 plot; the per-frame update is ONE batched Plotly.restyle across all 16
 traces, not 16 calls, which killed the jitter; and an
-IntersectionObserver auto-plays the race once at 45% visibility, the
-button becoming Replay). Data lives inline in js/dristi.js.
+IntersectionObserver auto-plays the race ONCE when the chart reaches
+the MIDDLE band of the screen (rootMargin -32% top/bottom), preceded by
+a big 3-2-1-GO countdown (.race-count: giant Fraunces numerals popped
+over the emptied grid, GO in paper); the button becomes Replay and
+re-runs countdown + race). Data lives inline in js/dristi.js.
 
 Later same day: stats grid became 2 HERO stats (1,920 filed; ~5 months
 vs ~2 years, green aura, span-2) over 4 quiet ones; testimonials became

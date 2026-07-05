@@ -153,12 +153,42 @@
     var flash = document.getElementById("raceFlash");
     var animating = false;
 
+    /* big 3 - 2 - 1 - GO over an emptied grid before the lines move */
+    var countEl = document.createElement("div");
+    countEl.className = "race-count";
+    countEl.setAttribute("aria-hidden", "true");
+    chartEl.parentNode.insertBefore(countEl, chartEl.nextSibling);
+    function countdown(done) {
+      var steps = ["3", "2", "1", "GO"];
+      var i = 0;
+      (function tick() {
+        if (i >= steps.length) { countEl.textContent = ""; countEl.classList.remove("is-on"); done(); return; }
+        countEl.textContent = steps[i];
+        countEl.classList.toggle("is-go", steps[i] === "GO");
+        countEl.classList.remove("is-on");
+        void countEl.offsetWidth; // restart the pop animation
+        countEl.classList.add("is-on");
+        i++;
+        setTimeout(tick, steps[i - 1] === "GO" ? 550 : 700);
+      })();
+    }
+
     function runRace() {
       if (animating) return;
       animating = true;
+      btn.textContent = "On your marks…";
+      btn.disabled = true;
+      // clear the grid FIRST so the countdown plays over an empty track
+      Plotly.relayout("raceChart", { shapes: [], annotations: [] });
+      var empty = names.map(function () { return []; });
+      Plotly.restyle("raceChart", { x: empty, y: empty }, names.map(function (_, i) { return i; }));
+      updateRank(0);
+      countdown(startRun);
+    }
+
+    function startRun() {
       var flashFired = false;
       btn.textContent = "Racing…";
-      btn.disabled = true;
       Plotly.relayout("raceChart", { shapes: [], annotations: [] });
       updateRank(0);
 
@@ -212,7 +242,9 @@
     }
     btn.addEventListener("click", runRace);
 
-    /* auto-play ONCE when the race scrolls into view (button = replay) */
+    /* auto-play ONCE when the CHART sits in the middle band of the screen
+       (rootMargin trims 32% off the top and bottom, so intersection only
+       begins when the chart is truly centred, not merely peeking in) */
     var played = false;
     if (window.IntersectionObserver) {
       var io = new IntersectionObserver(function (entries) {
@@ -220,11 +252,11 @@
           if (e.isIntersecting && !played) {
             played = true;
             io.disconnect();
-            setTimeout(runRace, 350); // settle first, then race
+            runRace(); // the countdown IS the settle time
           }
         });
-      }, { threshold: 0.45 });
-      io.observe(document.getElementById("race"));
+      }, { rootMargin: "-32% 0px -32% 0px", threshold: 0.1 });
+      io.observe(chartEl);
     }
   }
 })();
