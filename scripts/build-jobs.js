@@ -384,10 +384,19 @@ function aboutPage() {
 "    <h2>What we do</h2>\n" +
 "    <p>We are building an ecosystem that continuously fuels innovation. PUCAR 'unstucks' the dispute resolution system by inspiring imagination and harnessing capacities to create new possibilities.</p>\n" +
 "    <p>We orchestrate key connections, foster collaboration, and develop foundational ideas. We build a vibrant community of innovators who create and ensure the adoption of public goods that can create a multiplier effect.</p>\n" +
-"    <h2>Why PUCAR?</h2>\n" +
-"    <p>The outdated processes and insular structure of our dispute resolution system have left millions disillusioned. To restore trust and reset expectations, we must actively engage diverse users and innovators in evolving resolution processes.</p>\n" +
-"    <p>Born in 2023, PUCAR is now a group of 100+ contributors from diverse fields that include economics, legal practice, public technology, artificial intelligence, and government.</p>\n" +
 "  </article>\n" +
+"</main>\n" +
+/* full-bleed dark band: the About page finally gets the cream<->forest
+   rhythm the rest of the site runs on. Same copy, elevated: first para as
+   a lede, the "Born in 2023" line as a display pull-quote. */
+'<section class="about-why">\n' +
+'  <div class="about-why-inner">\n' +
+'    <p class="beat-eyebrow">Why PUCAR?</p>\n' +
+'    <p class="about-why-lede">The outdated processes and insular structure of our dispute resolution system have left millions disillusioned. To restore trust and reset expectations, we must actively engage diverse users and innovators in evolving resolution processes.</p>\n' +
+'    <p class="about-why-pull">Born in 2023, PUCAR is now a group of <em>100+ contributors</em> from diverse fields that include economics, legal practice, public technology, artificial intelligence, and government.</p>\n' +
+"  </div>\n" +
+"</section>\n" +
+'<div class="job-main about-lower">\n' +
   /* No <p> inside this one -- just the heading, wrapped in the same
      job-body.prose classes purely to reuse its h2 styling (display face +
      short green rule) without also reusing the drop-cap rule, which is
@@ -411,7 +420,8 @@ function aboutPage() {
 '  <div class="cta-row">\n' +
 '    <a class="btn btn-primary" href="/#collaborate">See open work</a>\n' +
 '    <a class="btn btn-outline" href="/contributors/">Meet the contributors</a>\n' +
-"  </div>";
+"  </div>\n" +
+"</div>\n<main hidden>";
   return pageShell({
     title: "About PUCAR",
     desc: "PUCAR is a public collective transforming dispute resolution in India: 100+ contributors from law, technology, economics, and government building people-centric justice.",

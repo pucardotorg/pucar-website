@@ -2747,29 +2747,67 @@ body.scroll-locked{ overflow:hidden; }
    Jul 2026: the page was a single unbroken prose column ("can use a better
    layout that looks more visual" -- user feedback). These three blocks
    (aboutPage() in build-jobs.js) break it up without inventing new copy. */
+/* stats sit in a forest gradient panel (same family as .civis-callout):
+   paper numbers pop on dark, and the page gets an early hit of the site's
+   dark palette instead of opening as an unbroken cream column */
 .about-stats{
   display:flex;
   flex-wrap:wrap;
-  gap:28px 44px;
-  margin:8px 0 36px;
-  padding-bottom:28px;
-  border-bottom:1px solid var(--line);
+  gap:28px clamp(36px,6vw,72px);
+  margin:18px 0 40px;
+  padding:clamp(22px,3.5vw,34px) clamp(24px,4vw,44px);
+  border-radius:22px;
+  background:
+    radial-gradient(120% 160% at 85% -20%, rgba(94,226,160,.25), transparent 55%),
+    linear-gradient(135deg, var(--forest), #1C3540);
+  box-shadow:0 20px 50px rgba(17,31,38,.22);
 }
 .about-stat{ display:flex; flex-direction:column; }
 .about-stat-num{
   font-family:var(--font-display);
   font-weight:600;
-  font-size:clamp(1.9rem, 4vw, 2.6rem);
-  color:var(--forest); /* light bg -- bright --green is dark-bg-only, see §2 */
+  font-size:clamp(2rem, 4.2vw, 2.8rem);
+  color:var(--paper);
   line-height:1;
 }
 .about-stat-label{
-  margin-top:6px;
-  font-size:.78rem;
+  margin-top:7px;
+  font-size:.75rem;
   font-weight:600;
-  letter-spacing:.04em;
-  color:var(--muted);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--green);
 }
+
+/* full-bleed "Why PUCAR?" band: cream<->forest rhythm for the About page */
+.about-why{
+  background:
+    radial-gradient(70% 120% at 15% 110%, rgba(94,226,160,.14), transparent 60%),
+    var(--forest);
+  color:var(--paper);
+  padding:clamp(56px,8vw,96px) clamp(20px,5vw,72px);
+  margin-top:48px;
+}
+.about-why-inner{ max-width:880px; margin:0 auto; }
+.about-why-lede{
+  margin:14px 0 26px;
+  font-size:1.08rem;
+  line-height:1.75;
+  color:rgba(251,248,242,.82);
+  max-width:64ch;
+}
+.about-why-pull{
+  margin:0;
+  font-family:var(--font-display);
+  font-weight:500;
+  font-size:clamp(1.4rem,3vw,2rem);
+  line-height:1.4;
+}
+.about-why-pull em{
+  font-style:normal;
+  color:var(--green);
+}
+.about-lower{ padding-top:clamp(40px,6vw,64px); }
 /* the heading-only prose wrapper (no <p> inside, see aboutPage()) still
    gets the h2 rule's margin-top -- give it a touch less bottom margin than
    a real prose block since a card grid follows immediately, not a lede

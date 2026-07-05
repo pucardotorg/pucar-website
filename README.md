@@ -1228,6 +1228,17 @@ The policy intro deliberately has NO bold spans (user: "I don't like the
 random bolding"); the About page keeps its bold lead-ins on the How-we-work
 points. Short bios/job pages are untouched (opt-in class).
 
+### About page layout (v3, July 2026)
+
+Structure: title -> stat panel -> "What we do" prose (drop cap) ->
+FULL-BLEED dark "Why PUCAR?" band -> How we work 3-card grid -> How we
+organise -> photo strip -> CTAs. The stat panel is a forest gradient card
+(paper numbers, green uppercase labels; open-roles count computed from
+boardJobs). The Why band (.about-why) closes the page's <main> and reopens
+a .job-main.about-lower div (same hidden-main swallow trick as sc-ai-policy)
+so it can bleed edge to edge; its second paragraph is a display pull-quote
+with "100+ contributors" in green. All copy is unchanged from pucar.org.
+
 ### Participate event cards (sc-ai-policy)
 
 The participate section is now a DARK .collaborate shell
