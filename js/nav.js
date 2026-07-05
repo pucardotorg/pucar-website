@@ -28,14 +28,22 @@
       if (!expand.animate) return; // ancient browser: instant swap is fine
       var e1 = expand.offsetWidth, c1 = collapse.offsetWidth;
       var ease = "cubic-bezier(.4,.1,.2,1)";
+      // hover states are frozen while the pills move (is-swapping kills
+      // pointer-events + gliders in CSS) so a highlight can't land on a
+      // link that hasn't reached its final position yet
+      cluster.classList.add("is-swapping");
+      var pending = 2;
       [ [expand, e0, e1], [collapse, c0, c1] ].forEach(function (job) {
         var el = job[0];
         el.style.overflow = "hidden";
         var anim = el.animate(
           [{ width: job[1] + "px" }, { width: job[2] + "px" }],
-          { duration: 240, easing: ease } // fast: the text waits for this to finish before fading in
+          { duration: 160, easing: ease } // fast: the text waits for this to finish before fading in
         );
-        anim.onfinish = function () { el.style.overflow = ""; };
+        anim.onfinish = function () {
+          el.style.overflow = "";
+          if (--pending === 0) cluster.classList.remove("is-swapping");
+        };
       });
     }
     var mainNav = cluster.querySelector(".main-nav");
@@ -100,16 +108,18 @@
     if (!sameOrigin) back.parentNode.removeChild(back);
   }
 
-  /* ---- glider ---- */
-  var links = Array.prototype.slice.call(
-    nav.querySelectorAll(":scope > a, :scope > .nav-drop > a")
-  );
-  if (links.length) {
-    nav.classList.add("has-glider");
+  /* ---- glider: on EVERY nav pill (main AND sub), so the sub-nav's hover
+     highlight slides between links exactly like the main menu's ---- */
+  navs.forEach(function (n) {
+    var links = Array.prototype.slice.call(
+      n.querySelectorAll(":scope > a, :scope > .nav-drop > a")
+    );
+    if (!links.length) return;
+    n.classList.add("has-glider");
     var glider = document.createElement("span");
     glider.className = "nav-glider";
     glider.setAttribute("aria-hidden", "true");
-    nav.insertBefore(glider, nav.firstChild);
+    n.insertBefore(glider, n.firstChild);
     var lit = null;
     var move = function (a) {
       glider.style.left = a.offsetLeft + "px";
@@ -129,11 +139,11 @@
       a.addEventListener("mouseenter", function () { move(a); });
       a.addEventListener("focus", function () { move(a); });
     });
-    nav.addEventListener("mouseleave", clear);
-    nav.addEventListener("focusout", function (e) {
-      if (!nav.contains(e.relatedTarget)) clear();
+    n.addEventListener("mouseleave", clear);
+    n.addEventListener("focusout", function (e) {
+      if (!n.contains(e.relatedTarget)) clear();
     });
-  }
+  });
 
   /* ---- same sliding pill inside each dropdown menu ---- */
   Array.prototype.forEach.call(nav.querySelectorAll(".nav-menu"), function (menu) {

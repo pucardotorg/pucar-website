@@ -1433,14 +1433,20 @@ YouTube playlist in July 2026.
   resize -- same offsetTop technique as collaborate.js clampChips).
 - Blog cards: summaries line-clamp at 3 with an ellipsis; outlet is quiet
   uppercase green text (not a pill); date is plain text with a calendar
-  glyph; tags sit pinned just above the bottom divider (margin-top:auto);
+  glyph; tags sit pinned just above the bottom divider: margin-top:auto on
+  the CHIPS and margin-top:0 on the foot (two auto margins would split the
+  slack and float the chips mid-card -- this bit, and got fixed);
   clicking shows the themed LEAVE-SITE modal (#leaveModal: names the
   destination host, Continue opens a new tab, cmd/ctrl-click skips it).
 - Card sheen: .res-shine sweeps a light band across the thumbnail on hover,
-  and .res-thumb-glow is THE SAME IMAGE mirrored (scaleY(-1)), blurred
-  (24px) and saturated, bleeding ~30px below the photo -- a reflection that
-  tints each card with its own thumbnail's colours. The photo's bottom
-  corners round softly over it. Card text sits above the glow via
+  and .res-thumb-glow is THE SAME IMAGE mirrored (scaleY(-1)), heavily
+  blurred and saturated, stretched from under the photo to the card's TRUE
+  bottom edge -- an ambient tint over the whole card that fades downward.
+  The photo's own bottom edge is square and feathered out with a CSS mask
+  (rounded bottoms were rejected). GOTCHA: the glow is an absolutely
+  positioned <img>; with height:auto it resolves to intrinsic height and
+  IGNORES bottom:0, clipping short on tall cards -- so its height is an
+  explicit calc(100% - 110px). Card text sits above the glow via
   position:relative+z-index on non-thumb children; list view hides all of
   it (.res-grid.is-list hides .res-thumb-wrap).
 
@@ -1496,13 +1502,19 @@ EXPANDED with the page's section links. HOVERING "Main Menu" expands the
 main nav and collapses the sub-nav to a "Page Menu" burger; hovering that
 reverses it (140ms hover-intent delay so a cursor passing across the burger
 doesn't swap; click still works for touch/keyboard). THE SWAP IS ANIMATED: swapNavs() in js/nav.js FLIPs both
-pills' widths via WAAPI (240ms, cubic-bezier(.4,.1,.2,1)) -- measure old
+pills' widths via WAAPI (160ms, cubic-bezier(.4,.1,.2,1)) -- measure old
 width, toggle classes, measure new, animate between. overflow:hidden is set
 only DURING the animation (permanently it would clip the main nav's
 absolute dropdown menus); freshly expanded items fade in via the
-navItemsIn keyframe with a 240ms delay, i.e. AFTER the width FLIP lands
+navItemsIn keyframe with a 160ms delay, i.e. AFTER the width FLIP lands
 (flex-wrap:nowrap/white-space:nowrap on .nav-cluster .site-nav stop the
 labels wrapping mid-animation, which used to balloon the pill's height).
+While the FLIP runs the cluster carries .is-swapping, which kills
+pointer-events on both pills and hides the gliders -- no hover state can
+fire until the links are in their final positions ("hover shows up before
+things are in position" bug). The GLIDER is wired on every nav in the
+cluster, sub-nav included, so its hover highlight slides between links
+exactly like the main menu's.
 A collapsed nav shows only its toggle; an expanded nav hides its own.
 
 Every sub-nav also carries the homepage-style looping UP-ARROW as its first

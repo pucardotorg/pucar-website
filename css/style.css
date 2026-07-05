@@ -128,14 +128,19 @@ body.job-page .site-header > .nav-cluster{
 .site-nav.is-collapsed > *:not(.nav-toggle){ display:none !important; }
 .site-nav.is-collapsed > .nav-toggle{ display:inline-flex; }
 /* items stay INVISIBLE until the width FLIP has finished, then fade in --
-   no text painting mid-animation (delay ~= the 240ms FLIP duration) */
+   no text painting mid-animation (delay ~= the 160ms FLIP duration) */
 .site-nav:not(.is-collapsed) > *:not(.nav-toggle){
-  animation:navItemsIn .16s ease .24s backwards;
+  animation:navItemsIn .14s ease .16s backwards;
 }
 @keyframes navItemsIn{
   from{ opacity:0; }
   to{ opacity:1; }
 }
+/* while the pills are mid-FLIP no hover state can fire: js/nav.js sets
+   is-swapping for the animation's duration, which freezes pointer-events
+   (so :hover/gliders can't land on links that aren't in position yet) */
+.nav-cluster.is-swapping .site-nav{ pointer-events:none; }
+.nav-cluster.is-swapping .nav-glider{ opacity:0 !important; }
 /* sub-nav up-arrow loops on hover, same as the homepage's */
 .subnav-top:hover svg,
 .subnav-top:focus-visible svg{
@@ -3668,6 +3673,11 @@ button.circle-card{
   margin-top:auto;
   justify-content:flex-start;
 }
+/* on cards WITH tag chips the auto margin lives on the CHIPS instead, so
+   they hug the divider; a second auto margin on the foot would split the
+   slack and float the chips mid-card */
+.res-card .collab-foot, .res-data-card .collab-foot{ margin-top:0; }
+.res-data-card .collab-chips{ margin-top:auto; }
 /* one-line clamp support: while collapsed, overflowing chips hide and a
    +N chip stands in; hovering it reveals the full set (ul wraps open) */
 .res-section .collab-chips .chip-more{
@@ -3806,7 +3816,10 @@ button.circle-card{
   top:110px;
   bottom:0;
   width:100%;
-  height:auto;
+  /* explicit: an absolutely-positioned <img> with height:auto resolves to
+     its intrinsic height and IGNORES bottom:0, so the glow used to stop
+     short on tall cards. This pins it to the card's true bottom edge. */
+  height:calc(100% - 110px);
   object-fit:cover;
   transform:scaleY(-1);
   filter:blur(36px) saturate(1.5);
