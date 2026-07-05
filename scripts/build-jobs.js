@@ -354,8 +354,11 @@ function aboutPage() {
   const stripStep = Math.max(1, Math.floor(withPhotos.length / (stripCount || 1)));
   const stripPicks = [];
   for (let i = 0; i < withPhotos.length && stripPicks.length < stripCount; i += stripStep) stripPicks.push(withPhotos[i]);
-  const stripHeads = stripPicks.map(function (c) {
-    return '<span class="strip-head"><img src="' + esc(c.photo) + '" alt="' + esc(c.name) + '" loading="lazy" /></span>';
+  const stripHeads = stripPicks.map(function (c, i) {
+    /* same waving 👋 as the homepage strip, staggered so the greeting
+       ripples down the line on hover */
+    return '<span class="strip-head"><img src="' + esc(c.photo) + '" alt="' + esc(c.name) + '" loading="lazy" />' +
+      '<span class="strip-wave" style="animation-delay:' + (i * 0.12).toFixed(2) + 's">\ud83d\udc4b</span></span>';
   }).join("");
   const openRoles = boardJobs.length;
 
