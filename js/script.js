@@ -1103,8 +1103,18 @@
   if (window.MutationObserver) {
     new MutationObserver(ride).observe(nav, { attributes: true, attributeFilter: ["class"] });
   }
+  // resync from ground truth on click (see nav.js: lit-without-pill is
+  // impossible this way; re-light only if the pointer is truly there)
   nav.addEventListener("click", function (e) {
-    if (e.target.closest("a")) ride();
+    var a = e.target.closest("a");
+    if (!a) return;
+    clear();
+    setTimeout(function () {
+      if (a.matches(":hover")) { move(a); ride(); } else { clear(); }
+    }, 80);
+    setTimeout(function () {
+      if (lit && !lit.matches(":hover")) clear();
+    }, 900);
   });
 
   // same sliding pill inside each dropdown menu

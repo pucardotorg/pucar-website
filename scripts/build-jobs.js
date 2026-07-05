@@ -213,7 +213,7 @@ function pageShell(opts) {
 /* SAME navbar as the homepage (extracted at build time); pages can add a
    sub-nav via opts.subnav which collapses the main nav behind a burger */
 "  " + navCluster(opts.subnav) + "\n</header>\n" +
-'<main class="job-main">\n' + opts.main + "\n</main>\n" +
+'<main class="job-main' + (opts.mainClass ? " " + opts.mainClass : "") + '">\n' + opts.main + "\n</main>\n" +
 FOOTER + "\n</body>\n</html>\n";
 }
 
@@ -913,24 +913,13 @@ function dristiPage() {
      cards in one row read as noise; the story is volume + speed). Each
      carries an icon from the site's inline stroke set (same style as the
      resources type icons) so the numbers read at a glance. */
-  function statIco(inner) {
-    return '<span class="dristi-stat-ico" aria-hidden="true"><svg viewBox="0 0 16 16" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">' + inner + "</svg></span>";
-  }
-  const ICO = {
-    filed: statIco('<path d="M4 1.5h5.5L13 5v8.5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-11a1 1 0 0 1 1-1z"/><path d="M9.5 1.5V5H13M6 9h4M8 7v4"/>'),
-    time: statIco('<circle cx="8" cy="8.5" r="6"/><path d="M8 5.5v3l2.2 2.2M8 1h0M5.5 1.6 5 1M11 1.6l.5-.6"/>'),
-    done: statIco('<circle cx="8" cy="8" r="6.5"/><path d="M5 8.3 7.2 10.5 11 5.8"/>'),
-    cal: statIco('<rect x="1.5" y="2.5" width="13" height="12" rx="2"/><path d="M1.5 6h13M5 1v3M11 1v3M5.5 10.2l1.8 1.8 3.2-3.6"/>'),
-    adv: statIco('<path d="M8 1.5v11M4.2 3.5h7.6"/><path d="M4.2 3.5 2.4 8a2 2 0 0 0 3.6 0L4.2 3.5zM11.8 3.5 10 8a2 2 0 0 0 3.6 0l-1.8-4.5z"/><path d="M5.5 14.5h5"/>'),
-    people: statIco('<circle cx="5.5" cy="5" r="2.4"/><path d="M1.5 13.5c0-2.2 1.8-4 4-4s4 1.8 4 4"/><circle cx="11.5" cy="5.5" r="1.9"/><path d="M10.8 9.7c1.9.3 3.7 1.7 3.7 3.8"/>')
-  };
   const kstatsHtml =
-'      <div class="dristi-stat is-big">' + ICO.filed + '<span class="dristi-stat-num">1,920</span><span class="dristi-stat-label">cases filed in a court that did not exist two years ago</span></div>\n' +
-'      <div class="dristi-stat is-big">' + ICO.time + '<span class="dristi-stat-num">~5 <em>months</em></span><span class="dristi-stat-label">average time to disposal. The conventional baseline: about 2 years</span></div>\n' +
-'      <div class="dristi-stat">' + ICO.done + '<span class="dristi-stat-num">402</span><span class="dristi-stat-label">Cases disposed</span></div>\n' +
-'      <div class="dristi-stat">' + ICO.cal + '<span class="dristi-stat-num">98%</span><span class="dristi-stat-label">Hearings held as scheduled</span></div>\n' +
-'      <div class="dristi-stat">' + ICO.adv + '<span class="dristi-stat-num">851</span><span class="dristi-stat-label">Advocates on the platform</span></div>\n' +
-'      <div class="dristi-stat">' + ICO.people + '<span class="dristi-stat-num">1,757</span><span class="dristi-stat-label">Litigants using it</span></div>';
+'      <div class="dristi-stat is-big"><span class="dristi-stat-num">1,920</span><span class="dristi-stat-label">cases filed in a court that did not exist two years ago</span></div>\n' +
+'      <div class="dristi-stat is-big"><span class="dristi-stat-num">~5 <em>months</em></span><span class="dristi-stat-label">average time to disposal. The conventional baseline: about 2 years</span></div>\n' +
+'      <div class="dristi-stat"><span class="dristi-stat-num">402</span><span class="dristi-stat-label">Cases disposed</span></div>\n' +
+'      <div class="dristi-stat"><span class="dristi-stat-num">98%</span><span class="dristi-stat-label">Hearings held as scheduled</span></div>\n' +
+'      <div class="dristi-stat"><span class="dristi-stat-num">851</span><span class="dristi-stat-label">Advocates on the platform</span></div>\n' +
+'      <div class="dristi-stat"><span class="dristi-stat-num">1,757</span><span class="dristi-stat-label">Litigants using it</span></div>';
 
   const main =
 '  <p class="beat-eyebrow">DRISTI</p>\n' +
@@ -1066,6 +1055,7 @@ collabBoardHtml() +
 
   return pageShell({
     title: "DRISTI | PUCAR",
+    mainClass: "dristi-main",
     desc: "DRISTI is the open-source platform behind PUCAR's 24x7 ON Courts: a people-centric redesign of the court journey, live in Kollam and headed to more states.",
     url: "/dristi/",
     jsonLd: { "@context": "https://schema.org", "@type": "SoftwareApplication", name: "DRISTI",

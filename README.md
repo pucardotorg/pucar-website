@@ -1601,7 +1601,11 @@ navItemsIn keyframe with a 160ms delay, i.e. AFTER the width FLIP lands
 the expanding nav for 500ms: hung off :not(.is-collapsed) the browser
 could restart it outside any swap, freezing children at the opacity:0
 start frame -- this manifested twice, first as vanishing gliders, then
-as clicked sub-nav links going ghost-faint)
+as clicked sub-nav links going ghost-faint). FINAL layer: clicking any
+nav link now RESYNCS FROM GROUND TRUTH -- clear() everything, then 80ms
+later re-light only if the link still matches :hover (and a 900ms sweep
+clears any lit link the pointer has left). A lit link without its pill
+is structurally impossible after a click now
 (the GLIDER is excluded from that selector -- :not(.nav-glider): the
 animation's backwards fill forced opacity:0 over the glider's inline
 opacity whenever it restarted, which read as "hover pill vanishes on

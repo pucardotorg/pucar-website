@@ -4368,6 +4368,16 @@ button.circle-card{
   transform:translateX(130%);
   transition:transform .85s ease;
 }
+/* the whole /dristi/ intro runs at content width like the dark bands
+   below it (revised: widening only the stat panel looked inconsistent);
+   prose paragraphs stay capped at a readable measure inside it */
+.dristi-main{
+  max-width:min(1240px, calc(100vw - 2 * clamp(20px, 5vw, 72px)));
+  padding-left:0;
+  padding-right:0;
+}
+.dristi-main .job-body{ max-width:74ch; }
+
 /* ---------------- /dristi/ page ----------------
    Intro + five levers reuse the About page components (.about-stats,
    .about-steps). Versions and deployments are dark .collaborate bands.
@@ -4381,11 +4391,6 @@ button.circle-card{
   grid-template-columns:repeat(3, 1fr);
   gap:clamp(22px,3.5vw,48px);
   align-items:start;
-  /* BREAK OUT of the narrow prose column (same trick as .about-funders):
-     inside it the columns were so cramped the numbers themselves wrapped */
-  width:min(1180px, calc(100vw - 2 * clamp(20px, 5vw, 72px)));
-  margin-left:50%;
-  transform:translateX(-50%);
 }
 .dristi-hero-stats .about-stat-num{ white-space:nowrap; }
 .dristi-hero-stats .about-stat + .about-stat{
@@ -4393,9 +4398,10 @@ button.circle-card{
   border-left:1px solid rgba(251,248,242,.18);
 }
 .dristi-hero-stats .about-stat-label{
-  max-width:26ch;
-  line-height:1.55;
+  line-height:1.6;
   letter-spacing:.06em;
+  font-size:.8rem;
+  padding-right:clamp(8px,2vw,28px); /* breathe before the divider */
 }
 @media (max-width: 760px){
   .dristi-hero-stats{ grid-template-columns:1fr; }
@@ -4604,28 +4610,6 @@ button.circle-card{
   background:rgba(251,248,242,.06);
   border:1px solid rgba(251,248,242,.14);
 }
-/* icon chip above the number: same stroke language as the resources icons */
-.dristi-stat-ico{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:34px;
-  height:34px;
-  border-radius:10px;
-  background:rgba(251,248,242,.08);
-  border:1px solid rgba(251,248,242,.16);
-  color:rgba(251,248,242,.75);
-  margin-bottom:6px;
-}
-.dristi-stat.is-big .dristi-stat-ico{
-  width:42px;
-  height:42px;
-  border-radius:12px;
-  background:rgba(48,207,140,.14);
-  border-color:rgba(48,207,140,.4);
-  color:var(--green);
-}
-.dristi-stat.is-big .dristi-stat-ico svg{ width:21px; height:21px; }
 .dristi-stat.is-big{
   grid-column:span 2;
   padding:30px 30px 24px;

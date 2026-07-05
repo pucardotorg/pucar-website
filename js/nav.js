@@ -179,10 +179,20 @@
     if (window.MutationObserver) {
       new MutationObserver(ride).observe(n, { attributes: true, attributeFilter: ["class"] });
     }
-    // clicking a link (same-page anchors jump the scroll, which toggles
-    // show-home and shifts every link) re-tracks + fail-safes too
+    // clicking a link: RESYNC FROM GROUND TRUTH. Whatever stale state the
+    // jump/reveal leaves behind, we clear everything and re-light only if
+    // the pointer is actually still on the link (checked again after the
+    // layout has settled) -- a lit link without its pill is impossible.
     n.addEventListener("click", function (e) {
-      if (e.target.closest("a")) ride();
+      var a = e.target.closest("a");
+      if (!a) return;
+      clear();
+      setTimeout(function () {
+        if (a.matches(":hover")) { move(a); ride(); } else { clear(); }
+      }, 80);
+      setTimeout(function () {
+        if (lit && !lit.matches(":hover")) clear();
+      }, 900);
     });
     // body.nav-dark (the dark-section colour flip) is set on <body>, not on
     // `n` -- the class-attribute observer just above never sees it, so a
