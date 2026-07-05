@@ -459,7 +459,7 @@ function contributorsPage() {
 "    </div>\n  </div>\n</div>\n" +
 '<script src="/js/collaborate.js"></script>\n' +
 
-'<div class="job-main policy-band" id="policy">\n' +
+'<section class="policy-band" id="policy">\n' +
 '  <div class="policy-callout">\n' +
 '    <div class="policy-callout-text">\n' +
 '      <p class="policy-kicker">Public consultation</p>\n' +
@@ -475,7 +475,7 @@ function contributorsPage() {
 '      <span class="policy-countdown-sub">to respond by 15 July 2026</span>\n' +
 "    </div>\n" +
 "  </div>\n" +
-"</div>\n" +
+"</section>\n" +
 '<script src="/js/policy-countdown.js"></script>\n\n' +
 
 contributorsSection() +

@@ -3797,26 +3797,25 @@ a.event-card{ text-decoration:none; }
   .civis-callout-action{ flex:1 1 100%; text-align:left; }
 }
 
-/* ---------------- policy callout: /contributors/ Policy section ----------------
-   Same gradient-card language as .civis-callout (act-now feature block),
-   extended with a live countdown badge. Sits inside .job-main (720px
-   readable column) via the .policy-band wrapper, so it's narrower than the
-   full-bleed DRISTI/.collaborate section above it -- deliberate, this is a
-   feature card in a prose-width band, matching how /sc-ai-policy/ and
-   /about/ use .job-main for their own light-band callouts. */
-.policy-band{ padding-top:70px; padding-bottom:70px; }
-.policy-callout{
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  gap:26px 36px;
-  padding:clamp(26px,4vw,40px);
-  border-radius:22px;
+/* ---------------- policy section: /contributors/ Policy band ----------------
+   A FULL-BLEED dark section (revised: it shipped as a rounded card floating
+   in a cream band and the user vetoed that -- "it was supposed to be the
+   whole section"). The forest gradient covers the whole band edge to edge;
+   the callout inside is just a centered flex layout, no card chrome. */
+.policy-band{
+  padding:clamp(64px,9vw,110px) clamp(20px,5vw,72px);
   background:
     radial-gradient(120% 160% at 85% -20%, rgba(94,226,160,.28), transparent 55%),
     linear-gradient(135deg, var(--forest), #1C3540);
   color:var(--paper);
-  box-shadow:0 24px 60px rgba(17,31,38,.28);
+}
+.policy-callout{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:26px clamp(36px,6vw,84px);
+  max-width:1180px;
+  margin:0 auto;
 }
 .policy-callout-text{ flex:1 1 320px; min-width:0; }
 .policy-kicker{
@@ -3831,8 +3830,9 @@ a.event-card{ text-decoration:none; }
   margin:0 0 10px;
   font-family:var(--font-display);
   font-weight:600;
-  font-size:clamp(1.25rem,2.6vw,1.6rem);
-  line-height:1.25;
+  font-size:clamp(1.6rem,3.4vw,2.5rem); /* section-scale, not card-scale */
+  line-height:1.2;
+  max-width:22ch;
 }
 .policy-sub{
   margin:0 0 18px;
