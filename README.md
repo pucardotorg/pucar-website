@@ -1492,9 +1492,10 @@ SUB-NAV SYSTEM: pageShell accepts opts.subnav = [{label, href}]. When set,
 the header renders a .nav-cluster of two pills: the main nav boots
 COLLAPSED behind a burger toggle labelled "Main Menu", and a .sub-nav pill
 (same style, slightly green-tinted background, dark variant included) boots
-EXPANDED with the page's section links. Clicking "Main Menu" expands the
-main nav and collapses the sub-nav to a "Page Menu" burger; clicking that
-reverses it. THE SWAP IS ANIMATED: swapNavs() in js/nav.js FLIPs both
+EXPANDED with the page's section links. HOVERING "Main Menu" expands the
+main nav and collapses the sub-nav to a "Page Menu" burger; hovering that
+reverses it (140ms hover-intent delay so a cursor passing across the burger
+doesn't swap; click still works for touch/keyboard). THE SWAP IS ANIMATED: swapNavs() in js/nav.js FLIPs both
 pills' widths via WAAPI (420ms, cubic-bezier(.4,.1,.2,1)) -- measure old
 width, toggle classes, measure new, animate between. overflow:hidden is set
 only DURING the animation (permanently it would clip the main nav's

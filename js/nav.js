@@ -38,14 +38,30 @@
         anim.onfinish = function () { el.style.overflow = ""; };
       });
     }
+    var mainNav = cluster.querySelector(".main-nav");
+    var subNav = cluster.querySelector(".sub-nav");
+    function expandNav(target) {
+      if (!mainNav || !subNav || !target.classList.contains("is-collapsed")) return;
+      if (target === mainNav) swapNavs(mainNav, subNav);
+      else swapNavs(subNav, mainNav);
+    }
+    // HOVER expands (no click needed): a short hover-intent delay stops the
+    // pills from swapping when the cursor merely passes across the burger
+    var hoverT = null;
+    [mainNav, subNav].forEach(function (n) {
+      if (!n) return;
+      n.addEventListener("mouseenter", function () {
+        if (!n.classList.contains("is-collapsed")) return;
+        clearTimeout(hoverT);
+        hoverT = setTimeout(function () { expandNav(n); }, 140);
+      });
+      n.addEventListener("mouseleave", function () { clearTimeout(hoverT); });
+    });
+    // click still works (touch devices, keyboard via focus+enter)
     cluster.addEventListener("click", function (e) {
       var t = e.target.closest(".nav-toggle");
       if (!t) return;
-      var main = cluster.querySelector(".main-nav");
-      var sub = cluster.querySelector(".sub-nav");
-      if (!main || !sub) return;
-      if (t.getAttribute("data-nav") === "main") swapNavs(main, sub);
-      else swapNavs(sub, main);
+      expandNav(t.getAttribute("data-nav") === "main" ? mainNav : subNav);
     });
     // sub-nav up-arrow: back to the top of the current page
     var topArrow = cluster.querySelector(".subnav-top");
