@@ -121,6 +121,19 @@ body.job-page .site-header > .nav-cluster{
 }
 .site-nav.is-collapsed > *:not(.nav-toggle){ display:none !important; }
 .site-nav.is-collapsed > .nav-toggle{ display:inline-flex; }
+/* freshly expanded items fade in just behind the width FLIP (js/nav.js) */
+.site-nav:not(.is-collapsed) > *:not(.nav-toggle){
+  animation:navItemsIn .3s ease .12s backwards;
+}
+@keyframes navItemsIn{
+  from{ opacity:0; }
+  to{ opacity:1; }
+}
+/* sub-nav up-arrow loops on hover, same as the homepage's */
+.subnav-top:hover svg,
+.subnav-top:focus-visible svg{
+  animation:navArrowUp 1s ease-in-out infinite;
+}
 /* sub-nav: same pill, slightly different underlying tint */
 .site-nav.sub-nav{
   background:rgba(210,236,220,.6);
@@ -3648,6 +3661,17 @@ button.circle-card{
   margin-top:auto;
   justify-content:flex-start;
 }
+/* one-line clamp support: while collapsed, overflowing chips hide and a
+   +N chip stands in; hovering it reveals the full set (ul wraps open) */
+.res-section .collab-chips .chip-more{
+  cursor:default;
+  background:rgba(94,226,160,.15);
+  border-color:rgba(94,226,160,.45);
+  color:var(--green);
+  font-weight:700;
+}
+.res-section .collab-chips.is-expanded .chip-more{ display:none; }
+
 /* tag/tab pills */
 .res-tagbar{
   display:flex;

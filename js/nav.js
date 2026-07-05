@@ -18,20 +18,43 @@
   /* ---- main <-> page menu swap (pages with a sub-nav) ---- */
   var cluster = document.querySelector(".site-header .nav-cluster");
   if (cluster) {
+    // FLIP the widths so the pills grow/shrink smoothly instead of snapping.
+    // overflow:hidden is applied only DURING the animation -- permanently it
+    // would clip the main nav's absolutely-positioned dropdown menus.
+    function swapNavs(expand, collapse) {
+      var e0 = expand.offsetWidth, c0 = collapse.offsetWidth;
+      expand.classList.remove("is-collapsed");
+      collapse.classList.add("is-collapsed");
+      if (!expand.animate) return; // ancient browser: instant swap is fine
+      var e1 = expand.offsetWidth, c1 = collapse.offsetWidth;
+      var ease = "cubic-bezier(.4,.1,.2,1)";
+      [ [expand, e0, e1], [collapse, c0, c1] ].forEach(function (job) {
+        var el = job[0];
+        el.style.overflow = "hidden";
+        var anim = el.animate(
+          [{ width: job[1] + "px" }, { width: job[2] + "px" }],
+          { duration: 420, easing: ease }
+        );
+        anim.onfinish = function () { el.style.overflow = ""; };
+      });
+    }
     cluster.addEventListener("click", function (e) {
       var t = e.target.closest(".nav-toggle");
       if (!t) return;
       var main = cluster.querySelector(".main-nav");
       var sub = cluster.querySelector(".sub-nav");
       if (!main || !sub) return;
-      if (t.getAttribute("data-nav") === "main") {
-        main.classList.remove("is-collapsed");
-        sub.classList.add("is-collapsed");
-      } else {
-        sub.classList.remove("is-collapsed");
-        main.classList.add("is-collapsed");
-      }
+      if (t.getAttribute("data-nav") === "main") swapNavs(main, sub);
+      else swapNavs(sub, main);
     });
+    // sub-nav up-arrow: back to the top of the current page
+    var topArrow = cluster.querySelector(".subnav-top");
+    if (topArrow) {
+      topArrow.addEventListener("click", function (e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: "auto" });
+      });
+    }
   }
 
   /* ---- back pill: only when it actually goes somewhere on THIS site ----

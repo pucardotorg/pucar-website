@@ -1426,7 +1426,23 @@ YouTube playlist in July 2026.
 - THUMBNAILS ARE NOT COMMITTED YET: run `node scripts/mirror-resource-thumbs.js`
   locally (downloads framer blog thumbs + i.ytimg video thumbs; sandbox
   cannot reach either CDN). Until then the cards show broken images.
-- js/resources.js holds the page behaviour (pill filter, tabs, video modal).
+- js/resources.js holds the page behaviour (pill filter, tabs, video modal,
+  leave-site modal, and the ONE-LINE TAG CLAMP: every .res-section
+  .collab-chips is clamped to a single line, overflow chips collapse behind
+  a green "+N" chip that reveals the full set on hover and re-clamps on
+  resize -- same offsetTop technique as collaborate.js clampChips).
+- Blog cards: summaries line-clamp at 3 with an ellipsis; outlet is quiet
+  uppercase green text (not a pill); date is plain text with a calendar
+  glyph; tags sit pinned just above the bottom divider (margin-top:auto);
+  clicking shows the themed LEAVE-SITE modal (#leaveModal: names the
+  destination host, Continue opens a new tab, cmd/ctrl-click skips it).
+- Card sheen: .res-shine sweeps a light band across the thumbnail on hover,
+  and .res-thumb-glow is THE SAME IMAGE mirrored (scaleY(-1)), blurred
+  (24px) and saturated, bleeding ~30px below the photo -- a reflection that
+  tints each card with its own thumbnail's colours. The photo's bottom
+  corners round softly over it. Card text sits above the glow via
+  position:relative+z-index on non-thumb children; list view hides all of
+  it (.res-grid.is-list hides .res-thumb-wrap).
 
 ### Cards <-> list view toggle
 
@@ -1478,11 +1494,22 @@ COLLAPSED behind a burger toggle labelled "Main Menu", and a .sub-nav pill
 (same style, slightly green-tinted background, dark variant included) boots
 EXPANDED with the page's section links. Clicking "Main Menu" expands the
 main nav and collapses the sub-nav to a "Page Menu" burger; clicking that
-reverses it (swap logic in js/nav.js; a collapsed nav shows only its
-toggle, an expanded nav hides its own toggle). /resources/ uses it with
-Blog / Data, Policy & More / Learning Circle anchors. js/nav.js also now
-runs the dropdown menu-gliders (copied from script.js) so inner-page
-dropdowns behave identically to the homepage.
+reverses it. THE SWAP IS ANIMATED: swapNavs() in js/nav.js FLIPs both
+pills' widths via WAAPI (420ms, cubic-bezier(.4,.1,.2,1)) -- measure old
+width, toggle classes, measure new, animate between. overflow:hidden is set
+only DURING the animation (permanently it would clip the main nav's
+absolute dropdown menus); freshly expanded items fade in via the
+navItemsIn keyframe with a 120ms delay so they appear as the pill opens.
+A collapsed nav shows only its toggle; an expanded nav hides its own.
+
+Every sub-nav also carries the homepage-style looping UP-ARROW as its first
+item (.subnav-top, static show-home class so the width/tooltip rules apply):
+click scrolls to the top of the current page, hover loops the arrow (shares
+the navArrowUp keyframes) and shows the "Back to Top" tooltip.
+
+/resources/ uses the sub-nav with Blog / Data, Policy & More / Learning
+Circle anchors. js/nav.js also runs the dropdown menu-gliders (copied from
+script.js) so inner-page dropdowns behave identically to the homepage.
 
 ### Footer: single source of truth
 
