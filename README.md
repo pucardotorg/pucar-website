@@ -1466,13 +1466,23 @@ page. The role line skips the organisation when the role already names it. The s
 dark-indigo shell with `.contrib-grid` / `.contrib-card` styles in style.css.
 Linked from the homepage footer; included in sitemap.xml.
 
-Every generated page's header nav (pageShell) shows two pills: "← Back"
-(.nav-back), which calls history.back() when there is history (href falls
-back to the page's backHref for crawlers/no-JS), and "View all
-Collaborators" linking to /contributors/. js/nav.js REMOVES the back pill
-unless document.referrer is same-origin (compared against location.origin
-dynamically, so it works on the netlify subdomain now and pucar.org later):
-arriving from Google/another site or directly means no back pill.
+Every generated page now carries THE SAME navbar as the homepage: pageShell
+injects a NAV constant extracted from index.html at build time (single
+source, like FOOTER), with in-page anchors rewritten to /#anchors and the
+homepage's animated up-arrow home swapped for a plain house link to "/"
+(tooltip "Home"). The old Back / View-all-Collaborators pills are gone.
+
+SUB-NAV SYSTEM: pageShell accepts opts.subnav = [{label, href}]. When set,
+the header renders a .nav-cluster of two pills: the main nav boots
+COLLAPSED behind a burger toggle labelled "Main Menu", and a .sub-nav pill
+(same style, slightly green-tinted background, dark variant included) boots
+EXPANDED with the page's section links. Clicking "Main Menu" expands the
+main nav and collapses the sub-nav to a "Page Menu" burger; clicking that
+reverses it (swap logic in js/nav.js; a collapsed nav shows only its
+toggle, an expanded nav hides its own toggle). /resources/ uses it with
+Blog / Data, Policy & More / Learning Circle anchors. js/nav.js also now
+runs the dropdown menu-gliders (copied from script.js) so inner-page
+dropdowns behave identically to the homepage.
 
 ### Footer: single source of truth
 

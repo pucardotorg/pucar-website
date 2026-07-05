@@ -11,8 +11,28 @@
    ========================================================= */
 (function () {
   "use strict";
-  var nav = document.querySelector(".site-header .site-nav");
+  var navs = Array.prototype.slice.call(document.querySelectorAll(".site-header .site-nav"));
+  var nav = document.querySelector(".site-header .site-nav.main-nav") || navs[0];
   if (!nav) return;
+
+  /* ---- main <-> page menu swap (pages with a sub-nav) ---- */
+  var cluster = document.querySelector(".site-header .nav-cluster");
+  if (cluster) {
+    cluster.addEventListener("click", function (e) {
+      var t = e.target.closest(".nav-toggle");
+      if (!t) return;
+      var main = cluster.querySelector(".main-nav");
+      var sub = cluster.querySelector(".sub-nav");
+      if (!main || !sub) return;
+      if (t.getAttribute("data-nav") === "main") {
+        main.classList.remove("is-collapsed");
+        sub.classList.add("is-collapsed");
+      } else {
+        sub.classList.remove("is-collapsed");
+        main.classList.add("is-collapsed");
+      }
+    });
+  }
 
   /* ---- back pill: only when it actually goes somewhere on THIS site ----
      history.back() from a Google result / external link would bounce the
@@ -64,6 +84,40 @@
       if (!nav.contains(e.relatedTarget)) clear();
     });
   }
+
+  /* ---- same sliding pill inside each dropdown menu ---- */
+  Array.prototype.forEach.call(nav.querySelectorAll(".nav-menu"), function (menu) {
+    var items = menu.querySelectorAll(".nav-menu-item");
+    if (!items.length) return;
+    menu.classList.add("has-glider");
+    var mg = document.createElement("span");
+    mg.className = "menu-glider";
+    mg.setAttribute("aria-hidden", "true");
+    menu.insertBefore(mg, menu.firstChild);
+    var mlit = null;
+    function mmove(a) {
+      mg.style.left = a.offsetLeft + "px";
+      mg.style.top = a.offsetTop + "px";
+      mg.style.width = a.offsetWidth + "px";
+      mg.style.height = a.offsetHeight + "px";
+      mg.style.opacity = "1";
+      if (mlit) mlit.classList.remove("is-lit");
+      mlit = a;
+      a.classList.add("is-lit");
+    }
+    function mclear() {
+      mg.style.opacity = "0";
+      if (mlit) { mlit.classList.remove("is-lit"); mlit = null; }
+    }
+    Array.prototype.forEach.call(items, function (a) {
+      a.addEventListener("mouseenter", function () { mmove(a); });
+      a.addEventListener("focus", function () { mmove(a); });
+    });
+    menu.addEventListener("mouseleave", mclear);
+    menu.addEventListener("focusout", function (e) {
+      if (!menu.contains(e.relatedTarget)) mclear();
+    });
+  });
 
   /* ---- home icon: always on for generated pages ----
      The homepage's own copy of this (js/script.js) still gates the up-arrow

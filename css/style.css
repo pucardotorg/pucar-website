@@ -86,9 +86,9 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
   pointer-events:none;
 }
 /* nav + CTA stay pinned: homepage wraps them in .header-right; generated
-   pages have the nav as a direct header child */
+   pages carry a .nav-cluster (main nav + optional page sub-nav) */
 .header-right,
-body.job-page .site-header > .site-nav{
+body.job-page .site-header > .nav-cluster{
   position:fixed;
   top:18px;
   right:clamp(20px,4vw,48px);
@@ -97,6 +97,41 @@ body.job-page .site-header > .site-nav{
      to, the logo has scrolled away by the film) */
   transition: translate .55s cubic-bezier(.4,.1,.3,1);
 }
+.nav-cluster{
+  pointer-events:auto;
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+}
+/* collapse/expand: a collapsed nav shows ONLY its burger toggle; an
+   expanded nav hides its toggle (you collapse it by expanding the other) */
+.nav-toggle{
+  display:none;
+  align-items:center;
+  gap:8px;
+  padding:8px 15px;
+  border:0;
+  border-radius:999px;
+  background:transparent;
+  color:var(--ink-soft);
+  font:600 .9rem var(--font-body);
+  letter-spacing:.01em;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.site-nav.is-collapsed > *:not(.nav-toggle){ display:none !important; }
+.site-nav.is-collapsed > .nav-toggle{ display:inline-flex; }
+/* sub-nav: same pill, slightly different underlying tint */
+.site-nav.sub-nav{
+  background:rgba(210,236,220,.6);
+}
+:is(body:has(.pin:is([data-beat="4"],[data-beat="5"],[data-beat="6"],[data-beat="7"],[data-beat="8"],[data-beat="9"])), body.nav-dark) .site-nav.sub-nav{
+  background:rgba(23,48,40,.62);
+}
+:is(body:has(.pin:is([data-beat="4"],[data-beat="5"],[data-beat="6"],[data-beat="7"],[data-beat="8"],[data-beat="9"])), body.nav-dark) .nav-toggle{
+  color:rgba(251,248,242,.88);
+}
+
 body.film-playing .header-right{
   translate:0 -120%;
   pointer-events:none;

@@ -136,6 +136,41 @@ const FOOTER = (function () {
   return m[0];
 })();
 
+/* THE nav: extracted from index.html at build time (same single-source
+   idea as FOOTER). Transformed for inner pages: in-page anchors become
+   /#anchors, and the homepage's animated up-arrow home becomes a plain
+   house link to "/". */
+const NAV = (function () {
+  const src = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  const m = src.match(/<nav class="site-nav">[\s\S]*?<\/nav>/);
+  if (!m) throw new Error("site-nav not found in index.html");
+  let nav = m[0];
+  nav = nav.replace(/href="#/g, 'href="/#');
+  nav = nav.replace(/<a class="nav-home"[\s\S]*?<\/a>/,
+    '<a class="nav-home" href="/" aria-label="Home" data-tip="Home"><svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7.5 8 2.5l5.5 5v6h-4v-3.5h-3V13.5h-4z"/></svg></a>');
+  return nav;
+})();
+
+const BURGER = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 4h12M2 8h12M2 12h12"/></svg>';
+
+/* builds the fixed nav cluster; opts.subnav = [{label, href}] makes the
+   main nav boot collapsed behind a "Main Menu" burger with the page's
+   sub-nav expanded beside it (js/nav.js swaps which one is open) */
+function navCluster(subnav) {
+  let main = NAV;
+  if (subnav && subnav.length) {
+    main = main.replace('<nav class="site-nav">',
+      '<nav class="site-nav main-nav is-collapsed">' +
+      '<button class="nav-toggle" type="button" data-nav="main">' + BURGER + "Main Menu</button>");
+    const sub = '<nav class="site-nav sub-nav" aria-label="Page sections">' +
+      '<button class="nav-toggle" type="button" data-nav="sub">' + BURGER + "Page Menu</button>" +
+      subnav.map(function (it) { return '<a href="' + esc(it.href) + '">' + esc(it.label) + "</a>"; }).join("") +
+      "</nav>";
+    return '<div class="nav-cluster">' + main + sub + "</div>";
+  }
+  return '<div class="nav-cluster">' + main.replace('<nav class="site-nav">', '<nav class="site-nav main-nav">') + "</div>";
+}
+
 function pageShell(opts) {
   return "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n" +
 '<meta charset="UTF-8" />\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />\n' +
@@ -162,13 +197,9 @@ function pageShell(opts) {
 '    <img class="logo-dark logo-dark-long" src="/assets/pucar-white-expanded.avif" alt="PUCAR: Public Collective for Avoidance and Resolution of Disputes" width="835" height="100" />\n' +
 '    <img class="logo-dark logo-dark-short" src="/assets/pucar-white-short.png" alt="PUCAR" width="379" height="87" />\n' +
 '  </a>\n' +
-/* "Back" uses real browser history (falls back to opts.backHref for no-JS
-   visitors and crawlers); the second pill always offers the contributors list */
-'  <nav class="site-nav">' +
-'<a class="nav-home" href="/" aria-label="Home" data-tip="Home"><svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7.5 8 2.5l5.5 5v6h-4v-3.5h-3V13.5h-4z"/></svg></a>' +
-'<a class="nav-back" href="' + opts.backHref + '" onclick="if(history.length>1){history.back();return false;}">← Back</a>' +
-'<a href="/contributors/">View all Collaborators</a>' +
-"</nav>\n</header>\n" +
+/* SAME navbar as the homepage (extracted at build time); pages can add a
+   sub-nav via opts.subnav which collapses the main nav behind a burger */
+"  " + navCluster(opts.subnav) + "\n</header>\n" +
 '<main class="job-main">\n' + opts.main + "\n</main>\n" +
 FOOTER + "\n</body>\n</html>\n";
 }
@@ -617,7 +648,12 @@ blogTags.map(function (t) { return '      <button type="button" class="res-tab" 
     desc: "Writing, open data, policy, research, and learning circles from the PUCAR collective.",
     url: "/resources/",
     jsonLd: { "@context": "https://schema.org", "@type": "CollectionPage", name: "PUCAR resources" },
-    backHref: "/", backLabel: "← Home", main: main
+    backHref: "/", backLabel: "← Home", main: main,
+    subnav: [
+      { label: "Blog", href: "#blog" },
+      { label: "Data, Policy & More", href: "#data-resources" },
+      { label: "Learning Circle", href: "#learning-circles" }
+    ]
   });
 }
 
