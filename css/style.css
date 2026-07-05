@@ -3920,20 +3920,26 @@ a.event-card{ text-decoration:none; }
    Static logo wall (explicitly no animation, unlike pucar.org's ticker).
    Logos are self-hosted at assets/funders/ via scripts/mirror-funder-logos.js. */
 /* white panel: most funder logos ship with white backgrounds, which read
-   as mismatched boxes on the cream page -- on white they melt in */
+   as mismatched boxes on the cream page -- on white they melt in. The panel BREAKS OUT of the prose column (width min(1240px, vw minus page pad), margin-left:50% + translateX(-50%)) so the logos flow wide instead of stacking five rows tall */
 .about-funders{
   margin:64px 0 16px;
-  padding:32px clamp(24px,4vw,44px) 38px;
+  padding:32px clamp(24px,4vw,52px) 38px;
   background:#fff;
   border:1px solid var(--line);
   border-radius:22px;
+  /* BREAK OUT of the narrow prose column: wide panel, logos flow into
+     two-ish rows instead of a tall five-row stack */
+  width:min(1240px, calc(100vw - 2 * clamp(20px, 5vw, 72px)));
+  margin-left:50%;
+  transform:translateX(-50%);
 }
 .about-funders .beat-eyebrow{ color:var(--forest); }
 .funder-grid{
   display:flex;
   flex-wrap:wrap;
   align-items:center;
-  gap:30px clamp(32px,4vw,52px);
+  justify-content:center; /* balanced rows in the wide panel */
+  gap:30px clamp(32px,4vw,56px);
   margin-top:22px;
 }
 .funder-grid img{
