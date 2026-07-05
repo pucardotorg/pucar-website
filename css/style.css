@@ -85,6 +85,98 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
   padding: 18px clamp(20px,4vw,48px);
   pointer-events:none;
 }
+/* ---- ecosystem switcher: caret beside the logo opens a dark panel
+   linking to the sibling Agami missions (modelled on opennyai.org's).
+   Pure CSS hover/focus-within; hidden on phones. ---- */
+.brand-switch{
+  position:relative;
+  pointer-events:auto;
+  align-self:center;
+  /* hug the logo on the left, push the nav cluster back to the right */
+  margin:0 auto 0 8px;
+}
+.brand-switch-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:28px;
+  height:28px;
+  border:0;
+  border-radius:50%;
+  background:transparent;
+  color:var(--ink-soft);
+  cursor:pointer;
+  transition:background .2s ease, color .2s ease;
+}
+.brand-switch-btn svg{ transition:transform .25s ease; }
+.brand-switch:hover .brand-switch-btn,
+.brand-switch:focus-within .brand-switch-btn{ background:rgba(36,30,26,.08); }
+.brand-switch:hover .brand-switch-btn svg,
+.brand-switch:focus-within .brand-switch-btn svg{ transform:rotate(180deg); }
+/* dark-half flip, same conditions as the logo/nav */
+:is(body:has(.pin:is([data-beat="4"],[data-beat="5"],[data-beat="6"],[data-beat="7"],[data-beat="8"],[data-beat="9"])), body.nav-dark) .brand-switch-btn{
+  color:rgba(251,248,242,.85);
+}
+:is(body:has(.pin:is([data-beat="4"],[data-beat="5"],[data-beat="6"],[data-beat="7"],[data-beat="8"],[data-beat="9"])), body.nav-dark) .brand-switch:hover .brand-switch-btn{
+  background:rgba(251,248,242,.14);
+}
+/* invisible bridge so the pointer can travel from caret to panel */
+.brand-switch::after{
+  content:"";
+  position:absolute;
+  top:100%;
+  left:0;
+  width:100%;
+  height:12px;
+}
+.brand-menu{
+  position:absolute;
+  top:calc(100% + 10px);
+  left:-8px;
+  min-width:216px;
+  padding:14px 18px 8px;
+  background:var(--forest); /* dark panel: the sibling logos are white/colour-on-dark */
+  border:1px solid rgba(251,248,242,.14);
+  border-radius:16px;
+  box-shadow:0 24px 60px rgba(17,31,38,.4);
+  opacity:0;
+  translate:0 8px;
+  pointer-events:none;
+  transition:opacity .22s ease, translate .22s ease;
+  z-index:60;
+}
+.brand-switch:hover .brand-menu,
+.brand-switch:focus-within .brand-menu{
+  opacity:1;
+  translate:0 0;
+  pointer-events:auto;
+}
+.brand-menu-label{
+  margin:0 0 4px;
+  font-size:.62rem;
+  font-weight:800;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--green);
+}
+.brand-menu-item{
+  display:block;
+  padding:13px 2px;
+}
+.brand-menu-item + .brand-menu-item{ border-top:1px solid rgba(251,248,242,.12); }
+.brand-menu-item img{
+  display:block;
+  height:24px;
+  width:auto;
+  opacity:.88;
+  transition:opacity .2s ease, transform .2s ease;
+}
+.brand-menu-item:hover img,
+.brand-menu-item:focus-visible img{ opacity:1; transform:translateX(2px); }
+@media (max-width: 640px){
+  .brand-switch{ display:none; } /* not needed on phones (explicit) */
+}
+
 /* nav + CTA stay pinned: homepage wraps them in .header-right; generated
    pages carry a .nav-cluster (main nav + optional page sub-nav) */
 .header-right,
@@ -3273,6 +3365,16 @@ a.event-card{ text-decoration:none; }
 /* .footer-links retired: replaced by the categorised .footer-map sitemap */
 .footer-links a:hover{ color:var(--gold); }
 .footer-copy{ font-size:.75rem; color:rgba(251,248,242,.4); border-top:1px solid rgba(251,248,242,.12); padding-top:20px; }
+/* the Agami/Vayam attribution sits with the copyright, one notch brighter */
+.footer-legal{
+  display:inline-block;
+  margin-bottom:6px;
+  color:rgba(251,248,242,.55);
+  line-height:1.55;
+  max-width:72ch;
+}
+.footer-legal a{ color:rgba(251,248,242,.78); text-decoration:none; border-bottom:1px solid rgba(251,248,242,.3); }
+.footer-legal a:hover{ color:var(--paper); border-color:var(--paper); }
 
 /* ---------------- reduced motion ---------------- */
 @media (prefers-reduced-motion: reduce){

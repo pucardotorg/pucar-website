@@ -1624,6 +1624,26 @@ through an anchor so it navigates instead of opening the modal.
 varun-h's contributor entry was also upgraded from placeholder to real
 (published:true, so contributor pages count went 77 -> 78).
 
+### Ecosystem switcher (brand-switch) + Agami attribution
+
+A small caret beside the PUCAR logo (every page; index.html and pageShell
+carry identical markup) opens a dark forest panel titled ALSO VISIT with
+the Agami and OpenNyAI logos linking out -- modelled on opennyai.org's
+own switcher. Pure CSS (hover + :focus-within, an ::after bridge keeps
+the pointer path alive between caret and panel); caret colour flips with
+the dark-half selectors like the logo. display:none under 640px (explicit:
+not needed on mobile). The logos are SELF-HOSTED SVGs
+(assets/agami-logo.svg, assets/opennyai-logo.svg) extracted path-by-path
+from opennyai.org's inline SVG sprite via the browser (the sites are
+Framer; their image CDN is unreachable from the sandbox, but inline
+sprite symbols are just text). The OpenNyAI sprite contained off-canvas
+duplicate paths that were dropped during assembly.
+
+The footer's copyright block now opens with .footer-legal: "PUCAR is a
+collaborative mission anchored by Agami, the tradename of Vayam Forum for
+Citizenship, a registered Section 8 non-profit advancing innovation in law
+and justice" (wording sourced from agami.in's own footer).
+
 ### Footer: single source of truth
 
 The footer's right side is a categorised sitemap (.footer-map: Explore /

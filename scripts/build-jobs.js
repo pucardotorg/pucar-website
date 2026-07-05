@@ -202,6 +202,14 @@ function pageShell(opts) {
 '    <img class="logo-dark logo-dark-short" src="/assets/pucar-white-short.png" alt="PUCAR" width="379" height="87" />\n' +
 '    <img class="logo-p" src="/assets/pacar-p-icon.png" alt="PUCAR" width="250" height="250" />\n' +
 '  </a>\n' +
+/* ecosystem switcher, same as index.html's (desktop only) */
+'  <div class="brand-switch">\n' +
+'    <button class="brand-switch-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Visit Agami and OpenNyAI"><svg viewBox="0 0 10 6" width="11" height="7" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>\n' +
+'    <div class="brand-menu" role="menu" aria-label="Agami missions">\n' +
+'      <p class="brand-menu-label">Also visit</p>\n' +
+'      <a class="brand-menu-item" role="menuitem" href="https://www.agami.in" target="_blank" rel="noopener"><img src="/assets/agami-logo.svg" alt="Agami" width="692" height="162" /></a>\n' +
+'      <a class="brand-menu-item" role="menuitem" href="https://opennyai.org" target="_blank" rel="noopener"><img src="/assets/opennyai-logo.svg" alt="OpenNyAI" width="506" height="101" /></a>\n' +
+"    </div>\n  </div>\n" +
 /* SAME navbar as the homepage (extracted at build time); pages can add a
    sub-nav via opts.subnav which collapses the main nav behind a burger */
 "  " + navCluster(opts.subnav) + "\n</header>\n" +
