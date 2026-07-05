@@ -10,6 +10,14 @@
 (function () {
   "use strict";
 
+  function catLabel(cat) { // display-only shortening; data stays intact
+    return String(cat || "Work").replace(/^Development$/i, "Dev");
+  }
+  function diffLabel(d) { // "Low Difficulty" -> "Low": bare text needs no suffix
+    return String(d || "Moderate").split(" ")[0];
+  }
+
+
   function catIcon(cat) {
     var w = String(cat || "").toLowerCase();
     var d =
@@ -457,8 +465,8 @@
     typeEl.textContent = job.streamLabel || job.stream || "Work";
     titleEl.textContent = job.title;
     metaEl.innerHTML =
-      '<span class="collab-cat">' + catIcon(job.category) + esc(job.category || "Work") + "</span>" +
-      '<span class="collab-diff ' + diffClass(job.difficulty) + '">' + esc(job.difficulty || "Moderate") + "</span>";
+      '<span class="collab-cat">' + catIcon(job.category) + esc(catLabel(job.category)) + "</span>" +
+      '<span class="collab-diff ' + diffClass(job.difficulty) + '">' + esc(diffLabel(job.difficulty)) + "</span>";
     var closes = daysUntil(job.expiry);
     datesEl.innerHTML =
       (job.deadline ? "<span><strong>Deadline</strong> " + esc(fmt(job.deadline)) + "</span>" : "") +

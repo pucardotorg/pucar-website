@@ -102,6 +102,13 @@ function catIcon(cat) {
   return '<svg class="cat-ico" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="' + d + '"/></svg>';
 }
 
+function catLabel(cat) { // display-only shortening; data stays intact
+  return String(cat || "Work").replace(/^Development$/i, "Dev");
+}
+function diffLabel(d) { // "Low Difficulty" -> "Low": bare text needs no suffix
+  return String(d || "Moderate").split(" ")[0];
+}
+
 function streamLabel(job) {
   return job.stream === "Paid" ? "Paid" + (job.term ? " · " + job.term : "") : (job.stream || "Volunteer");
 }
@@ -235,8 +242,8 @@ FOOTER + "\n</body>\n</html>\n";
 
 function jobMetaHtml(job) {
   return '<div class="job-meta">' +
-    '<span class="collab-cat">' + catIcon(job.category) + esc(job.category || "Work") + "</span>" +
-    '<span class="collab-diff ' + diffClass(job.difficulty) + '">' + '<svg class="diff-bars" viewBox="0 0 14 12" width="13" height="11" aria-hidden="true"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5.5" y="3.5" width="3" height="8.5" rx="1"/><rect x="11" y="0" width="3" height="12" rx="1"/></svg>' + esc(job.difficulty || "Moderate") + "</span>" +
+    '<span class="collab-cat">' + catIcon(job.category) + esc(catLabel(job.category)) + "</span>" +
+    '<span class="collab-diff ' + diffClass(job.difficulty) + '">' + '<svg class="diff-bars" viewBox="0 0 14 12" width="13" height="11" aria-hidden="true"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5.5" y="3.5" width="3" height="8.5" rx="1"/><rect x="11" y="0" width="3" height="12" rx="1"/></svg>' + esc(diffLabel(job.difficulty)) + "</span>" +
     '<span class="collab-stream">' + esc(streamLabel(job)) + "</span>" +
     (job.status !== "Open" ? '<span class="collab-status">' + esc(job.status) + "</span>" : "") +
     "</div>";
@@ -298,7 +305,7 @@ function jobPage(job) {
 
 function jobLine(job, note) {
   return '<li><a href="' + job.url + '">' + esc(job.title) + "</a>" +
-    '<span class="collab-cat">' + catIcon(job.category) + esc(job.category || "") + "</span>" +
+    '<span class="collab-cat">' + catIcon(job.category) + esc(catLabel(job.category)) + "</span>" +
     '<span class="collab-status">' + esc(note) + "</span></li>";
 }
 
@@ -1090,14 +1097,14 @@ function card(job) {
   return '<article class="collab-card"' +
     ' data-slug="' + esc(job.slug) + '"' +
     ' data-stream="' + esc(job.stream || "Volunteer") + '"' +
-    ' data-category="' + esc(job.category || "") + '"' +
-    ' data-difficulty="' + esc(job.difficulty || "Moderate") + '"' +
+    ' data-category="' + esc(catLabel(job.category)) + '"' +
+    ' data-difficulty="' + esc(diffLabel(job.difficulty)) + '"' +
     ' data-deadline="' + esc(String(job.deadline || "").slice(0, 10)) + '"' +
     ' data-expiry="' + esc(job.expiry) + '"' +
     ' data-tags="' + esc(job.tags.join("|")) + '">\n' +
     '  <a class="collab-cover" href="' + job.url + '" aria-label="' + esc(job.title) + '"></a>\n' +
-    '  <div class="collab-topline"><span class="collab-cat">' + catIcon(job.category) + esc(job.category || "Work") + "</span>" +
-    '<span class="collab-diff ' + diffClass(job.difficulty) + '">' + '<svg class="diff-bars" viewBox="0 0 14 12" width="13" height="11" aria-hidden="true"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5.5" y="3.5" width="3" height="8.5" rx="1"/><rect x="11" y="0" width="3" height="12" rx="1"/></svg>' + esc(job.difficulty || "Moderate") + "</span></div>\n" +
+    '  <div class="collab-topline"><span class="collab-cat">' + catIcon(job.category) + esc(catLabel(job.category)) + "</span>" +
+    '<span class="collab-diff ' + diffClass(job.difficulty) + '">' + '<svg class="diff-bars" viewBox="0 0 14 12" width="13" height="11" aria-hidden="true"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5.5" y="3.5" width="3" height="8.5" rx="1"/><rect x="11" y="0" width="3" height="12" rx="1"/></svg>' + esc(diffLabel(job.difficulty)) + "</span></div>\n" +
     '  <span class="collab-type">' + esc(streamLabel(job)) + "</span>\n" +
     '  <span class="collab-title">' + esc(job.title) + "</span>\n" +
     '  <span class="collab-summary">' + esc(job.summary) + "</span>\n" +
