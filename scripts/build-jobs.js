@@ -441,7 +441,7 @@ function aboutPage() {
    The actual parallax translate lives in js/nav.js (About page loads it
    like every generated page); pure decoration, hidden from AT. */
 '<section class="about-parallax" aria-hidden="true">\n' +
-'  <div class="about-parallax-img" id="aboutParallax" style="background-image:url(/assets/pucar-drawing.jpg)"></div>\n' +
+'  <div class="about-parallax-img" style="background-image:url(/assets/pucar-drawing.jpg)"></div>\n' +
 "</section>\n" +
 /* full-bleed dark band: the About page finally gets the cream<->forest
    rhythm the rest of the site runs on. Same copy, elevated: first para as
@@ -452,6 +452,10 @@ function aboutPage() {
 '    <p class="about-why-lede">The outdated processes and insular structure of our dispute resolution system have left millions disillusioned. To restore trust and reset expectations, we must actively engage diverse users and innovators in evolving resolution processes.</p>\n' +
 '    <p class="about-why-pull">Born in 2023, PUCAR is now a group of <em>100+ contributors</em> from diverse fields that include economics, legal practice, public technology, artificial intelligence, and government.</p>\n' +
 "  </div>\n" +
+"</section>\n" +
+/* second parallax band, flush against the why band above (group shot) */
+'<section class="about-parallax" aria-hidden="true">\n' +
+'  <div class="about-parallax-img" style="background-image:url(/assets/pucar-group-shot.avif)"></div>\n' +
 "</section>\n" +
 '<div class="job-main about-lower">\n' +
   /* No <p> inside this one -- just the heading, wrapped in the same

@@ -1242,10 +1242,10 @@ Structure: title -> stat panel -> "What we do" MISSION STATEMENT
 (.about-what: eyebrow + display-type first paragraph with 'unstucks'
 green-underlined, supporting second paragraph, NO drop cap -- "key
 information about us, don't treat like other pages") ->
-full-bleed PARALLAX band (assets/pucar-drawing.jpg; layer has 20% vertical
-headroom, js/nav.js translates it with scroll progress, rAF-throttled,
-skipped under reduced motion, plain cover image without JS) ->
-FULL-BLEED dark "Why PUCAR?" band -> How we work 3-card grid -> How we
+full-bleed PARALLAX band (assets/pucar-drawing.jpg) ->
+FULL-BLEED dark "Why PUCAR?" band (no vertical margins: the parallax bands
+sit flush above and below it) -> second PARALLAX band
+(assets/pucar-group-shot.avif) -> How we work 3-card grid -> How we
 organise -> photo strip -> CTAs. The stat panel is a forest gradient card
 (paper numbers, green uppercase labels; open-roles count computed from
 boardJobs). The Why band (.about-why) closes the page's <main> and reopens
@@ -1261,6 +1261,14 @@ pucar.org/about's funding ticker (list inlined as FUNDERS in the build
 script). Logos are referenced at /assets/funders/<slug>.png -- run
 `node scripts/mirror-funder-logos.js` LOCALLY once to download them
 (the sandbox cannot reach framerusercontent.com); until then the images 404.
+
+### About parallax bands
+
+js/nav.js translates EVERY .about-parallax-img with scroll progress (the
+layer has 20% vertical headroom, factor 0.16, rAF-throttled, skipped under
+reduced motion, plain cover image without JS). Two bands currently:
+pucar-drawing.jpg after What-we-do, pucar-group-shot.avif after the Why
+band, both flush against the dark section.
 
 ### Participate event cards (sc-ai-policy)
 

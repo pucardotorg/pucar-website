@@ -2817,7 +2817,7 @@ body.scroll-locked{ overflow:hidden; }
     var(--forest);
   color:var(--paper);
   padding:clamp(56px,8vw,96px) clamp(20px,5vw,72px);
-  margin-top:48px;
+  /* no margins: the parallax bands sit flush above AND below */
 }
 .about-why-inner{ max-width:880px; margin:0 auto; }
 /* one deliberate hierarchy instead of two competing treatments ("text is
