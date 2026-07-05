@@ -952,8 +952,10 @@ readable files here, only actual attachments/uploads do):
   white asset's alpha channel (found the gap between the wordmark and the
   tagline programmatically rather than eyeballing pixel coordinates), for
   dark backgrounds, mobile. Also `.footer-top .logo-short` below 640px.
-- `pucar-favicon-dp.png` — 500×500 green "P" mark, source for the generated
-  `favicon-32.png` / `favicon-16.png` / `favicon-apple-touch.png`.
+- `pucar-new-favicon.png` — 500×500, THE favicon (single `rel=icon` +
+  `apple-touch-icon` in index.html and pageShell). The old set
+  (pucar-favicon-dp / favicon-32 / favicon-16 / favicon-apple-touch) was
+  deleted in July 2026.
 
 The header logo (`.site-header .logo`) has no pill/background — it sits
 directly over whatever's scrolled underneath the fixed header. Four `<img>`s
