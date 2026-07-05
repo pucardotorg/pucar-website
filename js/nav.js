@@ -110,6 +110,7 @@
 
   /* ---- glider: on EVERY nav pill (main AND sub), so the sub-nav's hover
      highlight slides between links exactly like the main menu's ---- */
+  var topLits = []; // every top-level nav's "currently lit" getter, wired below
   navs.forEach(function (n) {
     var links = Array.prototype.slice.call(
       n.querySelectorAll(":scope > a, :scope > .nav-drop > a")
@@ -158,9 +159,17 @@
         })();
       }).observe(n, { attributes: true, attributeFilter: ["class"] });
     }
+    // body.nav-dark (the dark-section colour flip) is set on <body>, not on
+    // `n` -- the class-attribute observer just above never sees it, so a
+    // link lit right as the page scrolls across a dark-section boundary
+    // could be left with a stale-positioned glider under the new colour
+    // scheme. Exposed here so the shared body-level watcher further down
+    // can refresh it too.
+    topLits.push(function () { if (lit) move(lit); });
   });
 
   /* ---- same sliding pill inside each dropdown menu ---- */
+  var menuLits = []; // every dropdown's "currently lit" getter, for the fixes below
   Array.prototype.forEach.call(nav.querySelectorAll(".nav-menu"), function (menu) {
     var items = menu.querySelectorAll(".nav-menu-item");
     if (!items.length) return;
@@ -192,7 +201,47 @@
     menu.addEventListener("focusout", function (e) {
       if (!menu.contains(e.relatedTarget)) mclear();
     });
+    // Same "stale pixel coordinates" class of bug as the top-level glider
+    // above ("lit link turns into bare white text"), but this one was never
+    // fixed for dropdown menus (user report: hovering/clicking an item in
+    // the About/Community dropdown left it with its hover background gone
+    // and the text unreadable). body.nav-dark flips the WHOLE colour
+    // scheme (panel bg, default text, is-lit's text colour, the glider's
+    // own bg) the instant it toggles, via pure CSS -- that part is fine.
+    // What isn't fine: an item mid-hover already has its is-lit class (and
+    // the JS-measured pixel position of mg) fixed from whenever mmove()
+    // last ran. If nav-dark flips (scrolling into/out of a dark section
+    // while a dropdown happens to be open) or a webfont finishes loading
+    // and reflows the menu's text metrics AFTER mmove() already measured
+    // it, the glider sits at the wrong offset while is-lit still forces a
+    // colour meant to be read against it -- a background that's not where
+    // the text is, is functionally "no background", and the text can end
+    // up unreadable against the actual (now possibly re-coloured) panel.
+    // Re-measuring the currently-lit item keeps it glued to the right spot
+    // and colour regardless of what caused the reflow.
+    menuLits.push(function () { if (mlit) mmove(mlit); });
   });
+
+  /* ---- refresh every glider after whatever might have moved things ----
+     Re-run for 600ms (matches the existing per-nav "ride" mechanism above)
+     whenever body's classes change (nav-dark flips colour AND, via the
+     is-collapsed swap, layout) or once webfonts finish loading (Fraunces/
+     Source Sans swapping in reflows text metrics after gliders were first
+     measured against the fallback font). */
+  function rideAll() {
+    var t0 = performance.now();
+    (function ride() {
+      menuLits.forEach(function (fn) { fn(); });
+      topLits.forEach(function (fn) { fn(); });
+      if (performance.now() - t0 < 600) requestAnimationFrame(ride);
+    })();
+  }
+  if (window.MutationObserver) {
+    new MutationObserver(rideAll).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+  }
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(rideAll);
+  }
 
   /* ---- home icon: always on for generated pages ----
      The homepage's own copy of this (js/script.js) still gates the up-arrow

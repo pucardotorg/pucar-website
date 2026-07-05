@@ -337,24 +337,23 @@ function contributorIndexCard(person) {
     "</span></a>";
 }
 
-function contributorsIndexPage() {
+function contributorsSection() {
+  /* Extracted for reuse: this used to be the whole standalone page (see
+     contributorsPage() below, which now folds this into a bigger
+     consolidated page at the same /contributors/ URL). The old page-level
+     intro (h1 + paragraph) becomes this section's collab-head instead --
+     it's a SECTION on a bigger page now, not a page of its own, and a
+     page should only have one <h1>. */
   const people = contributors.slice().sort(function (a, b) {
     return a.name.localeCompare(b.name);
   });
   const orgs = Array.from(new Set(people.map(function (p) { return p.organisation; })
     .filter(Boolean))).sort(function (a, b) { return a.localeCompare(b); });
-  const main =
-'  <p class="beat-eyebrow">The PUCAR collective</p>\n' +
-'  <h1 class="job-title">The people behind the work.</h1>\n' +
-'  <article class="job-body">\n' +
-"    <p>PUCAR is a collective of 100+ contributors from economics, legal practice, public technology, artificial intelligence, and government. These are some of the people lending their time and expertise. Click anyone to read more about them and the work they have taken up.</p>\n" +
-"  </article>\n" +
-"</main>\n" +
-'<section class="collaborate contrib-section" id="contributors">\n' +
+  return '<section class="collaborate contrib-section" id="contributors">\n' +
 '  <div class="collab-head">\n' +
 '    <p class="beat-eyebrow">Contributors</p>\n' +
 '    <h2 class="collab-title-main">Find a collaborator.</h2>\n' +
-'    <p class="collab-sub">Search by name or role, or filter by organisation.</p>\n' +
+'    <p class="collab-sub">PUCAR is a collective of 100+ contributors from economics, legal practice, public technology, artificial intelligence, and government. Search by name or role, or filter by organisation.</p>\n' +
 "  </div>\n" +
 '  <div class="collab-filters contrib-filters" id="contribFilters" hidden>\n' +
 '    <input class="contrib-search" id="contribSearch" type="search" placeholder="Search people, roles…" aria-label="Search contributors" />\n' +
@@ -372,7 +371,7 @@ people.map(contributorIndexCard).join("\n") + "\n" +
 '<div class="job-modal" id="contribModal" hidden>\n' +
 '  <div class="job-modal-backdrop" data-close></div>\n' +
 '  <div class="job-modal-panel" role="dialog" aria-modal="true" aria-labelledby="cmName">\n' +
-'    <button class="job-modal-close" type="button" data-close aria-label="Close">\u00d7</button>\n' +
+'    <button class="job-modal-close" type="button" data-close aria-label="Close">×</button>\n' +
 '    <div class="contrib-head">\n' +
 '      <img class="avatar avatar-xl" id="cmPhoto" src="" alt="" />\n' +
 '      <div><p class="beat-eyebrow">Contributor</p>\n' +
@@ -383,14 +382,94 @@ people.map(contributorIndexCard).join("\n") + "\n" +
 '    <div class="cta-row" id="cmLinks"></div>\n' +
 "  </div>\n" +
 "</div>\n" +
-'<script src="/js/contributors-page.js"></script>\n<script src="/js/view-toggle.js"></script>\n<main hidden>';
+'<script src="/js/contributors-page.js"></script>\n<script src="/js/view-toggle.js"></script>\n';
+}
+
+function contributorsPage() {
+  /* Jul 2026: /contributors/ is now the consolidated "ways to contribute"
+     hub -- DRISTI 2.0 (live board), the Supreme Court AI policy (summary +
+     link), and the full contributor directory, all on one page with
+     anchors. Explicitly NOT a redirect -- this page IS /contributors/, not
+     a stub pointing somewhere else.
+
+     DRISTI 2.0 gets a live view of the actual open-work cards (same
+     card()/boardJobs the homepage board renders), reusing the exact
+     #collabFilters/#collabGrid/#jobModal ids so js/collaborate.js -- built
+     to work by id, not by page -- runs here unmodified. Policy gets a
+     short summary (adapted from scPolicyPage's intro) plus a link through
+     to the full /sc-ai-policy/ page, which stays exactly as it is. */
+  const dristiCards = boardJobs.length ? boardJobs.map(card).join("\n")
+    : '<p class="collab-filter-empty">No open work right now -- check back soon, or write to us.</p>';
+
+  const main =
+'  <p class="beat-eyebrow">About Contributing</p>\n' +
+'  <h1 class="job-title">Find your way into the work.</h1>\n' +
+'  <article class="job-body">\n' +
+"    <p>PUCAR's work happens in three places right now: building the DRISTI 2.0 stack, shaping how the courts use AI, and the wider collective of contributors who make both possible. Pick a thread below, or scroll through all three.</p>\n" +
+"  </article>\n" +
+"</main>\n" +
+
+'<section class="collaborate dristi-section" id="dristi">\n' +
+'  <div class="collab-head">\n' +
+'    <p class="beat-eyebrow">DRISTI 2.0</p>\n' +
+'    <h2 class="collab-title-main">Advance the DRISTI 2.0 stack.</h2>\n' +
+'    <p class="collab-sub">Open work on the people-centric courts platform -- some volunteer, some paid (permanent or temporary). This is what’s open right now.</p>\n' +
+"  </div>\n" +
+'  <div class="collab-filters" id="collabFilters" hidden>\n' +
+'    <select data-filter="stream" aria-label="Filter by stream">\n' +
+'      <option value="">All streams</option>\n' +
+"      <option>Volunteer</option>\n" +
+"      <option>Paid</option>\n" +
+"    </select>\n" +
+'    <select data-filter="category" aria-label="Filter by type of work">\n' +
+'      <option value="">All types</option>\n' +
+"    </select>\n" +
+'    <select data-filter="difficulty" aria-label="Filter by difficulty">\n' +
+'      <option value="">Any difficulty</option>\n' +
+"      <option>Low Difficulty</option>\n" +
+"      <option>Moderate</option>\n" +
+"      <option>High</option>\n" +
+"    </select>\n" +
+'    <select data-filter="deadline" aria-label="Filter by deadline">\n' +
+'      <option value="">Any deadline</option>\n' +
+'      <option value="7">Due within a week</option>\n' +
+'      <option value="14">Due within 2 weeks</option>\n' +
+'      <option value="30">Due within a month</option>\n' +
+'      <option value="90">Due within 3 months</option>\n' +
+"    </select>\n" +
+'    <div class="collab-tagbar" id="collabTagbar" role="group" aria-label="Filter by tag"></div>\n' +
+'    <button class="collab-clear" id="collabClear" type="button" hidden>Clear filters ×</button>\n' +
+"  </div>\n" +
+'  <p class="collab-count" id="collabCount" hidden></p>\n' +
+'  <div class="collab-grid" id="collabGrid">\n' + dristiCards + "\n" +
+'    <div class="collab-filter-empty" id="collabEmpty" hidden>No work matches these filters right now. Try widening them.</div>\n' +
+"  </div>\n" +
+"</section>\n" +
+
+'<div class="job-main" id="policy">\n' +
+'  <article class="job-body">\n' +
+'    <h2>Policy</h2>\n' +
+"    <p>The Supreme Court's AI Committee has published a draft framework for how courts can use AI: assist, never adjudicate. Citizen feedback is open until 15 July 2026, and the collective has been reading the draft closely, publishing explainers, critiques, and formal submissions along the way.</p>\n" +
+"  </article>\n" +
+'  <div class="cta-row">\n' +
+'    <a class="btn btn-primary" href="/sc-ai-policy/">Explore the Supreme Court’s AI policy</a>\n' +
+"  </div>\n" +
+"</div>\n" +
+
+contributorsSection() +
+"<main hidden>";
   return pageShell({
-    title: "Contributors | PUCAR",
-    desc: "The people behind PUCAR: " + contributors.length + " contributors from law, technology, economics, and government working to transform dispute resolution in India.",
+    title: "About Contributing | PUCAR",
+    desc: "Three ways into PUCAR's work: the DRISTI 2.0 platform, the Supreme Court's AI policy consultation, and the 100+ contributors who make up the collective.",
     url: "/contributors/",
-    jsonLd: { "@context": "https://schema.org", "@type": "CollectionPage", name: "PUCAR contributors",
-      about: "Contributors to the PUCAR collective" },
-    backHref: "/", backLabel: "← Home", main: main
+    jsonLd: { "@context": "https://schema.org", "@type": "CollectionPage", name: "About contributing to PUCAR",
+      about: "Ways to contribute to the PUCAR collective" },
+    backHref: "/", backLabel: "← Home", main: main,
+    subnav: [
+      { label: "DRISTI 2.0", href: "#dristi" },
+      { label: "Policy", href: "#policy" },
+      { label: "Contributors", href: "#contributors" }
+    ]
   });
 }
 
@@ -722,7 +801,7 @@ function teamSection() {
 '  <span class="strip-text">The anchor team leads the mission day to day, but none of it would be possible without <strong>100+ contributors</strong> across the ecosystem</span>\n' +
 '  <span class="strip-group">\n' +
 '    <span class="strip-stack" id="stripStack" aria-hidden="true"></span>\n' +
-'    <a class="strip-btn" href="/contributors/">Meet the contributors<span class="strip-arrow" aria-hidden="true">&rarr;</span></a>\n' +
+'    <a class="strip-btn" href="/contributors/#contributors">Meet the contributors<span class="strip-arrow" aria-hidden="true">&rarr;</span></a>\n' +
 "  </span>\n" +
 "</div>\n" +
 '<div class="job-modal" id="teamModal" hidden>\n' +
@@ -926,7 +1005,7 @@ contributors.forEach(function (person) {
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, "index.html"), contributorPage(person));
 });
-fs.writeFileSync(path.join(ROOT, "contributors", "index.html"), contributorsIndexPage());
+fs.writeFileSync(path.join(ROOT, "contributors", "index.html"), contributorsPage());
 /* full profile payloads for the contributors-page modal */
 fs.writeFileSync(path.join(ROOT, "contributors", "profiles.json"),
   JSON.stringify(contributors.map(function (c) {
@@ -981,6 +1060,10 @@ fs.writeFileSync(path.join(ROOT, "sitemap.xml"),
   '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
   urls.map(function (u) { return "  <url><loc>" + u + "</loc></url>"; }).join("\n") + "\n</urlset>\n");
 
+/* robots.txt -- allow everything (incl. AI crawlers) and point at the sitemap */
+fs.writeFileSync(path.join(ROOT, "robots.txt"),
+  "User-agent: *\nAllow: /\n\nSitemap: " + SITE + "/sitemap.xml\n");
+
 console.log("Built " + jobs.length + " job page(s) (" + boardJobs.length + " on the board), " +
   contributors.length + " contributor page(s), sc-ai-policy (" + perspectives.length +
-  " perspectives, " + scEvents.length + " events), jobs.json, cards, sitemap.xml");
+  " perspectives, " + scEvents.length + " events), jobs.json, cards, sitemap.xml, robots.txt");

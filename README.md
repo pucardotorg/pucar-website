@@ -28,7 +28,7 @@ js/script.js           Story engine: beat switching, count-up stats, is-walking 
 js/collaborate.js      Board enhancement: filters, closes-in labels, modal + pushState.
 js/contact.js          Get-in-touch modal + Netlify form AJAX + themed validation.
 js/perspectives.js     sc-ai-policy: perspective-card modal + live CIVIS respondent count.
-js/contributors-page.js  /contributors/ search + organisation filter.
+js/contributors-page.js  Contributor directory search + org filter (used inside /contributors/).
 js/nav.js              GENERATED PAGES ONLY: nav glider + body.nav-dark flip over dark sections.
 js/view-toggle.js      Cards <-> list switch for all three card grids.
 scripts/build-jobs.js  THE build step (node scripts/build-jobs.js). Zero dependencies.
@@ -39,9 +39,13 @@ content/contributors/  One JSON per contributor ← source of truth (77 real + 3
 content/sc-perspectives/ + content/sc-events/  sc-ai-policy page content.
 admin/                 Decap CMS: index.html (loads decap from unpkg) + config.yml.
 collaborate/           GENERATED: <slug>/index.html per work item + jobs.json index.
-contributors/          GENERATED: <slug>/index.html per contributor + index.html (filterable
-                       list) + photos.json (waving-heads data).
-about/ team/ sc-ai-policy/  GENERATED pages (aboutPage/teamPage/scPolicyPage in build script).
+contributors/          GENERATED: <slug>/index.html per contributor + index.html (the
+                       consolidated hub — DRISTI 2.0 + Policy + Contributors, see 6.3c) +
+                       photos.json (waving-heads data) + profiles.json (modal data).
+about/ sc-ai-policy/   GENERATED pages (aboutPage/scPolicyPage in build script).
+team/                  GENERATED redirect stub → /about/#team (teamPage() in build script).
+sitemap.xml / robots.txt  GENERATED at build time (urls array + allow-all robots.txt
+                       pointing at the sitemap).
 sitemap.xml            GENERATED.
 assets/litigant-source.svg  Cleaned copy of the litigant illustration (same as inline).
 netlify.toml           publish=".", command="node scripts/build-jobs.js", security headers.
@@ -1078,11 +1082,11 @@ gap so the menu survives the mouse travelling to it. Nav is display:none
 under 640px as before.
 
 - Collaborate menu: "Active Collaborations" (Advance the DRISTI 2.0 stack →
-  #collaborate, Explore the Supreme Court's AI policy → /sc-ai-policy/, same
-  framing as the hero bulletin board) and "More" (Meet the Contributors →
-  /contributors/, About Contributing → /about-contributing/ which DOES NOT
-  EXIST YET, page is planned).
-- About menu: About PUCAR → /about/, Meet the Team → /team/.
+  /contributors/#dristi, Explore the Supreme Court's AI policy →
+  /contributors/#policy) and "More" (About Contributing → /contributors/,
+  Meet the Contributors → /contributors/#contributors). See §6.3c below —
+  this whole section was consolidated into one page in July 2026.
+- About menu: About PUCAR → /about/, Meet the Team → /about/#team.
 
 Styling: the nav container is a frosted-glass pill (blur+saturate backdrop,
 hairline border, inset top highlight). js/script.js (homepage only) injects
@@ -1523,22 +1527,56 @@ text like "Lawyer"/"L1 Engineer" replaced with real orgs or blanked) so the
 org filter is a clean list. The three 404'd LinkedIn bios no longer carry the
 "profile unavailable" note.
 
-### 6.3b Contributors index page — /contributors/
+### 6.3b Contributors directory section (folded into /contributors/, see 6.3c)
 
-`contributorsIndexPage()` in the build script generates `contributors/index.html`:
-an alphabetical grid of person cards (avatar, name, role, organisation) that
-link to each profile page. A filter bar offers free-text search (name, role,
-org) and an organisation dropdown built from the distinct `organisation`
-values. Filtering lives in `js/contributors-page.js` (same custom `.dd`
-dropdown pattern as collaborate; the bar is `hidden` until JS runs, so the
-no-JS page is a plain crawlable list). Cards open a PROFILE MODAL (shared
-job-modal chrome, same as the contact modal; data from
-contributors/profiles.json emitted by the build) with pushState to the
-person's real URL and history-back on close, so deep links and crawlable
-per-person pages are untouched; cmd/ctrl/middle-clicks still open the full
-page. The role line skips the organisation when the role already names it. The section reuses the `.collaborate`
-dark-indigo shell with `.contrib-grid` / `.contrib-card` styles in style.css.
-Linked from the homepage footer; included in sitemap.xml.
+`contributorsSection()` in the build script returns the person-directory
+markup reused inside the consolidated hub: an alphabetical grid of person
+cards (avatar, name, role, organisation) that link to each profile page. A
+filter bar offers free-text search (name, role, org) and an organisation
+dropdown built from the distinct `organisation` values. Filtering lives in
+`js/contributors-page.js` (same custom `.dd` dropdown pattern as
+collaborate; the bar is `hidden` until JS runs, so the no-JS page is a plain
+crawlable list). Cards open a PROFILE MODAL (shared job-modal chrome, same
+as the contact modal; data from contributors/profiles.json emitted by the
+build) with pushState to the person's real URL and history-back on close,
+so deep links and crawlable per-person pages are untouched; cmd/ctrl/
+middle-clicks still open the full page. The role line skips the
+organisation when the role already names it. The section reuses the
+`.collaborate` dark-indigo shell with `.contrib-grid` / `.contrib-card`
+styles in style.css.
+
+### 6.3c Consolidated hub — /contributors/ (About Contributing)
+
+July 2026: what used to be three separate destinations (a standalone
+`/contributors/` directory, DRISTI 2.0 framing scattered across the
+homepage bulletin board, and a copy of the Supreme Court AI policy story)
+is now ONE page at `/contributors/`, built by `contributorsPage()`. It is
+NOT a redirect — the URL resolves directly to the full hub, same pattern
+`/about/` uses for its own sections, just without a separate old URL to
+retire (contrast with `/team/`, which IS still a redirect stub into
+`/about/#team`).
+
+Three sections, each with its own anchor and listed in the page's
+`navCluster` sub-nav (`#dristi`, `#policy`, `#contributors`):
+
+- `#dristi` — a LIVE view of the open-work board: the exact same
+  `card()`/`boardJobs` data and `#collabFilters`/`#collabGrid`/`#jobModal`
+  ids the homepage board uses, so `js/collaborate.js` (id-driven, bails
+  early if its ids are missing) runs here completely unmodified.
+- `#policy` — a short summary of the Supreme Court AI policy draft plus a
+  button through to the full `/sc-ai-policy/` page, which is UNCHANGED and
+  still exists in full as its own destination — this section is a teaser,
+  not a duplicate of its perspectives/participate grids.
+- `#contributors` — `contributorsSection()` (6.3b above), verbatim.
+
+Nav, footer, the homepage's `.collab-strip` CTA, and the about page's
+contributors-strip CTA (inside `teamSection()`) all point here now:
+"Advance the DRISTI 2.0 stack" → `/contributors/#dristi`, "Explore the
+Supreme Court's AI policy" (nav copy only) → `/contributors/#policy`,
+"About Contributing" / "Meet the Contributors" → `/contributors/` /
+`/contributors/#contributors` (in that order in the nav's "More" group).
+`sitemap.xml` already had `/contributors/` listed as a page-level URL, so
+no sitemap change was needed beyond adding `robots.txt` (see below).
 
 Every generated page now carries THE SAME navbar as the homepage: pageShell
 injects a NAV constant extracted from index.html at build time (single
@@ -1881,8 +1919,8 @@ and run `npx decap-server` next to the static server.
 
 ## 8. Known placeholders / TODO before launch (updated July 2026)
 
-- /about-contributing/ DOES NOT EXIST yet but is linked from the Collaborate
-  nav dropdown ("About Contributing") — build it next or the link 404s.
+- robots.txt is now generated at build time (allow-all + sitemap pointer);
+  previously missing entirely.
 - /team/ shows the real 10-person team (Jul 2026); all ten headshots are
   committed in assets/team/ (mirror script retired -- the LinkedIn photos
   were pulled through the user's Chrome instead: scripted a.click()
