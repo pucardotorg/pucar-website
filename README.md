@@ -1412,6 +1412,10 @@ arriving from Google/another site or directly means no back pill.
 
 ### Footer: single source of truth
 
+The footer's right side is a categorised sitemap (.footer-map: Explore /
+Community / Active right now columns, green uppercase titles); blurb sits
+left, copyright spans below (grid, stacks under 860px).
+
 pageShell no longer carries its own footer markup: the build script extracts
 <footer class="site-footer">...</footer> VERBATIM from index.html at build
 time (const FOOTER) and injects it into every generated page. To change any

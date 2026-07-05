@@ -2989,7 +2989,39 @@ a.event-card{ text-decoration:none; }
   background:#000;
   color:rgba(251,248,242,.8);
   padding:64px clamp(20px,5vw,72px) 32px;
+  /* blurb left, sitemap right, copyright full-width below */
+  display:grid;
+  grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);
+  gap:24px clamp(32px,6vw,96px);
+  align-items:start;
 }
+@media (max-width:860px){
+  .site-footer{ grid-template-columns:1fr; }
+}
+.footer-copy{ grid-column:1 / -1; }
+.footer-map{
+  display:flex;
+  flex-wrap:wrap;
+  gap:28px clamp(28px,4vw,56px);
+  justify-content:flex-end;
+}
+@media (max-width:860px){ .footer-map{ justify-content:flex-start; } }
+.footer-col{ display:flex; flex-direction:column; gap:9px; min-width:130px; }
+.footer-col-title{
+  margin:0 0 4px;
+  font-size:.68rem;
+  font-weight:700;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--green);
+}
+.footer-col a{
+  text-decoration:none;
+  font-size:.85rem;
+  color:rgba(251,248,242,.72);
+  transition:color .18s ease;
+}
+.footer-col a:hover{ color:var(--paper); }
 .footer-top{ max-width:640px; }
 .footer-top .logo{ display:block; height:22px; width:auto; margin-bottom:2px; }
 .footer-top .logo-short{ display:none; }
@@ -2998,8 +3030,7 @@ a.event-card{ text-decoration:none; }
   .footer-top .logo-short{ display:block; }
 }
 .footer-top p{ margin-top:14px; font-size:.92rem; line-height:1.6; color:rgba(251,248,242,.6); }
-.footer-links{ display:flex; gap:22px; flex-wrap:wrap; margin:32px 0; }
-.footer-links a{ text-decoration:none; font-size:.85rem; color:rgba(251,248,242,.75); }
+/* .footer-links retired: replaced by the categorised .footer-map sitemap */
 .footer-links a:hover{ color:var(--gold); }
 .footer-copy{ font-size:.75rem; color:rgba(251,248,242,.4); border-top:1px solid rgba(251,248,242,.12); padding-top:20px; }
 
