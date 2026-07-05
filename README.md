@@ -381,9 +381,12 @@ notification emails can be configured there.
   file shows `.video-missing` and never traps), the film AUTOPLAYS
   (v6, Jul 2026: "just autoplay the video and remove this button" --
   the v5 click-to-watch pill + fullscreen flow was built and then
-  removed). tryPlayFilm() attempts unmuted, falls back to MUTED
-  SILENTLY (no "Tap for sound" pill either); native controls carry the
-  unmute.
+  removed). tryPlayFilm() attempts UNMUTED (v7: "with audio on");
+  if the policy refuses it plays muted and arms a one-shot document-level
+  gesture listener that unmutes on the next click/keypress anywhere.
+  Note: browsers flatly forbid unmuted autoplay before ANY site
+  interaction, so a cold visitor who only scrolls hears sound from their
+  first click onward; that is the ceiling the platform allows.
   Still **NO scroll lock** beyond the 700ms arrival hold; **leaving the
   zone in either direction pauses the video** and restores the chrome;
   re-entering RESUMES (it only restarts from 0 after a completed watch,

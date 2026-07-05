@@ -561,9 +561,24 @@
   var filmBreak = document.getElementById("videoBreak");
   var filmUsable = false;
 
-  // AUTOPLAY (re-revised, Jul 2026: "just autoplay the video and remove
-  // this button"). Try with sound first; if the autoplay policy refuses,
-  // fall back to muted silently -- native controls carry the unmute.
+  // AUTOPLAY WITH AUDIO (v7, Jul 2026: "autoplay the video with audio
+  // on"). Browsers only permit unmuted autoplay after the visitor has
+  // interacted with the site, so: always ATTEMPT unmuted; if the policy
+  // refuses, play muted AND arm a one-shot listener that unmutes on the
+  // very next gesture anywhere on the page (a click counts; from then on
+  // unmuted attempts succeed directly).
+  function armUnmuteOnGesture() {
+    function unmute() {
+      if (filmVideo && filmActive) {
+        filmVideo.muted = false;
+        filmVideo.volume = 1;
+      }
+      document.removeEventListener("pointerdown", unmute, true);
+      document.removeEventListener("keydown", unmute, true);
+    }
+    document.addEventListener("pointerdown", unmute, true);
+    document.addEventListener("keydown", unmute, true);
+  }
   function tryPlayFilm() {
     if (!filmVideo) return;
     if (filmVideo.ended) {
@@ -576,6 +591,7 @@
       filmVideo.muted = true;
       var p2 = filmVideo.play();
       if (p2 && p2.catch) p2.catch(function () {});
+      armUnmuteOnGesture();
     });
   }
   if (filmVideo) {
