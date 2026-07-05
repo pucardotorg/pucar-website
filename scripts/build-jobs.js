@@ -162,7 +162,9 @@ function navCluster(subnav) {
     main = main.replace('<nav class="site-nav">',
       '<nav class="site-nav main-nav is-collapsed">' +
       '<button class="nav-toggle" type="button" data-nav="main">' + BURGER + "Main Menu</button>");
-    const sub = '<nav class="site-nav sub-nav show-home" aria-label="Page sections">' +
+    /* no static show-home here: js/nav.js reveals the up-arrow only after
+       the visitor has scrolled a little (same 200px gate as the homepage) */
+    const sub = '<nav class="site-nav sub-nav" aria-label="Page sections">' +
       '<button class="nav-toggle" type="button" data-nav="sub">' + BURGER + "Page Menu</button>" +
       /* homepage-style looping up-arrow: back to the top of this page */
       '<a class="nav-home subnav-top" href="#" aria-label="Back to top" data-tip="Back to Top"><svg viewBox="0 0 16 16" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V3M3.5 7.5 8 3l4.5 4.5"/></svg></a>' +

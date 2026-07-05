@@ -1496,17 +1496,22 @@ EXPANDED with the page's section links. HOVERING "Main Menu" expands the
 main nav and collapses the sub-nav to a "Page Menu" burger; hovering that
 reverses it (140ms hover-intent delay so a cursor passing across the burger
 doesn't swap; click still works for touch/keyboard). THE SWAP IS ANIMATED: swapNavs() in js/nav.js FLIPs both
-pills' widths via WAAPI (420ms, cubic-bezier(.4,.1,.2,1)) -- measure old
+pills' widths via WAAPI (240ms, cubic-bezier(.4,.1,.2,1)) -- measure old
 width, toggle classes, measure new, animate between. overflow:hidden is set
 only DURING the animation (permanently it would clip the main nav's
 absolute dropdown menus); freshly expanded items fade in via the
-navItemsIn keyframe with a 120ms delay so they appear as the pill opens.
+navItemsIn keyframe with a 240ms delay, i.e. AFTER the width FLIP lands
+(flex-wrap:nowrap/white-space:nowrap on .nav-cluster .site-nav stop the
+labels wrapping mid-animation, which used to balloon the pill's height).
 A collapsed nav shows only its toggle; an expanded nav hides its own.
 
 Every sub-nav also carries the homepage-style looping UP-ARROW as its first
-item (.subnav-top, static show-home class so the width/tooltip rules apply):
-click scrolls to the top of the current page, hover loops the arrow (shares
-the navArrowUp keyframes) and shows the "Back to Top" tooltip.
+item (.subnav-top): click scrolls to the top of the current page, hover
+loops the arrow (shares the navArrowUp keyframes) and shows the "Back to
+Top" tooltip. It is NOT always visible: js/nav.js toggles show-home on the
+sub-nav only past 200px of scroll (same gate + width-reveal as the
+homepage's arrow), so it appears only once there's somewhere to scroll
+back up to.
 
 /resources/ uses the sub-nav with Blog / Data, Policy & More / Learning
 Circle anchors. js/nav.js also runs the dropdown menu-gliders (copied from

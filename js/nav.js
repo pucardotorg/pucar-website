@@ -70,6 +70,17 @@
         e.preventDefault();
         window.scrollTo({ top: 0, behavior: "auto" });
       });
+      // only shown once there's something to scroll back UP to -- same
+      // 200px gate (and the same width-reveal) as the homepage's arrow
+      var topTick = false;
+      var topUpdate = function () {
+        topTick = false;
+        subNav.classList.toggle("show-home", window.scrollY > 200);
+      };
+      window.addEventListener("scroll", function () {
+        if (!topTick) { topTick = true; requestAnimationFrame(topUpdate); }
+      }, { passive: true });
+      topUpdate();
     }
   }
 
