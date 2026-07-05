@@ -133,8 +133,8 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
   position:absolute;
   top:calc(100% + 10px);
   left:-8px;
-  min-width:216px;
-  padding:14px 18px 8px;
+  min-width:282px;
+  padding:14px 20px 10px;
   background:var(--forest); /* dark panel: the sibling logos are white/colour-on-dark */
   border:1px solid rgba(251,248,242,.14);
   border-radius:16px;
@@ -176,7 +176,7 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
 /* two-line blurb slides open under the hovered logo */
 .brand-menu-desc{
   display:block;
-  max-width:24ch;
+  max-width:30ch;
   font-size:.78rem;
   line-height:1.45;
   color:rgba(251,248,242,.65);
@@ -189,7 +189,7 @@ sup{ font-size:.55em; opacity:.6; font-style:italic; }
 }
 .brand-menu-item:hover .brand-menu-desc,
 .brand-menu-item:focus-visible .brand-menu-desc{
-  max-height:4.5em;
+  max-height:6.5em; /* room for three full lines, nothing clipped */
   opacity:1;
   margin-top:9px;
   /* ENTER: space opens first, text fades in as it lands */
