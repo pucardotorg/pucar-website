@@ -4381,7 +4381,13 @@ button.circle-card{
   grid-template-columns:repeat(3, 1fr);
   gap:clamp(22px,3.5vw,48px);
   align-items:start;
+  /* BREAK OUT of the narrow prose column (same trick as .about-funders):
+     inside it the columns were so cramped the numbers themselves wrapped */
+  width:min(1180px, calc(100vw - 2 * clamp(20px, 5vw, 72px)));
+  margin-left:50%;
+  transform:translateX(-50%);
 }
+.dristi-hero-stats .about-stat-num{ white-space:nowrap; }
 .dristi-hero-stats .about-stat + .about-stat{
   padding-left:clamp(22px,3.5vw,48px);
   border-left:1px solid rgba(251,248,242,.18);
