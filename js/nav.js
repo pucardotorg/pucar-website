@@ -25,6 +25,11 @@
       var e0 = expand.offsetWidth, c0 = collapse.offsetWidth;
       expand.classList.remove("is-collapsed");
       collapse.classList.add("is-collapsed");
+      // one-shot: the items' fade-in animation is scoped to .just-in so it
+      // can ONLY run right here, during a real expand (see style.css note)
+      expand.classList.add("just-in");
+      clearTimeout(expand.__justT);
+      expand.__justT = setTimeout(function () { expand.classList.remove("just-in"); }, 500);
       if (!expand.animate) return; // ancient browser: instant swap is fine
       var e1 = expand.offsetWidth, c1 = collapse.offsetWidth;
       var ease = "cubic-bezier(.4,.1,.2,1)";

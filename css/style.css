@@ -225,7 +225,13 @@ body.job-page .site-header > .nav-cluster{
    fill (opacity:0) OVERRIDES the glider's inline opacity whenever the
    animation restarts -- that was the "hover pill disappears, lit text
    unreadable" bug on sub-nav clicks. Its opacity is JS-driven only. */
-.site-nav:not(.is-collapsed) > *:not(.nav-toggle):not(.nav-glider){
+.site-nav.just-in > *:not(.nav-toggle):not(.nav-glider){
+  /* SCOPED to .just-in, a one-shot class swapNavs() sets on the expanding
+     nav and removes 500ms later. It used to hang off :not(.is-collapsed),
+     which let the browser RESTART the animation outside any swap (observed
+     twice: gliders erased, then clicked links frozen ghost-faint at the
+     opacity:0 start frame) -- with backwards fill, any restart makes
+     children invisible. Now it can only run during a real expand. */
   animation:navItemsIn .14s ease .16s backwards;
 }
 @keyframes navItemsIn{

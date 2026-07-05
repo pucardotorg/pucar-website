@@ -1597,6 +1597,11 @@ width, toggle classes, measure new, animate between. overflow:hidden is set
 only DURING the animation (permanently it would clip the main nav's
 absolute dropdown menus); freshly expanded items fade in via the
 navItemsIn keyframe with a 160ms delay, i.e. AFTER the width FLIP lands
+(the keyframe is SCOPED to .just-in, a one-shot class swapNavs sets on
+the expanding nav for 500ms: hung off :not(.is-collapsed) the browser
+could restart it outside any swap, freezing children at the opacity:0
+start frame -- this manifested twice, first as vanishing gliders, then
+as clicked sub-nav links going ghost-faint)
 (the GLIDER is excluded from that selector -- :not(.nav-glider): the
 animation's backwards fill forced opacity:0 over the glider's inline
 opacity whenever it restarted, which read as "hover pill vanishes on
