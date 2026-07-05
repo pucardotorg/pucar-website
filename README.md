@@ -1426,8 +1426,11 @@ YouTube playlist in July 2026.
   Lucide-style strokes in TYPE_ICONS (scripts/build-jobs.js), one per type
   (Policy/Dataset/Courts/Open Source/Code/Presentation/Article/Research/
   Dashboard/Handbook) plus a default file icon. Has the cards/list VIEW
-  TOGGLE (dataGrid registered in js/view-toggle.js; the toggle mounts in
-  the #dataTypebar pill row -- on the tab track it looked out of place).
+  TOGGLE (dataGrid registered in js/view-toggle.js; the toggle mounts at
+  the right end of the #dataTabs row, align-self:center + margin-bottom
+  lift it off the underline track; .view-toggle also carries
+  align-self:center generally, else flex-stretch in filter bars leaves a
+  dead strip under the fixed-height buttons).
 - LEARNING CIRCLES (#learning-circles): 9 videos (LC #5 is not in the
   playlist) as thumbnail cards (assets/circles/<id>.jpg, play overlay);
   clicking opens #videoModal -- job-modal chrome with ONLY a

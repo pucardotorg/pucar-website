@@ -13,9 +13,8 @@
     { id: "collabGrid", bar: "collabFilters" },
     { id: "perspGrid", bar: null },
     { id: "contribGrid", bar: "contribFilters" },
-    // resources page: mounts in the TYPE-FILTER pill row, not the tab bar --
-    // the pill-shaped toggle looked out of place on the tabs' baseline track
-    { id: "dataGrid", bar: "dataTypebar" }
+    // resources page: right end of the TAB row, vertically centered on it
+    { id: "dataGrid", bar: "dataTabs" }
   ];
 
   var ICONS = {

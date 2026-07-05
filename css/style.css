@@ -3218,7 +3218,14 @@ a.event-card{ text-decoration:none; }
   border:1px solid rgba(251,248,242,.25);
   background:rgba(251,248,242,.08);
   margin-left:auto; /* pushes to the right end of the filter bar */
+  /* the filter bars are flex rows with default stretch: without this the
+     pill stretches to the tallest sibling and the fixed-height buttons
+     leave a dead strip at the bottom (and the rounding stops matching) */
+  align-self:center;
 }
+/* on the data section's tab row: lift off the baseline track so the pill
+   floats beside the tabs instead of sitting on the underline */
+.res-tabbar .view-toggle{ margin-bottom:8px; }
 .view-toggle-btn{
   display:inline-flex;
   align-items:center;
