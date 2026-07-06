@@ -4737,14 +4737,15 @@ button.circle-card{
   color:rgba(251,248,242,.5);
   max-width:52ch;
 }
-.dj-old{ color:rgba(251,248,242,.5); text-decoration:line-through; text-decoration-color:rgba(240,162,138,.7); }
+.dj-old{ font-size:1.1rem; color:rgba(251,248,242,.5); text-decoration:line-through; text-decoration-color:rgba(240,162,138,.7); }
 .dj-arrow{ color:rgba(251,248,242,.4); text-align:center; }
-.dj-new{ color:var(--green); font-weight:700; text-align:right; min-width:86px; }
+.dj-new{ font-size:1.3rem; color:var(--green); font-weight:700; text-align:right; min-width:86px; }
 .dristi-journey-row.is-total{
   border-top:2px solid rgba(251,248,242,.25);
   font-weight:700;
 }
-.dristi-journey-row.is-total .dj-new{ font-size:1.15rem; }
+.dristi-journey-row.is-total .dj-old{ font-size:1.2rem; }
+.dristi-journey-row.is-total .dj-new{ font-size:1.55rem; }
 
 /* ===== /approach/: metric shift + three pillars ===== */
 /* the shift table reuses the journey rows but both sides carry full
@@ -4755,6 +4756,10 @@ button.circle-card{
 }
 .approach-shift .dristi-journey-row:first-child{ border-top:0; }
 .approach-shift .dj-new{ text-align:left; min-width:0; }
+/* the shift rows carry SENTENCES, not day counts: keep them at body
+   size (the journey's big 1.1/1.3rem numerals would be shouting here) */
+.approach-shift .dj-old,
+.approach-shift .dj-new{ font-size:.95rem; }
 @media (max-width: 760px){
   .approach-shift .dristi-journey-row{
     grid-template-columns:1fr 24px 1fr;
