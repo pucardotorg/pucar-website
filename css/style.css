@@ -677,7 +677,8 @@ body:has(.pin[data-beat="5"]) .header-cta,
 body:has(.pin[data-beat="6"]) .header-cta,
 body:has(.pin[data-beat="7"]) .header-cta,
 body:has(.pin[data-beat="8"]) .header-cta,
-body:has(.pin[data-beat="9"]) .header-cta{
+body:has(.pin[data-beat="9"]) .header-cta,
+body.nav-dark .header-cta{
   background:var(--green);
   color:var(--ink);
 }
@@ -5585,9 +5586,12 @@ button.circle-card{
 .rm-district.is-court{ fill:rgba(48,207,140,.2); stroke:var(--green); stroke-width:1.4; pointer-events:auto; cursor:pointer; }
 .rm-district.is-court:hover{ fill:rgba(48,207,140,.32); }
 .rm-dots{ pointer-events:auto; }
-.rm-dot{ fill:#141732; stroke:var(--green); stroke-width:2.4; cursor:pointer; }   /* coming soon: hollow green ring on the indigo */
-.rm-dot.is-live{ fill:var(--green); stroke:#141732; stroke-width:1.4; }            /* live: solid green */
-.rm-ping{ fill:none; stroke:var(--green); stroke-width:2; opacity:.8; transform-box:fill-box; transform-origin:center;
+/* solid PINK dots (no outline) with a drop-shadow so they lift off the green
+   map, plus a pink pulse — distinct from the green states/districts */
+.rm-dot{ fill:var(--pink); stroke:none; cursor:pointer;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.6)) drop-shadow(0 0 4px rgba(218,110,170,.6)); }
+.rm-dot.is-live{ filter:drop-shadow(0 1px 3px rgba(0,0,0,.65)) drop-shadow(0 0 8px rgba(218,110,170,.95)); }
+.rm-ping{ fill:none; stroke:var(--pink); stroke-width:2; opacity:.85; transform-box:fill-box; transform-origin:center;
   animation:rmPing 2.2s ease-out infinite; }
 @keyframes rmPing{ 0%{ transform:scale(1); opacity:.8; } 70%{ transform:scale(3.2); opacity:0; } 100%{ transform:scale(3.2); opacity:0; } }
 

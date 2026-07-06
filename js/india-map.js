@@ -190,12 +190,8 @@
     svg.setAttribute("viewBox", v.x + " " + v.y + " " + v.w + " " + v.h);
     // dot radius/stroke scale with the current zoom so they look constant
     var k = v.w / W;
-    gDots.querySelectorAll(".rm-dot").forEach(function (c) {
-      c.setAttribute("r", (7.5 * k));
-    });
-    gDots.querySelectorAll(".rm-ping").forEach(function (c) {
-      c.setAttribute("r", (7.5 * k));
-      c.style.setProperty("--ping-r", (7.5 * k) + "px");
+    gDots.querySelectorAll(".rm-dot,.rm-ping").forEach(function (c) {
+      c.setAttribute("r", ((+c.getAttribute("data-br") || 7.5) * k));
     });
     // labels keep a constant screen size regardless of zoom
     gMeta.querySelectorAll(".rm-label").forEach(function (t) { t.setAttribute("font-size", 26 * k); });
@@ -223,11 +219,12 @@
   function addDot(cx, cy, live, label) {
     if (cx == null) return;
     var k = view.w / W;
+    var br = live ? 9 : 7;   // live courts read a touch larger
     if (!reduce) { // every dot pulses (live and coming-soon)
-      var ping = el("circle", { class: "rm-ping", cx: cx, cy: cy, r: 7.5 * k, "vector-effect": "non-scaling-stroke" });
+      var ping = el("circle", { class: "rm-ping", cx: cx, cy: cy, r: br * k, "data-br": br, "vector-effect": "non-scaling-stroke" });
       gDots.appendChild(ping);
     }
-    var dot = el("circle", { class: "rm-dot" + (live ? " is-live" : ""), cx: cx, cy: cy, r: 7.5 * k, "vector-effect": "non-scaling-stroke" });
+    var dot = el("circle", { class: "rm-dot" + (live ? " is-live" : ""), cx: cx, cy: cy, r: br * k, "data-br": br });
     if (label) {
       dot.addEventListener("mouseenter", function () { showTip(label, cx, cy); });
       dot.addEventListener("mouseleave", hideTip);
@@ -456,4 +453,23 @@
   showBeams("all");
   showMeta(null);
   setRowActive("all");
+
+  /* ---------- flip the header to its dark variant over this section ----------
+     The homepage nav goes dark via body.nav-dark OR the story's
+     :has(.pin[data-beat=4..9]) selectors. This section sits BEFORE the story
+     (data-beat still 0), so nothing else flips it — do it on scroll here. */
+  var section = host.closest(".reach") || document.getElementById("reach");
+  if (section) {
+    var navTick = false;
+    var navUpdate = function () {
+      navTick = false;
+      var r = section.getBoundingClientRect();
+      document.body.classList.toggle("nav-dark", r.top <= 44 && r.bottom >= 44);
+    };
+    window.addEventListener("scroll", function () {
+      if (!navTick) { navTick = true; requestAnimationFrame(navUpdate); }
+    }, { passive: true });
+    window.addEventListener("resize", navUpdate);
+    navUpdate();
+  }
 })();
