@@ -317,11 +317,11 @@ function jobPage(job) {
     (job.status === "Open"
       ? '    <a class="btn btn-primary" href="' + esc(job.apply_url || "mailto:collaborate@pucar.org") + '">Express interest</a>\n'
       : '    <span class="btn btn-outline is-disabled">' + esc(job.status) + "</span>\n") +
-    '    <a class="btn btn-outline" href="/#collaborate">See all work</a>\n  </div>';
+    '    <a class="btn btn-outline" href="/dristi/#collaborate">See all work</a>\n  </div>';
   return pageShell({
     title: job.title + " | Collaborate with PUCAR",
     desc: job.summary, url: job.url, jsonLd: jsonLd,
-    backHref: "/#collaborate", backLabel: "← All work", main: main
+    backHref: "/dristi/#collaborate", backLabel: "← All work", main: main
   });
 }
 
@@ -1014,7 +1014,7 @@ function dristiPage() {
 '        <li>Lightweight: one deployable, on-premise</li>\n' +
 '        <li>Bespoke to each court, configurable by its own staff</li>\n' +
 "      </ul>\n" +
-'      <a class="ver-link" href="/#collaborate">Help build it<span aria-hidden="true"> &rarr;</span></a>\n' +
+'      <a class="ver-link" href="#collaborate">Help build it<span aria-hidden="true"> &rarr;</span></a>\n' +
 "    </article>\n" +
 "  </div>\n" +
 "</section>\n" +
