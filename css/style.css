@@ -4483,6 +4483,10 @@ button.circle-card{
   color:rgba(251,248,242,.7);
 }
 .district-tagbar{ margin:18px 0 26px; }
+/* .res-tagbar's display:flex beats the [hidden] attribute (same gotcha
+   as .res-more/.res-type-pill): restate it explicitly */
+.district-tagbar[hidden]{ display:none; }
+.dristi-panel[hidden]{ display:none; }
 /* live tabs carry the homepage's throbbing green orb */
 .state-tabbar .res-tab, .district-tagbar .res-tab{
   display:inline-flex;
@@ -4936,7 +4940,8 @@ button.circle-card{
   flex-wrap:wrap;
 }
 .dristi-panel-copy{ flex:0 1 62ch; min-width:min(100%,340px); }
-.dristi-map{ flex:0 0 auto; width:clamp(120px,15vw,176px); margin-inline:auto; }
+/* no auto margins: the map hugs the paragraph, gap alone separates them */
+.dristi-map{ flex:0 0 auto; width:clamp(120px,15vw,176px); }
 .dristi-map svg{ display:block; width:100%; height:auto; max-height:300px; }
 .km-state{
   fill:rgba(251,248,242,.07);
