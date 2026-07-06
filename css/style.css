@@ -4938,11 +4938,12 @@ button.circle-card{
   justify-content:flex-start;
   gap:clamp(32px,6vw,96px);
   flex-wrap:wrap;
+  margin-bottom:clamp(36px,5vh,64px); /* room to breathe above the stats */
 }
 .dristi-panel-copy{ flex:0 1 62ch; min-width:min(100%,340px); }
 /* no auto margins: the map hugs the paragraph, gap alone separates them */
-.dristi-map{ flex:0 0 auto; width:clamp(120px,15vw,176px); }
-.dristi-map svg{ display:block; width:100%; height:auto; max-height:300px; }
+.dristi-map{ flex:0 0 auto; width:clamp(160px,20vw,240px); margin-bottom:14px; }
+.dristi-map svg{ display:block; width:100%; height:auto; max-height:400px; }
 .km-state{
   fill:rgba(251,248,242,.07);
   stroke:rgba(251,248,242,.07); /* same tone bridges simplification gaps */
