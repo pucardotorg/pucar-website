@@ -4944,6 +4944,11 @@ button.circle-card{
 /* no auto margins: the map hugs the paragraph, gap alone separates them */
 .dristi-map{ flex:0 0 auto; width:clamp(200px,26vw,320px); margin-bottom:14px; }
 .dristi-map svg{ display:block; width:100%; height:auto; max-height:520px; }
+/* Gujarat's outline is a WIDE, short shape (viewBox 576x452) vs the tall
+   Kerala/Punjab maps (~656 high). At the shared width it renders far shorter
+   and reads small next to the copy, so give the Gujarat panel alone a larger
+   width band. Other states keep the rule above. */
+[data-state-panel="gujarat"] .dristi-map{ width:clamp(280px,40vw,520px); }
 .km-state{
   fill:rgba(251,248,242,.07);
   stroke:rgba(251,248,242,.07); /* same tone bridges simplification gaps */
