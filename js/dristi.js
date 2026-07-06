@@ -10,6 +10,78 @@
       user request, 6 Jul 2026). Plotly is loaded from CDN on
       this page only; everything no-ops gracefully if it fails.
    ========================================================= */
+/* ---- deployments: state tabs + district tabs + gliding map marker ----
+   All states are clickable (6 Jul 2026). Kerala/Kollam shows the live
+   body; every other district swaps in its coming-soon copy. Each state
+   panel carries an inline SVG map; the district highlight (.km-d) and
+   the dot (.km-marker) TRANSITION between districts via CSS. */
+(function () {
+  "use strict";
+  var section = document.getElementById("deployments");
+  if (!section) return;
+
+  var stateTabs = section.querySelectorAll("[data-state-tab]");
+  var rows = section.querySelectorAll("[data-state-row]");
+  var panels = section.querySelectorAll("[data-state-panel]");
+
+  function resizeCharts() {
+    if (!window.Plotly) return;
+    ["raceChart", "growthChart"].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && el.offsetParent && el._fullLayout) Plotly.Plots.resize(el);
+    });
+  }
+
+  stateTabs.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var key = btn.getAttribute("data-state-tab");
+      stateTabs.forEach(function (b) { b.classList.toggle("is-active", b === btn); });
+      rows.forEach(function (r) { r.hidden = r.getAttribute("data-state-row") !== key; });
+      panels.forEach(function (p) { p.hidden = p.getAttribute("data-state-panel") !== key; });
+      if (key === "kerala") setTimeout(resizeCharts, 60);
+    });
+  });
+
+  rows.forEach(function (row) {
+    var panel = section.querySelector('[data-state-panel="' + row.getAttribute("data-state-row") + '"]');
+    var isKerala = row.getAttribute("data-state-row") === "kerala";
+    row.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-district]");
+      if (!btn) return;
+      var key = btn.getAttribute("data-district");
+      row.querySelectorAll("[data-district]").forEach(function (b) {
+        b.classList.toggle("is-active", b === btn);
+      });
+      /* copy blocks */
+      panel.querySelectorAll("[data-dcopy]").forEach(function (c) {
+        c.hidden = c.getAttribute("data-dcopy") !== key;
+      });
+      /* map: glide highlight + marker */
+      var svg = panel.querySelector("svg.state-map");
+      if (svg) {
+        var target = null;
+        svg.querySelectorAll(".km-d").forEach(function (p) {
+          var on = p.getAttribute("data-d") === key;
+          p.classList.toggle("is-active", on);
+          if (on) target = p;
+        });
+        var marker = svg.querySelector(".km-marker");
+        if (marker && target) {
+          marker.style.transform = "translate(" + target.getAttribute("data-cx") + "px," + target.getAttribute("data-cy") + "px)";
+        }
+      }
+      /* Kerala only: Kollam is live, everything else is coming soon */
+      if (isKerala) {
+        var live = panel.querySelector(".dristi-live-body");
+        var soon = panel.querySelector(".dristi-soon-body");
+        if (live) live.hidden = key !== "kollam";
+        if (soon) soon.hidden = key === "kollam";
+        if (key === "kollam") setTimeout(resizeCharts, 60);
+      }
+    });
+  });
+})();
+
 /* ---- quarterly filings + disposals (public dashboard, July 2026) ----
    Static grouped bars in the site palette; independent of the race so
    either chart still renders if the other's element is missing. */

@@ -4460,14 +4460,18 @@ button.circle-card{
   }
 }
 
+/* coming-soon tabs are CLICKABLE now (6 Jul 2026): dimmer than live
+   tabs but interactive, and they light up normally when active */
 .res-tab.tab-soon{
-  opacity:.42;
-  cursor:not-allowed;
+  opacity:.55;
+  cursor:pointer;
   display:inline-flex;
   align-items:center;
   gap:8px;
+  transition:opacity .25s ease;
 }
-.res-tab.tab-soon:hover{ color:inherit; border-color:transparent; background:inherit; }
+.res-tab.tab-soon:hover{ opacity:.85; }
+.res-tab.tab-soon.is-active{ opacity:1; }
 .soon-chip{
   font-size:.6rem;
   font-weight:800;
@@ -4921,36 +4925,43 @@ button.circle-card{
 }
 .approach-note{ margin-top:22px; }
 
-/* Kerala vector map beside the panel intro: Kollam outlined + pulsing */
+/* State vector map beside the panel intro: active district outlined,
+   dot + highlight GLIDE between districts on tab clicks. The map sits
+   right after the copy (flex-start), not flushed to the panel edge. */
 .dristi-panel-head{
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  gap:clamp(24px,5vw,72px);
+  justify-content:flex-start;
+  gap:clamp(32px,6vw,96px);
   flex-wrap:wrap;
 }
-.dristi-panel-copy{ flex:1 1 420px; min-width:0; }
+.dristi-panel-copy{ flex:0 1 62ch; min-width:min(100%,340px); }
 .dristi-map{ flex:0 0 auto; width:clamp(120px,15vw,176px); margin-inline:auto; }
-.dristi-map svg{ display:block; width:100%; height:auto; }
+.dristi-map svg{ display:block; width:100%; height:auto; max-height:300px; }
 .km-state{
   fill:rgba(251,248,242,.07);
   stroke:rgba(251,248,242,.07); /* same tone bridges simplification gaps */
   stroke-width:2;
   stroke-linejoin:round;
 }
-.km-kollam{
-  fill:rgba(48,207,140,.16);
-  stroke:var(--green);
+.km-d{
+  fill:transparent;
+  stroke:transparent;
   stroke-width:1.6;
   stroke-linejoin:round;
+  transition:fill .6s ease, stroke .6s ease;
 }
+.km-d.is-active{
+  fill:rgba(48,207,140,.16);
+  stroke:var(--green);
+}
+.km-marker{ transition:transform .7s cubic-bezier(.4,0,.2,1); }
 .km-dot{ fill:var(--green); }
 .km-ping{
   fill:none;
   stroke:var(--green);
   stroke-width:2;
   opacity:.8;
-  transform-origin:283px 544px;
   animation:kmPing 2.2s ease-out infinite;
 }
 @keyframes kmPing{
@@ -4960,7 +4971,29 @@ button.circle-card{
 }
 @media (prefers-reduced-motion: reduce){
   .km-ping{ animation:none; opacity:.4; }
+  .km-marker,.km-d{ transition:none; }
 }
+.soon-flag{
+  display:inline-flex;
+  align-items:center;
+  margin-top:14px;
+  font-size:.62rem;
+  font-weight:800;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  padding:5px 12px;
+  border-radius:999px;
+  border:1px solid rgba(240,162,138,.5);
+  color:#F0A28A;
+}
+.dristi-soon-note{
+  margin:26px 0 4px;
+  max-width:64ch;
+  font-size:.95rem;
+  line-height:1.65;
+  color:rgba(251,248,242,.6);
+}
+.dristi-soon-note a{ color:var(--green); }
 
 /* quarterly filings + disposals panel (same chrome as the journey) */
 .dristi-growth{

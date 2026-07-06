@@ -1852,6 +1852,33 @@ without asking):
 
 From the DeltaXY x PUCAR daily sync notes:
 
+- INTERACTIVE DEPLOYMENTS (later 6 Jul, user request): ALL state tabs
+  are clickable now. Punjab & Haryana are ONE tab (user explicit).
+  Three state panels ([data-state-panel]), each with its own district
+  row ([data-state-row] > [data-district] buttons) and inline SVG map:
+  Kerala (Kollam LIVE + Thrissur soon), P&H (Panchkula, Gurgaon,
+  Chandigarh, Mohali; Mohali = "Sahibzada Ajit Singh Nagar" in the
+  source data), Gujarat (Ahmedabad = "Ahmadabad" in source, Rajkot,
+  Vadodara, Surat). Every map: .km-state silhouette + per-district
+  .km-d paths (data-d/data-cx/data-cy) + ONE .km-marker <g> whose
+  transform GLIDES (.7s cubic-bezier) between district centroids; the
+  .km-d highlight cross-fades (.6s fill/stroke transition). District
+  clicks swap [data-dcopy] copy blocks; on Kerala they also toggle
+  .dristi-live-body (all Kollam stats/charts/race) vs .dristi-soon-body.
+  Returning to Kollam calls Plotly.Plots.resize on race+growth charts
+  (they mis-size if laid out while hidden). .tab-soon is now clickable
+  (opacity .55 -> 1 when active), no more [disabled]. Coming-soon
+  panels carry a .soon-flag pill (soft orange) + .dristi-soon-note
+  linking to #collaborate. MAP DATA: datta07/INDIAN-SHAPEFILES
+  <STATE>_DISTRICTS.geojson via cdn.jsdelivr.net (raw.githubusercontent
+  pages are SANDBOXED, no localStorage, and their CSP blocks fetch;
+  jsdelivr from a CSP-free page works. Frozen background tabs never
+  resolve fetches: open a FRESH ACTIVE TAB). Same projection pipeline
+  as Kerala; silhouettes tol 10, highlight districts tol 2.5; data
+  extracted through the extension via browser_batch (5 x ~900-char
+  slices per call beats one call per slice) and length+checksum
+  verified before assembly. Panel head is justify-content:flex-start
+  now ("map too far right"), copy capped 62ch.
 - KERALA MAP (assets/kerala-map.svg, INLINED into the Kollam panel
   head): vector Kerala silhouette with Kollam alone outlined in green
   plus a pulsing dot (.km-ping, kmPing keyframes, reduced-motion

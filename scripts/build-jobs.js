@@ -1049,31 +1049,52 @@ function dristiPage() {
 '    <h2 class="collab-title-main">One court live. More on the way.</h2>\n' +
 '    <p class="collab-sub">ON Courts in Kollam is the first running instance of DRISTI. Work with new High Courts is underway; each state lights up here as it goes live.</p>\n' +
 "  </div>\n" +
+/* ALL states clickable (6 Jul 2026): Punjab & Haryana are ONE tab;
+   each state has its own district row and panel. Non-live districts
+   show a coming-soon body; the state maps (assets/*-map.svg, inlined)
+   share one look and the district highlight + dot GLIDE between
+   districts (CSS transitions, driven by js/dristi.js). */
 '  <div class="res-tabbar state-tabbar" role="tablist" aria-label="States">\n' +
-'    <button type="button" class="res-tab is-active" data-state="kerala"><span class="board-live" aria-hidden="true"></span>Kerala</button>\n' +
-'    <button type="button" class="res-tab tab-soon" disabled>Punjab<span class="soon-chip">Coming soon</span></button>\n' +
-'    <button type="button" class="res-tab tab-soon" disabled>Haryana<span class="soon-chip">Coming soon</span></button>\n' +
-'    <button type="button" class="res-tab tab-soon" disabled>Gujarat<span class="soon-chip">Coming soon</span></button>\n' +
+'    <button type="button" class="res-tab is-active" data-state-tab="kerala"><span class="board-live" aria-hidden="true"></span>Kerala</button>\n' +
+'    <button type="button" class="res-tab tab-soon" data-state-tab="ph">Punjab &amp; Haryana<span class="soon-chip">Coming soon</span></button>\n' +
+'    <button type="button" class="res-tab tab-soon" data-state-tab="gujarat">Gujarat<span class="soon-chip">Coming soon</span></button>\n' +
 "  </div>\n" +
-'  <div class="res-tagbar district-tagbar" aria-label="Districts">\n' +
+'  <div class="res-tagbar district-tagbar" data-state-row="kerala" aria-label="Kerala districts">\n' +
 '    <button type="button" class="res-tab is-active" data-district="kollam"><span class="board-live" aria-hidden="true"></span>Kollam</button>\n' +
-'    <button type="button" class="res-tab tab-soon" disabled>More districts<span class="soon-chip">Coming soon</span></button>\n' +
+'    <button type="button" class="res-tab tab-soon" data-district="thrissur">Thrissur</button>\n' +
+"  </div>\n" +
+'  <div class="res-tagbar district-tagbar" data-state-row="ph" aria-label="Punjab and Haryana districts" hidden>\n' +
+'    <button type="button" class="res-tab tab-soon is-active" data-district="panchkula">Panchkula</button>\n' +
+'    <button type="button" class="res-tab tab-soon" data-district="gurgaon">Gurgaon</button>\n' +
+'    <button type="button" class="res-tab tab-soon" data-district="chandigarh">Chandigarh</button>\n' +
+'    <button type="button" class="res-tab tab-soon" data-district="mohali">Mohali</button>\n' +
+"  </div>\n" +
+'  <div class="res-tagbar district-tagbar" data-state-row="gujarat" aria-label="Gujarat districts" hidden>\n' +
+'    <button type="button" class="res-tab tab-soon is-active" data-district="ahmedabad">Ahmedabad</button>\n' +
+'    <button type="button" class="res-tab tab-soon" data-district="rajkot">Rajkot</button>\n' +
+'    <button type="button" class="res-tab tab-soon" data-district="vadodara">Vadodara</button>\n' +
+'    <button type="button" class="res-tab tab-soon" data-district="surat">Surat</button>\n' +
 "  </div>\n" +
 
-'  <div class="dristi-panel" id="panelKollam">\n' +
+'  <div class="dristi-panel" id="panelKollam" data-state-panel="kerala">\n' +
 '    <div class="dristi-panel-head">\n' +
-'      <div class="dristi-panel-copy">\n' +
+'      <div class="dristi-panel-copy" data-dcopy="kollam">\n' +
 '        <h3 class="dristi-panel-title">24x7 ON Court, Kollam</h3>\n' +
 '        <p class="dristi-panel-sub">Live since 20 November 2024 under the High Court of Kerala. It accepts cheque dishonour cases under Section 138 of the Negotiable Instruments Act arising from nine police stations in Kollam district, and it never closes: a court that goes to people, instead of people going to courts.</p>\n' +
 "      </div>\n" +
-      /* vector Kerala with Kollam outlined green + throbbing dot; the SVG
-         (assets/kerala-map.svg, built from geohacker/kerala district
-         GeoJSON, equirect projection, simplified) is INLINED so site CSS
-         drives the colours and the ping animation */
+'      <div class="dristi-panel-copy" data-dcopy="thrissur" hidden>\n' +
+'        <h3 class="dristi-panel-title">24x7 ON Court, Thrissur</h3>\n' +
+'        <p class="dristi-panel-sub">The ON Court model is expanding within Kerala, and Thrissur is on the roadmap. The same platform, the same people-first redesign of the court journey; it will light up here the day it goes live.</p>\n' +
+'        <span class="soon-flag">Coming soon</span>\n' +
+"      </div>\n" +
+      /* vector Kerala with the active district outlined green + gliding
+         dot (assets/kerala-map.svg, geohacker/kerala GeoJSON, equirect,
+         simplified); INLINED so site CSS drives colours + transitions */
 '      <div class="dristi-map" aria-hidden="true">\n' +
 fs.readFileSync(path.join(ROOT, "assets", "kerala-map.svg"), "utf8") + "\n" +
 "      </div>\n" +
 "    </div>\n" +
+'    <div class="dristi-live-body">\n' +
 '    <div class="dristi-stat-grid">\n' + kstatsHtml + "\n    </div>\n" +
 '    <p class="dristi-source">Figures from the <a href="https://oncourts.kerala.gov.in/dashboard" target="_blank" rel="noopener">public ON Courts dashboard</a>, July 2026. 80% of disposed cases end in withdrawal: parties settle directly once the process is credible and predictable.</p>\n' +
 
@@ -1125,6 +1146,74 @@ journeyHtml + "\n" +
 '      <a class="btn btn-primary" href="https://oncourts.kerala.gov.in/" target="_blank" rel="noopener">Visit ON Courts</a>\n' +
 '      <a class="btn btn-ghost" href="https://oncourts.kerala.gov.in/dashboard" target="_blank" rel="noopener">Live dashboard</a>\n' +
 '      <a class="btn btn-ghost" href="https://pucar.gitbook.io/dristi" target="_blank" rel="noopener">Documentation</a>\n' +
+"    </div>\n" +
+"    </div>\n" + /* /.dristi-live-body */
+'    <div class="dristi-soon-body" hidden>\n' +
+'      <p class="dristi-soon-note">Nothing to report yet: the numbers, journeys and races you see for Kollam will appear here once this court opens its doors. Want to help it get there sooner? <a href="#collaborate">Pick up open work on DRISTI</a>.</p>\n' +
+"    </div>\n" +
+"  </div>\n" +
+
+/* Punjab & Haryana panel: coming soon (four districts) */
+'  <div class="dristi-panel" data-state-panel="ph" hidden>\n' +
+'    <div class="dristi-panel-head">\n' +
+'      <div class="dristi-panel-copy" data-dcopy="panchkula">\n' +
+'        <h3 class="dristi-panel-title">24x7 ON Court, Panchkula</h3>\n' +
+'        <p class="dristi-panel-sub">Work with the High Court of Punjab and Haryana is underway. The Panchkula ON Court is being prepared on the same platform and the same people-first redesign proven in Kollam; it will light up here the day it opens.</p>\n' +
+'        <span class="soon-flag">Coming soon</span>\n' +
+"      </div>\n" +
+'      <div class="dristi-panel-copy" data-dcopy="gurgaon" hidden>\n' +
+'        <h3 class="dristi-panel-title">24x7 ON Court, Gurgaon</h3>\n' +
+'        <p class="dristi-panel-sub">Work with the High Court of Punjab and Haryana is underway. The Gurgaon ON Court is being prepared on the same platform and the same people-first redesign proven in Kollam; it will light up here the day it opens.</p>\n' +
+'        <span class="soon-flag">Coming soon</span>\n' +
+"      </div>\n" +
+'      <div class="dristi-panel-copy" data-dcopy="chandigarh" hidden>\n' +
+'        <h3 class="dristi-panel-title">24x7 ON Court, Chandigarh</h3>\n' +
+'        <p class="dristi-panel-sub">Work with the High Court of Punjab and Haryana is underway. The Chandigarh ON Court is being prepared on the same platform and the same people-first redesign proven in Kollam; it will light up here the day it opens.</p>\n' +
+'        <span class="soon-flag">Coming soon</span>\n' +
+"      </div>\n" +
+'      <div class="dristi-panel-copy" data-dcopy="mohali" hidden>\n' +
+'        <h3 class="dristi-panel-title">24x7 ON Court, Mohali</h3>\n' +
+'        <p class="dristi-panel-sub">Work with the High Court of Punjab and Haryana is underway. The Mohali ON Court is being prepared on the same platform and the same people-first redesign proven in Kollam; it will light up here the day it opens.</p>\n' +
+'        <span class="soon-flag">Coming soon</span>\n' +
+"      </div>\n" +
+'      <div class="dristi-map" aria-hidden="true">\n' +
+fs.readFileSync(path.join(ROOT, "assets", "ph-map.svg"), "utf8") + "\n" +
+"      </div>\n" +
+"    </div>\n" +
+'    <div class="dristi-soon-body">\n' +
+'      <p class="dristi-soon-note">Nothing to report yet: the numbers, journeys and races you see for Kollam will appear here once this court opens its doors. Want to help it get there sooner? <a href="#collaborate">Pick up open work on DRISTI</a>.</p>\n' +
+"    </div>\n" +
+"  </div>\n" +
+
+/* Gujarat panel: coming soon (four districts) */
+'  <div class="dristi-panel" data-state-panel="gujarat" hidden>\n' +
+'    <div class="dristi-panel-head">\n' +
+'      <div class="dristi-panel-copy" data-dcopy="ahmedabad">\n' +
+'        <h3 class="dristi-panel-title">24x7 ON Court, Ahmedabad</h3>\n' +
+'        <p class="dristi-panel-sub">Work with the Gujarat High Court is underway. The Ahmedabad ON Court is being prepared on the same platform and the same people-first redesign proven in Kollam; it will light up here the day it opens.</p>\n' +
+'        <span class="soon-flag">Coming soon</span>\n' +
+"      </div>\n" +
+'      <div class="dristi-panel-copy" data-dcopy="rajkot" hidden>\n' +
+'        <h3 class="dristi-panel-title">24x7 ON Court, Rajkot</h3>\n' +
+'        <p class="dristi-panel-sub">Work with the Gujarat High Court is underway. The Rajkot ON Court is being prepared on the same platform and the same people-first redesign proven in Kollam; it will light up here the day it opens.</p>\n' +
+'        <span class="soon-flag">Coming soon</span>\n' +
+"      </div>\n" +
+'      <div class="dristi-panel-copy" data-dcopy="vadodara" hidden>\n' +
+'        <h3 class="dristi-panel-title">24x7 ON Court, Vadodara</h3>\n' +
+'        <p class="dristi-panel-sub">Work with the Gujarat High Court is underway. The Vadodara ON Court is being prepared on the same platform and the same people-first redesign proven in Kollam; it will light up here the day it opens.</p>\n' +
+'        <span class="soon-flag">Coming soon</span>\n' +
+"      </div>\n" +
+'      <div class="dristi-panel-copy" data-dcopy="surat" hidden>\n' +
+'        <h3 class="dristi-panel-title">24x7 ON Court, Surat</h3>\n' +
+'        <p class="dristi-panel-sub">Work with the Gujarat High Court is underway. The Surat ON Court is being prepared on the same platform and the same people-first redesign proven in Kollam; it will light up here the day it opens.</p>\n' +
+'        <span class="soon-flag">Coming soon</span>\n' +
+"      </div>\n" +
+'      <div class="dristi-map" aria-hidden="true">\n' +
+fs.readFileSync(path.join(ROOT, "assets", "gj-map.svg"), "utf8") + "\n" +
+"      </div>\n" +
+"    </div>\n" +
+'    <div class="dristi-soon-body">\n' +
+'      <p class="dristi-soon-note">Nothing to report yet: the numbers, journeys and races you see for Kollam will appear here once this court opens its doors. Want to help it get there sooner? <a href="#collaborate">Pick up open work on DRISTI</a>.</p>\n' +
 "    </div>\n" +
 "  </div>\n" +
 "</section>\n" +
