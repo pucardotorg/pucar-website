@@ -1859,7 +1859,10 @@ From the DeltaXY x PUCAR daily sync notes:
   Kerala (Kollam LIVE + Thrissur soon), P&H (Panchkula, Gurgaon,
   Chandigarh, Mohali; Mohali = "Sahibzada Ajit Singh Nagar" in the
   source data), Gujarat (Ahmedabad = "Ahmadabad" in source, Rajkot,
-  Vadodara, Surat). Every map: .km-state silhouette + per-district
+  Vadodara, Surat). NAMING: Gujarat courts are "SARAS 2.0 Court,
+  <city>", NOT 24x7 ON Courts (explicit user correction, 6 Jul 2026);
+  Kerala and P&H keep "24x7 ON Court". Every map: .km-state silhouette
+  + per-district
   .km-d paths (data-d/data-cx/data-cy) + ONE .km-marker <g> whose
   transform GLIDES (.7s cubic-bezier) between district centroids; the
   .km-d highlight cross-fades (.6s fill/stroke transition). District

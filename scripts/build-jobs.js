@@ -1189,23 +1189,23 @@ fs.readFileSync(path.join(ROOT, "assets", "ph-map.svg"), "utf8") + "\n" +
 '  <div class="dristi-panel" data-state-panel="gujarat" hidden>\n' +
 '    <div class="dristi-panel-head">\n' +
 '      <div class="dristi-panel-copy" data-dcopy="ahmedabad">\n' +
-'        <h3 class="dristi-panel-title">24x7 ON Court, Ahmedabad</h3>\n' +
-'        <p class="dristi-panel-sub">Work with the Gujarat High Court is underway. The Ahmedabad ON Court is being prepared on the same platform and the same people-first redesign proven in Kollam; it will light up here the day it opens.</p>\n' +
+'        <h3 class="dristi-panel-title">SARAS 2.0 Court, Ahmedabad</h3>\n' +
+'        <p class="dristi-panel-sub">Work with the Gujarat High Court is underway. The Ahmedabad SARAS 2.0 Court is being prepared on the same platform and the same people-first redesign proven in Kollam; it will light up here the day it opens.</p>\n' +
 '        <span class="soon-flag">Coming soon</span>\n' +
 "      </div>\n" +
 '      <div class="dristi-panel-copy" data-dcopy="rajkot" hidden>\n' +
-'        <h3 class="dristi-panel-title">24x7 ON Court, Rajkot</h3>\n' +
-'        <p class="dristi-panel-sub">Work with the Gujarat High Court is underway. The Rajkot ON Court is being prepared on the same platform and the same people-first redesign proven in Kollam; it will light up here the day it opens.</p>\n' +
+'        <h3 class="dristi-panel-title">SARAS 2.0 Court, Rajkot</h3>\n' +
+'        <p class="dristi-panel-sub">Work with the Gujarat High Court is underway. The Rajkot SARAS 2.0 Court is being prepared on the same platform and the same people-first redesign proven in Kollam; it will light up here the day it opens.</p>\n' +
 '        <span class="soon-flag">Coming soon</span>\n' +
 "      </div>\n" +
 '      <div class="dristi-panel-copy" data-dcopy="vadodara" hidden>\n' +
-'        <h3 class="dristi-panel-title">24x7 ON Court, Vadodara</h3>\n' +
-'        <p class="dristi-panel-sub">Work with the Gujarat High Court is underway. The Vadodara ON Court is being prepared on the same platform and the same people-first redesign proven in Kollam; it will light up here the day it opens.</p>\n' +
+'        <h3 class="dristi-panel-title">SARAS 2.0 Court, Vadodara</h3>\n' +
+'        <p class="dristi-panel-sub">Work with the Gujarat High Court is underway. The Vadodara SARAS 2.0 Court is being prepared on the same platform and the same people-first redesign proven in Kollam; it will light up here the day it opens.</p>\n' +
 '        <span class="soon-flag">Coming soon</span>\n' +
 "      </div>\n" +
 '      <div class="dristi-panel-copy" data-dcopy="surat" hidden>\n' +
-'        <h3 class="dristi-panel-title">24x7 ON Court, Surat</h3>\n' +
-'        <p class="dristi-panel-sub">Work with the Gujarat High Court is underway. The Surat ON Court is being prepared on the same platform and the same people-first redesign proven in Kollam; it will light up here the day it opens.</p>\n' +
+'        <h3 class="dristi-panel-title">SARAS 2.0 Court, Surat</h3>\n' +
+'        <p class="dristi-panel-sub">Work with the Gujarat High Court is underway. The Surat SARAS 2.0 Court is being prepared on the same platform and the same people-first redesign proven in Kollam; it will light up here the day it opens.</p>\n' +
 '        <span class="soon-flag">Coming soon</span>\n' +
 "      </div>\n" +
 '      <div class="dristi-map" aria-hidden="true">\n' +
