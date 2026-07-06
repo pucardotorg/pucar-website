@@ -955,20 +955,25 @@ function dristiPage() {
   }).join("\n");
 
   /* live per-stage medians from the public dashboard (July 2026):
-     [stage, median days, median hearings] for cases that completed the
-     stage. Registration is same-day and needs no hearing. */
+     [stage, median days, median hearings, plain-language description]
+     for cases that completed the stage. Registration is same-day and
+     needs no hearing. Descriptions adapted from the dashboard's own
+     stage notes, lightly rewritten for a public reader (meeting
+     feedback, 6 Jul 2026: "define filing, registration, cognizance
+     ... but it should remain the table format"). */
   const STAGES = [
-    ["Registration", "Same day", null],
-    ["Cognizance", "11 days", "2 hearings"],
-    ["Appearance", "74 days", "3 hearings"],
-    ["Bail", "61 days", "6 hearings"],
-    ["Mediation", "49 days", "2 hearings"],
-    ["Trial", "111 days", "8 hearings"]
+    ["Registration", "Same day", null, "The court checks the case file, the lawyer corrects any defects remotely, and the case is registered."],
+    ["Cognizance", "11 days", "2 hearings", "The court formally takes the complaint on record and decides the case can proceed."],
+    ["Appearance", "74 days", "3 hearings", "The accused appears before the court, or formally joins the case through their lawyer."],
+    ["Bail", "61 days", "6 hearings", "The accused requests bail, the court may grant it, and their plea is recorded."],
+    ["Mediation", "49 days", "2 hearings", "The parties take time to try settling the matter directly, with a mediator."],
+    ["Trial", "111 days", "8 hearings", "Depositions are taken, evidence is marked and arguments are heard, readying the case for judgment."]
   ];
   const stagesHtml = STAGES.map(function (s) {
     return '      <div class="dj-stage-card"><span class="djs-name">' + esc(s[0]) + "</span>" +
       '<span class="djs-days">' + esc(s[1]) + "</span>" +
-      '<span class="djs-hear">' + (s[2] ? esc(s[2]) : "no hearing needed") + "</span></div>";
+      '<span class="djs-hear">' + (s[2] ? esc(s[2]) : "no hearing needed") + "</span>" +
+      '<span class="djs-desc">' + esc(s[3]) + "</span></div>";
   }).join("\n");
 
   /* two HERO stats up front, four supporting below (revised: six equal
@@ -1080,26 +1085,25 @@ journeyHtml + "\n" +
 '    <div class="race" id="race">\n' +
 '      <div class="race-head">\n' +
 '        <div>\n' +
-'          <h4 class="race-title">The race: fifteen districts, one year</h4>\n' +
-'          <p class="race-sub">Share of January 2025 cheque dishonour filings resolved, day by day, across every Kerala district. The ON Court starts near the back of the pack and finishes first.</p>\n' +
+'          <h4 class="race-title">The race: fourteen districts, one year</h4>\n' +
+'          <p class="race-sub">Share of January 2025 cheque dishonour filings resolved, day by day, across Kerala’s districts. The ON Court starts near the back of the pack and finishes first.</p>\n' +
 "        </div>\n" +
 '        <button class="race-btn" id="raceBtn" type="button">\u25b6 Play the race</button>\n' +
 "      </div>\n" +
 '      <div class="race-stats">\n' +
-'        <div class="race-stat is-hero"><span class="race-stat-num">#8 \u2192 #1</span><span class="race-stat-label">ON Court rank over one year</span></div>\n' +
+'        <div class="race-stat is-hero"><span class="race-stat-num">#14 \u2192 #1</span><span class="race-stat-label">ON Court rank over one year</span></div>\n' +
 '        <div class="race-stat"><span class="race-stat-num">39% vs 11%</span><span class="race-stat-label">resolved at one year, ON Court vs Kerala average</span></div>\n' +
-'        <div class="race-stat"><span class="race-stat-num">~Day 359</span><span class="race-stat-label">the ON Court overtakes the last district ahead of it</span></div>\n' +
+'        <div class="race-stat"><span class="race-stat-num">~Day 306</span><span class="race-stat-label">the ON Court overtakes the last district ahead of it</span></div>\n' +
 "      </div>\n" +
-'      <div class="race-rank"><span class="race-rank-label">ON Court rank</span><span class="race-rank-num" id="raceRank">#8</span><span class="race-rank-pips" id="racePips"></span><span class="race-rank-day" id="raceDay">Day 0</span></div>\n' +
+'      <div class="race-rank"><span class="race-rank-label">ON Court rank</span><span class="race-rank-num" id="raceRank">#1</span><span class="race-rank-pips" id="racePips"></span><span class="race-rank-day" id="raceDay">Day 0</span></div>\n' +
 '      <div class="race-legend">\n' +
 '        <span class="race-leg"><i style="background:#30CF8C;height:4px"></i>ON Court, Kollam</span>\n' +
-'        <span class="race-leg"><i style="background:#DA6EAA;height:3px"></i>Malappuram (closest rival)</span>\n' +
-'        <span class="race-leg"><i style="background:#F0A28A;height:2px"></i>Kerala combined</span>\n' +
+'        <span class="race-leg"><i style="background:#F0A28A;height:2px"></i>All Kerala (average)</span>\n' +
 '        <span class="race-leg"><i style="background:rgba(251,248,242,.3);height:2px"></i>Other districts</span>\n' +
 "      </div>\n" +
 '      <div id="raceChart" aria-label="Resolution race chart"></div>\n' +
-'      <div class="race-flash" id="raceFlash" aria-hidden="true"><span class="race-flash-tag">Final overtake</span><span class="race-flash-head">ON Court reaches #1</span><span class="race-flash-sub">Around day 359</span></div>\n' +
-'      <p class="race-note">Kaplan-Meier estimates, January 2025 filing cohort, tracked through day 417. "Rest of Kollam" is the district excluding the ON Court.</p>\n' +
+'      <div class="race-flash" id="raceFlash" aria-hidden="true"><span class="race-flash-tag">Final overtake</span><span class="race-flash-head">ON Court reaches #1</span><span class="race-flash-sub">Around day 306</span></div>\n' +
+'      <p class="race-note">Kaplan-Meier estimates, January 2025 filing cohort, tracked through day 417. "Rest of Kollam" is the district excluding the ON Court. Malappuram is not shown.</p>\n' +
 "    </div>\n" +
 
 '    <div class="dristi-voices">\n' +

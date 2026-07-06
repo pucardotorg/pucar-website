@@ -1848,6 +1848,29 @@ without asking):
   (AGAMI_CONTEXT targets); the chips are the LIVE actuals, labelled as
   such. 6 cols -> 3 (<=960) -> 2 (<=520).
 
+### /dristi/ terminology + race edits (6 Jul 2026 sync feedback)
+
+From the DeltaXY x PUCAR daily sync notes:
+
+- STAGE DESCRIPTIONS: each .dj-stage-card now carries a .djs-desc
+  plain-language line (what Registration / Cognizance / Appearance /
+  Bail / Mediation / Trial actually mean), adapted from the public
+  dashboard's own stage notes. The meeting was explicit that the
+  journey "should remain the table format", so definitions went into
+  the existing cards, not a new component.
+- RACE: the MALAPPURAM line is REMOVED (user request) and the Kerala
+  (Combined) line gets an on-chart final annotation "All Kerala 12.5%"
+  (orange, matching its line) plus legend rename to "All Kerala
+  (average)". Knock-on consistency edits: with Malappuram gone the
+  last line ahead of the ON Court is Pathanamthitta's late plateau
+  (33.33 at day 300), so the final overtake moved ~day 359 -> ~day 306
+  (annotation, dotted shape, flash trigger 302, hero stat, flash sub);
+  title "fifteen districts" -> "fourteen districts"; rank hero stat
+  "#8 -> #1" -> "#14 -> #1" (matches what the live pips actually show
+  at day 15 with 15 traces); race-note says Malappuram is not shown.
+  Ranks/pips are computed from RAW at runtime so they adapted on their
+  own.
+
 ### /approach/ (6 Jul 2026, awaiting user review)
 
 approachPage() in the build script. User brief: WHY the people-centric

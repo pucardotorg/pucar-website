@@ -2,13 +2,13 @@
    PUCAR — /dristi/ page
    1. State/district tabs (only Kerala/Kollam are live; the
       rest are disabled "coming soon" tabs, no JS needed).
-   2. THE RACE: Kaplan-Meier resolution race across all 15
-      Kerala districts (Jan 2025 cohort, day 417). Data and
-      animation adapted from the user-supplied
-      oncourts_overtake.html, re-themed to the site palette
-      (green ON Court, pink rival, soft-orange Kerala line on
-      the dark band). Plotly is loaded from CDN on this page
-      only; everything no-ops gracefully if it fails.
+   2. THE RACE: Kaplan-Meier resolution race across Kerala's
+      districts (Jan 2025 cohort, day 417). Data and animation
+      adapted from the user-supplied oncourts_overtake.html,
+      re-themed to the site palette (green ON Court, soft-orange
+      All Kerala line on the dark band; Malappuram removed on
+      user request, 6 Jul 2026). Plotly is loaded from CDN on
+      this page only; everything no-ops gracefully if it fails.
    ========================================================= */
 /* ---- quarterly filings + disposals (public dashboard, July 2026) ----
    Static grouped bars in the site palette; independent of the race so
@@ -70,7 +70,7 @@
   var DAYS = [0, 15, 30, 45, 60, 75, 90, 105, 120, 150, 180, 210, 240, 270, 300, 330, 365, 400];
   var RAW = {
     "ON Court (Kollam)":  [0, 0.09, 0.76, 2.53, 5.33, 7.45, 9.42, 10.48, 12.82, 15.18, 18.18, 21.93, 26.53, 30.68, 32.90, 35.09, 38.94, 44.48],
-    "Malappuram":         [0, 11.22, 13.08, 13.68, 16.03, 17.85, 19.64, 20.35, 23.45, 24.62, 26.49, 30.24, 34.06, 37.01, 38.26, 38.26, 38.26, 38.26],
+    /* Malappuram removed on user request (6 Jul 2026 sync) */
     "Pathanamthitta":     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 33.33, 33.33, 33.33, 33.33],
     "Idukki":             [0, 0.26, 0.62, 1.00, 1.49, 1.67, 1.98, 2.82, 4.66, 8.84, 13.38, 15.55, 17.05, 19.34, 22.64, 24.00, 26.04, 31.55],
     "Rest of Kollam":     [0, 2.82, 2.99, 3.16, 3.33, 3.68, 4.63, 5.24, 5.51, 7.76, 8.30, 9.01, 10.32, 12.37, 15.69, 17.61, 18.99, 18.99],
@@ -90,8 +90,7 @@
   /* ---- site palette on the dark band ---- */
   var ON = "ON Court (Kollam)";
   var GREEN = "#30CF8C";       // --green, the ON Court line
-  var PINK = "#DA6EAA";        // --pink, the rival (Malappuram)
-  var ORANGE = "#F0A28A";      // soft urgent tone, Kerala combined
+  var ORANGE = "#F0A28A";      // soft urgent tone, the All Kerala line
   var DIM = "rgba(251,248,242,0.22)";
   var GRID = "rgba(251,248,242,0.08)";
   var MUTED = "rgba(251,248,242,0.55)";
@@ -138,7 +137,6 @@
 
   function traceStyle(name) {
     if (name === ON) return { color: GREEN, width: 3.5 };
-    if (name === "Malappuram") return { color: PINK, width: 2.4 };
     if (name === "Kerala (Combined)") return { color: ORANGE, width: 1.8 };
     return { color: DIM, width: 1.2 };
   }
@@ -171,21 +169,22 @@
     function finalAnnotations() {
       Plotly.relayout("raceChart", {
         shapes: [
-          { type: "line", x0: 359, x1: 359, y0: 0, y1: 50, line: { color: "rgba(48,207,140,.35)", width: 1.5, dash: "dot" } },
-          { type: "line", x0: 297, x1: 410, y0: 38.26, y1: 38.26, line: { color: "rgba(218,110,170,.2)", width: 1, dash: "dot" } }
+          // with Malappuram gone the last line ahead of the ON Court is
+          // Pathanamthitta's late plateau; crossing is ~day 306
+          { type: "line", x0: 306, x1: 306, y0: 0, y1: 50, line: { color: "rgba(48,207,140,.35)", width: 1.5, dash: "dot" } }
         ],
         annotations: [
           // xanchor:right keeps every label INSIDE the plot area (they used
           // to hang off the right edge of the chart)
-          { x: 350, y: 44, text: "ON Court overtakes<br>Malappuram ~day 359", showarrow: false, xanchor: "right",
+          { x: 298, y: 44, text: "ON Court takes the lead<br>for good ~day 306", showarrow: false, xanchor: "right",
             font: { size: 11, color: GREEN, family: FONT },
             bgcolor: "rgba(17,31,38,.92)", bordercolor: GREEN, borderwidth: 1, borderpad: 5 },
           { x: 400, y: 47.5, text: "<b>ON Court</b> 44.5%", showarrow: false, xanchor: "right",
             font: { size: 11, color: GREEN, family: FONT },
             bgcolor: "rgba(48,207,140,.1)", bordercolor: "rgba(48,207,140,.3)", borderwidth: 1, borderpad: 4 },
-          { x: 400, y: 34.5, text: "<b>Malappuram</b> 38.3% (plateau)", showarrow: false, xanchor: "right",
-            font: { size: 11, color: PINK, family: FONT },
-            bgcolor: "rgba(218,110,170,.08)", bordercolor: "rgba(218,110,170,.25)", borderwidth: 1, borderpad: 4 }
+          { x: 400, y: 12.5, text: "<b>All Kerala</b> 12.5%", showarrow: false, xanchor: "right",
+            font: { size: 11, color: ORANGE, family: FONT },
+            bgcolor: "rgba(17,31,38,.92)", bordercolor: "rgba(240,162,138,.35)", borderwidth: 1, borderpad: 4 }
         ]
       });
     }
@@ -274,7 +273,7 @@
         });
         Plotly.restyle("raceChart", { x: xAll, y: yAll }, allIdx);
 
-        if (!flashFired && currentDay >= 355) {
+        if (!flashFired && currentDay >= 302) {
           flashFired = true;
           flash.classList.add("show");
           setTimeout(function () { flash.classList.remove("show"); }, 2500);

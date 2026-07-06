@@ -4887,6 +4887,14 @@ button.circle-card{
   font-size:.78rem;
   color:rgba(251,248,242,.6);
 }
+.djs-desc{
+  margin-top:4px;
+  padding-top:8px;
+  border-top:1px solid rgba(251,248,242,.1);
+  font-size:.76rem;
+  line-height:1.5;
+  color:rgba(251,248,242,.55);
+}
 
 /* ---- the race ---- */
 .race{
