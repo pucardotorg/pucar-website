@@ -5503,6 +5503,7 @@ button.circle-card{
 @media (max-width:900px){ .reach-grid{ grid-template-columns:1fr; } }
 
 .reach-list{ display:flex; flex-direction:column; gap:11px; }
+.rm-item{ display:flex; flex-direction:column; }
 /* Cards: dark inset panel, a state-silhouette thumbnail on the left (same
    map paths), a left accent rail + soft glow when active. */
 .rm-row{ display:flex; align-items:center; gap:14px; width:100%; text-align:left;
@@ -5514,14 +5515,30 @@ button.circle-card{
 .rm-row::before{ content:""; position:absolute; left:0; top:8px; bottom:8px; width:3px; border-radius:0 3px 3px 0;
   background:var(--green); transform:scaleY(0); transform-origin:center; transition:transform .3s ease; }
 .rm-row:hover{ border-color:rgba(48,207,140,.42); transform:translateY(-2px); box-shadow:0 12px 28px rgba(0,0,0,.3); }
-.rm-row.is-active{ border-color:rgba(48,207,140,.55);
+.rm-item.is-active .rm-row{ border-color:rgba(48,207,140,.55);
   background:linear-gradient(180deg, rgba(48,207,140,.15), rgba(48,207,140,.045));
   box-shadow:0 8px 26px rgba(48,207,140,.13); }
-.rm-row.is-active::before{ transform:scaleY(1); }
-.rm-row.is-all{ margin-bottom:2px; }
+.rm-item.is-active .rm-row::before{ transform:scaleY(1); }
+.rm-item.is-all{ margin-bottom:2px; }
 /* quick pulse when the row is selected by clicking its state on the map */
 .rm-row.is-pinged{ animation:rmCardPulse .55s ease; }
 @keyframes rmCardPulse{ 0%{ box-shadow:0 0 0 0 rgba(48,207,140,.45); } 100%{ box-shadow:0 0 0 12px rgba(48,207,140,0); } }
+
+/* accordion: the districts a region's courts are coming up in */
+.rm-expand{ display:grid; grid-template-rows:0fr; opacity:0; margin-top:0;
+  transition:grid-template-rows .42s cubic-bezier(.4,.1,.2,1), opacity .3s ease, margin-top .3s ease; }
+.rm-item.is-active .rm-expand{ grid-template-rows:1fr; opacity:1; margin-top:8px; }
+.rm-expand-inner{ min-height:0; overflow:hidden; }
+.rm-dlist{ list-style:none; margin:0 0 0 34px; padding:2px 0 2px 14px;
+  display:flex; flex-direction:column; gap:1px; border-left:2px solid rgba(48,207,140,.35); }
+.rm-ditem{ display:flex; align-items:center; gap:9px; padding:6px 9px; border-radius:9px; font-size:.86rem;
+  color:rgba(251,248,242,.82); transition:background .2s; cursor:default; }
+.rm-ditem:hover{ background:rgba(48,207,140,.09); }
+.rm-ddot{ width:8px; height:8px; border-radius:50%; border:1.5px solid var(--green); box-sizing:border-box; flex:0 0 auto; }
+.rm-ddot.is-live{ background:var(--green); }
+.rm-dname{ flex:1 1 auto; }
+.rm-dstatus{ font-size:.64rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:rgba(251,248,242,.45); }
+.rm-dstatus.is-live{ color:var(--green); }
 
 .rm-thumb{ width:50px; height:50px; flex:0 0 auto; border-radius:12px; display:flex; align-items:center; justify-content:center;
   background:rgba(10,21,26,.55); border:1px solid rgba(251,248,242,.09); transition:background .25s, border-color .25s; }
@@ -5529,7 +5546,7 @@ button.circle-card{
 .rm-th{ fill:rgba(251,248,242,.16); transition:fill .25s; }
 .rm-th.is-live{ fill:var(--green); }
 .rm-row:hover .rm-thumb{ border-color:rgba(48,207,140,.3); }
-.rm-row.is-active .rm-thumb{ background:rgba(48,207,140,.12); border-color:rgba(48,207,140,.4); }
+.rm-item.is-active .rm-thumb{ background:rgba(48,207,140,.12); border-color:rgba(48,207,140,.4); }
 
 .rm-row-main{ display:flex; flex-direction:column; gap:2px; flex:1 1 auto; min-width:0; }
 .rm-row-label{ font-weight:600; font-size:1.04rem; }
@@ -5550,10 +5567,13 @@ button.circle-card{
 .rm-state.is-hover{ fill:rgba(48,207,140,.3); }
 .rm-state.is-faded{ opacity:.28; }
 .rm-state.is-selected{ fill:rgba(251,248,242,.04); stroke:rgba(251,248,242,.11); stroke-width:.55; }
-/* shiny shimmer around the borders of the states/districts we're in */
-.rm-state.is-live:not(.is-selected){ animation:rmShine 3.2s ease-in-out infinite; }
-.rm-district.is-court{ animation:rmShine 3.2s ease-in-out infinite; }
-@keyframes rmShine{ 0%,100%{ filter:drop-shadow(0 0 1.5px rgba(48,207,140,.4)); } 50%{ filter:drop-shadow(0 0 7px rgba(48,207,140,.9)); } }
+/* a small beam of light runs around the perimeter of the states / court
+   districts we're in. pathLength=100 (set in JS) normalises the dash. */
+.rm-beam{ fill:none; stroke:#CFFFEC; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round;
+  stroke-dasharray:12 88; transition:opacity .5s ease;
+  filter:drop-shadow(0 0 3px rgba(48,207,140,.95));
+  animation:rmBeam 2.8s linear infinite; }
+@keyframes rmBeam{ from{ stroke-dashoffset:0; } to{ stroke-dashoffset:-100; } }
 .rm-districts{ transition:opacity .5s ease; }
 .rm-district{ fill:rgba(251,248,242,.05); stroke:rgba(251,248,242,.12); stroke-width:.5; stroke-linejoin:round;
   transition:fill .4s ease, stroke .4s ease; pointer-events:none; }   /* inactive districts: no hover */
@@ -5570,4 +5590,4 @@ button.circle-card{
   border:1px solid rgba(48,207,140,.5); padding:5px 11px; border-radius:8px; font-size:.8rem; font-weight:600;
   white-space:nowrap; pointer-events:none; opacity:0; transition:opacity .18s; z-index:6; box-shadow:0 6px 20px rgba(0,0,0,.4); }
 .rm-tip.is-on{ opacity:1; }
-@media (prefers-reduced-motion:reduce){ .rm-live-dot,.rm-ping,.rm-state.is-live,.rm-district.is-court,.rm-row.is-pinged{ animation:none!important; } }
+@media (prefers-reduced-motion:reduce){ .rm-live-dot,.rm-ping,.rm-row.is-pinged{ animation:none!important; } .rm-beam{ animation:none!important; opacity:0!important; } }

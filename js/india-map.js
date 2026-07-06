@@ -77,6 +77,41 @@
     regionLayers[r.id] = g;
     gZoom.appendChild(g);
   });
+
+  // beam overlay: a bright dash that travels around the perimeter of the
+  // states / court-districts we're in (a running "beam of light"). One path
+  // per active state and per court district; pathLength=100 normalises the
+  // dash so the beam looks the same on every outline regardless of size.
+  var gBeams = el("g", { class: "rm-beams" });
+  D.regions.forEach(function (r) {
+    r.states.forEach(function (sn) {
+      var s = D.states.find(function (x) { return x.n === sn; });
+      if (!s) return;
+      var b = el("path", { d: s.d, class: "rm-beam", pathLength: "100",
+        "vector-effect": "non-scaling-stroke", "data-region": r.id, "data-kind": "state" });
+      b.style.opacity = "0";
+      gBeams.appendChild(b);
+    });
+    r.districts.forEach(function (d) {
+      var isCourt = r.courts.some(function (c) { return c.c && d.c && c.c[0] === d.c[0] && c.c[1] === d.c[1]; });
+      if (!isCourt) return;
+      var b = el("path", { d: d.d, class: "rm-beam", pathLength: "100",
+        "vector-effect": "non-scaling-stroke", "data-region": r.id, "data-kind": "court" });
+      b.style.opacity = "0";
+      gBeams.appendChild(b);
+    });
+  });
+  gZoom.appendChild(gBeams);
+  // which beams glow: "all" = every active state's outline; a region id =
+  // that region's court-district outlines; "none" = hidden
+  function showBeams(mode) {
+    gBeams.querySelectorAll(".rm-beam").forEach(function (b) {
+      var kind = b.getAttribute("data-kind"), reg = b.getAttribute("data-region");
+      var on = (mode === "all" && kind === "state") || (mode === reg && kind === "court");
+      b.style.opacity = on ? "1" : "0";
+    });
+  }
+
   svg.appendChild(gZoom);
 
   // dots overlay (kept in the same coord space; radius rescaled per frame
@@ -192,6 +227,7 @@
     for (var n in stateEls) stateEls[n].classList.remove("is-faded", "is-selected");
     tweenTo(full, 760);
     nationalDots();
+    showBeams("all");
     setRowActive("all");
     hideTip();
   }
@@ -217,8 +253,9 @@
     tweenTo(padBox(r.b, 0.28), 820);
     // dots fade/settle after the zoom reads
     setTimeout(function () { if (current === id) regionDots(r); }, reduce ? 0 : 120);
+    showBeams(id);
     setRowActive(id);
-    pingCard(id);   // clicking a state on the map lands you on its card
+    pingCard(id);   // clicking a state on the map lands you on its card + opens its district list
     hideTip();
   }
 
@@ -236,6 +273,7 @@
     D.regions.forEach(function (rr) { regionLayers[rr.id].style.opacity = "0"; });
     tweenTo(padBox(s.b, 0.3), 820);
     clearDots();
+    showBeams("none");
     setRowActive(null);
     setTimeout(function () {
       if (current === "state:" + name) showTip(titleCase(name) + " — coming soon", s.c[0], s.c[1]);
@@ -264,13 +302,16 @@
     }
     return '<svg viewBox="' + vb.join(" ") + '" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' + paths + "</svg>";
   }
+  var items = {};
   function makeRow(id, label, sub, live) {
+    var item = document.createElement("div");
+    item.className = "rm-item" + (id === "all" ? " is-all" : "");
     var b = document.createElement("button");
     b.type = "button";
-    b.className = "rm-row" + (id === "all" ? " is-all" : "");
+    b.className = "rm-row";
     b.setAttribute("data-row", id);
     var live_html = live ? '<span class="rm-live"><span class="rm-live-dot"></span>Live</span>'
-      : (id === "all" ? '<span class="rm-count"></span>' : '<span class="rm-soon">Coming soon</span>');
+      : (id === "all" ? "" : '<span class="rm-soon">Coming soon</span>');
     b.innerHTML =
       '<span class="rm-thumb">' + thumbHTML(id) + "</span>" +
       '<span class="rm-row-main"><span class="rm-row-label">' + label + "</span>" +
@@ -288,11 +329,37 @@
     b.addEventListener("mouseleave", function () {
       for (var n in stateEls) stateEls[n].classList.remove("is-hover");
     });
+    item.appendChild(b);
+
+    // a line expands below the card listing the districts this region's
+    // courts are coming up in (accordion, opens when the region is active)
+    if (id !== "all") {
+      var reg = regionById[id];
+      var ex = document.createElement("div");
+      ex.className = "rm-expand";
+      var lis = reg.courts.map(function (c) {
+        return '<li class="rm-ditem"' + (c.c ? ' data-cx="' + c.c[0] + '" data-cy="' + c.c[1] + '"' : "") + ">" +
+          '<span class="rm-ddot' + (c.live ? " is-live" : "") + '"></span>' +
+          '<span class="rm-dname">' + c.n + "</span>" +
+          '<span class="rm-dstatus' + (c.live ? " is-live" : "") + '">' + (c.live ? "Live" : "Coming soon") + "</span></li>";
+      }).join("");
+      ex.innerHTML = '<div class="rm-expand-inner"><ul class="rm-dlist">' + lis + "</ul></div>";
+      ex.querySelectorAll(".rm-ditem").forEach(function (li) {
+        var cx = li.getAttribute("data-cx");
+        if (cx == null) return;
+        li.addEventListener("mouseenter", function () {
+          if (current === id) showTip(li.querySelector(".rm-dname").textContent, +cx, +li.getAttribute("data-cy"));
+        });
+        li.addEventListener("mouseleave", hideTip);
+      });
+      item.appendChild(ex);
+    }
     rows[id] = b;
-    listHost.appendChild(b);
+    items[id] = item;
+    listHost.appendChild(item);
   }
   function setRowActive(id) {
-    for (var k in rows) rows[k].classList.toggle("is-active", k === id);
+    for (var k in items) items[k].classList.toggle("is-active", k === id);
   }
   // pulse the matching card and bring it into view (map click -> its section)
   function pingCard(id) {
@@ -337,5 +404,6 @@
   // start in the all-India view
   applyView(view);
   nationalDots();
+  showBeams("all");
   setRowActive("all");
 })();
