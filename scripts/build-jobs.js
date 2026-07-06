@@ -135,7 +135,12 @@ contributors.forEach(function (c) { c.url = "/contributors/" + c.slug + "/"; byS
 const jobs = loadDir("jobs").map(function (j) {
   j.url = "/collaborate/" + j.slug + "/";
   j.tags = j.tags || [];
-  j.expiry = addDays(String(j.date).slice(0, 10), j.listing_days || 30);
+  // the LISTING never closes before the application DEADLINE ("deadline
+  // says 30 Sep but it closes in 39 days" -- flipped and confusing).
+  // With a deadline, the listing stays up exactly until it; otherwise the
+  // old posted+listing_days window applies.
+  j.expiry = j.deadline ? String(j.deadline).slice(0, 10)
+    : addDays(String(j.date).slice(0, 10), j.listing_days || 30);
   j.poster = bySlug[j.posted_by] || null;
   j.assignee = bySlug[j.assigned_to] || null;
   j.status = j.status || "Open";

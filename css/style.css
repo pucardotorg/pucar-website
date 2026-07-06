@@ -2669,6 +2669,9 @@ button.btn.btn-outline{ border:1px solid var(--line); }
   border:1px solid var(--line);
   border-radius:16px;
   box-shadow:0 18px 44px rgba(0,0,0,.35);
+
+  max-height:min(340px, 60vh); /* long org lists scroll INSIDE the menu, not the page */
+  overflow-y:auto;
 }
 .dd-menu li{
   position:relative;
@@ -3494,6 +3497,18 @@ a.event-card{ text-decoration:none; }
     text-wrap:balance;
   }
   .pin[data-beat="3"] .judge-bubble{ translate:-50% 0; }
+  /* the judge's balloon must sit ABOVE his head and hard-wrap inside its
+     drawn paper, whatever the engine thinks max-content means */
+  .judge-bubble{
+    z-index:8;
+    box-sizing:border-box;
+    white-space:normal;
+    overflow-wrap:break-word;
+  }
+  /* floating heads: decorative only on phones -- never above content,
+     never tappable (one sat on the Learn-about button and ate the tap) */
+  .hi-stream{ z-index:1; }
+  .hi-bubble{ pointer-events:none !important; }
   .beats{
     grid-column:1;
     grid-row:2;  /* mobile really IS two rows (figure above, text below) -- undo the desktop grid-row:1 */
@@ -3501,7 +3516,9 @@ a.event-card{ text-decoration:none; }
        it collided with the figure's animations (walks, bubbles) spilling
        into the lower half */
     align-items:flex-end;
-    padding: 24px clamp(20px,6vw,32px) 100px;
+    /* ONE mobile gutter everywhere: 20px, same as .collaborate/.intro-hero
+       (was 6vw, which drifted a few px off every other section's edge) */
+    padding: 24px 20px 100px;
   }
   .beat{
     position:absolute;
