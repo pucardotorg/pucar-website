@@ -5574,6 +5574,11 @@ button.circle-card{
   filter:drop-shadow(0 0 1.5px rgba(48,207,140,.5));
   animation:rmBeam 4.2s linear infinite; }
 @keyframes rmBeam{ from{ stroke-dashoffset:0; } to{ stroke-dashoffset:-100; } }
+/* multi-state regions: distinguish each member (e.g. Punjab / Haryana /
+   Chandigarh UT) with a soft outline + a name label */
+.rm-stateline{ fill:none; stroke:rgba(207,255,236,.26); stroke-width:1.1; stroke-linejoin:round; transition:opacity .4s ease; }
+.rm-label{ fill:var(--paper); stroke:#141732; stroke-width:3; font-family:'Source Sans 3', sans-serif;
+  font-weight:700; letter-spacing:.03em; text-transform:uppercase; pointer-events:none; transition:opacity .4s ease; }
 .rm-districts{ transition:opacity .5s ease; }
 .rm-district{ fill:rgba(251,248,242,.05); stroke:rgba(251,248,242,.12); stroke-width:.5; stroke-linejoin:round;
   transition:fill .4s ease, stroke .4s ease; pointer-events:none; }   /* inactive districts: no hover */

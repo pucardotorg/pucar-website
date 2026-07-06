@@ -112,6 +112,33 @@
     });
   }
 
+  // for MULTI-state regions (Punjab & Haryana + the Chandigarh UT), draw each
+  // member's outline + a name label so the three are distinguishable when
+  // zoomed in. Single-state regions don't need it (the card already names them).
+  var gMeta = el("g", { class: "rm-meta" });
+  D.regions.forEach(function (r) {
+    if (r.states.length < 2) return;
+    r.states.forEach(function (sn) {
+      var s = D.states.find(function (x) { return x.n === sn; });
+      if (!s) return;
+      var o = el("path", { d: s.d, class: "rm-stateline", "vector-effect": "non-scaling-stroke", "data-region": r.id });
+      o.style.opacity = "0";
+      gMeta.appendChild(o);
+      var t = el("text", { x: s.c[0], y: s.c[1], class: "rm-label", "data-region": r.id,
+        "text-anchor": "middle", "dominant-baseline": "central",
+        "paint-order": "stroke", "vector-effect": "non-scaling-stroke" });
+      t.textContent = titleCase(sn);
+      t.style.opacity = "0";
+      gMeta.appendChild(t);
+    });
+  });
+  gZoom.appendChild(gMeta);
+  function showMeta(id) {
+    gMeta.querySelectorAll(".rm-stateline,.rm-label").forEach(function (e) {
+      e.style.opacity = (e.getAttribute("data-region") === id) ? "1" : "0";
+    });
+  }
+
   svg.appendChild(gZoom);
 
   // dots overlay (kept in the same coord space; radius rescaled per frame
@@ -142,6 +169,22 @@
     else { var nw = h * ar; x -= (nw - w) / 2; w = nw; }
     return { x: x, y: y, w: w, h: h };
   }
+  // frame the region's COURTS (where the dots are) rather than the whole
+  // state area — otherwise clustered courts (e.g. the Chandigarh tri-city in
+  // Punjab & Haryana) read as crammed in a corner. A minimum span keeps a
+  // tight cluster from over-zooming so surrounding districts still show.
+  function courtsFocus(r) {
+    var xs = [], ys = [];
+    r.courts.forEach(function (c) { if (c.c) { xs.push(c.c[0]); ys.push(c.c[1]); } });
+    if (!xs.length) return r.b;
+    var minx = Math.min.apply(null, xs), maxx = Math.max.apply(null, xs),
+        miny = Math.min.apply(null, ys), maxy = Math.max.apply(null, ys);
+    var w = maxx - minx, h = maxy - miny;
+    var minSpan = Math.max(r.b[2], r.b[3]) * 0.5;
+    if (w < minSpan) { var cx = (minx + maxx) / 2; minx = cx - minSpan / 2; w = minSpan; }
+    if (h < minSpan) { var cy = (miny + maxy) / 2; miny = cy - minSpan / 2; h = minSpan; }
+    return [minx, miny, w, h];
+  }
 
   function applyView(v) {
     svg.setAttribute("viewBox", v.x + " " + v.y + " " + v.w + " " + v.h);
@@ -154,6 +197,8 @@
       c.setAttribute("r", (7.5 * k));
       c.style.setProperty("--ping-r", (7.5 * k) + "px");
     });
+    // labels keep a constant screen size regardless of zoom
+    gMeta.querySelectorAll(".rm-label").forEach(function (t) { t.setAttribute("font-size", 26 * k); });
   }
 
   function tweenTo(target, ms) {
@@ -228,6 +273,7 @@
     tweenTo(full, 760);
     nationalDots();
     showBeams("all");
+    showMeta(null);
     setRowActive("all");
     hideTip();
   }
@@ -250,10 +296,11 @@
       g.style.opacity = on ? "1" : "0";
       g.style.pointerEvents = on ? "auto" : "none";
     });
-    tweenTo(padBox(r.b, 0.28), 820);
+    tweenTo(padBox(courtsFocus(r), 0.42), 820);
     // dots fade/settle after the zoom reads
     setTimeout(function () { if (current === id) regionDots(r); }, reduce ? 0 : 120);
     showBeams(id);
+    showMeta(id);
     setRowActive(id);
     pingCard(id);   // clicking a state on the map lands you on its card + opens its district list
     hideTip();
@@ -274,6 +321,7 @@
     tweenTo(padBox(s.b, 0.3), 820);
     clearDots();
     showBeams("none");
+    showMeta(null);
     setRowActive(null);
     setTimeout(function () {
       if (current === "state:" + name) showTip(titleCase(name) + " — coming soon", s.c[0], s.c[1]);
@@ -406,5 +454,6 @@
   applyView(view);
   nationalDots();
   showBeams("all");
+  showMeta(null);
   setRowActive("all");
 })();
