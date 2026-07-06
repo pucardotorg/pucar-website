@@ -954,17 +954,34 @@ function dristiPage() {
       '<span class="dj-new">' + esc(r[2]) + "</span></div>";
   }).join("\n");
 
+  /* live per-stage medians from the public dashboard (July 2026):
+     [stage, median days, median hearings] for cases that completed the
+     stage. Registration is same-day and needs no hearing. */
+  const STAGES = [
+    ["Registration", "Same day", null],
+    ["Cognizance", "11 days", "2 hearings"],
+    ["Appearance", "74 days", "3 hearings"],
+    ["Bail", "61 days", "6 hearings"],
+    ["Mediation", "49 days", "2 hearings"],
+    ["Trial", "111 days", "8 hearings"]
+  ];
+  const stagesHtml = STAGES.map(function (s) {
+    return '      <div class="dj-stage-card"><span class="djs-name">' + esc(s[0]) + "</span>" +
+      '<span class="djs-days">' + esc(s[1]) + "</span>" +
+      '<span class="djs-hear">' + (s[2] ? esc(s[2]) : "no hearing needed") + "</span></div>";
+  }).join("\n");
+
   /* two HERO stats up front, four supporting below (revised: six equal
      cards in one row read as noise; the story is volume + speed). Each
      carries an icon from the site's inline stroke set (same style as the
      resources type icons) so the numbers read at a glance. */
   const kstatsHtml =
 '      <div class="dristi-stat is-big"><span class="dristi-stat-num">1,920</span><span class="dristi-stat-label">cases filed in a court that did not exist two years ago</span></div>\n' +
-'      <div class="dristi-stat is-big"><span class="dristi-stat-num">~5 <em>months</em></span><span class="dristi-stat-label">average time to disposal. The conventional baseline: about 2 years</span></div>\n' +
-'      <div class="dristi-stat"><span class="dristi-stat-num">402</span><span class="dristi-stat-label">Cases disposed</span></div>\n' +
+'      <div class="dristi-stat is-big"><span class="dristi-stat-num">164 <em>days</em></span><span class="dristi-stat-label">median time to disposal. The conventional baseline: about 2 years</span></div>\n' +
+'      <div class="dristi-stat"><span class="dristi-stat-num">7</span><span class="dristi-stat-label">Median hearings to disposal</span></div>\n' +
 '      <div class="dristi-stat"><span class="dristi-stat-num">98%</span><span class="dristi-stat-label">Hearings held as scheduled</span></div>\n' +
 '      <div class="dristi-stat"><span class="dristi-stat-num">851</span><span class="dristi-stat-label">Advocates on the platform</span></div>\n' +
-'      <div class="dristi-stat"><span class="dristi-stat-num">1,757</span><span class="dristi-stat-label">Litigants using it</span></div>';
+'      <div class="dristi-stat"><span class="dristi-stat-num">1,758</span><span class="dristi-stat-label">Litigants using it</span></div>';
 
   const main =
 '  <p class="beat-eyebrow">DRISTI</p>\n' +
@@ -1044,9 +1061,19 @@ function dristiPage() {
 '    <div class="dristi-stat-grid">\n' + kstatsHtml + "\n    </div>\n" +
 '    <p class="dristi-source">Figures from the <a href="https://oncourts.kerala.gov.in/dashboard" target="_blank" rel="noopener">public ON Courts dashboard</a>, July 2026. 80% of disposed cases end in withdrawal: parties settle directly once the process is credible and predictable.</p>\n' +
 
+/* quarterly filings + disposals, live from the dashboard (Plotly bars) */
+'    <div class="dristi-growth">\n' +
+'      <div class="dristi-journey-head"><h4>Adoption is accelerating</h4><p>Cases filed and disposed each quarter since the court opened. Filings have grown five-fold, and disposals are keeping pace.</p></div>\n' +
+'      <div id="growthChart" aria-label="Quarterly cases filed and disposed chart"></div>\n' +
+'      <p class="race-note">From the public dashboard, July 2026. The quarter in progress is not shown.</p>\n' +
+"    </div>\n" +
+
 '    <div class="dristi-journey">\n' +
 '      <div class="dristi-journey-head"><h4>The journey, before and after</h4><p>Median stage times for cheque dishonour cases, conventional process versus the ON Court redesign.</p></div>\n' +
 journeyHtml + "\n" +
+'      <p class="dj-stages-lead">And here is how the live court is actually doing, stage by stage. Median time and hearings for cases that completed each stage, straight from the dashboard:</p>\n' +
+'      <div class="dj-stages">\n' + stagesHtml + "\n      </div>\n" +
+'      <p class="race-note">Filing to disposal: a median of 164 days and 7 hearings, or 138 days excluding time the parties spend in mediation.</p>\n' +
 "    </div>\n" +
 
 /* ---- the race (user-supplied Kaplan-Meier data, PUCAR-themed) ---- */

@@ -4736,6 +4736,64 @@ button.circle-card{
 }
 .dristi-journey-row.is-total .dj-new{ font-size:1.15rem; }
 
+/* quarterly filings + disposals panel (same chrome as the journey) */
+.dristi-growth{
+  margin:44px 0 0;
+  padding:26px clamp(20px,3vw,34px) 22px;
+  border-radius:22px;
+  background:rgba(251,248,242,.05);
+  border:1px solid rgba(251,248,242,.12);
+}
+#growthChart{ width:100%; height:320px; }
+@media (max-width: 640px){
+  #growthChart{ height:260px; }
+}
+
+/* live per-stage medians strip inside the journey panel */
+.dj-stages-lead{
+  margin:26px 0 14px;
+  font-size:.88rem;
+  color:rgba(251,248,242,.6);
+  max-width:64ch;
+}
+.dj-stages{
+  display:grid;
+  grid-template-columns:repeat(6, 1fr);
+  gap:10px;
+}
+@media (max-width: 960px){
+  .dj-stages{ grid-template-columns:repeat(3, 1fr); }
+}
+@media (max-width: 520px){
+  .dj-stages{ grid-template-columns:repeat(2, 1fr); }
+}
+.dj-stage-card{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  padding:14px 12px 12px;
+  border-radius:14px;
+  background:rgba(251,248,242,.05);
+  border:1px solid rgba(251,248,242,.12);
+}
+.djs-name{
+  font-size:.72rem;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  color:rgba(251,248,242,.55);
+}
+.djs-days{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:1.2rem;
+  line-height:1.1;
+  color:var(--green);
+}
+.djs-hear{
+  font-size:.78rem;
+  color:rgba(251,248,242,.6);
+}
+
 /* ---- the race ---- */
 .race{
   position:relative;

@@ -10,6 +10,57 @@
       the dark band). Plotly is loaded from CDN on this page
       only; everything no-ops gracefully if it fails.
    ========================================================= */
+/* ---- quarterly filings + disposals (public dashboard, July 2026) ----
+   Static grouped bars in the site palette; independent of the race so
+   either chart still renders if the other's element is missing. */
+(function () {
+  "use strict";
+  var el = document.getElementById("growthChart");
+  if (!el) return;
+
+  var QUARTERS = ["Oct-Dec 24", "Jan-Mar 25", "Apr-Jun 25", "Jul-Sep 25", "Oct-Dec 25", "Jan-Mar 26", "Apr-Jun 26"];
+  var FILED = [89, 245, 163, 246, 194, 461, 486];
+  var DISPOSED = [0, 12, 37, 53, 105, 98, 88];
+
+  var GREEN = "#30CF8C";
+  var ORANGE = "#F0A28A";
+  var GRID = "rgba(251,248,242,0.08)";
+  var MUTED = "rgba(251,248,242,0.55)";
+  var FONT = "'Source Sans 3', sans-serif";
+
+  var tries = 0;
+  (function waitPlotly() {
+    if (window.Plotly) { init(); return; }
+    if (++tries > 100) return; // CDN failed: the copy stands alone
+    setTimeout(waitPlotly, 100);
+  })();
+
+  function init() {
+    Plotly.newPlot(el, [
+      { type: "bar", name: "Filed", x: QUARTERS, y: FILED,
+        marker: { color: "rgba(48,207,140,.85)", line: { color: GREEN, width: 1 } },
+        hovertemplate: "<b>Filed</b>: %{y}<extra></extra>" },
+      { type: "bar", name: "Disposed", x: QUARTERS, y: DISPOSED,
+        marker: { color: "rgba(240,162,138,.75)", line: { color: ORANGE, width: 1 } },
+        hovertemplate: "<b>Disposed</b>: %{y}<extra></extra>" }
+    ], {
+      barmode: "group",
+      bargap: 0.28,
+      bargroupgap: 0.08,
+      paper_bgcolor: "rgba(0,0,0,0)",
+      plot_bgcolor: "rgba(0,0,0,0)",
+      font: { family: FONT, color: MUTED },
+      margin: { t: 8, r: 8, b: 44, l: 40 },
+      xaxis: { tickfont: { size: 11 }, color: MUTED, fixedrange: true },
+      yaxis: { title: { text: "Cases per quarter", font: { size: 12 } },
+        gridcolor: GRID, zeroline: false, tickfont: { size: 11 }, color: MUTED, fixedrange: true },
+      legend: { orientation: "h", x: 0, y: 1.12, font: { size: 12, color: "rgba(251,248,242,.75)" } },
+      hovermode: "x unified",
+      hoverlabel: { bgcolor: "#111F26", bordercolor: "rgba(251,248,242,.25)", font: { family: FONT, size: 12, color: "#FBF8F2" } }
+    }, { displayModeBar: false, responsive: true });
+  }
+})();
+
 (function () {
   "use strict";
   var chartEl = document.getElementById("raceChart");

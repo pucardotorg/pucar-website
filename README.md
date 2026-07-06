@@ -1818,6 +1818,36 @@ is gone.
 - The race auto-plays once when the CHART is centred (rootMargin -32%)
   with a 3-2-1-GO countdown; button replays.
 
+### /dristi/ more dashboard data (6 Jul 2026)
+
+User asked what ELSE the public dashboard offers; approved three adds
+and explicitly left the "weaker" ones (disposal-mix donut, stage of
+withdrawal, contested-judgment count, pipeline funnel -- do not add
+without asking):
+
+- GROWTH CHART (.dristi-growth, #growthChart, own IIFE at the top of
+  js/dristi.js): quarterly cases FILED vs DISPOSED as grouped Plotly
+  bars, green (.85 alpha) vs soft orange #F0A28A (.75), same dark-band
+  chrome as the journey panel. Data inline: filed 89/245/163/246/194/
+  461/486, disposed 0/12/37/53/105/98/88, Oct-Dec 24 through Apr-Jun 26.
+  The partial quarter in progress (Jul-Sep 26: 36 filed) is EXCLUDED so
+  the last bar doesn't read as a crash; the race-note says so. Static
+  (no animation) -- the race stays the page's one animated showpiece.
+  Sits between the source line and the journey panel.
+- HERO STATS revised: big stat 2 is now "164 days" median to disposal
+  (was "~5 months" approx); small stats are 7 median hearings to
+  disposal (replaces 402 disposed, which now lives in the growth
+  chart), 98% hearings as scheduled, 851 advocates, 1,758 litigants
+  (dashboard re-read 6 Jul).
+- LIVE STAGE MEDIANS (.dj-stages inside .dristi-journey): six
+  .dj-stage-card chips under the before/after rows -- Registration
+  same day/no hearing, Cognizance 11d/2, Appearance 74d/3, Bail 61d/6,
+  Mediation 49d/2, Trial 111d/8 -- with a lead-in line and a footer
+  note: 164 days + 7 hearings median to disposal, 138 days excluding
+  mediation time. The before/after table stays as the DESIGN journey
+  (AGAMI_CONTEXT targets); the chips are the LIVE actuals, labelled as
+  such. 6 cols -> 3 (<=960) -> 2 (<=520).
+
 ### Cache busting (July 2026)
 
 Every local css/js URL in generated pages AND index.html is stamped
