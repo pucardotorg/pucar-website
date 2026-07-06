@@ -5601,13 +5601,13 @@ button.circle-card{
 .rm-district.is-court{ fill:rgba(48,207,140,.2); stroke:var(--green); stroke-width:1.4; pointer-events:auto; cursor:pointer; }
 .rm-district.is-court:hover{ fill:rgba(48,207,140,.32); }
 .rm-dots{ pointer-events:auto; }
-/* glossy green ORBS: a radial-gradient fill (bright specular highlight ->
-   deep green edge) gives a 3D bead, a dark shadow lifts it off the map, and a
-   neon glow makes it pop. Pulsing green ring. */
+/* green court dots: a DARK radial gradient (rich green core -> near-black
+   edge) for a deep, matte bead — a dark shadow lifts it off the map with just
+   a soft green glow, no light-reflective sheen. Pulsing green ring. */
 .rm-dot{ fill:url(#rmDotGrad); stroke:none; cursor:pointer;
-  filter:drop-shadow(0 1.5px 2.5px rgba(0,0,0,.6)) drop-shadow(0 0 5px rgba(48,207,140,.7)); }
-.rm-dot.is-live{ filter:drop-shadow(0 1.5px 3px rgba(0,0,0,.65)) drop-shadow(0 0 10px rgba(48,207,140,.98)); }
-.rm-ping{ fill:none; stroke:var(--green); stroke-width:1.6; opacity:.7; transform-box:fill-box; transform-origin:center;
+  filter:drop-shadow(0 1.5px 3px rgba(0,0,0,.72)) drop-shadow(0 0 3px rgba(48,207,140,.45)); }
+.rm-dot.is-live{ filter:drop-shadow(0 2px 4px rgba(0,0,0,.78)) drop-shadow(0 0 6px rgba(48,207,140,.72)); }
+.rm-ping{ fill:none; stroke:var(--green); stroke-width:1.6; opacity:.65; transform-box:fill-box; transform-origin:center;
   animation:rmPing 2.4s ease-out infinite; }
 @keyframes rmPing{ 0%{ transform:scale(1); opacity:.8; } 70%{ transform:scale(3.2); opacity:0; } 100%{ transform:scale(3.2); opacity:0; } }
 

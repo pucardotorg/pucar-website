@@ -45,10 +45,11 @@
   var svg = el("svg", { viewBox: "0 0 " + W + " " + H, class: "reach-svg", role: "img",
     "aria-label": "Map of India showing where PUCAR's courts are live and coming soon" });
 
-  // glossy-orb gradient for the court dots (off-centre bright spot = specular)
+  // dark gradient for the court dots: rich green core deepening to near-black
+  // at the edge (no light-reflective highlight)
   var defs = el("defs");
-  var grad = el("radialGradient", { id: "rmDotGrad", cx: "50%", cy: "50%", r: "58%", fx: "34%", fy: "28%" });
-  [["0%", "#F2FFF9"], ["18%", "#8CF3CB"], ["55%", "#30CF8C"], ["100%", "#158A57"]].forEach(function (s) {
+  var grad = el("radialGradient", { id: "rmDotGrad", cx: "50%", cy: "42%", r: "62%" });
+  [["0%", "#43D89B"], ["48%", "#1E9A66"], ["100%", "#07301F"]].forEach(function (s) {
     grad.appendChild(el("stop", { offset: s[0], "stop-color": s[1] }));
   });
   defs.appendChild(grad);
@@ -126,7 +127,7 @@
   // zoomed in. Single-state regions don't need it (the card already names them).
   // Chandigarh's centroid sits right under the tri-city court dots, so its
   // label is nudged clear of them (with a short leader line back to the spot).
-  var LABEL_OFFSET = { "CHANDIGARH": [34, -42] };
+  var LABEL_OFFSET = { "CHANDIGARH": [16, -20] };
   var gMeta = el("g", { class: "rm-meta" });
   D.regions.forEach(function (r) {
     if (r.states.length < 2) return;
@@ -204,6 +205,21 @@
     if (h < minSpan) { var cy = (miny + maxy) / 2; miny = cy - minSpan / 2; h = minSpan; }
     return [minx, miny, w, h];
   }
+  // the DENSEST cluster of courts (those near the region's primary dot) — this
+  // is what the region opens zoomed into. Outliers (e.g. Gurugram, far south of
+  // the Chandigarh tri-city) are reached by hovering, which pans the map there.
+  function clusterBox(r) {
+    var d = r.dot || (r.courts[0] && r.courts[0].c) || [r.b[0] + r.b[2] / 2, r.b[1] + r.b[3] / 2];
+    var near = r.courts.filter(function (c) { return c.c && Math.hypot(c.c[0] - d[0], c.c[1] - d[1]) < 45; });
+    if (!near.length) near = r.courts.filter(function (c) { return c.c; });
+    var xs = near.map(function (c) { return c.c[0]; }), ys = near.map(function (c) { return c.c[1]; });
+    var minx = Math.min.apply(null, xs), maxx = Math.max.apply(null, xs),
+        miny = Math.min.apply(null, ys), maxy = Math.max.apply(null, ys);
+    var w = maxx - minx, h = maxy - miny, ms = 40;
+    if (w < ms) { var cx = (minx + maxx) / 2; minx = cx - ms / 2; w = ms; }
+    if (h < ms) { var cy = (miny + maxy) / 2; miny = cy - ms / 2; h = ms; }
+    return [minx, miny, w, h];
+  }
 
   function applyView(v) {
     svg.setAttribute("viewBox", v.x + " " + v.y + " " + v.w + " " + v.h);
@@ -234,9 +250,19 @@
     })(t0);
   }
 
+  // the region's resting view; hovering a court pans to it and keeps this zoom
+  var homeView = null;
+  function panToPoint(cx, cy) {
+    if (!homeView) return;
+    tweenTo({ x: cx - homeView.w / 2, y: cy - homeView.h / 2, w: homeView.w, h: homeView.h }, 480);
+  }
+  function returnHome() {
+    if (homeView) tweenTo(homeView, 480);
+  }
+
   /* ---------- dots ---------- */
   function clearDots() { while (gDots.firstChild) gDots.removeChild(gDots.firstChild); }
-  function addDot(cx, cy, live, label) {
+  function addDot(cx, cy, live, label, pan) {
     if (cx == null) return;
     var rw = svg.getBoundingClientRect().width || W;
     var unit = view.w / rw;
@@ -247,21 +273,21 @@
     }
     var dot = el("circle", { class: "rm-dot" + (live ? " is-live" : ""), cx: cx, cy: cy, r: br * unit, "data-br": br });
     if (label) {
-      dot.addEventListener("mouseenter", function () { showTip(label, cx, cy); });
-      dot.addEventListener("mouseleave", hideTip);
+      dot.addEventListener("mouseenter", function () { showTip(label, cx, cy); if (pan) panToPoint(cx, cy); });
+      dot.addEventListener("mouseleave", function () { hideTip(); if (pan) returnHome(); });
     }
     gDots.appendChild(dot);
   }
   function nationalDots() {
     clearDots();
     D.regions.forEach(function (r) {
-      if (r.dot) addDot(r.dot[0], r.dot[1], r.live, r.label + (r.live ? " — live" : " — coming soon"));
+      if (r.dot) addDot(r.dot[0], r.dot[1], r.live, r.label + (r.live ? " — live" : " — coming soon"), false);
     });
   }
   function regionDots(r) {
     clearDots();
     r.courts.forEach(function (c) {
-      if (c.c) addDot(c.c[0], c.c[1], c.live, c.n + (c.live ? " — live" : " — coming soon"));
+      if (c.c) addDot(c.c[0], c.c[1], c.live, c.n + (c.live ? " — live" : " — coming soon"), true);
     });
   }
 
@@ -288,6 +314,7 @@
     });
     svg.classList.remove("is-zoomed");
     for (var n in stateEls) stateEls[n].classList.remove("is-faded", "is-selected");
+    homeView = null;
     tweenTo(full, 760);
     nationalDots();
     showBeams("all");
@@ -314,7 +341,9 @@
       g.style.opacity = on ? "1" : "0";
       g.style.pointerEvents = on ? "auto" : "none";
     });
-    tweenTo(padBox(courtsFocus(r), 0.42), 820);
+    // open zoomed into the densest court cluster; outliers are reached on hover
+    homeView = padBox(clusterBox(r), 0.55);
+    tweenTo(homeView, 820);
     // dots fade/settle after the zoom reads
     setTimeout(function () { if (current === id) regionDots(r); }, reduce ? 0 : 120);
     showBeams(id);
@@ -336,6 +365,7 @@
       stateEls[n].classList.toggle("is-selected", n === name);
     }
     D.regions.forEach(function (rr) { regionLayers[rr.id].style.opacity = "0"; });
+    homeView = null;
     tweenTo(padBox(s.b, 0.3), 820);
     clearDots();
     showBeams("none");
@@ -414,9 +444,11 @@
         var cx = li.getAttribute("data-cx");
         if (cx == null) return;
         li.addEventListener("mouseenter", function () {
-          if (current === id) showTip(li.querySelector(".rm-dname").textContent, +cx, +li.getAttribute("data-cy"));
+          if (current !== id) return;
+          showTip(li.querySelector(".rm-dname").textContent, +cx, +li.getAttribute("data-cy"));
+          panToPoint(+cx, +li.getAttribute("data-cy"));   // shift the map to this court
         });
-        li.addEventListener("mouseleave", hideTip);
+        li.addEventListener("mouseleave", function () { hideTip(); if (current === id) returnHome(); });
       });
       item.appendChild(ex);
     }
@@ -452,11 +484,15 @@
   D.regions.forEach(function (r) {
     regionLayers[r.id].querySelectorAll(".rm-district.is-court").forEach(function (p) {
       p.addEventListener("mouseenter", function () {
-        var nm = p.getAttribute("data-name");
-        var box = p.getBBox();
-        showTip(titleCase(nm), box.x + box.width / 2, box.y + box.height / 2);
+        var box = p.getBBox(), mx = box.x + box.width / 2, my = box.y + box.height / 2;
+        // show the COURT's display name (e.g. "Mohali"), not the raw district
+        var court = r.courts.filter(function (c) { return c.c; }).sort(function (a, b) {
+          return Math.hypot(a.c[0] - mx, a.c[1] - my) - Math.hypot(b.c[0] - mx, b.c[1] - my);
+        })[0];
+        showTip(court ? court.n : titleCase(p.getAttribute("data-name")), mx, my);
+        if (current === r.id && court) panToPoint(court.c[0], court.c[1]);
       });
-      p.addEventListener("mouseleave", hideTip);
+      p.addEventListener("mouseleave", function () { hideTip(); if (current === r.id) returnHome(); });
     });
   });
 
