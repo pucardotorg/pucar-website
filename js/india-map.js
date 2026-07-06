@@ -64,8 +64,14 @@
     g.style.opacity = "0";
     g.style.pointerEvents = "none";
     r.districts.forEach(function (d) {
-      var p = el("path", { d: d.d, class: "rm-district", "data-name": d.n,
-        "vector-effect": "non-scaling-stroke" });
+      // a district is a "court" district if its centroid matches one of the
+      // region's court centroids (same source, so an exact match) -> it gets
+      // the green DRISTI active-district treatment
+      var isCourt = r.courts.some(function (c) {
+        return c.c && d.c && c.c[0] === d.c[0] && c.c[1] === d.c[1];
+      });
+      var p = el("path", { d: d.d, class: "rm-district" + (isCourt ? " is-court" : ""),
+        "data-name": d.n, "vector-effect": "non-scaling-stroke" });
       g.appendChild(p);
     });
     regionLayers[r.id] = g;
@@ -135,14 +141,13 @@
   /* ---------- dots ---------- */
   function clearDots() { while (gDots.firstChild) gDots.removeChild(gDots.firstChild); }
   function addDot(cx, cy, live, label) {
-    if (!cx && !cx === 0) return;
+    if (cx == null) return;
     var k = view.w / W;
     if (live && !reduce) {
-      var ping = el("circle", { class: "rm-ping", cx: cx, cy: cy, r: 7.5 * k });
-      ping.style.setProperty("--ping-r", (7.5 * k) + "px");
+      var ping = el("circle", { class: "rm-ping", cx: cx, cy: cy, r: 7.5 * k, "vector-effect": "non-scaling-stroke" });
       gDots.appendChild(ping);
     }
-    var dot = el("circle", { class: "rm-dot" + (live ? " is-live" : ""), cx: cx, cy: cy, r: 7.5 * k });
+    var dot = el("circle", { class: "rm-dot" + (live ? " is-live" : ""), cx: cx, cy: cy, r: 7.5 * k, "vector-effect": "non-scaling-stroke" });
     if (label) {
       dot.addEventListener("mouseenter", function () { showTip(label, cx, cy); });
       dot.addEventListener("mouseleave", hideTip);
@@ -238,14 +243,35 @@
 
   /* ---------- left-hand rows ---------- */
   var rows = {};
+  function stateByName(n) { return D.states.find(function (s) { return s.n === n; }); }
+  // a tiny silhouette of the row's state(s), reusing the same map paths so
+  // the card visually echoes the region it selects
+  function thumbHTML(id) {
+    var vb, paths;
+    if (id === "all") {
+      vb = [0, 0, W, H];
+      paths = D.states.map(function (s) {
+        return '<path d="' + s.d + '" class="rm-th' + (ACTIVE[s.n] ? " is-live" : "") + '"/>';
+      }).join("");
+    } else {
+      var r = regionById[id], b = r.b, pad = Math.max(b[2], b[3]) * 0.14;
+      vb = [b[0] - pad, b[1] - pad, b[2] + pad * 2, b[3] + pad * 2];
+      paths = r.states.map(function (n) {
+        var s = stateByName(n);
+        return s ? '<path d="' + s.d + '" class="rm-th is-live"/>' : "";
+      }).join("");
+    }
+    return '<svg viewBox="' + vb.join(" ") + '" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' + paths + "</svg>";
+  }
   function makeRow(id, label, sub, live) {
     var b = document.createElement("button");
     b.type = "button";
     b.className = "rm-row" + (id === "all" ? " is-all" : "");
     b.setAttribute("data-row", id);
     var live_html = live ? '<span class="rm-live"><span class="rm-live-dot"></span>Live</span>'
-      : (id === "all" ? "" : '<span class="rm-soon">Coming soon</span>');
+      : (id === "all" ? '<span class="rm-count"></span>' : '<span class="rm-soon">Coming soon</span>');
     b.innerHTML =
+      '<span class="rm-thumb">' + thumbHTML(id) + "</span>" +
       '<span class="rm-row-main"><span class="rm-row-label">' + label + "</span>" +
       (sub ? '<span class="rm-row-sub">' + sub + "</span>" : "") + "</span>" +
       live_html;

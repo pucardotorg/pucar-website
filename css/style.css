@@ -5502,40 +5502,65 @@ button.circle-card{
 .reach-grid{ display:grid; grid-template-columns:minmax(270px,360px) 1fr; gap:clamp(24px,4vw,56px); align-items:center; }
 @media (max-width:900px){ .reach-grid{ grid-template-columns:1fr; } }
 
-.reach-list{ display:flex; flex-direction:column; gap:12px; }
-.rm-row{ display:flex; align-items:center; justify-content:space-between; gap:16px; width:100%; text-align:left;
-  padding:15px 20px; border-radius:16px; border:1px solid rgba(251,248,242,.12); background:rgba(251,248,242,.03);
-  color:var(--paper); cursor:pointer; font:inherit; transition:border-color .25s, background .25s, transform .2s; }
-.rm-row:hover{ border-color:rgba(48,207,140,.5); background:rgba(48,207,140,.06); transform:translateX(3px); }
-.rm-row.is-active{ border-color:var(--green); background:rgba(48,207,140,.13); }
-.rm-row.is-all{ margin-bottom:4px; }
-.rm-row-main{ display:flex; flex-direction:column; gap:3px; min-width:0; }
-.rm-row-label{ font-weight:600; font-size:1.06rem; }
-.rm-row-sub{ font-size:.82rem; color:rgba(251,248,242,.55); }
+.reach-list{ display:flex; flex-direction:column; gap:11px; }
+/* Cards: dark inset panel, a state-silhouette thumbnail on the left (same
+   map paths), a left accent rail + soft glow when active. */
+.rm-row{ display:flex; align-items:center; gap:14px; width:100%; text-align:left;
+  padding:13px 15px; border-radius:16px; position:relative; overflow:hidden;
+  border:1px solid rgba(251,248,242,.1);
+  background:linear-gradient(180deg, rgba(251,248,242,.05), rgba(251,248,242,.015));
+  color:var(--paper); cursor:pointer; font:inherit;
+  transition:border-color .25s, background .25s, transform .2s, box-shadow .25s; }
+.rm-row::before{ content:""; position:absolute; left:0; top:8px; bottom:8px; width:3px; border-radius:0 3px 3px 0;
+  background:var(--green); transform:scaleY(0); transform-origin:center; transition:transform .3s ease; }
+.rm-row:hover{ border-color:rgba(48,207,140,.42); transform:translateY(-2px); box-shadow:0 12px 28px rgba(0,0,0,.3); }
+.rm-row.is-active{ border-color:rgba(48,207,140,.55);
+  background:linear-gradient(180deg, rgba(48,207,140,.15), rgba(48,207,140,.045));
+  box-shadow:0 8px 26px rgba(48,207,140,.13); }
+.rm-row.is-active::before{ transform:scaleY(1); }
+.rm-row.is-all{ margin-bottom:2px; }
+
+.rm-thumb{ width:50px; height:50px; flex:0 0 auto; border-radius:12px; display:flex; align-items:center; justify-content:center;
+  background:rgba(10,21,26,.55); border:1px solid rgba(251,248,242,.09); transition:background .25s, border-color .25s; }
+.rm-thumb svg{ width:100%; height:100%; padding:7px; box-sizing:border-box; overflow:visible; display:block; }
+.rm-th{ fill:rgba(251,248,242,.16); transition:fill .25s; }
+.rm-th.is-live{ fill:var(--green); }
+.rm-row:hover .rm-thumb{ border-color:rgba(48,207,140,.3); }
+.rm-row.is-active .rm-thumb{ background:rgba(48,207,140,.12); border-color:rgba(48,207,140,.4); }
+
+.rm-row-main{ display:flex; flex-direction:column; gap:2px; flex:1 1 auto; min-width:0; }
+.rm-row-label{ font-weight:600; font-size:1.04rem; }
+.rm-row-sub{ font-size:.8rem; color:rgba(251,248,242,.55); }
 .rm-live{ display:inline-flex; align-items:center; gap:6px; font-size:.7rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--green); flex:0 0 auto; }
 .rm-live-dot{ width:8px; height:8px; border-radius:50%; background:var(--green); animation:rmLive 2.4s infinite; }
-.rm-soon{ font-size:.66rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:rgba(240,162,138,.92);
-  border:1px solid rgba(240,162,138,.34); border-radius:999px; padding:3px 9px; flex:0 0 auto; }
+.rm-soon{ font-size:.64rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:rgba(251,248,242,.62);
+  border:1px solid rgba(251,248,242,.2); border-radius:999px; padding:3px 9px; flex:0 0 auto; white-space:nowrap; }
 @keyframes rmLive{ 0%{ box-shadow:0 0 0 0 rgba(48,207,140,.5);} 70%{ box-shadow:0 0 0 8px rgba(48,207,140,0);} 100%{ box-shadow:0 0 0 0 rgba(48,207,140,0);} }
 
+/* Map: DRISTI look — ghosted paper silhouette, green outline + faint green
+   fill on the active states/districts, green dot + pulsing ping. */
 .reach-map{ position:relative; display:flex; justify-content:center; }
-.reach-svg{ width:100%; height:auto; max-height:76vh; display:block; overflow:visible; }
-.rm-state{ fill:rgba(48,207,140,.15); stroke:var(--forest-deep); stroke-width:1; transition:fill .5s, opacity .5s; }
-.rm-state.is-live{ fill:var(--green); }
-.rm-state.is-hover{ fill:rgba(48,207,140,.4); }
-.rm-state.is-faded{ opacity:.14; }
-.rm-state.is-selected{ fill:rgba(48,207,140,.09); }
-.rm-districts{ transition:opacity .5s; }
-.rm-district{ fill:var(--green); stroke:var(--forest-deep); stroke-width:1; transition:fill .25s; cursor:pointer; }
-.rm-district:hover{ fill:#66E0A9; }
+.reach-svg{ width:100%; height:auto; max-height:78vh; display:block; overflow:visible; }
+.rm-state{ fill:rgba(251,248,242,.06); stroke:rgba(251,248,242,.14); stroke-width:1; stroke-linejoin:round;
+  transition:fill .5s ease, stroke .5s ease, opacity .5s ease; }
+.rm-state.is-live{ fill:rgba(48,207,140,.18); stroke:var(--green); stroke-width:1.4; }
+.rm-state.is-hover{ fill:rgba(48,207,140,.3); }
+.rm-state.is-faded{ opacity:.3; }
+.rm-state.is-selected{ fill:rgba(251,248,242,.045); stroke:rgba(251,248,242,.12); }
+.rm-districts{ transition:opacity .5s ease; }
+.rm-district{ fill:rgba(251,248,242,.05); stroke:rgba(251,248,242,.13); stroke-width:1; stroke-linejoin:round;
+  transition:fill .4s ease, stroke .4s ease; cursor:pointer; }
+.rm-district:hover{ fill:rgba(48,207,140,.14); stroke:rgba(48,207,140,.5); }
+.rm-district.is-court{ fill:rgba(48,207,140,.2); stroke:var(--green); stroke-width:1.4; }
 .rm-dots{ pointer-events:auto; }
-.rm-dot{ fill:var(--pink); stroke:#fff; stroke-width:1.6; cursor:pointer; }
-.rm-dot.is-live{ fill:var(--green); }
-.rm-ping{ fill:none; stroke:var(--green); stroke-width:1.6; opacity:.7; transform-box:fill-box; transform-origin:center; animation:rmPing 2.2s ease-out infinite; }
-@keyframes rmPing{ 0%{ transform:scale(1); opacity:.7; } 100%{ transform:scale(3.6); opacity:0; } }
+.rm-dot{ fill:var(--forest-deep); stroke:var(--green); stroke-width:2.4; cursor:pointer; }   /* coming soon: hollow green ring */
+.rm-dot.is-live{ fill:var(--green); stroke:var(--forest-deep); stroke-width:1.4; }             /* live: solid green */
+.rm-ping{ fill:none; stroke:var(--green); stroke-width:2; opacity:.8; transform-box:fill-box; transform-origin:center;
+  animation:rmPing 2.2s ease-out infinite; }
+@keyframes rmPing{ 0%{ transform:scale(1); opacity:.8; } 70%{ transform:scale(3.2); opacity:0; } 100%{ transform:scale(3.2); opacity:0; } }
 
-.rm-tip{ position:absolute; transform:translate(-50%,-145%); background:var(--forest-deep); color:var(--paper);
-  border:1px solid rgba(48,207,140,.42); padding:5px 11px; border-radius:8px; font-size:.8rem; font-weight:600;
-  white-space:nowrap; pointer-events:none; opacity:0; transition:opacity .18s; z-index:6; box-shadow:0 6px 20px rgba(0,0,0,.35); }
+.rm-tip{ position:absolute; transform:translate(-50%,-145%); background:#111F26; color:var(--paper);
+  border:1px solid rgba(48,207,140,.5); padding:5px 11px; border-radius:8px; font-size:.8rem; font-weight:600;
+  white-space:nowrap; pointer-events:none; opacity:0; transition:opacity .18s; z-index:6; box-shadow:0 6px 20px rgba(0,0,0,.4); }
 .rm-tip.is-on{ opacity:1; }
 @media (prefers-reduced-motion:reduce){ .rm-live-dot,.rm-ping{ animation:none; } }
