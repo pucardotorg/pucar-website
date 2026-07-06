@@ -5569,10 +5569,10 @@ button.circle-card{
 .rm-state.is-selected{ fill:rgba(251,248,242,.04); stroke:rgba(251,248,242,.11); stroke-width:.55; }
 /* a small beam of light runs around the perimeter of the states / court
    districts we're in. pathLength=100 (set in JS) normalises the dash. */
-.rm-beam{ fill:none; stroke:#CFFFEC; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round;
-  stroke-dasharray:12 88; transition:opacity .5s ease;
-  filter:drop-shadow(0 0 3px rgba(48,207,140,.95));
-  animation:rmBeam 2.8s linear infinite; }
+.rm-beam{ fill:none; stroke:rgba(207,255,236,.5); stroke-width:1.2; stroke-linecap:round; stroke-linejoin:round;
+  stroke-dasharray:5 95; transition:opacity .5s ease;
+  filter:drop-shadow(0 0 1.5px rgba(48,207,140,.5));
+  animation:rmBeam 4.2s linear infinite; }
 @keyframes rmBeam{ from{ stroke-dashoffset:0; } to{ stroke-dashoffset:-100; } }
 .rm-districts{ transition:opacity .5s ease; }
 .rm-district{ fill:rgba(251,248,242,.05); stroke:rgba(251,248,242,.12); stroke-width:.5; stroke-linejoin:round;
