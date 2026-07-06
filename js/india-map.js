@@ -252,8 +252,16 @@
 
   // the region's resting view; hovering a court pans to it and keeps this zoom
   var homeView = null;
+  // pan ONLY to courts that fall outside the resting view (e.g. Gurugram, far
+  // south of the Chandigarh tri-city). Courts already in view keep the map
+  // fixed — the tri-city dots are too close together to pan between without
+  // it looking like jitter — and any in-view hover snaps back home.
   function panToPoint(cx, cy) {
     if (!homeView) return;
+    var m = 0.16;
+    var inView = cx > homeView.x + homeView.w * m && cx < homeView.x + homeView.w * (1 - m) &&
+                 cy > homeView.y + homeView.h * m && cy < homeView.y + homeView.h * (1 - m);
+    if (inView) { returnHome(); return; }
     tweenTo({ x: cx - homeView.w / 2, y: cy - homeView.h / 2, w: homeView.w, h: homeView.h }, 480);
   }
   function returnHome() {
