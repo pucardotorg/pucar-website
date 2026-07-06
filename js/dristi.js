@@ -42,6 +42,78 @@
     });
   });
 
+  /* ---- hover callout: elbowed leader line from the pulsing dot to a
+     mouse-following label ("Kollam, Kerala"). Activates when the mouse
+     comes within PAD px of the map, fades out when it leaves. Drawn in
+     SVG viewBox units, so every size is scaled by sx (vb units per
+     screen px) to render at constant screen size. ---- */
+  var LABELS = {
+    kollam: "Kollam, Kerala", thrissur: "Thrissur, Kerala",
+    panchkula: "Panchkula, Haryana", gurgaon: "Gurgaon, Haryana",
+    chandigarh: "Chandigarh", mohali: "Mohali, Punjab",
+    ahmedabad: "Ahmedabad, Gujarat", rajkot: "Rajkot, Gujarat",
+    vadodara: "Vadodara, Gujarat", surat: "Surat, Gujarat"
+  };
+  var NS = "http://www.w3.org/2000/svg";
+  var PAD = 110; // activation distance around the map, in screen px
+
+  section.querySelectorAll(".dristi-map").forEach(function (wrap) {
+    var svg = wrap.querySelector("svg.state-map");
+    var panel = wrap.closest(".dristi-panel");
+    if (!svg || !panel) return;
+    var g = document.createElementNS(NS, "g");
+    g.setAttribute("class", "km-callout");
+    var line = document.createElementNS(NS, "polyline");
+    line.setAttribute("class", "km-lead");
+    var box = document.createElementNS(NS, "rect");
+    box.setAttribute("class", "km-tag-bg");
+    var txt = document.createElementNS(NS, "text");
+    txt.setAttribute("class", "km-tag");
+    g.appendChild(line); g.appendChild(box); g.appendChild(txt);
+    svg.appendChild(g);
+
+    function hide() { g.classList.remove("is-on"); }
+
+    panel.addEventListener("mousemove", function (e) {
+      var r = svg.getBoundingClientRect();
+      if (!r.width) { hide(); return; }
+      if (e.clientX < r.left - PAD || e.clientX > r.right + PAD ||
+          e.clientY < r.top - PAD || e.clientY > r.bottom + PAD) { hide(); return; }
+      var act = svg.querySelector(".km-d.is-active");
+      if (!act) { hide(); return; }
+      var vb = svg.viewBox.baseVal;
+      var sx = vb.width / r.width;
+      var mx = vb.x + (e.clientX - r.left) * sx;
+      var my = vb.y + (e.clientY - r.top) * (vb.height / r.height);
+      var dx = +act.getAttribute("data-cx"), dy = +act.getAttribute("data-cy");
+
+      txt.textContent = LABELS[act.getAttribute("data-d")] || "";
+      var fs = 12.5 * sx;
+      txt.setAttribute("font-size", fs);
+      var tw = txt.getComputedTextLength();
+      var padX = 8 * sx, h = fs + 12 * sx, w = tw + 2 * padX;
+
+      var dir = mx >= dx ? 1 : -1;                 // label on the mouse's side of the dot
+      var boxX = dir === 1 ? mx + 14 * sx : mx - 14 * sx - w;
+      boxX = Math.max(vb.x + 2 * sx, Math.min(boxX, vb.x + vb.width - w - 2 * sx));
+      var boxY = Math.max(vb.y + 2 * sx, Math.min(my - h / 2, vb.y + vb.height - h - 2 * sx));
+      var anchorX = dir === 1 ? boxX : boxX + w;   // label edge the line plugs into
+      var midY = boxY + h / 2;
+      var elbowX = anchorX - dir * 12 * sx;        // dot -> diagonal -> short horizontal
+
+      line.setAttribute("points", dx + "," + dy + " " + elbowX + "," + midY + " " + anchorX + "," + midY);
+      line.setAttribute("stroke-width", 1.4 * sx);
+      box.setAttribute("x", boxX); box.setAttribute("y", boxY);
+      box.setAttribute("width", w); box.setAttribute("height", h);
+      box.setAttribute("rx", 6 * sx);
+      box.setAttribute("stroke-width", 1 * sx);
+      txt.setAttribute("x", boxX + padX);
+      txt.setAttribute("y", midY);
+      g.classList.add("is-on");
+    });
+    panel.addEventListener("mouseleave", hide);
+  });
+
   rows.forEach(function (row) {
     var panel = section.querySelector('[data-state-panel="' + row.getAttribute("data-state-row") + '"]');
     var isKerala = row.getAttribute("data-state-row") === "kerala";

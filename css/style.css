@@ -4973,6 +4973,36 @@ button.circle-card{
   .km-ping{ animation:none; opacity:.4; }
   .km-marker,.km-d{ transition:none; }
 }
+/* hover callout: leader line + label, mouse-following (js/dristi.js) */
+.km-callout{
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .25s ease;
+}
+.km-callout.is-on{ opacity:1; }
+.km-lead{
+  fill:none;
+  stroke:var(--green);
+  stroke-linejoin:round;
+  stroke-linecap:round;
+  opacity:.85;
+}
+.km-tag-bg{
+  fill:#111F26;
+  fill-opacity:.95;
+  stroke:rgba(48,207,140,.5);
+}
+.km-tag{
+  fill:var(--paper);
+  font-family:'Source Sans 3', sans-serif;
+  font-weight:600;
+  dominant-baseline:central;
+}
+/* phones: no map (and therefore no callout) */
+@media (max-width: 700px){
+  .dristi-map{ display:none; }
+}
+
 .soon-flag{
   display:inline-flex;
   align-items:center;
