@@ -34,20 +34,34 @@ js/view-toggle.js      Cards <-> list switch for all three card grids.
 scripts/build-jobs.js  THE build step (node scripts/build-jobs.js). Zero dependencies.
 scripts/import-pucar-contributors.js   one-off: 77 contributors scraped from pucar.org/about.
 scripts/mirror-contributor-photos.js   one-off: self-hosts contributor photos (run locally).
+js/dristi.js           /dristi/ page: deployments tabs (states/districts, gliding map
+                       marker, hover callout, grey coverage dots), growth chart, THE RACE.
 content/jobs/          One JSON per work item  ← source of truth, edited via Decap or hand.
+content/careers/       One JSON per HIRING role (separate from jobs/ by design; see the
+                       /careers/ section). Seven DRAFT listings as of 6 Jul 2026.
 content/contributors/  One JSON per contributor ← source of truth (77 real + 3 unpublished samples).
+content/team/team.json 10 core-team members (rendered on /about/#team).
+content/resources/     blog.json / data.json / circles.json for /resources/.
 content/sc-perspectives/ + content/sc-events/  sc-ai-policy page content.
 admin/                 Decap CMS: index.html (loads decap from unpkg) + config.yml.
 collaborate/           GENERATED: <slug>/index.html per work item + jobs.json index.
 contributors/          GENERATED: <slug>/index.html per contributor + index.html (the
                        consolidated hub — DRISTI 2.0 + Policy + Contributors, see 6.3c) +
                        photos.json (waving-heads data) + profiles.json (modal data).
-about/ sc-ai-policy/   GENERATED pages (aboutPage/scPolicyPage in build script).
+about/ sc-ai-policy/ resources/  GENERATED pages (aboutPage/scPolicyPage/resourcesPage).
+dristi/                GENERATED (dristiPage): the DRISTI platform page — live stats,
+                       growth chart, journey, race, state/district deployment tabs, board.
+approach/              GENERATED (approachPage): people-centric lens + 3 pillars +
+                       unit-of-change. NOT IN NAV YET (awaiting user review).
+careers/               GENERATED (careersPage/careerPage): open-roles page + one page per
+                       role. NOT IN NAV YET (awaiting user review); listings are DRAFTS.
 team/                  GENERATED redirect stub → /about/#team (teamPage() in build script).
 sitemap.xml / robots.txt  GENERATED at build time (urls array + allow-all robots.txt
                        pointing at the sitemap).
-sitemap.xml            GENERATED.
 assets/litigant-source.svg  Cleaned copy of the litigant illustration (same as inline).
+assets/kerala-map.svg / ph-map.svg / gj-map.svg  State district maps (INLINED into
+                       /dristi/ by the build; regenerate via the browser pipeline
+                       documented in the deployments section, don't hand-edit paths).
 netlify.toml           publish=".", command="node scripts/build-jobs.js", security headers.
 ```
 
@@ -2241,6 +2255,54 @@ when shared in Slack, iMessage, WhatsApp, X, LinkedIn, etc.
   Netlify's `process.env.URL` is set at build time; there's no custom
   domain/CNAME in the repo as of this writing.
 
+## 7b. WHERE WE LEFT OFF (end of 6 Jul 2026 session) — read this first
+
+State of the site at handover:
+
+- SITE URL: pucar.netlify.app (corrected 6 Jul from pucar-journey; SITE
+  constant in the build script + hardcoded homepage meta block).
+- HOMEPAGE HERO rewritten as a call to action (user picked option 3 of
+  6 offered): "The courts of the future won't build themselves." /
+  "Join the mission redesigning Indian justice around the litigant,
+  one case type at a time." User explicitly did NOT want "PUCAR is
+  xyz" phrasing. May need a size check against the right-hand card
+  (single sentence renders shorter than the old 4-liner).
+- TWO PAGES BUILT BUT AWAITING USER REVIEW, deliberately NOT in the
+  nav or footer (in the sitemap only):
+  1. /approach/ — people-centric lens, pendency->people metric shift,
+     three pillars with proof stats, SELECT/TRANSFORM/ENABLE/EXTEND,
+     why Sec 138 first. ("Sec 318" in the user's brief was a confirmed
+     typo for Sec 138 NI Act.)
+  2. /careers/ — hiring page, SEPARATE from the collaborate board by
+     explicit user decision (board = open work anyone picks up;
+     careers = roles PUCAR hires for). SEVEN listings in
+     content/careers/ are PLACEHOLDER DRAFTS, each body contains a
+     "[draft description, refine before publishing]" marker. Apply
+     links use collaborate@pucar.org (only known-good address).
+  When the user approves them, add nav/footer links (Community
+  dropdown + footer map are built in index.html and mirrored by
+  navCluster/footer extraction — see section 6.3c).
+- /dristi/ deployments section is fully interactive: Kerala (Kollam
+  LIVE + Thrissur soon) / Punjab & Haryana one tab (Panchkula,
+  Gurgaon, Chandigarh, Mohali) / Gujarat (Ahmedabad, Rajkot, Vadodara,
+  Surat, named "SARAS 2.0 Court", NOT ON Court). Maps glide, hover
+  callout, grey coverage dots. Details in the dristi sections above.
+- MEETING FEEDBACK BACKLOG (from the DeltaXY x PUCAR sync doc, 6 Jul):
+  items the user has NOT yet asked to implement, likely coming:
+  (a) more testimonials on the site (many accumulated, unpublished);
+  (b) refresh the contributors list (user says ~a year stale; he will
+  supply LinkedIn IDs); (c) auto-sync "Meet the Collaborators" with a
+  community Google Sheet; (d) rephrase sc-ai-policy perspectives for
+  readability (publishing needs each person's consent); (e) fix bugs
+  "Home" shared on the PUCAR thread (list not seen here); (f) test
+  scroll behaviour with a physical mouse on non-Mac; (g) Abhiram will
+  send a Figma of annotated nav feedback (main-nav vs subnav
+  confusion). Design feedback arrives as annotated screenshots by
+  agreed convention.
+- The user reviews visual changes from screenshots and iterates fast;
+  expect short follow-ups like "bigger", "too far right", "remove this
+  section" referencing a screenshot crop.
+
 ## 8. Known placeholders / TODO before launch (updated July 2026)
 
 - robots.txt is now generated at build time (allow-all + sitemap pointer);
@@ -2268,6 +2330,12 @@ when shared in Slack, iMessage, WhatsApp, X, LinkedIn, etc.
 - Decap OAuth setup (section 6.6) not yet done.
 - Sample job dates are relative to July 2026; re-check expiry behaviour when
   updating.
+- /approach/ and /careers/ await user review before nav placement (see
+  7b). The seven content/careers/*.json listings are drafts.
+- Kerala dashboard numbers were last read 6 Jul 2026 (hero stats,
+  growth chart, stage medians, race). They're inline/static: re-read
+  the public dashboard and update kstatsHtml + js/dristi.js data when
+  they drift. Dashboard URL + iframe trick are in the dristi sections.
 - PUSH WORKFLOW: the sandbox agents work in cannot push (no GitHub
   credentials). Every change session ends with a commented `git push`
   command for the user to run — keep doing that.
