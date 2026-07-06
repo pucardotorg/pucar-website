@@ -39,9 +39,13 @@
     Plotly.newPlot(el, [
       { type: "bar", name: "Filed", x: QUARTERS, y: FILED,
         marker: { color: "rgba(48,207,140,.85)", line: { color: GREEN, width: 1 } },
+        text: FILED.map(String), textposition: "outside", cliponaxis: false,
+        textfont: { family: FONT, size: 12, color: GREEN },
         hovertemplate: "<b>Filed</b>: %{y}<extra></extra>" },
       { type: "bar", name: "Disposed", x: QUARTERS, y: DISPOSED,
         marker: { color: "rgba(240,162,138,.75)", line: { color: ORANGE, width: 1 } },
+        text: DISPOSED.map(String), textposition: "outside", cliponaxis: false,
+        textfont: { family: FONT, size: 12, color: ORANGE },
         hovertemplate: "<b>Disposed</b>: %{y}<extra></extra>" }
     ], {
       barmode: "group",
@@ -53,6 +57,7 @@
       margin: { t: 8, r: 8, b: 44, l: 40 },
       xaxis: { tickfont: { size: 11 }, color: MUTED, fixedrange: true },
       yaxis: { title: { text: "Cases per quarter", font: { size: 12 } },
+        range: [0, 545], /* headroom so the 486 label sits inside the plot */
         gridcolor: GRID, zeroline: false, tickfont: { size: 11 }, color: MUTED, fixedrange: true },
       legend: { orientation: "h", x: 0, y: 1.12, font: { size: 12, color: "rgba(251,248,242,.75)" } },
       hovermode: "x unified",
