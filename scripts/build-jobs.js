@@ -1062,8 +1062,17 @@ function dristiPage() {
 
 '  <div class="dristi-panel" id="panelKollam">\n' +
 '    <div class="dristi-panel-head">\n' +
-'      <h3 class="dristi-panel-title">24x7 ON Court, Kollam</h3>\n' +
-'      <p class="dristi-panel-sub">Live since 20 November 2024 under the High Court of Kerala. It accepts cheque dishonour cases under Section 138 of the Negotiable Instruments Act arising from nine police stations in Kollam district, and it never closes: a court that goes to people, instead of people going to courts.</p>\n' +
+'      <div class="dristi-panel-copy">\n' +
+'        <h3 class="dristi-panel-title">24x7 ON Court, Kollam</h3>\n' +
+'        <p class="dristi-panel-sub">Live since 20 November 2024 under the High Court of Kerala. It accepts cheque dishonour cases under Section 138 of the Negotiable Instruments Act arising from nine police stations in Kollam district, and it never closes: a court that goes to people, instead of people going to courts.</p>\n' +
+"      </div>\n" +
+      /* vector Kerala with Kollam outlined green + throbbing dot; the SVG
+         (assets/kerala-map.svg, built from geohacker/kerala district
+         GeoJSON, equirect projection, simplified) is INLINED so site CSS
+         drives the colours and the ping animation */
+'      <div class="dristi-map" aria-hidden="true">\n' +
+fs.readFileSync(path.join(ROOT, "assets", "kerala-map.svg"), "utf8") + "\n" +
+"      </div>\n" +
 "    </div>\n" +
 '    <div class="dristi-stat-grid">\n' + kstatsHtml + "\n    </div>\n" +
 '    <p class="dristi-source">Figures from the <a href="https://oncourts.kerala.gov.in/dashboard" target="_blank" rel="noopener">public ON Courts dashboard</a>, July 2026. 80% of disposed cases end in withdrawal: parties settle directly once the process is credible and predictable.</p>\n' +

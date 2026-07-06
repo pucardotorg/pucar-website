@@ -4845,6 +4845,47 @@ button.circle-card{
 }
 .approach-note{ margin-top:22px; }
 
+/* Kerala vector map beside the panel intro: Kollam outlined + pulsing */
+.dristi-panel-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:clamp(24px,5vw,72px);
+  flex-wrap:wrap;
+}
+.dristi-panel-copy{ flex:1 1 420px; min-width:0; }
+.dristi-map{ flex:0 0 auto; width:clamp(120px,15vw,176px); margin-inline:auto; }
+.dristi-map svg{ display:block; width:100%; height:auto; }
+.km-state{
+  fill:rgba(251,248,242,.07);
+  stroke:rgba(251,248,242,.07); /* same tone bridges simplification gaps */
+  stroke-width:2;
+  stroke-linejoin:round;
+}
+.km-kollam{
+  fill:rgba(48,207,140,.16);
+  stroke:var(--green);
+  stroke-width:1.6;
+  stroke-linejoin:round;
+}
+.km-dot{ fill:var(--green); }
+.km-ping{
+  fill:none;
+  stroke:var(--green);
+  stroke-width:2;
+  opacity:.8;
+  transform-origin:283px 544px;
+  animation:kmPing 2.2s ease-out infinite;
+}
+@keyframes kmPing{
+  0%{ transform:scale(1); opacity:.8; }
+  70%{ transform:scale(3.2); opacity:0; }
+  100%{ transform:scale(3.2); opacity:0; }
+}
+@media (prefers-reduced-motion: reduce){
+  .km-ping{ animation:none; opacity:.4; }
+}
+
 /* quarterly filings + disposals panel (same chrome as the journey) */
 .dristi-growth{
   margin:44px 0 0;

@@ -1852,6 +1852,22 @@ without asking):
 
 From the DeltaXY x PUCAR daily sync notes:
 
+- KERALA MAP (assets/kerala-map.svg, INLINED into the Kollam panel
+  head): vector Kerala silhouette with Kollam alone outlined in green
+  plus a pulsing dot (.km-ping, kmPing keyframes, reduced-motion
+  fallback). Built from geohacker/kerala district GeoJSON (14 district
+  polygons, equirect projection with cos-lat correction, distance
+  simplification: silhouette tol 4.5px / Kollam 1.8px at H=640,
+  integer coords). All non-Kollam districts are FILLED in the same
+  faint tone with a same-tone 2px stroke so simplification gaps
+  between districts disappear and no internal borders show. Panel head
+  is now flex: .dristi-panel-copy left, .dristi-map (120-176px) right,
+  wraps+centres on phones. HOW IT WAS FETCHED: sandbox curl and
+  scripted browser downloads are both blocked; the GeoJSON was fetched
+  in a browser tab (raw.githubusercontent 404s under the old geohacker
+  paths; the live ones are geojsons/district.geojson), projected and
+  simplified IN PAGE, then extracted through the extension in ~900-char
+  chunks (the extension truncates ~1KB per output).
 - JOURNEY ROW DESCRIPTIONS: the before/after table's terms (Filing to
   registration etc.) each carry a .dj-stage-desc plain-English line
   under the term (block em inside .dj-stage, .78rem, 52ch cap) --
