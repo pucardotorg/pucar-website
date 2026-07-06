@@ -4968,6 +4968,7 @@ button.circle-card{
 }
 /* CTAs: one glowing primary + quiet pills that fill on hover */
 .dristi-links{ margin-top:40px; gap:12px; }
+.collab-head-cta{ margin-top:22px; }
 /* "About the DRISTI platform ->" link inside board intros */
 .collab-dristi-link{
   color:var(--green);
