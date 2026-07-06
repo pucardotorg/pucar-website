@@ -205,20 +205,14 @@
     if (h < minSpan) { var cy = (miny + maxy) / 2; miny = cy - minSpan / 2; h = minSpan; }
     return [minx, miny, w, h];
   }
-  // Far-flung outlier courts are kept OUT of the resting view and revealed
-  // only by hovering them in the card list (the map pans there). Every other
-  // court sits inside the home view, so hovering it never moves the map. Only
-  // Punjab & Haryana has an outlier (Gurugram, far south of the tri-city);
-  // Kerala and Gujarat frame all their courts and never pan.
-  var OUTLIERS = { ph: ["Gurugram"] };
-  function isOutlier(rid, name) { return !!(OUTLIERS[rid] && OUTLIERS[rid].indexOf(name) !== -1); }
+  // frame ALL of a region's courts at once (no panning) — every dot, including
+  // Gurugram, is visible in the resting view; the map never moves on hover.
   function homeBox(r) {
-    var cs = r.courts.filter(function (c) { return c.c && !isOutlier(r.id, c.n); });
-    if (!cs.length) cs = r.courts.filter(function (c) { return c.c; });
+    var cs = r.courts.filter(function (c) { return c.c; });
     var xs = cs.map(function (c) { return c.c[0]; }), ys = cs.map(function (c) { return c.c[1]; });
     var minx = Math.min.apply(null, xs), maxx = Math.max.apply(null, xs),
         miny = Math.min.apply(null, ys), maxy = Math.max.apply(null, ys);
-    var w = maxx - minx, h = maxy - miny, ms = 40;
+    var w = maxx - minx, h = maxy - miny, ms = 45; // min span so a tight cluster isn't over-zoomed
     if (w < ms) { var cx = (minx + maxx) / 2; minx = cx - ms / 2; w = ms; }
     if (h < ms) { var cy = (miny + maxy) / 2; miny = cy - ms / 2; h = ms; }
     return [minx, miny, w, h];
@@ -254,16 +248,7 @@
   }
 
   // the region's resting view; hovering a court pans to it and keeps this zoom
-  var homeView = null;
-  // pan the map to an outlier court (called only from the fixed card list, so
-  // there's no dot-follows-cursor feedback loop)
-  function panToPoint(cx, cy) {
-    if (!homeView) return;
-    tweenTo({ x: cx - homeView.w / 2, y: cy - homeView.h / 2, w: homeView.w, h: homeView.h }, 480);
-  }
-  function returnHome() {
-    if (homeView) tweenTo(homeView, 480);
-  }
+  var homeView = null;   // the region's fixed resting view (no panning)
 
   /* ---------- dots ---------- */
   function clearDots() { while (gDots.firstChild) gDots.removeChild(gDots.firstChild); }
@@ -348,9 +333,8 @@
       g.style.opacity = on ? "1" : "0";
       g.style.pointerEvents = on ? "auto" : "none";
     });
-    // open framed on all the region's courts (outliers excluded — those are
-    // reached by hovering their card row); Kerala & Gujarat never need to pan
-    homeView = padBox(homeBox(r), 0.55);
+    // fixed view framed on ALL the region's courts (no panning anywhere)
+    homeView = padBox(homeBox(r), 0.5);
     tweenTo(homeView, 820);
     // dots fade/settle after the zoom reads
     setTimeout(function () { if (current === id) regionDots(r); }, reduce ? 0 : 120);
@@ -407,7 +391,8 @@
     return '<svg viewBox="' + vb.join(" ") + '" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' + paths + "</svg>";
   }
   var items = {};
-  var hoverT = null;   // hover-intent debounce shared across cards
+  var hoverT = null;     // hover-intent debounce shared across cards
+  var lastActivate = 0;  // cooldown so the accordion's layout shift can't bounce us to another card
   // per-region "explore in detail" link (points at the DRISTI page section)
   var REGION_LINK = { kerala: { href: "/dristi/#deployments", text: "Explore Kerala in detail" } };
   function makeRow(id, label, sub, live) {
@@ -427,11 +412,14 @@
     // cards activate on HOVER (with a short intent delay so passing over
     // doesn't fire), and stay active until another card is hovered; click
     // still works for touch/keyboard
-    function activate() { if (current === id) return; if (id === "all") selectAll(); else selectRegion(id); }
+    function activate() { if (current === id) return; if (id === "all") selectAll(); else selectRegion(id); lastActivate = Date.now(); }
     b.addEventListener("click", activate);
     b.addEventListener("mouseenter", function () {
       clearTimeout(hoverT);
       if (current === id) return;
+      // ignore the spurious mouseenter that the accordion's collapse/expand
+      // fires right after a switch (it would bounce us back to the old card)
+      if (Date.now() - lastActivate < 400) return;
       hoverT = setTimeout(activate, 130);
     });
     b.addEventListener("mouseleave", function () { clearTimeout(hoverT); });
@@ -445,8 +433,7 @@
       var ex = document.createElement("div");
       ex.className = "rm-expand";
       var lis = reg.courts.map(function (c) {
-        return '<li class="rm-ditem"' + (c.c ? ' data-cx="' + c.c[0] + '" data-cy="' + c.c[1] + '"' : "") +
-          (isOutlier(id, c.n) ? ' data-outlier="1"' : "") + ">" +
+        return '<li class="rm-ditem"' + (c.c ? ' data-cx="' + c.c[0] + '" data-cy="' + c.c[1] + '"' : "") + ">" +
           '<span class="rm-ddot' + (c.live ? " is-live" : "") + '"></span>' +
           '<span class="rm-dname">' + c.n + "</span>" +
           '<span class="rm-dstatus' + (c.live ? " is-live" : "") + '">' + (c.live ? "Live" : "Coming soon") + "</span></li>";
@@ -459,13 +446,9 @@
         var cx = li.getAttribute("data-cx");
         if (cx == null) return;
         li.addEventListener("mouseenter", function () {
-          if (current !== id) return;
-          showTip(li.querySelector(".rm-dname").textContent, +cx, +li.getAttribute("data-cy"));
-          // only outlier courts (Gurugram) shift the map; everything else stays put
-          if (li.getAttribute("data-outlier")) panToPoint(+cx, +li.getAttribute("data-cy"));
-          else returnHome();
+          if (current === id) showTip(li.querySelector(".rm-dname").textContent, +cx, +li.getAttribute("data-cy"));
         });
-        li.addEventListener("mouseleave", function () { hideTip(); if (current === id) returnHome(); });
+        li.addEventListener("mouseleave", hideTip);
       });
       item.appendChild(ex);
     }
