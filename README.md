@@ -1879,6 +1879,16 @@ From the DeltaXY x PUCAR daily sync notes:
   slices per call beats one call per slice) and length+checksum
   verified before assembly. Panel head is justify-content:flex-start
   now ("map too far right"), copy capped 62ch.
+- MAP HOVER CALLOUT (later 6 Jul): each map gets a .km-callout group
+  (polyline + rect + text, built in JS): an ELBOWED leader line from
+  the pulsing dot to a mouse-following "Kollam, Kerala" label. Shows
+  when the mouse is within 110px of the map's rect (mousemove on the
+  panel), fades out beyond it or on panel mouseleave. Everything is
+  drawn in viewBox units scaled by sx = vb.width/rect.width so the
+  label renders at constant SCREEN size; the box clamps inside the
+  viewBox and flips sides based on mouse vs dot. Labels live in a JS
+  map (LABELS) keyed by data-d. Maps are display:none on <=700px
+  phones (user request), which also kills the callout there.
 - KERALA MAP (assets/kerala-map.svg, INLINED into the Kollam panel
   head): vector Kerala silhouette with Kollam alone outlined in green
   plus a pulsing dot (.km-ping, kmPing keyframes, reduced-motion
