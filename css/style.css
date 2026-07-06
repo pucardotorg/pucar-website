@@ -4942,8 +4942,8 @@ button.circle-card{
 }
 .dristi-panel-copy{ flex:0 1 62ch; min-width:min(100%,340px); }
 /* no auto margins: the map hugs the paragraph, gap alone separates them */
-.dristi-map{ flex:0 0 auto; width:clamp(160px,20vw,240px); margin-bottom:14px; }
-.dristi-map svg{ display:block; width:100%; height:auto; max-height:400px; }
+.dristi-map{ flex:0 0 auto; width:clamp(200px,26vw,320px); margin-bottom:14px; }
+.dristi-map svg{ display:block; width:100%; height:auto; max-height:520px; }
 .km-state{
   fill:rgba(251,248,242,.07);
   stroke:rgba(251,248,242,.07); /* same tone bridges simplification gaps */

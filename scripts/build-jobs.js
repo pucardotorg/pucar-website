@@ -1149,7 +1149,6 @@ journeyHtml + "\n" +
 "    </div>\n" +
 "    </div>\n" + /* /.dristi-live-body */
 '    <div class="dristi-soon-body" hidden>\n' +
-'      <p class="dristi-soon-note">Nothing to report yet: the numbers, journeys and races you see for Kollam will appear here once this court opens its doors. Want to help it get there sooner? <a href="#collaborate">Pick up open work on DRISTI</a>.</p>\n' +
 "    </div>\n" +
 "  </div>\n" +
 
@@ -1181,7 +1180,6 @@ fs.readFileSync(path.join(ROOT, "assets", "ph-map.svg"), "utf8") + "\n" +
 "      </div>\n" +
 "    </div>\n" +
 '    <div class="dristi-soon-body">\n' +
-'      <p class="dristi-soon-note">Nothing to report yet: the numbers, journeys and races you see for Kollam will appear here once this court opens its doors. Want to help it get there sooner? <a href="#collaborate">Pick up open work on DRISTI</a>.</p>\n' +
 "    </div>\n" +
 "  </div>\n" +
 
@@ -1213,7 +1211,6 @@ fs.readFileSync(path.join(ROOT, "assets", "gj-map.svg"), "utf8") + "\n" +
 "      </div>\n" +
 "    </div>\n" +
 '    <div class="dristi-soon-body">\n' +
-'      <p class="dristi-soon-note">Nothing to report yet: the numbers, journeys and races you see for Kollam will appear here once this court opens its doors. Want to help it get there sooner? <a href="#collaborate">Pick up open work on DRISTI</a>.</p>\n' +
 "    </div>\n" +
 "  </div>\n" +
 "</section>\n" +
