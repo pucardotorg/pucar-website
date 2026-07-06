@@ -57,10 +57,32 @@
   var NS = "http://www.w3.org/2000/svg";
   var PAD = 110; // activation distance around the map, in screen px
 
+  /* grey dots on every OTHER covered district, so you can see at a
+     glance what the state deployment covers; the active district's
+     grey dot hides under the green marker (6 Jul 2026 request) */
+  function syncOtherDots(svg) {
+    var act = svg.querySelector(".km-d.is-active");
+    var key = act ? act.getAttribute("data-d") : "";
+    svg.querySelectorAll(".km-other").forEach(function (c) {
+      c.classList.toggle("is-here", c.getAttribute("data-for") === key);
+    });
+  }
+
   section.querySelectorAll(".dristi-map").forEach(function (wrap) {
     var svg = wrap.querySelector("svg.state-map");
     var panel = wrap.closest(".dristi-panel");
     if (!svg || !panel) return;
+    var marker = svg.querySelector(".km-marker");
+    svg.querySelectorAll(".km-d").forEach(function (p) {
+      var c = document.createElementNS(NS, "circle");
+      c.setAttribute("class", "km-other");
+      c.setAttribute("data-for", p.getAttribute("data-d"));
+      c.setAttribute("cx", p.getAttribute("data-cx"));
+      c.setAttribute("cy", p.getAttribute("data-cy"));
+      c.setAttribute("r", 4);
+      svg.insertBefore(c, marker); // grey dots UNDER the green marker
+    });
+    syncOtherDots(svg);
     var g = document.createElementNS(NS, "g");
     g.setAttribute("class", "km-callout");
     var line = document.createElementNS(NS, "polyline");
@@ -141,6 +163,7 @@
         if (marker && target) {
           marker.style.transform = "translate(" + target.getAttribute("data-cx") + "px," + target.getAttribute("data-cy") + "px)";
         }
+        syncOtherDots(svg);
       }
       /* Kerala only: Kollam is live, everything else is coming soon */
       if (isKerala) {
