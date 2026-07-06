@@ -201,8 +201,17 @@ function navCluster(subnav) {
   return '<div class="nav-cluster">' + main.replace('<nav class="site-nav">', '<nav class="site-nav main-nav">') + "</div>";
 }
 
+/* CACHE BUSTING (Jul 2026): iPhone Safari was serving week-old style.css
+   despite fix after fix landing ("this judge thing keeps breaking") -- the
+   site had no versioning at all. Every build stamps local css/js URLs with
+   ?v=<build id>, in generated pages AND index.html (rewritten below). */
+const BUILD_V = Date.now().toString(36);
+function bust(html) {
+  return html.replace(/(href|src)="((?:\/)?(?:css|js)\/[^"?]+)(?:\?v=[^"]*)?"/g, '$1="$2?v=' + BUILD_V + '"');
+}
+
 function pageShell(opts) {
-  return "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n" +
+  return bust("<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n" +
 '<meta charset="UTF-8" />\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />\n' +
 "<title>" + esc(opts.title) + "</title>\n" +
 '<meta name="description" content="' + esc(opts.desc) + '" />\n' +
@@ -250,7 +259,7 @@ function pageShell(opts) {
    sub-nav via opts.subnav which collapses the main nav behind a burger */
 "  " + navCluster(opts.subnav) + "\n</header>\n" +
 '<main class="job-main' + (opts.mainClass ? " " + opts.mainClass : "") + '">\n' + opts.main + "\n</main>\n" +
-FOOTER + "\n</body>\n</html>\n";
+FOOTER + "\n</body>\n</html>\n");
 }
 
 /* ---------------- job pieces ---------------- */
@@ -1323,7 +1332,7 @@ html = html.slice(0, s + START.length) + "\n" +
   (boardJobs.length ? boardJobs.map(card).join("\n")
     : '<p class="collab-empty">No open work right now — check back soon, or write to us.</p>') +
   "\n" + html.slice(e);
-fs.writeFileSync(indexPath, html);
+fs.writeFileSync(indexPath, bust(html));
 
 /* sitemap */
 const urls = [SITE + "/", SITE + "/sc-ai-policy/", SITE + "/contributors/", SITE + "/about/", SITE + "/dristi/", SITE + "/resources/"]

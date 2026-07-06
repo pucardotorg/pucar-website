@@ -1818,6 +1818,17 @@ is gone.
 - The race auto-plays once when the CHART is centred (rootMargin -32%)
   with a 3-2-1-GO countdown; button replays.
 
+### Cache busting (July 2026)
+
+Every local css/js URL in generated pages AND index.html is stamped
+?v=<build id> (bust() in the build script, BUILD_V = Date.now base36).
+Added after a week of "the judge keeps breaking" reports that turned out
+to be iPhone Safari serving STALE style.css: there was no versioning at
+all, so shipped fixes never reached cached devices. Mobile speech
+bubbles also switched to EXPLICIT width (not max-content + cap): Safari
+lays the box out one line tall when max-content exceeds the cap and the
+wrapped text spills out of the drawn paper.
+
 ### Footer: single source of truth
 
 The footer's right side is a categorised sitemap (.footer-map: Explore /

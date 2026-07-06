@@ -3464,7 +3464,11 @@ a.event-card{ text-decoration:none; }
      need overriding (this media block is later in the file, so its
      hidden-state translate would win even while visible). */
   .speech-bubble{
-    max-width:min(260px, calc(100vw - 40px));
+    /* EXPLICIT width on phones, not max-content+cap: Safari lays the box
+       out at one-line height when max-content exceeds the cap, spilling
+       wrapped text out of the drawn paper (the recurring judge bug) */
+    width:min(240px, calc(100vw - 48px));
+    max-width:none;
     font-size:.84rem;
     line-height:1.4;
     padding:11px 14px;
