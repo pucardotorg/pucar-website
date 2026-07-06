@@ -205,14 +205,17 @@
     if (h < minSpan) { var cy = (miny + maxy) / 2; miny = cy - minSpan / 2; h = minSpan; }
     return [minx, miny, w, h];
   }
-  // the DENSEST cluster of courts (those near the region's primary dot) — this
-  // is what the region opens zoomed into. Outliers (e.g. Gurugram, far south of
-  // the Chandigarh tri-city) are reached by hovering, which pans the map there.
-  function clusterBox(r) {
-    var d = r.dot || (r.courts[0] && r.courts[0].c) || [r.b[0] + r.b[2] / 2, r.b[1] + r.b[3] / 2];
-    var near = r.courts.filter(function (c) { return c.c && Math.hypot(c.c[0] - d[0], c.c[1] - d[1]) < 45; });
-    if (!near.length) near = r.courts.filter(function (c) { return c.c; });
-    var xs = near.map(function (c) { return c.c[0]; }), ys = near.map(function (c) { return c.c[1]; });
+  // Far-flung outlier courts are kept OUT of the resting view and revealed
+  // only by hovering them in the card list (the map pans there). Every other
+  // court sits inside the home view, so hovering it never moves the map. Only
+  // Punjab & Haryana has an outlier (Gurugram, far south of the tri-city);
+  // Kerala and Gujarat frame all their courts and never pan.
+  var OUTLIERS = { ph: ["Gurugram"] };
+  function isOutlier(rid, name) { return !!(OUTLIERS[rid] && OUTLIERS[rid].indexOf(name) !== -1); }
+  function homeBox(r) {
+    var cs = r.courts.filter(function (c) { return c.c && !isOutlier(r.id, c.n); });
+    if (!cs.length) cs = r.courts.filter(function (c) { return c.c; });
+    var xs = cs.map(function (c) { return c.c[0]; }), ys = cs.map(function (c) { return c.c[1]; });
     var minx = Math.min.apply(null, xs), maxx = Math.max.apply(null, xs),
         miny = Math.min.apply(null, ys), maxy = Math.max.apply(null, ys);
     var w = maxx - minx, h = maxy - miny, ms = 40;
@@ -252,16 +255,10 @@
 
   // the region's resting view; hovering a court pans to it and keeps this zoom
   var homeView = null;
-  // pan ONLY to courts that fall outside the resting view (e.g. Gurugram, far
-  // south of the Chandigarh tri-city). Courts already in view keep the map
-  // fixed — the tri-city dots are too close together to pan between without
-  // it looking like jitter — and any in-view hover snaps back home.
+  // pan the map to an outlier court (called only from the fixed card list, so
+  // there's no dot-follows-cursor feedback loop)
   function panToPoint(cx, cy) {
     if (!homeView) return;
-    var m = 0.16;
-    var inView = cx > homeView.x + homeView.w * m && cx < homeView.x + homeView.w * (1 - m) &&
-                 cy > homeView.y + homeView.h * m && cy < homeView.y + homeView.h * (1 - m);
-    if (inView) { returnHome(); return; }
     tweenTo({ x: cx - homeView.w / 2, y: cy - homeView.h / 2, w: homeView.w, h: homeView.h }, 480);
   }
   function returnHome() {
@@ -281,8 +278,10 @@
     }
     var dot = el("circle", { class: "rm-dot" + (live ? " is-live" : ""), cx: cx, cy: cy, r: br * unit, "data-br": br });
     if (label) {
-      dot.addEventListener("mouseenter", function () { showTip(label, cx, cy); if (pan) panToPoint(cx, cy); });
-      dot.addEventListener("mouseleave", function () { hideTip(); if (pan) returnHome(); });
+      // map dots only show the tooltip — panning here would move the dot out
+      // from under the cursor and oscillate. Panning lives on the card list.
+      dot.addEventListener("mouseenter", function () { showTip(label, cx, cy); });
+      dot.addEventListener("mouseleave", hideTip);
     }
     gDots.appendChild(dot);
   }
@@ -349,8 +348,9 @@
       g.style.opacity = on ? "1" : "0";
       g.style.pointerEvents = on ? "auto" : "none";
     });
-    // open zoomed into the densest court cluster; outliers are reached on hover
-    homeView = padBox(clusterBox(r), 0.55);
+    // open framed on all the region's courts (outliers excluded — those are
+    // reached by hovering their card row); Kerala & Gujarat never need to pan
+    homeView = padBox(homeBox(r), 0.55);
     tweenTo(homeView, 820);
     // dots fade/settle after the zoom reads
     setTimeout(function () { if (current === id) regionDots(r); }, reduce ? 0 : 120);
@@ -445,7 +445,8 @@
       var ex = document.createElement("div");
       ex.className = "rm-expand";
       var lis = reg.courts.map(function (c) {
-        return '<li class="rm-ditem"' + (c.c ? ' data-cx="' + c.c[0] + '" data-cy="' + c.c[1] + '"' : "") + ">" +
+        return '<li class="rm-ditem"' + (c.c ? ' data-cx="' + c.c[0] + '" data-cy="' + c.c[1] + '"' : "") +
+          (isOutlier(id, c.n) ? ' data-outlier="1"' : "") + ">" +
           '<span class="rm-ddot' + (c.live ? " is-live" : "") + '"></span>' +
           '<span class="rm-dname">' + c.n + "</span>" +
           '<span class="rm-dstatus' + (c.live ? " is-live" : "") + '">' + (c.live ? "Live" : "Coming soon") + "</span></li>";
@@ -460,7 +461,9 @@
         li.addEventListener("mouseenter", function () {
           if (current !== id) return;
           showTip(li.querySelector(".rm-dname").textContent, +cx, +li.getAttribute("data-cy"));
-          panToPoint(+cx, +li.getAttribute("data-cy"));   // shift the map to this court
+          // only outlier courts (Gurugram) shift the map; everything else stays put
+          if (li.getAttribute("data-outlier")) panToPoint(+cx, +li.getAttribute("data-cy"));
+          else returnHome();
         });
         li.addEventListener("mouseleave", function () { hideTip(); if (current === id) returnHome(); });
       });
@@ -504,9 +507,8 @@
           return Math.hypot(a.c[0] - mx, a.c[1] - my) - Math.hypot(b.c[0] - mx, b.c[1] - my);
         })[0];
         showTip(court ? court.n : titleCase(p.getAttribute("data-name")), mx, my);
-        if (current === r.id && court) panToPoint(court.c[0], court.c[1]);
       });
-      p.addEventListener("mouseleave", function () { hideTip(); if (current === r.id) returnHome(); });
+      p.addEventListener("mouseleave", hideTip);
     });
   });
 
