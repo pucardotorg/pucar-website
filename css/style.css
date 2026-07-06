@@ -1281,7 +1281,16 @@ body:has(.pin[data-beat="9"]) .header-cta:hover{
   z-index:-1;
   background:var(--paper);
   border:1.8px solid var(--ink);
-  /* four differently-weighted corners -- a perfect 14px radius all round
+  /* the judge's balloon: WRAPPING IS NOT TRUSTED. WebKit repeatedly laid
+   the box out one line tall while visually wrapping the text (with
+   max-content, with caps, even with fixed width), spilling text past the
+   drawn paper. The two lines are now EXPLICIT <br/>-separated spans that
+   never wrap, so the box height is line-count * line-height in every
+   engine, full stop. */
+.judge-bubble{ text-wrap:initial; }
+.judge-bubble .jb-line{ white-space:nowrap; }
+
+/* four differently-weighted corners -- a perfect 14px radius all round
      reads as machine-drawn; uneven ones read as a hand-sketched balloon */
   border-radius:255px 15px 225px 20px / 20px 220px 18px 255px;
   box-shadow:0 10px 20px rgba(36,30,26,.16);
@@ -3489,16 +3498,11 @@ a.event-card{ text-decoration:none; }
     left:50%;
     bottom:calc(100% + 12px);
     translate:-50% 10px;
-    /* FIXED width, not max-content: his line is hard-coded, and iOS was
-       rendering the max-content box at one-line height while the text
-       wrapped past the drawn ::before strip. An explicit width keeps the
-       box, the text, and the sketched balloon background in agreement. */
     width:200px;
-    max-width:calc(100vw - 48px);
+    max-width:none;
     font-size:.95rem;
     padding:12px 16px;
     text-align:center;
-    text-wrap:balance;
   }
   .pin[data-beat="3"] .judge-bubble{ translate:-50% 0; }
   /* the judge's balloon must sit ABOVE his head and hard-wrap inside its
