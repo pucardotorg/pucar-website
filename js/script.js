@@ -1106,7 +1106,12 @@
   // impossible this way; re-light only if the pointer is truly there)
   nav.addEventListener("click", function (e) {
     var a = e.target.closest("a");
-    if (!a) return;
+    // Only the top-level pills own this glider. A click on a dropdown
+    // .nav-menu-item bubbles up to `nav` too, and closest("a") returns that
+    // item -- moving the main pill onto its (offset-parent-relative)
+    // coordinates made the main highlight lurch toward the sub-menu on
+    // click. Dropdown items have their own menu-glider; ignore them here.
+    if (!a || links.indexOf(a) === -1) return;
     clear();
     setTimeout(function () {
       if (a.matches(":hover")) { move(a); ride(); } else { clear(); }
