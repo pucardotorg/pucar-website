@@ -5493,7 +5493,7 @@ button.circle-card{
    Dark collaborate-band styling; left rows drive a viewBox zoom on the
    right-hand map. States green, active states brighter, pink court dots.
    ======================================================================= */
-.reach{ background:var(--forest); color:var(--paper); padding:clamp(64px,9vh,120px) 0; overflow:hidden; }
+.reach{ background:#141732; color:var(--paper); padding:clamp(64px,9vh,120px) 0; overflow:hidden; } /* deep indigo, same as the DRISTI/collaborate band */
 .reach-inner{ max-width:1220px; margin:0 auto; padding:0 clamp(20px,5vw,64px); }
 .reach-head{ max-width:780px; margin-bottom:clamp(28px,4vh,52px); }
 .reach .beat-eyebrow{ color:var(--pink); }
@@ -5519,6 +5519,9 @@ button.circle-card{
   box-shadow:0 8px 26px rgba(48,207,140,.13); }
 .rm-row.is-active::before{ transform:scaleY(1); }
 .rm-row.is-all{ margin-bottom:2px; }
+/* quick pulse when the row is selected by clicking its state on the map */
+.rm-row.is-pinged{ animation:rmCardPulse .55s ease; }
+@keyframes rmCardPulse{ 0%{ box-shadow:0 0 0 0 rgba(48,207,140,.45); } 100%{ box-shadow:0 0 0 12px rgba(48,207,140,0); } }
 
 .rm-thumb{ width:50px; height:50px; flex:0 0 auto; border-radius:12px; display:flex; align-items:center; justify-content:center;
   background:rgba(10,21,26,.55); border:1px solid rgba(251,248,242,.09); transition:background .25s, border-color .25s; }
@@ -5541,20 +5544,24 @@ button.circle-card{
    fill on the active states/districts, green dot + pulsing ping. */
 .reach-map{ position:relative; display:flex; justify-content:center; }
 .reach-svg{ width:100%; height:auto; max-height:78vh; display:block; overflow:visible; }
-.rm-state{ fill:rgba(251,248,242,.06); stroke:rgba(251,248,242,.14); stroke-width:1; stroke-linejoin:round;
+.rm-state{ fill:rgba(251,248,242,.055); stroke:rgba(251,248,242,.13); stroke-width:.55; stroke-linejoin:round;
   transition:fill .5s ease, stroke .5s ease, opacity .5s ease; }
 .rm-state.is-live{ fill:rgba(48,207,140,.18); stroke:var(--green); stroke-width:1.4; }
 .rm-state.is-hover{ fill:rgba(48,207,140,.3); }
-.rm-state.is-faded{ opacity:.3; }
-.rm-state.is-selected{ fill:rgba(251,248,242,.045); stroke:rgba(251,248,242,.12); }
+.rm-state.is-faded{ opacity:.28; }
+.rm-state.is-selected{ fill:rgba(251,248,242,.04); stroke:rgba(251,248,242,.11); stroke-width:.55; }
+/* shiny shimmer around the borders of the states/districts we're in */
+.rm-state.is-live:not(.is-selected){ animation:rmShine 3.2s ease-in-out infinite; }
+.rm-district.is-court{ animation:rmShine 3.2s ease-in-out infinite; }
+@keyframes rmShine{ 0%,100%{ filter:drop-shadow(0 0 1.5px rgba(48,207,140,.4)); } 50%{ filter:drop-shadow(0 0 7px rgba(48,207,140,.9)); } }
 .rm-districts{ transition:opacity .5s ease; }
-.rm-district{ fill:rgba(251,248,242,.05); stroke:rgba(251,248,242,.13); stroke-width:1; stroke-linejoin:round;
-  transition:fill .4s ease, stroke .4s ease; cursor:pointer; }
-.rm-district:hover{ fill:rgba(48,207,140,.14); stroke:rgba(48,207,140,.5); }
-.rm-district.is-court{ fill:rgba(48,207,140,.2); stroke:var(--green); stroke-width:1.4; }
+.rm-district{ fill:rgba(251,248,242,.05); stroke:rgba(251,248,242,.12); stroke-width:.5; stroke-linejoin:round;
+  transition:fill .4s ease, stroke .4s ease; pointer-events:none; }   /* inactive districts: no hover */
+.rm-district.is-court{ fill:rgba(48,207,140,.2); stroke:var(--green); stroke-width:1.4; pointer-events:auto; cursor:pointer; }
+.rm-district.is-court:hover{ fill:rgba(48,207,140,.32); }
 .rm-dots{ pointer-events:auto; }
-.rm-dot{ fill:var(--forest-deep); stroke:var(--green); stroke-width:2.4; cursor:pointer; }   /* coming soon: hollow green ring */
-.rm-dot.is-live{ fill:var(--green); stroke:var(--forest-deep); stroke-width:1.4; }             /* live: solid green */
+.rm-dot{ fill:#141732; stroke:var(--green); stroke-width:2.4; cursor:pointer; }   /* coming soon: hollow green ring on the indigo */
+.rm-dot.is-live{ fill:var(--green); stroke:#141732; stroke-width:1.4; }            /* live: solid green */
 .rm-ping{ fill:none; stroke:var(--green); stroke-width:2; opacity:.8; transform-box:fill-box; transform-origin:center;
   animation:rmPing 2.2s ease-out infinite; }
 @keyframes rmPing{ 0%{ transform:scale(1); opacity:.8; } 70%{ transform:scale(3.2); opacity:0; } 100%{ transform:scale(3.2); opacity:0; } }
@@ -5563,4 +5570,4 @@ button.circle-card{
   border:1px solid rgba(48,207,140,.5); padding:5px 11px; border-radius:8px; font-size:.8rem; font-weight:600;
   white-space:nowrap; pointer-events:none; opacity:0; transition:opacity .18s; z-index:6; box-shadow:0 6px 20px rgba(0,0,0,.4); }
 .rm-tip.is-on{ opacity:1; }
-@media (prefers-reduced-motion:reduce){ .rm-live-dot,.rm-ping{ animation:none; } }
+@media (prefers-reduced-motion:reduce){ .rm-live-dot,.rm-ping,.rm-state.is-live,.rm-district.is-court,.rm-row.is-pinged{ animation:none!important; } }

@@ -143,7 +143,7 @@
   function addDot(cx, cy, live, label) {
     if (cx == null) return;
     var k = view.w / W;
-    if (live && !reduce) {
+    if (!reduce) { // every dot pulses (live and coming-soon)
       var ping = el("circle", { class: "rm-ping", cx: cx, cy: cy, r: 7.5 * k, "vector-effect": "non-scaling-stroke" });
       gDots.appendChild(ping);
     }
@@ -218,6 +218,7 @@
     // dots fade/settle after the zoom reads
     setTimeout(function () { if (current === id) regionDots(r); }, reduce ? 0 : 120);
     setRowActive(id);
+    pingCard(id);   // clicking a state on the map lands you on its card
     hideTip();
   }
 
@@ -293,6 +294,15 @@
   function setRowActive(id) {
     for (var k in rows) rows[k].classList.toggle("is-active", k === id);
   }
+  // pulse the matching card and bring it into view (map click -> its section)
+  function pingCard(id) {
+    var c = rows[id];
+    if (!c) return;
+    c.classList.remove("is-pinged");
+    void c.offsetWidth;
+    c.classList.add("is-pinged");
+    if (c.scrollIntoView) c.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
 
   makeRow("all", "All India", "Every state we're building toward", null);
   D.regions.forEach(function (r) { makeRow(r.id, r.label, r.sub, r.live); });
@@ -303,8 +313,10 @@
     p.style.cursor = "pointer";
     p.addEventListener("click", function () { selectState(s.n); });
   });
+  // only the court districts are interactive — no hover on districts we're
+  // not active in
   D.regions.forEach(function (r) {
-    regionLayers[r.id].querySelectorAll(".rm-district").forEach(function (p) {
+    regionLayers[r.id].querySelectorAll(".rm-district.is-court").forEach(function (p) {
       p.addEventListener("mouseenter", function () {
         var nm = p.getAttribute("data-name");
         var box = p.getBBox();
