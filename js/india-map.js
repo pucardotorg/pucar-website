@@ -407,6 +407,9 @@
     return '<svg viewBox="' + vb.join(" ") + '" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' + paths + "</svg>";
   }
   var items = {};
+  var hoverT = null;   // hover-intent debounce shared across cards
+  // per-region "explore in detail" link (points at the DRISTI page section)
+  var REGION_LINK = { kerala: { href: "/dristi/#deployments", text: "Explore Kerala in detail" } };
   function makeRow(id, label, sub, live) {
     var item = document.createElement("div");
     item.className = "rm-item" + (id === "all" ? " is-all" : "");
@@ -421,18 +424,18 @@
       '<span class="rm-row-main"><span class="rm-row-label">' + label + "</span>" +
       (sub ? '<span class="rm-row-sub">' + sub + "</span>" : "") + "</span>" +
       live_html;
-    b.addEventListener("click", function () {
-      if (id === "all") selectAll(); else selectRegion(id);
-    });
+    // cards activate on HOVER (with a short intent delay so passing over
+    // doesn't fire), and stay active until another card is hovered; click
+    // still works for touch/keyboard
+    function activate() { if (current === id) return; if (id === "all") selectAll(); else selectRegion(id); }
+    b.addEventListener("click", activate);
     b.addEventListener("mouseenter", function () {
-      if (id !== "all" && current === "all") {
-        var r = regionById[id];
-        r.states.forEach(function (n) { if (stateEls[n]) stateEls[n].classList.add("is-hover"); });
-      }
+      clearTimeout(hoverT);
+      if (current === id) return;
+      hoverT = setTimeout(activate, 130);
     });
-    b.addEventListener("mouseleave", function () {
-      for (var n in stateEls) stateEls[n].classList.remove("is-hover");
-    });
+    b.addEventListener("mouseleave", function () { clearTimeout(hoverT); });
+    b.addEventListener("focus", activate);   // keyboard
     item.appendChild(b);
 
     // a line expands below the card listing the districts this region's
@@ -447,7 +450,10 @@
           '<span class="rm-dname">' + c.n + "</span>" +
           '<span class="rm-dstatus' + (c.live ? " is-live" : "") + '">' + (c.live ? "Live" : "Coming soon") + "</span></li>";
       }).join("");
-      ex.innerHTML = '<div class="rm-expand-inner"><ul class="rm-dlist">' + lis + "</ul></div>";
+      var lk = REGION_LINK[id];
+      var linkHtml = lk ? '<a class="rm-detail" href="' + lk.href + '">' + lk.text +
+        ' <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M5 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>' : "";
+      ex.innerHTML = '<div class="rm-expand-inner"><ul class="rm-dlist">' + lis + "</ul>" + linkHtml + "</div>";
       ex.querySelectorAll(".rm-ditem").forEach(function (li) {
         var cx = li.getAttribute("data-cx");
         if (cx == null) return;

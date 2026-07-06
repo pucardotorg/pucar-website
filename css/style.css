@@ -5554,6 +5554,11 @@ button.circle-card{
 .rm-dname{ flex:1 1 auto; }
 .rm-dstatus{ font-size:.64rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:rgba(251,248,242,.45); }
 .rm-dstatus.is-live{ color:var(--green); }
+.rm-detail{ display:inline-flex; align-items:center; gap:6px; margin:9px 0 3px 34px; font-size:.82rem; font-weight:600;
+  color:var(--green); text-decoration:none; transition:gap .2s ease, color .2s ease; }
+.rm-detail:hover{ gap:9px; color:#66E0A9; }
+.rm-detail svg{ transition:transform .2s ease; }
+.rm-detail:hover svg{ transform:translateX(2px); }
 
 .rm-thumb{ width:50px; height:50px; flex:0 0 auto; border-radius:12px; display:flex; align-items:center; justify-content:center;
   background:rgba(10,21,26,.55); border:1px solid rgba(251,248,242,.09); transition:background .25s, border-color .25s; }
