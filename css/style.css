@@ -4736,6 +4736,100 @@ button.circle-card{
 }
 .dristi-journey-row.is-total .dj-new{ font-size:1.15rem; }
 
+/* ===== /approach/: metric shift + three pillars ===== */
+/* the shift table reuses the journey rows but both sides carry full
+   sentences, so the columns get real tracks instead of auto-hugging */
+.approach-shift{ margin:0 0 34px; }
+.approach-shift .dristi-journey-row{
+  grid-template-columns:minmax(140px,.7fr) 1fr 24px 1fr;
+}
+.approach-shift .dristi-journey-row:first-child{ border-top:0; }
+.approach-shift .dj-new{ text-align:left; min-width:0; }
+@media (max-width: 760px){
+  .approach-shift .dristi-journey-row{
+    grid-template-columns:1fr 24px 1fr;
+    row-gap:4px;
+  }
+  .approach-shift .dj-stage{
+    grid-column:1 / -1;
+    font-size:.78rem;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:rgba(251,248,242,.5);
+  }
+}
+.pillar-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:18px;
+  align-items:stretch;
+}
+@media (max-width: 900px){
+  .pillar-grid{ grid-template-columns:1fr; }
+}
+.pillar-card{
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  padding:clamp(24px,3vw,34px);
+  border-radius:26px;
+  border:1px solid rgba(251,248,242,.14);
+  background:
+    radial-gradient(130% 130% at 85% -10%, rgba(251,248,242,.06), transparent 55%),
+    rgba(251,248,242,.05);
+}
+.pillar-num{
+  position:absolute;
+  top:-24px;
+  right:8px;
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:clamp(5rem,9vw,7.5rem);
+  line-height:1;
+  color:rgba(251,248,242,.05);
+  pointer-events:none;
+  user-select:none;
+}
+.pillar-title{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:1.45rem;
+  margin:0 0 10px;
+  color:var(--paper);
+}
+.pillar-body{
+  margin:0 0 22px;
+  font-size:.92rem;
+  line-height:1.65;
+  color:rgba(251,248,242,.72);
+}
+.pillar-proof{
+  margin-top:auto;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  padding:16px 18px 14px;
+  border-radius:16px;
+  border:1px solid rgba(48,207,140,.35);
+  background:
+    radial-gradient(120% 150% at 80% -20%, rgba(48,207,140,.14), transparent 55%),
+    rgba(251,248,242,.04);
+}
+.pillar-proof-num{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:clamp(1.7rem,2.6vw,2.2rem);
+  line-height:1;
+  color:var(--green);
+}
+.pillar-proof-cap{
+  font-size:.82rem;
+  line-height:1.45;
+  color:rgba(251,248,242,.65);
+}
+.approach-note{ margin-top:22px; }
+
 /* quarterly filings + disposals panel (same chrome as the journey) */
 .dristi-growth{
   margin:44px 0 0;

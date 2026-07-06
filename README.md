@@ -1848,6 +1848,30 @@ without asking):
   (AGAMI_CONTEXT targets); the chips are the LIVE actuals, labelled as
   such. 6 cols -> 3 (<=960) -> 2 (<=520).
 
+### /approach/ (6 Jul 2026, awaiting user review)
+
+approachPage() in the build script. User brief: WHY the people-centric
+lens (litigants are the PRIMARY USERS; the court exists to serve them),
+the shift from system-centric pendency to litigant-centric metrics, the
+THREE PILLARS (Seamlessness / Efficiency / Predictability), unit of
+change = case type, and why Sec 138 first ("Sec 318" in the brief was
+confirmed as a typo for Sec 138 NI Act; user picked /approach/ as the
+slug and YES to numbers backing each pillar). Structure: prose lens
+intro -> dark band "From pendency to people" with a 3-row metric-shift
+table (.approach-shift, reuses .dristi-journey-row: system question
+struck through -> litigant question in green) + .pillar-grid (3
+.pillar-card, ver-card chrome: giant translucent numeral, body, and a
+green-aura .pillar-proof stat: Same day registration / 164 days + 7
+hearings / 98% vs 40% as scheduled) -> light band: unit-of-change
+prose + SELECT-TRANSFORM-ENABLE-EXTEND as 4 about-steps -> why Sec 138
+prose (10% of criminal pendency, low complexity, diverse litigants,
+special-court containment) -> CTAs to /dristi/ and /dristi/#collaborate.
+Subnav: The lens / Three pillars / Unit of change. In the sitemap but
+DELIBERATELY NOT IN THE NAV OR FOOTER: user reviews the page first.
+Sources: AGAMI_CONTEXT.md (vision line "Efficient. Predictable.
+Seamless.", theory of change, selection criteria, baseline tables) +
+the public dashboard reads.
+
 ### Cache busting (July 2026)
 
 Every local css/js URL in generated pages AND index.html is stamped

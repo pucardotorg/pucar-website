@@ -1142,6 +1142,119 @@ collabBoardHtml() +
   });
 }
 
+function approachPage() {
+  /* /approach/ (July 2026, user brief): WHY the people-centric lens.
+     Litigants are the PRIMARY USERS of the court; the court exists to
+     serve them. That flips the metrics: away from system-centric
+     pendency, toward litigant-centric seamlessness, efficiency and
+     predictability (the three pillars, each with a live proof point).
+     Then: why the unit of change is a CASE TYPE, and why Sec 138
+     cheque dishonour came first. Sources: AGAMI_CONTEXT.md (vision
+     line, theory of change, selection criteria, baseline vs ON Court
+     tables) + the public ON Courts dashboard (July 2026 reads).
+     NOT in the nav yet: user reviews the page first. */
+
+  const PILLARS = [
+    { n: "01", t: "Seamlessness", b: "A litigant should experience one continuous journey, not a relay of disconnected offices. The court is digitally connected to police, post and treasury, so summons, fees and processes move between institutions without the litigant carrying paper from counter to counter. Filing happens from anywhere, registration follows the same day, and mediation is available at any stage without leaving the process.",
+      num: "Same day", cap: "filing to registration at the ON Court. The conventional process takes 10 days" },
+    { t: "Efficiency", n: "02", b: "Efficiency here is measured in the litigant’s time, not the court’s throughput. Asynchronous proceedings mean key case actions happen without everyone travelling to stand in the same room: no roll calls, no appearances that exist only to fix the next date. Every hearing that does happen moves the case forward.",
+      num: "164 days", cap: "median filing to disposal, in 7 hearings. The conventional baseline is about 2 years" },
+    { t: "Predictability", n: "03", b: "The quiet cruelty of the conventional process is not knowing: whether the hearing will happen, what comes next, how long anything takes. The ON Court reaches out first, with SMS alerts that tell litigants where their case stands and what to do next, and a schedule that holds.",
+      num: "98%", cap: "hearings held as scheduled, against a conventional baseline of 40%" }
+  ];
+  const pillarsHtml = PILLARS.map(function (p) {
+    return '    <article class="pillar-card">\n' +
+      '      <span class="pillar-num" aria-hidden="true">' + p.n + "</span>\n" +
+      '      <h3 class="pillar-title">' + esc(p.t) + "</h3>\n" +
+      '      <p class="pillar-body">' + esc(p.b) + "</p>\n" +
+      '      <div class="pillar-proof"><span class="pillar-proof-num">' + esc(p.num) + '</span><span class="pillar-proof-cap">' + esc(p.cap) + "</span></div>\n" +
+      "    </article>";
+  }).join("\n");
+
+  /* the metric shift: system questions struck through, litigant
+     questions in green (reuses the dristi journey row styling) */
+  const SHIFT = [
+    ["What the metric asks", "How many cases does the system hold?", "How long does one person wait?"],
+    ["What a hearing means", "A line in the cause list", "A day of wages, travel and waiting"],
+    ["What success looks like", "Clearance rates and disposal counts", "A journey that is seamless, efficient and predictable"]
+  ];
+  const shiftHtml = SHIFT.map(function (r) {
+    return '    <div class="dristi-journey-row">' +
+      '<span class="dj-stage">' + esc(r[0]) + "</span>" +
+      '<span class="dj-old">' + esc(r[1]) + "</span>" +
+      '<span class="dj-arrow" aria-hidden="true">&rarr;</span>' +
+      '<span class="dj-new">' + esc(r[2]) + "</span></div>";
+  }).join("\n");
+
+  const STAGES4 = [
+    { t: "Select", b: "Choose a dispute type with high pendency, low legal complexity, a diverse litigant base, and room for focused change management." },
+    { t: "Transform", b: "Re-engineer the entire experience of that dispute type: process, technology, rules and behaviour, end to end." },
+    { t: "Enable", b: "Scale the transformation across courts in the state, and build the enablers: policy, infrastructure, capacity." },
+    { t: "Extend", b: "Carry the learnings and the reusable capabilities to the next dispute type, and begin again." }
+  ];
+  const stages4Html = STAGES4.map(function (s, i) {
+    return '    <div class="about-step">\n' +
+      '      <span class="about-step-num">0' + (i + 1) + '</span>\n' +
+      "      <h3>" + esc(s.t) + "</h3>\n" +
+      "      <p>" + esc(s.b) + "</p>\n" +
+      "    </div>";
+  }).join("\n");
+
+  const main =
+'  <p class="beat-eyebrow">Our approach</p>\n' +
+'  <h1 class="job-title">The court exists to serve the litigant.</h1>\n' +
+'  <article class="job-body prose no-cap" id="lens">\n' +
+"    <p>Every system gets designed around whoever it treats as its primary user. For decades, India’s courts have been designed, measured and reformed around the institution itself: its cause lists, its disposal counts, its pendency figures. The litigant, the person the whole apparatus supposedly exists for, appears in that picture only as a unit of backlog.</p>\n" +
+"    <p>PUCAR starts from the opposite premise. The litigant is the primary user of the court, and the court is a service that exists to resolve their dispute. That is not a slogan: it is a design constraint. It means every process, every hearing, every notice is judged by one question: what did this cost the person waiting for justice, and what did it move forward for them?</p>\n" +
+"    <p>Taking that lens seriously changes what you measure. Pendency is a system-centric metric: it tells you how burdened the institution is, not how any person inside it is faring. A court can improve its numbers while every litigant in it still runs pillar to post. So we measure the litigant’s experience instead, along three pillars: is the journey <strong>seamless</strong>, is it <strong>efficient</strong>, and is it <strong>predictable</strong>?</p>\n" +
+"  </article>\n" +
+"</main>\n" +
+
+'<section class="collaborate approach-pillars" id="pillars">\n' +
+'  <div class="collab-head">\n' +
+'    <p class="beat-eyebrow">The metrics that matter</p>\n' +
+'    <h2 class="collab-title-main">From pendency to people.</h2>\n' +
+'    <p class="collab-sub">System-centric metrics ask how the institution is doing. Litigant-centric metrics ask how the person is doing. The difference decides what gets fixed.</p>\n' +
+"  </div>\n" +
+'  <div class="dristi-journey approach-shift">\n' +
+shiftHtml + "\n" +
+"  </div>\n" +
+'  <div class="pillar-grid">\n' + pillarsHtml + "\n  </div>\n" +
+'  <p class="race-note approach-note">Proof points from the ON Court in Kollam: the public dashboard (July 2026) and PUCAR baseline studies of the conventional Sec 138 process.</p>\n' +
+"</section>\n" +
+
+'<div class="job-main about-lower" id="unit">\n' +
+'  <article class="job-body prose no-cap">\n' +
+"    <h2>Our unit of change is a case type</h2>\n" +
+"    <p>Most reform picks a court, a state or a policy as its unit and improves it a few percent at a time. PUCAR’s unit of change is a dispute type. We take one kind of case and redesign its entire journey, from the moment a dispute arises to the day it is resolved, across process, technology, rules and behaviour at once. A whole journey transformed for one case type beats a marginal gain spread thinly across all of them: it produces a working court people can see, use and demand elsewhere.</p>\n" +
+"  </article>\n" +
+'  <div class="about-steps approach-stages">\n' + stages4Html + "\n  </div>\n" +
+'  <article class="job-body prose no-cap" id="sec138">\n' +
+"    <h2>Why we started with cheque dishonour</h2>\n" +
+"    <p>The first case type had to be chosen carefully: common enough to matter, simple enough to transform, and contained enough to manage. Cheque dishonour cases under Section 138 of the Negotiable Instruments Act fit on every count. They make up roughly 10% of India’s criminal pendency, so the volume is enormous. Their legal structure is simple, with clear constituent elements and a well-defined process, which makes them ideal for rule-based redesign. Their litigants are everyone: individuals, small businesses, large corporates. And they can be routed to a dedicated special court, so the whole transformation can be managed, measured and proven in one place.</p>\n" +
+"    <p>That proof now exists. The 24x7 ON Court in Kollam has taken the conventional 600-day Sec 138 journey down to a median of 164 days, and the learnings and reusable capabilities are ready to extend to the next case type.</p>\n" +
+"  </article>\n" +
+'  <div class="cta-row">\n' +
+'    <a class="btn btn-primary" href="/dristi/">Explore DRISTI, the platform</a>\n' +
+'    <a class="btn btn-ghost" href="/dristi/#collaborate">Help build what comes next</a>\n' +
+"  </div>\n" +
+"</div>\n<main hidden>";
+
+  return pageShell({
+    title: "Our Approach | PUCAR",
+    desc: "Why PUCAR takes a people-centric lens: litigants are the primary users of courts. We measure seamlessness, efficiency and predictability instead of pendency, and transform one case type at a time.",
+    url: "/approach/",
+    jsonLd: { "@context": "https://schema.org", "@type": "WebPage", name: "Our Approach",
+      description: "PUCAR's people-centric lens: litigant-centric metrics and case-type-level transformation" },
+    backHref: "/", backLabel: "← Home", main: main,
+    subnav: [
+      { label: "The lens", href: "#lens" },
+      { label: "Three pillars", href: "#pillars" },
+      { label: "Unit of change", href: "#unit" }
+    ]
+  });
+}
+
 /* ---------------- homepage cards ---------------- */
 
 function card(job) {
@@ -1332,6 +1445,8 @@ fs.mkdirSync(path.join(ROOT, "resources"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, "resources", "index.html"), resourcesPage());
 fs.mkdirSync(path.join(ROOT, "dristi"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, "dristi", "index.html"), dristiPage());
+fs.mkdirSync(path.join(ROOT, "approach"), { recursive: true });
+fs.writeFileSync(path.join(ROOT, "approach", "index.html"), approachPage());
 
 fs.writeFileSync(path.join(ROOT, "collaborate", "jobs.json"), JSON.stringify(jobs.map(function (j) {
   return {
@@ -1362,7 +1477,7 @@ html = html.slice(0, s + START.length) + "\n" +
 fs.writeFileSync(indexPath, bust(html));
 
 /* sitemap */
-const urls = [SITE + "/", SITE + "/sc-ai-policy/", SITE + "/contributors/", SITE + "/about/", SITE + "/dristi/", SITE + "/resources/"]
+const urls = [SITE + "/", SITE + "/sc-ai-policy/", SITE + "/contributors/", SITE + "/about/", SITE + "/dristi/", SITE + "/approach/", SITE + "/resources/"]
   .concat(jobs.map(function (j) { return SITE + j.url; }))
   .concat(contributors.map(function (c) { return SITE + c.url; }));
 fs.writeFileSync(path.join(ROOT, "sitemap.xml"),
