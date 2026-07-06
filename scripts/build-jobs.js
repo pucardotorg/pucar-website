@@ -956,28 +956,6 @@ function dristiPage() {
       '<span class="dj-new">' + esc(r[2]) + "</span></div>";
   }).join("\n");
 
-  /* live per-stage medians from the public dashboard (July 2026):
-     [stage, median days, median hearings, plain-language description]
-     for cases that completed the stage. Registration is same-day and
-     needs no hearing. Descriptions adapted from the dashboard's own
-     stage notes, lightly rewritten for a public reader (meeting
-     feedback, 6 Jul 2026: "define filing, registration, cognizance
-     ... but it should remain the table format"). */
-  const STAGES = [
-    ["Registration", "Same day", null, "The court checks the case file, the lawyer corrects any defects remotely, and the case is registered."],
-    ["Cognizance", "11 days", "2 hearings", "The court formally takes the complaint on record and decides the case can proceed."],
-    ["Appearance", "74 days", "3 hearings", "The accused appears before the court, or formally joins the case through their lawyer."],
-    ["Bail", "61 days", "6 hearings", "The accused requests bail, the court may grant it, and their plea is recorded."],
-    ["Mediation", "49 days", "2 hearings", "The parties take time to try settling the matter directly, with a mediator."],
-    ["Trial", "111 days", "8 hearings", "Depositions are taken, evidence is marked and arguments are heard, readying the case for judgment."]
-  ];
-  const stagesHtml = STAGES.map(function (s) {
-    return '      <div class="dj-stage-card"><span class="djs-name">' + esc(s[0]) + "</span>" +
-      '<span class="djs-days">' + esc(s[1]) + "</span>" +
-      '<span class="djs-hear">' + (s[2] ? esc(s[2]) : "no hearing needed") + "</span>" +
-      '<span class="djs-desc">' + esc(s[3]) + "</span></div>";
-  }).join("\n");
-
   /* two HERO stats up front, four supporting below (revised: six equal
      cards in one row read as noise; the story is volume + speed). Each
      carries an icon from the site's inline stroke set (same style as the
@@ -1108,9 +1086,6 @@ fs.readFileSync(path.join(ROOT, "assets", "kerala-map.svg"), "utf8") + "\n" +
 '    <div class="dristi-journey">\n' +
 '      <div class="dristi-journey-head"><h4>The journey, before and after</h4><p>Median stage times for cheque dishonour cases, conventional process versus the ON Court redesign.</p></div>\n' +
 journeyHtml + "\n" +
-'      <p class="dj-stages-lead">And here is how the live court is actually doing, stage by stage. Median time and hearings for cases that completed each stage, straight from the dashboard:</p>\n' +
-'      <div class="dj-stages">\n' + stagesHtml + "\n      </div>\n" +
-'      <p class="race-note">Filing to disposal: a median of 164 days and 7 hearings, or 138 days excluding time the parties spend in mediation.</p>\n' +
 "    </div>\n" +
 
 /* ---- the race (user-supplied Kaplan-Meier data, PUCAR-themed) ---- */
