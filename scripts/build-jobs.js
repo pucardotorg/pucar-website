@@ -203,9 +203,19 @@ function pageShell(opts) {
 '<meta name="description" content="' + esc(opts.desc) + '" />\n' +
 '<link rel="canonical" href="' + SITE + opts.url + '" />\n' +
 '<meta property="og:type" content="website" />\n' +
+'<meta property="og:site_name" content="PUCAR" />\n' +
 '<meta property="og:title" content="' + esc(opts.title) + '" />\n' +
 '<meta property="og:description" content="' + esc(opts.desc) + '" />\n' +
 '<meta property="og:url" content="' + SITE + opts.url + '" />\n' +
+'<meta property="og:image" content="' + SITE + '/assets/graph-photo.webp" />\n' +
+'<meta property="og:image:width" content="1920" />\n' +
+'<meta property="og:image:height" content="1080" />\n' +
+'<meta property="og:image:type" content="image/webp" />\n' +
+'<meta property="og:image:alt" content="' + esc(opts.title) + '" />\n' +
+'<meta name="twitter:card" content="summary_large_image" />\n' +
+'<meta name="twitter:title" content="' + esc(opts.title) + '" />\n' +
+'<meta name="twitter:description" content="' + esc(opts.desc) + '" />\n' +
+'<meta name="twitter:image" content="' + SITE + '/assets/graph-photo.webp" />\n' +
 '<link rel="preconnect" href="https://fonts.googleapis.com" />\n' +
 '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />\n' +
 '<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />\n' +

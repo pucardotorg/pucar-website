@@ -2032,6 +2032,39 @@ and run `npx decap-server` next to the static server.
   no commits for weeks won't drop expired cards server-side — the client
   hides them anyway; a scheduled/manual redeploy also refreshes it.
 
+## 7a. Social sharing metadata (Open Graph / Twitter Card)
+
+Every page ships a full social-preview head block, so links to any page
+(not just the homepage) render a real title, description, and image card
+when shared in Slack, iMessage, WhatsApp, X, LinkedIn, etc.
+
+- Generated pages get this from `pageShell()` in `scripts/build-jobs.js`:
+  `og:type`, `og:site_name` ("PUCAR"), `og:title`/`og:description` (from
+  `opts.title`/`opts.desc`, i.e. each page's own copy), `og:url` (`SITE +
+  opts.url`), `og:image`/`og:image:width`/`og:image:height`/
+  `og:image:type`/`og:image:alt`, and the `twitter:card` (`summary_large_
+  image`) + `twitter:title`/`twitter:description`/`twitter:image` mirrors.
+- `index.html` (the homepage, hand-authored, not templated through
+  `pageShell()`) carries the same block by hand, hardcoded to
+  `https://pucar-journey.netlify.app/` since it has no `opts.url` to
+  compute from.
+- The image is the same for every page: `assets/graph-photo.webp`
+  (1920×1080, confirmed via `identify`/Pillow), referenced by absolute
+  URL (`SITE + "/assets/graph-photo.webp"`) since social crawlers don't
+  resolve relative image paths. There's no per-page custom image — every
+  URL on the site shows the same card image, only the title/description
+  text changes per page.
+- Known caveat: some older/less-common social crawlers historically had
+  spotty WebP support for og:image (current major platforms — Slack,
+  X, LinkedIn, WhatsApp, iMessage — handle it fine). If a preview ever
+  renders as a blank/broken image on some platform, the fix is a JPG/PNG
+  re-export of the same asset, not a code change (just swap the file
+  extension in the two `pageShell()` lines + `index.html`'s block).
+- `SITE` (used for all absolute URLs — canonical, og:url, og:image,
+  sitemap.xml) defaults to `https://pucar-journey.netlify.app` unless
+  Netlify's `process.env.URL` is set at build time; there's no custom
+  domain/CNAME in the repo as of this writing.
+
 ## 8. Known placeholders / TODO before launch (updated July 2026)
 
 - robots.txt is now generated at build time (allow-all + sitemap pointer);
