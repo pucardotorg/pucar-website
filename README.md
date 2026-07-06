@@ -1918,6 +1918,31 @@ Sources: AGAMI_CONTEXT.md (vision line "Efficient. Predictable.
 Seamless.", theory of change, selection criteria, baseline tables) +
 the public dashboard reads.
 
+### /careers/ (6 Jul 2026, awaiting user review; listings are DRAFTS)
+
+careersPage() + careerPage() in the build script; data in
+content/careers/*.json (title, type Permanent|Part-time|Volunteer,
+location, commitment, summary, tags, apply_url, status, posted,
+published, body md). EXPLICITLY SEPARATE from the collaborate board
+(user: the board holds open WORK the community takes up; /careers/
+holds ROLES PUCAR is hiring for). Page: inspiring hero ("Build the
+future of courts.") + 3-stat strip (5.5 Cr queue / 600->164 proof /
+3 states next) + "Why build here" 3 about-steps -> dark band "The
+bench is forming. Take your seat." with .career-group sections
+(Permanent / Part-time / Volunteer) of .career-row links (title +
+summary left, commitment/location right, green arrow, hover slide) ->
+CTA row (write to us mailto + "pick up open work" -> /dristi/
+#collaborate). Each role gets /careers/<slug>/ via careerPage()
+(JobPosting JSON-LD: FULL_TIME/PART_TIME/VOLUNTEER). Empty state
+exists if no roles are Open. Seven launch listings are PLACEHOLDER
+DRAFTS ([draft description, refine before publishing] markers in
+bodies): 3 permanent (Sr full-stack DRISTI 2.0, PM court
+transformation, design lead litigant experience), 2 part-time (legal
+process consultant, data and impact analyst), 2 volunteer (legal
+researcher, comms and storytelling). Apply links use
+collaborate@pucar.org (only known-good address; swap if a careers@
+alias is created). In the sitemap; NOT in the nav until user reviews.
+
 ### Cache busting (July 2026)
 
 Every local css/js URL in generated pages AND index.html is stamped

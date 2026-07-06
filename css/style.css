@@ -4747,6 +4747,82 @@ button.circle-card{
 .dristi-journey-row.is-total .dj-old{ font-size:1.2rem; }
 .dristi-journey-row.is-total .dj-new{ font-size:1.55rem; }
 
+/* ===== /careers/: grouped open-role rows on the dark band ===== */
+.career-group{ margin:0 0 40px; }
+.career-group:last-of-type{ margin-bottom:8px; }
+.career-group-head{ margin:0 0 14px; }
+.career-group-head h3{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:1.4rem;
+  margin:0 0 2px;
+  color:var(--paper);
+}
+.career-group-head p{
+  margin:0;
+  font-size:.9rem;
+  color:rgba(251,248,242,.55);
+}
+.career-row{
+  display:grid;
+  grid-template-columns:1fr auto 28px;
+  align-items:center;
+  gap:clamp(16px,3vw,40px);
+  padding:18px clamp(16px,2.5vw,26px);
+  margin:0 0 10px;
+  border-radius:18px;
+  border:1px solid rgba(251,248,242,.14);
+  background:rgba(251,248,242,.05);
+  text-decoration:none;
+  color:inherit;
+  transition:border-color .25s ease, background .25s ease, transform .25s ease;
+}
+.career-row:hover{
+  border-color:rgba(48,207,140,.5);
+  background:rgba(48,207,140,.07);
+  transform:translateX(4px);
+}
+.career-row-main{ display:flex; flex-direction:column; gap:4px; min-width:0; }
+.career-row-title{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:1.12rem;
+  color:var(--paper);
+}
+.career-row-sum{
+  font-size:.88rem;
+  line-height:1.5;
+  color:rgba(251,248,242,.65);
+  max-width:64ch;
+}
+.career-row-meta{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  text-align:right;
+  font-size:.8rem;
+  color:rgba(251,248,242,.55);
+  white-space:nowrap;
+}
+.career-row-arrow{
+  color:var(--green);
+  font-size:1.2rem;
+  transition:transform .25s ease;
+}
+.career-row:hover .career-row-arrow{ transform:translateX(4px); }
+.careers-cta{ margin-top:34px; }
+@media (max-width: 700px){
+  .career-row{ grid-template-columns:1fr 24px; }
+  .career-row-meta{
+    grid-column:1 / -1;
+    grid-row:2;
+    flex-direction:row;
+    gap:14px;
+    text-align:left;
+    white-space:normal;
+  }
+}
+
 /* ===== /approach/: metric shift + three pillars ===== */
 /* the shift table reuses the journey rows but both sides carry full
    sentences, so the columns get real tracks instead of auto-hugging */

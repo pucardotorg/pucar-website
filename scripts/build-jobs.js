@@ -1270,6 +1270,130 @@ shiftHtml + "\n" +
   });
 }
 
+/* ---------------- careers: open roles (July 2026) ----------------
+   DISTINCT from the collaborate board by explicit user decision: the
+   board holds open WORK the community can take up; /careers/ holds
+   ROLES PUCAR is hiring for (Permanent / Part-time / Volunteer).
+   Data: content/careers/*.json. All six launch listings are DRAFTS
+   ([draft description...] markers in the bodies) pending user review.
+   NOT in the nav yet: user reviews first. */
+
+const careerRoles = fs.readdirSync(path.join(ROOT, "content/careers"))
+  .filter(function (f) { return f.endsWith(".json"); })
+  .map(function (f) {
+    const r = JSON.parse(fs.readFileSync(path.join(ROOT, "content/careers", f), "utf8"));
+    r.slug = f.replace(/\.json$/, "");
+    r.url = "/careers/" + r.slug + "/";
+    return r;
+  })
+  .filter(function (r) { return r.published !== false; });
+
+function careerPage(role) {
+  const jsonLd = {
+    "@context": "https://schema.org", "@type": "JobPosting",
+    title: role.title, description: role.summary, datePosted: role.posted,
+    employmentType: role.type === "Permanent" ? "FULL_TIME" : role.type === "Part-time" ? "PART_TIME" : "VOLUNTEER",
+    hiringOrganization: { "@type": "Organization", name: "PUCAR", sameAs: "https://pucar.org" },
+    jobLocationType: /remote/i.test(role.location || "") ? "TELECOMMUTE" : undefined,
+    directApply: true
+  };
+  const main =
+    '  <p class="beat-eyebrow">' + esc(role.type) + " role</p>\n" +
+    '  <h1 class="job-title">' + esc(role.title) + "</h1>\n" +
+    '  <p class="job-summary">' + esc(role.summary) + "</p>\n" +
+    '  <ul class="job-chips">' +
+    [role.commitment, role.location].concat(role.tags || []).filter(Boolean)
+      .map(function (c) { return '<li title="' + esc(c) + '">' + esc(c) + "</li>"; }).join("") +
+    "</ul>\n" +
+    '  <article class="job-body">\n' + mdToHtml(role.body || "") + "\n  </article>\n" +
+    '  <div class="cta-row">\n' +
+    (role.status === "Open"
+      ? '    <a class="btn btn-primary" href="' + esc(role.apply_url || "mailto:collaborate@pucar.org") + '">Apply for this role</a>\n'
+      : '    <span class="btn btn-outline is-disabled">' + esc(role.status) + "</span>\n") +
+    '    <a class="btn btn-outline" href="/careers/">All open roles</a>\n  </div>';
+  return pageShell({
+    title: role.title + " | Careers at PUCAR",
+    desc: role.summary, url: role.url, jsonLd: jsonLd,
+    backHref: "/careers/", backLabel: "← Open roles", main: main
+  });
+}
+
+function careersPage() {
+  const GROUPS = [
+    ["Permanent", "Permanent roles", "Full-time seats at the heart of the mission."],
+    ["Part-time", "Part-time roles", "Serious work that fits around the rest of your life."],
+    ["Volunteer", "Volunteer roles", "Give the mission a few hours a week, on your own schedule."]
+  ];
+  const open = careerRoles.filter(function (r) { return r.status === "Open"; });
+  const groupsHtml = GROUPS.map(function (g) {
+    const rows = open.filter(function (r) { return r.type === g[0]; });
+    if (!rows.length) return "";
+    return '  <div class="career-group">\n' +
+      '    <div class="career-group-head"><h3>' + esc(g[1]) + '</h3><p>' + esc(g[2]) + "</p></div>\n" +
+      rows.map(function (r) {
+        return '    <a class="career-row" href="' + r.url + '">\n' +
+          '      <span class="career-row-main"><span class="career-row-title">' + esc(r.title) + '</span>' +
+          '<span class="career-row-sum">' + esc(r.summary) + "</span></span>\n" +
+          '      <span class="career-row-meta"><span>' + esc(r.commitment || "") + "</span><span>" + esc(r.location || "") + "</span></span>\n" +
+          '      <span class="career-row-arrow" aria-hidden="true">&rarr;</span>\n' +
+          "    </a>";
+      }).join("\n") + "\n  </div>";
+  }).filter(Boolean).join("\n");
+
+  const WHY = [
+    { t: "Work that ships to a real court", b: "This is not a lab. The 24x7 ON Court in Kollam runs on what this team builds, and litigants feel every improvement within weeks, not years." },
+    { t: "A problem worthy of a career", b: "5.5 crore cases are waiting in India’s courts. Cutting one journey from 600 days to 164 is the proof; carrying it to every case type is the work of a generation." },
+    { t: "Built in the open, with the best", b: "You join a collective of 100+ contributors across law, technology, design and government, and everything you make is a public good." }
+  ];
+  const whyHtml = WHY.map(function (s, i) {
+    return '    <div class="about-step">\n' +
+      '      <span class="about-step-num">0' + (i + 1) + '</span>\n' +
+      "      <h3>" + esc(s.t) + "</h3>\n" +
+      "      <p>" + esc(s.b) + "</p>\n" +
+      "    </div>";
+  }).join("\n");
+
+  const main =
+'  <p class="beat-eyebrow">Careers</p>\n' +
+'  <h1 class="job-title">Build the future of courts.</h1>\n' +
+'  <article class="job-body prose no-cap">\n' +
+"    <p>Somewhere in India today, a litigant checked their phone and knew exactly where their case stands, because a court was redesigned around them. That court exists because people chose to build it. Not to study the justice system, not to write about it, but to sit with judges and registries and engineers and remake how it works, one case type at a time.</p>\n" +
+"    <p>The first 24x7 ON Court is live. The platform behind it is being rebuilt AI-native. Three states are next. If you have ever wanted your work to matter to someone on the hardest day of their life, this is the place, and this is the moment.</p>\n" +
+"  </article>\n" +
+'  <div class="about-stats dristi-hero-stats">\n' +
+'    <div class="about-stat"><span class="about-stat-num">5.5 Cr</span><span class="about-stat-label">cases waiting in India’s courts. This is the queue we exist to end</span></div>\n' +
+'    <div class="about-stat"><span class="about-stat-num">600 → 164</span><span class="about-stat-label">days to disposal in the first redesigned court. Proof this is buildable</span></div>\n' +
+'    <div class="about-stat"><span class="about-stat-num">3 states</span><span class="about-stat-label">preparing to go live next. This is where you come in</span></div>\n' +
+"  </div>\n" +
+'  <div class="job-body prose about-steps-head"><h2>Why build here</h2></div>\n' +
+'  <div class="about-steps">\n' + whyHtml + "\n  </div>\n" +
+"</main>\n" +
+
+'<section class="collaborate careers-board" id="roles">\n' +
+'  <div class="collab-head">\n' +
+'    <p class="beat-eyebrow">Open roles</p>\n' +
+'    <h2 class="collab-title-main">The bench is forming. Take your seat.</h2>\n' +
+'    <p class="collab-sub">Permanent, part-time and volunteer roles across engineering, product, design, law and research. Every one of them exists to make courts work for the people who need them.</p>\n' +
+"  </div>\n" +
+(groupsHtml ||
+'  <p class="collab-empty">No open roles right now. Check back soon, or write to us anyway: the right person has a way of creating their own role.</p>\n') + "\n" +
+'  <div class="cta-row careers-cta">\n' +
+'    <a class="btn btn-primary" href="mailto:collaborate@pucar.org?subject=Careers%20-%20I%20want%20to%20build%20courts">Don’t see your role? Write to us</a>\n' +
+'    <a class="btn btn-ghost" href="/dristi/#collaborate">Or pick up open work, no role needed</a>\n' +
+"  </div>\n" +
+"</section>\n<main hidden>";
+
+  return pageShell({
+    title: "Careers | PUCAR",
+    mainClass: "dristi-main",
+    desc: "Help build the future of courts. Permanent, part-time and volunteer roles at PUCAR, the collective behind India's 24x7 people-centric ON Courts.",
+    url: "/careers/",
+    jsonLd: { "@context": "https://schema.org", "@type": "CollectionPage", name: "Careers at PUCAR",
+      description: "Open roles at PUCAR: permanent, part-time and volunteer" },
+    backHref: "/", backLabel: "← Home", main: main
+  });
+}
+
 /* ---------------- homepage cards ---------------- */
 
 function card(job) {
@@ -1462,6 +1586,13 @@ fs.mkdirSync(path.join(ROOT, "dristi"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, "dristi", "index.html"), dristiPage());
 fs.mkdirSync(path.join(ROOT, "approach"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, "approach", "index.html"), approachPage());
+fs.mkdirSync(path.join(ROOT, "careers"), { recursive: true });
+fs.writeFileSync(path.join(ROOT, "careers", "index.html"), careersPage());
+careerRoles.forEach(function (r) {
+  const dir = path.join(ROOT, "careers", r.slug);
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, "index.html"), careerPage(r));
+});
 
 fs.writeFileSync(path.join(ROOT, "collaborate", "jobs.json"), JSON.stringify(jobs.map(function (j) {
   return {
@@ -1492,8 +1623,9 @@ html = html.slice(0, s + START.length) + "\n" +
 fs.writeFileSync(indexPath, bust(html));
 
 /* sitemap */
-const urls = [SITE + "/", SITE + "/sc-ai-policy/", SITE + "/contributors/", SITE + "/about/", SITE + "/dristi/", SITE + "/approach/", SITE + "/resources/"]
+const urls = [SITE + "/", SITE + "/sc-ai-policy/", SITE + "/contributors/", SITE + "/about/", SITE + "/dristi/", SITE + "/approach/", SITE + "/careers/", SITE + "/resources/"]
   .concat(jobs.map(function (j) { return SITE + j.url; }))
+  .concat(careerRoles.map(function (r) { return SITE + r.url; }))
   .concat(contributors.map(function (c) { return SITE + c.url; }));
 fs.writeFileSync(path.join(ROOT, "sitemap.xml"),
   '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
