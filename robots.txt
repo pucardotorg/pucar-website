@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://pucar-journey.netlify.app/sitemap.xml
+Sitemap: https://pucar.netlify.app/sitemap.xml

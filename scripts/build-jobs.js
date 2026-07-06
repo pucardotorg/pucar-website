@@ -20,7 +20,7 @@ const fs = require("fs");
 const path = require("path");
 
 const ROOT = path.join(__dirname, "..");
-const SITE = (process.env.URL || "https://pucar-journey.netlify.app").replace(/\/$/, "");
+const SITE = (process.env.URL || "https://pucar.netlify.app").replace(/\/$/, "");
 const TODAY = new Date().toISOString().slice(0, 10);
 
 /* ---------------- tiny helpers ---------------- */

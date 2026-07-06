@@ -2182,7 +2182,7 @@ when shared in Slack, iMessage, WhatsApp, X, LinkedIn, etc.
   image`) + `twitter:title`/`twitter:description`/`twitter:image` mirrors.
 - `index.html` (the homepage, hand-authored, not templated through
   `pageShell()`) carries the same block by hand, hardcoded to
-  `https://pucar-journey.netlify.app/` since it has no `opts.url` to
+  `https://pucar.netlify.app/` since it has no `opts.url` to
   compute from.
 - The image is the same for every page: `assets/graph-photo.webp`
   (1920×1080, confirmed via `identify`/Pillow), referenced by absolute
@@ -2197,7 +2197,7 @@ when shared in Slack, iMessage, WhatsApp, X, LinkedIn, etc.
   re-export of the same asset, not a code change (just swap the file
   extension in the two `pageShell()` lines + `index.html`'s block).
 - `SITE` (used for all absolute URLs — canonical, og:url, og:image,
-  sitemap.xml) defaults to `https://pucar-journey.netlify.app` unless
+  sitemap.xml) defaults to `https://pucar.netlify.app` unless
   Netlify's `process.env.URL` is set at build time; there's no custom
   domain/CNAME in the repo as of this writing.
 
