@@ -5501,7 +5501,21 @@ button.circle-card{
 .reach-title{ font-family:var(--font-display); font-size:clamp(1.8rem,3.8vw,3.1rem); line-height:1.04; margin:.25em 0 .35em; color:var(--paper); }
 .reach-lead{ color:rgba(251,248,242,.72); font-size:clamp(1rem,1.35vw,1.16rem); max-width:58ch; line-height:1.5; }
 .reach-grid{ display:grid; grid-template-columns:minmax(270px,360px) 1fr; gap:clamp(24px,4vw,56px); align-items:center; }
-@media (max-width:900px){ .reach-grid{ grid-template-columns:1fr; } }
+/* phone: stack, with the map on top and sticky so tapping the cards below
+   updates it while it stays in view */
+@media (max-width:900px){
+  .reach{ padding:clamp(44px,7vh,72px) 0; }
+  .reach-grid{ grid-template-columns:1fr; gap:18px; align-items:start; }
+  .reach-map{ order:-1; position:sticky; top:62px; align-self:start; }
+  .reach-svg{ max-height:46vh; }
+  .reach-head{ margin-bottom:22px; }
+}
+@media (max-width:520px){
+  .rm-row{ padding:11px 12px; gap:11px; }
+  .rm-thumb{ width:44px; height:44px; }
+  .rm-row-label{ font-size:.98rem; }
+  .rm-dlist{ margin-left:26px; }
+}
 
 .reach-list{ display:flex; flex-direction:column; gap:11px; }
 .rm-item{ display:flex; flex-direction:column; }
@@ -5580,19 +5594,21 @@ button.circle-card{
 .rm-stateline{ fill:none; stroke:rgba(207,255,236,.26); stroke-width:1.1; stroke-linejoin:round; transition:opacity .4s ease; }
 .rm-label{ fill:var(--paper); stroke:#141732; stroke-width:3; font-family:'Source Sans 3', sans-serif;
   font-weight:700; letter-spacing:.03em; text-transform:uppercase; pointer-events:none; transition:opacity .4s ease; }
+.rm-labelline{ stroke:rgba(251,248,242,.38); stroke-width:1; transition:opacity .4s ease; }
 .rm-districts{ transition:opacity .5s ease; }
 .rm-district{ fill:rgba(251,248,242,.05); stroke:rgba(251,248,242,.12); stroke-width:.5; stroke-linejoin:round;
   transition:fill .4s ease, stroke .4s ease; pointer-events:none; }   /* inactive districts: no hover */
 .rm-district.is-court{ fill:rgba(48,207,140,.2); stroke:var(--green); stroke-width:1.4; pointer-events:auto; cursor:pointer; }
 .rm-district.is-court:hover{ fill:rgba(48,207,140,.32); }
 .rm-dots{ pointer-events:auto; }
-/* solid PINK dots (no outline) with a drop-shadow so they lift off the green
-   map, plus a pink pulse — distinct from the green states/districts */
-.rm-dot{ fill:var(--pink); stroke:none; cursor:pointer;
-  filter:drop-shadow(0 1px 2px rgba(0,0,0,.6)) drop-shadow(0 0 4px rgba(218,110,170,.6)); }
-.rm-dot.is-live{ filter:drop-shadow(0 1px 3px rgba(0,0,0,.65)) drop-shadow(0 0 8px rgba(218,110,170,.95)); }
-.rm-ping{ fill:none; stroke:var(--pink); stroke-width:2; opacity:.85; transform-box:fill-box; transform-origin:center;
-  animation:rmPing 2.2s ease-out infinite; }
+/* glossy green ORBS: a radial-gradient fill (bright specular highlight ->
+   deep green edge) gives a 3D bead, a dark shadow lifts it off the map, and a
+   neon glow makes it pop. Pulsing green ring. */
+.rm-dot{ fill:url(#rmDotGrad); stroke:none; cursor:pointer;
+  filter:drop-shadow(0 1.5px 2.5px rgba(0,0,0,.6)) drop-shadow(0 0 5px rgba(48,207,140,.7)); }
+.rm-dot.is-live{ filter:drop-shadow(0 1.5px 3px rgba(0,0,0,.65)) drop-shadow(0 0 10px rgba(48,207,140,.98)); }
+.rm-ping{ fill:none; stroke:var(--green); stroke-width:1.6; opacity:.7; transform-box:fill-box; transform-origin:center;
+  animation:rmPing 2.4s ease-out infinite; }
 @keyframes rmPing{ 0%{ transform:scale(1); opacity:.8; } 70%{ transform:scale(3.2); opacity:0; } 100%{ transform:scale(3.2); opacity:0; } }
 
 .rm-tip{ position:absolute; transform:translate(-50%,-145%); background:#111F26; color:var(--paper);

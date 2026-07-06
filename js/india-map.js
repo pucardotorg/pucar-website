@@ -45,6 +45,15 @@
   var svg = el("svg", { viewBox: "0 0 " + W + " " + H, class: "reach-svg", role: "img",
     "aria-label": "Map of India showing where PUCAR's courts are live and coming soon" });
 
+  // glossy-orb gradient for the court dots (off-centre bright spot = specular)
+  var defs = el("defs");
+  var grad = el("radialGradient", { id: "rmDotGrad", cx: "50%", cy: "50%", r: "58%", fx: "34%", fy: "28%" });
+  [["0%", "#F2FFF9"], ["18%", "#8CF3CB"], ["55%", "#30CF8C"], ["100%", "#158A57"]].forEach(function (s) {
+    grad.appendChild(el("stop", { offset: s[0], "stop-color": s[1] }));
+  });
+  defs.appendChild(grad);
+  svg.appendChild(defs);
+
   var gZoom = el("g", { class: "rm-zoom" });
   var gStates = el("g", { class: "rm-states" });
   var stateEls = {};
@@ -115,6 +124,9 @@
   // for MULTI-state regions (Punjab & Haryana + the Chandigarh UT), draw each
   // member's outline + a name label so the three are distinguishable when
   // zoomed in. Single-state regions don't need it (the card already names them).
+  // Chandigarh's centroid sits right under the tri-city court dots, so its
+  // label is nudged clear of them (with a short leader line back to the spot).
+  var LABEL_OFFSET = { "CHANDIGARH": [34, -42] };
   var gMeta = el("g", { class: "rm-meta" });
   D.regions.forEach(function (r) {
     if (r.states.length < 2) return;
@@ -124,7 +136,14 @@
       var o = el("path", { d: s.d, class: "rm-stateline", "vector-effect": "non-scaling-stroke", "data-region": r.id });
       o.style.opacity = "0";
       gMeta.appendChild(o);
-      var t = el("text", { x: s.c[0], y: s.c[1], class: "rm-label", "data-region": r.id,
+      var off = LABEL_OFFSET[sn] || [0, 0];
+      if (off[0] || off[1]) {
+        var ln = el("line", { x1: s.c[0], y1: s.c[1], x2: s.c[0] + off[0], y2: s.c[1] + off[1],
+          class: "rm-labelline", "data-region": r.id, "vector-effect": "non-scaling-stroke" });
+        ln.style.opacity = "0";
+        gMeta.appendChild(ln);
+      }
+      var t = el("text", { x: s.c[0] + off[0], y: s.c[1] + off[1], class: "rm-label", "data-region": r.id,
         "text-anchor": "middle", "dominant-baseline": "central",
         "paint-order": "stroke", "vector-effect": "non-scaling-stroke" });
       t.textContent = titleCase(sn);
@@ -134,7 +153,7 @@
   });
   gZoom.appendChild(gMeta);
   function showMeta(id) {
-    gMeta.querySelectorAll(".rm-stateline,.rm-label").forEach(function (e) {
+    gMeta.querySelectorAll(".rm-stateline,.rm-label,.rm-labelline").forEach(function (e) {
       e.style.opacity = (e.getAttribute("data-region") === id) ? "1" : "0";
     });
   }
@@ -188,13 +207,14 @@
 
   function applyView(v) {
     svg.setAttribute("viewBox", v.x + " " + v.y + " " + v.w + " " + v.h);
-    // dot radius/stroke scale with the current zoom so they look constant
-    var k = v.w / W;
+    // size dots + labels in true ON-SCREEN pixels (constant at any zoom AND
+    // any device width, so they don't shrink to nothing on a phone)
+    var rw = svg.getBoundingClientRect().width || W;
+    var unit = v.w / rw;
     gDots.querySelectorAll(".rm-dot,.rm-ping").forEach(function (c) {
-      c.setAttribute("r", ((+c.getAttribute("data-br") || 7.5) * k));
+      c.setAttribute("r", ((+c.getAttribute("data-br") || 7) * unit));
     });
-    // labels keep a constant screen size regardless of zoom
-    gMeta.querySelectorAll(".rm-label").forEach(function (t) { t.setAttribute("font-size", 26 * k); });
+    gMeta.querySelectorAll(".rm-label").forEach(function (t) { t.setAttribute("font-size", 14 * unit); });
   }
 
   function tweenTo(target, ms) {
@@ -218,13 +238,14 @@
   function clearDots() { while (gDots.firstChild) gDots.removeChild(gDots.firstChild); }
   function addDot(cx, cy, live, label) {
     if (cx == null) return;
-    var k = view.w / W;
-    var br = live ? 9 : 7;   // live courts read a touch larger
+    var rw = svg.getBoundingClientRect().width || W;
+    var unit = view.w / rw;
+    var br = live ? 9 : 7;   // target on-screen radius in px (live reads larger)
     if (!reduce) { // every dot pulses (live and coming-soon)
-      var ping = el("circle", { class: "rm-ping", cx: cx, cy: cy, r: br * k, "data-br": br, "vector-effect": "non-scaling-stroke" });
+      var ping = el("circle", { class: "rm-ping", cx: cx, cy: cy, r: br * unit, "data-br": br, "vector-effect": "non-scaling-stroke" });
       gDots.appendChild(ping);
     }
-    var dot = el("circle", { class: "rm-dot" + (live ? " is-live" : ""), cx: cx, cy: cy, r: br * k, "data-br": br });
+    var dot = el("circle", { class: "rm-dot" + (live ? " is-live" : ""), cx: cx, cy: cy, r: br * unit, "data-br": br });
     if (label) {
       dot.addEventListener("mouseenter", function () { showTip(label, cx, cy); });
       dot.addEventListener("mouseleave", hideTip);
@@ -444,8 +465,8 @@
       .replace(/&/g, "&").replace(/\bNag\*$/, "Nagar");
   }
 
-  // keep the tooltip glued while resizing
-  window.addEventListener("resize", function () { if (tip.classList.contains("is-on")) hideTip(); });
+  // re-size dots/labels (they're in on-screen px) and drop the tooltip on resize
+  window.addEventListener("resize", function () { applyView(view); if (tip.classList.contains("is-on")) hideTip(); });
 
   // start in the all-India view
   applyView(view);
