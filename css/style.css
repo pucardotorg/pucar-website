@@ -4727,6 +4727,16 @@ button.circle-card{
   font-size:.95rem;
 }
 .dj-stage{ color:rgba(251,248,242,.85); }
+.dj-stage-desc{
+  display:block;
+  margin-top:2px;
+  font-style:normal;
+  font-weight:400;
+  font-size:.78rem;
+  line-height:1.45;
+  color:rgba(251,248,242,.5);
+  max-width:52ch;
+}
 .dj-old{ color:rgba(251,248,242,.5); text-decoration:line-through; text-decoration-color:rgba(240,162,138,.7); }
 .dj-arrow{ color:rgba(251,248,242,.4); text-align:center; }
 .dj-new{ color:var(--green); font-weight:700; text-align:right; min-width:86px; }

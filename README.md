@@ -1852,6 +1852,13 @@ without asking):
 
 From the DeltaXY x PUCAR daily sync notes:
 
+- JOURNEY ROW DESCRIPTIONS: the before/after table's terms (Filing to
+  registration etc.) each carry a .dj-stage-desc plain-English line
+  under the term (block em inside .dj-stage, .78rem, 52ch cap) --
+  follow-up to the same feedback, requested with a screenshot.
+- GROWTH CHART: value labels always visible above the bars
+  (textposition outside, cliponaxis false, y range capped 545 for
+  headroom over the 486 bar).
 - STAGE DESCRIPTIONS: each .dj-stage-card now carries a .djs-desc
   plain-language line (what Registration / Cognizance / Appearance /
   Bail / Mediation / Trial actually mean), adapted from the public

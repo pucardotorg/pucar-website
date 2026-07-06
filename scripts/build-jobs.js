@@ -938,17 +938,19 @@ function dristiPage() {
       "    </div>";
   }).join("\n");
 
+  /* each row: [term, before, after, plain-English description] --
+     6 Jul 2026 sync feedback: court terminology needs definitions */
   const JOURNEY = [
-    ["Filing to registration", "10 days", "Same day"],
-    ["Registration to cognizance", "150 days", "7 days"],
-    ["Summons and bail", "300 days", "52 days"],
-    ["Between hearings", "60 days", "14 days"],
-    ["Filing to disposal", "~600 days", "~140 days"]
+    ["Filing to registration", "10 days", "Same day", "The lawyer submits the case; the court checks it for defects and takes it on record."],
+    ["Registration to cognizance", "150 days", "7 days", "The court formally takes notice of the complaint so the case can move forward."],
+    ["Summons and bail", "300 days", "52 days", "The accused is officially notified of the case, appears, and the question of bail is settled."],
+    ["Between hearings", "60 days", "14 days", "The wait from one hearing to the next."],
+    ["Filing to disposal", "~600 days", "~140 days", "The whole journey, from submitting the case to its resolution."]
   ];
   const journeyHtml = JOURNEY.map(function (r, i) {
     var last = i === JOURNEY.length - 1;
     return '    <div class="dristi-journey-row' + (last ? " is-total" : "") + '">' +
-      '<span class="dj-stage">' + esc(r[0]) + "</span>" +
+      '<span class="dj-stage">' + esc(r[0]) + '<em class="dj-stage-desc">' + esc(r[3]) + "</em></span>" +
       '<span class="dj-old">' + esc(r[1]) + "</span>" +
       '<span class="dj-arrow" aria-hidden="true">&rarr;</span>' +
       '<span class="dj-new">' + esc(r[2]) + "</span></div>";
