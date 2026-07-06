@@ -377,6 +377,7 @@
   /* ---------- state click/hover on the map ---------- */
   D.states.forEach(function (s) {
     var p = stateEls[s.n];
+    if (!ACTIVE[s.n]) return;   // only the states we're in are clickable
     p.style.cursor = "pointer";
     p.addEventListener("click", function () { selectState(s.n); });
   });
