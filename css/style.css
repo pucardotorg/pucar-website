@@ -3494,17 +3494,24 @@ a.event-card{ text-decoration:none; }
      at max-content his one-liner rendered as an unreadable edge-to-edge
      strip -- capping at ~220px wraps it into a proper two-line balloon,
      and the type goes back up to something readable */
-  .judge-bubble{
-    left:50%;
-    bottom:calc(100% + 12px);
-    translate:-50% 10px;
-    width:200px;
-    max-width:none;
-    font-size:.95rem;
-    padding:12px 16px;
-    text-align:center;
+  /* the judge's balloon is HIDDEN on phones (explicit call: after four
+     rounds of WebKit mis-measuring it, "if you can't fix it on phone,
+     just hide it") -- the desktop balloon is untouched */
+  .judge-bubble{ display:none !important; }
+
+  /* buttons + pill tags inside the animated story get a frosted
+     semi-opaque backing on phones only, so drifting heads and artwork
+     behind them never hurt readability (all in-story CTAs/pills sit on
+     the dark beats) */
+  .pin .btn-ghost,
+  .pin .value-chips li{
+    background:rgba(10,21,26,.55);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
   }
-  .pin[data-beat="3"] .judge-bubble{ translate:-50% 0; }
+  .pin .btn-primary{
+    box-shadow:0 6px 22px rgba(10,21,26,.45);
+  }
   /* the judge's balloon must sit ABOVE his head and hard-wrap inside its
      drawn paper, whatever the engine thinks max-content means */
   .judge-bubble{
