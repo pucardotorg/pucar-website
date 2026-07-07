@@ -44,9 +44,12 @@ async function fetchScalar(field, dash, card) {
   // NOTE: brackets MUST be percent-encoded (%5B%5D); a literal "[]" is rejected.
   const url = BASE + "/dashcard/" + dash + "/card/" + card + "?parameters=%5B%5D";
   let last = 0;
-  for (let i = 0; i < 18; i++) { // ~50s cap per card
+  // 202 = Metabase is still computing this card. First run is slow; results
+  // get cached server-side, so later daily runs return 200 quickly. Poll up
+  // to ~4 min per card (all cards run in parallel, so wall time ≈ one card).
+  for (let i = 0; i < 80; i++) {
     const ctl = new AbortController();
-    const to = setTimeout(() => ctl.abort(), 20000); // per-request timeout
+    const to = setTimeout(() => ctl.abort(), 25000); // per-request timeout
     let res;
     try { res = await fetch(url, { signal: ctl.signal, headers: HDRS }); }
     catch (e) { clearTimeout(to); if (i === 0) console.error("  " + field + ": fetch error " + (e && e.message)); await sleep(2500); continue; }
