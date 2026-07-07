@@ -969,11 +969,6 @@ function tenUnlocksHtml() {
       stars: 3, rep: "Replicable across case types and state contexts." }
   ];
   var totalDays = U.reduce(function (s, u) { return s + u.days; }, 0);
-  function stars(n) {
-    var s = "";
-    for (var i = 1; i <= 3; i++) s += '<span class="ub-star' + (i <= n ? " is-on" : "") + '">★</span>';
-    return s;
-  }
   var cards = U.map(function (u, i) {
     var no = (i + 1 < 10 ? "0" : "") + (i + 1);
     return '<article class="unlock" data-dim="' + u.dim + '" data-days="' + u.days + '">' +
@@ -989,8 +984,6 @@ function tenUnlocksHtml() {
           '<div class="ub-col ub-before"><span class="ub-tag">Before</span><p>' + u.before + "</p></div>" +
           '<div class="ub-col ub-after"><span class="ub-tag">ON Court</span><p>' + u.after + "</p></div>" +
         "</div>" +
-        '<div class="ub-rep"><span class="ub-stars" title="Replicability ' + u.stars + ' of 3">' + stars(u.stars) + "</span>" +
-          '<span class="ub-rep-text">' + u.rep + "</span></div>" +
       "</div></div>" +
     "</article>";
   }).join("\n");
