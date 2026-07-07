@@ -1585,11 +1585,10 @@ function careersPage() {
       '<p class="beat-eyebrow jdm-eyebrow">' + esc(r.type) + ' role</p>' +
       '<h2 class="jdm-title">' + esc(r.title) + '</h2>' +
       '<p class="jdm-openings"><span class="career-openings">' + openingsLabel(r) + '</span></p>' +
-      '<p class="jdm-summary">' + esc(r.summary) + '</p>' +
       '<ul class="job-chips">' +
         [r.commitment, r.location].concat(r.tags || []).filter(Boolean).map(function (c) { return '<li>' + esc(c) + '</li>'; }).join("") +
       '</ul>' +
-      '<div class="job-body prose">' + mdToHtml(r.body || "") + '</div>' +
+      '<div class="job-body">' + mdToHtml(r.body || "") + '</div>' +
       '<div class="cta-row jdm-cta">' +
         (r.status === "Open"
           ? '<a class="btn btn-primary" href="' + esc(r.apply_url || "mailto:collaborate@pucar.org") + '">Apply for this role</a>'
