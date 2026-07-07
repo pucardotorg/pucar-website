@@ -970,6 +970,8 @@ function dristiPage() {
   var ds = dsFallback;
   try { ds = Object.assign({}, dsFallback, JSON.parse(fs.readFileSync(path.join(__dirname, "..", "content", "dristi-stats.json"), "utf8"))); } catch (e) {}
   var nf = function (n) { return Number(n).toLocaleString("en-IN"); };
+  var syncedStr = "";
+  try { var _dt = new Date(ds.updated); if (!isNaN(_dt.getTime())) syncedStr = _dt.toLocaleString("en-IN", { timeZone: "Asia/Kolkata", day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: true }) + " IST"; } catch (e) {}
 
   const kstatsHtml =
 '      <div class="dristi-stat is-big"><span class="dristi-stat-num">' + nf(ds.filed) + '</span><span class="dristi-stat-label">cases filed in a court that did not exist two years ago</span></div>\n' +
@@ -1085,7 +1087,7 @@ fs.readFileSync(path.join(ROOT, "assets", "kerala-map.svg"), "utf8") + "\n" +
 "    </div>\n" +
 '    <div class="dristi-live-body">\n' +
 '    <div class="dristi-stat-grid">\n' + kstatsHtml + "\n    </div>\n" +
-'    <p class="dristi-source">Figures from the <a href="https://oncourts.kerala.gov.in/dashboard" target="_blank" rel="noopener">public ON Courts dashboard</a>, July 2026. 80% of disposed cases end in withdrawal: parties settle directly once the process is credible and predictable.</p>\n' +
+'    <p class="dristi-source">Figures pulled from the <a href="https://oncourts.kerala.gov.in/dashboard" target="_blank" rel="noopener">public ON Courts dashboard</a>' + (syncedStr ? ', last synced ' + syncedStr : ', July 2026') + '. 80% of disposed cases end in withdrawal: parties settle directly once the process is credible and predictable.</p>\n' +
 
 /* quarterly filings + disposals, live from the dashboard (Plotly bars) */
 '    <div class="dristi-growth">\n' +

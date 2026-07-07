@@ -35,13 +35,23 @@ const CARDS = {
 };
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const HDRS = {
+  "accept": "application/json",
+  "user-agent": "Mozilla/5.0 (compatible; PUCAR-bot/1.0; +https://pucar.netlify.app)"
+};
 
-async function fetchScalar(dash, card) {
-  const url = BASE + "/dashcard/" + dash + "/card/" + card + "?parameters=[]";
-  for (let i = 0; i < 40; i++) { // ~2 min max
+async function fetchScalar(field, dash, card) {
+  // NOTE: brackets MUST be percent-encoded (%5B%5D); a literal "[]" is rejected.
+  const url = BASE + "/dashcard/" + dash + "/card/" + card + "?parameters=%5B%5D";
+  let last = 0;
+  for (let i = 0; i < 18; i++) { // ~50s cap per card
+    const ctl = new AbortController();
+    const to = setTimeout(() => ctl.abort(), 20000); // per-request timeout
     let res;
-    try { res = await fetch(url, { headers: { accept: "application/json" } }); }
-    catch (e) { await sleep(3000); continue; }
+    try { res = await fetch(url, { signal: ctl.signal, headers: HDRS }); }
+    catch (e) { clearTimeout(to); if (i === 0) console.error("  " + field + ": fetch error " + (e && e.message)); await sleep(2500); continue; }
+    clearTimeout(to);
+    last = res.status;
     if (res.status === 200) {
       let j; try { j = await res.json(); } catch (e) { return null; }
       const rows = j && j.data && j.data.rows;
@@ -49,11 +59,14 @@ async function fetchScalar(dash, card) {
         const v = Number(rows[0][0]);
         if (Number.isFinite(v)) return v;
       }
+      console.error("  " + field + ": 200 but no numeric row");
       return null;
     }
-    // 202 (still running) or a transient status: wait and retry
-    await sleep(3000);
+    if (res.status >= 400 && res.status !== 429) { console.error("  " + field + ": HTTP " + res.status + " (giving up)"); return null; }
+    // 202 (query still running) / 429 / 5xx: wait and retry
+    await sleep(2500);
   }
+  console.error("  " + field + ": no result after retries (last status " + last + ")");
   return null;
 }
 
@@ -62,23 +75,40 @@ async function fetchScalar(dash, card) {
   try { prev = JSON.parse(fs.readFileSync(OUT, "utf8")); } catch (e) {}
   const out = Object.assign({}, prev);
 
-  let ok = 0, fail = 0;
-  for (const field of Object.keys(CARDS)) {
-    const [dash, card] = CARDS[field];
-    const v = await fetchScalar(dash, card);
-    if (v == null) { console.error("FAIL " + field + " (card " + card + ") — keeping " + prev[field]); fail++; continue; }
-    out[field] = Math.round(v);
-    ok++;
-    console.log("OK   " + field + " = " + out[field]);
-  }
+  // Fetch all cards in PARALLEL so the whole run is ~one card's wait (<1 min),
+  // not the sum of five. Each still falls back to the previous value on failure.
+  const results = [];
+  await Promise.all(Object.keys(CARDS).map(async function (field) {
+    const dash = CARDS[field][0], card = CARDS[field][1];
+    const before = prev[field];
+    const v = await fetchScalar(field, dash, card);
+    if (v == null) { results.push({ field, state: "FAILED", before, after: before }); return; }
+    const after = Math.round(v);
+    out[field] = after;
+    results.push({ field, state: (Number(before) === after ? "unchanged" : "updated"), before, after });
+  }));
 
-  if (ok === 0) {
-    console.error("All fetches failed — leaving content/dristi-stats.json unchanged.");
+  const nUpdated = results.filter(r => r.state === "updated").length;
+  const nSame    = results.filter(r => r.state === "unchanged").length;
+  const nFailed  = results.filter(r => r.state === "FAILED").length;
+
+  console.log("\n===== ON Courts sync report =====");
+  results.sort((a, b) => a.field.localeCompare(b.field)).forEach(function (r) {
+    if (r.state === "updated")   console.log("  ~ " + r.field + ":  " + r.before + "  ->  " + r.after);
+    else if (r.state === "unchanged") console.log("  = " + r.field + ":  " + r.after + "  (no change)");
+    else console.log("  x " + r.field + ":  FAILED — kept " + r.before);
+  });
+  console.log("  ---");
+  console.log("  " + nUpdated + " updated, " + nSame + " unchanged, " + nFailed + " failed");
+  console.log("=================================\n");
+
+  if (nUpdated + nSame === 0) {
+    console.error("Every fetch failed — leaving content/dristi-stats.json unchanged (site keeps last-good numbers).");
     process.exit(1);
   }
 
   out.source = "https://oncourts.kerala.gov.in/dashboard";
-  out.updated = new Date().toISOString().slice(0, 10);
+  out.updated = new Date().toISOString();
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2) + "\n");
-  console.log("Wrote " + OUT + "  (" + ok + " updated, " + fail + " kept as fallback)");
+  console.log("Wrote " + OUT);
 })();
