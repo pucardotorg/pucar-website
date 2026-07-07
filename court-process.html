@@ -6,141 +6,130 @@
 <title>The Journey of a Cheque-Bounce Case | PUCAR</title>
 <meta name="description" content="An interactive flowchart and service blueprint of what actually happens to a cheque-bounce (§138 NI Act) complaint once it enters the court system." />
 <link rel="canonical" href="https://pucar.netlify.app/court-process/" />
-
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<!-- the real PUCAR stylesheet: all brand tokens + components come from here -->
 <link rel="stylesheet" href="css/style.css" />
-<!-- React Flow base styles -->
 <link rel="stylesheet" href="https://esm.sh/@xyflow/react@12.3.5/dist/style.css" />
 <link rel="icon" type="image/png" href="assets/pucar-new-favicon.png" />
 <link rel="apple-touch-icon" href="assets/pucar-new-favicon.png" />
 
 <style>
 /* =========================================================
-   Court-process page — scoped styles ONLY for the interactive
-   chart. Everything else (colours, type, header, footer,
-   cards) is inherited from /css/style.css so it matches the
-   PUCAR site exactly. Edit content in the PROCESS / BLUEPRINT
-   data objects in the module script at the bottom.
+   Court-process page — scoped styles for the interactive board.
+   Chrome (header/footer/type/colours) inherited from css/style.css.
+   Both views share ONE dark board with a sticky stage-column
+   header; only the body swaps on tab change.
+   Edit content in PROCESS / BLUEPRINT below.
    ========================================================= */
+:root{ --indigo:#141732; --indigo-2:#1b1f3f; --paper2:#F4EFE6;
+  --a-litigant:#30CF8C; --a-respondent:#E7B860; --a-advocate:#DA6EAA;
+  --a-judge:#7FB0E8; --a-courtstaff:#B69CE0; --a-external:#9AA0A6; }
 
 .cp-lead{ max-width:60ch; font-size:1.06rem; line-height:1.6; color:var(--ink-soft); }
 
-/* view tabs — light-background variant of the site's .res-tabbar */
-.cp-tabs{ display:flex; gap:26px; border-bottom:1px solid var(--line); margin:40px 0 6px; }
+/* tabs (light, on the cream hero) */
+.cp-tabs{ display:flex; gap:26px; border-bottom:1px solid var(--line); margin:36px 0 0; }
 .cp-tab{ appearance:none; background:none; border:0; cursor:pointer; padding:12px 2px 14px; margin-bottom:-1px; border-bottom:2px solid transparent; font:600 1.02rem var(--font-body); color:var(--ink-soft); display:inline-flex; align-items:center; gap:9px; transition:color .2s ease, border-color .2s ease; }
 .cp-tab svg{ width:16px; height:16px; opacity:.65; }
 .cp-tab:hover{ color:var(--ink); border-bottom-color:var(--line); }
 .cp-tab.on{ color:var(--ink); border-bottom-color:var(--green); font-weight:700; }
 .cp-tab.on svg{ opacity:1; color:var(--forest); }
 
-/* sticky stage rail */
-.cp-rail{ position:sticky; top:0; z-index:20; margin:0 0 8px; padding:12px 0; background:linear-gradient(var(--cream) 72%, rgba(246,241,230,0)); }
-.cp-rail-inner{ display:flex; align-items:center; gap:14px; }
-.cp-rail .lbl{ flex:0 0 auto; font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; font-weight:700; color:var(--muted); }
-.cp-chips{ display:flex; gap:7px; overflow-x:auto; scrollbar-width:none; }
-.cp-chips::-webkit-scrollbar{ display:none; }
-.cp-chip2{ flex:0 0 auto; display:inline-flex; align-items:center; gap:8px; text-decoration:none; white-space:nowrap; font:600 .84rem var(--font-body); color:var(--ink-soft); background:var(--paper); border:1px solid var(--line); border-radius:100px; padding:6px 13px 6px 6px; transition:all .2s ease; }
-.cp-chip2 .n{ width:19px; height:19px; border-radius:50%; display:grid; place-items:center; font-size:.7rem; font-weight:700; background:var(--cream-deep); color:var(--ink-soft); }
-.cp-chip2:hover{ border-color:var(--muted); color:var(--ink); }
-.cp-chip2.on{ background:var(--forest); border-color:var(--forest); color:var(--paper); }
-.cp-chip2.on .n{ background:var(--green); color:var(--forest-deep); }
+/* full-bleed dark board section (DRISTI indigo) */
+.cp-dark{ background:var(--indigo); color:var(--paper2); padding:clamp(26px,4vw,44px) 0 clamp(40px,6vw,72px); }
+.cp-dark-in{ max-width:1240px; margin:0 auto; padding:0 clamp(16px,4vw,40px); }
+.cp-dark .cp-caption{ color:rgba(244,239,230,.62); font-size:.95rem; margin:0 0 18px; max-width:70ch; }
 
-/* a stage: editorial story column + chart card */
-.cp-stage{ padding-top:30px; margin-bottom:14px; scroll-margin-top:90px; }
-.cp-stage-idx{ font-family:var(--font-display); font-weight:600; font-size:.92rem; color:var(--forest); letter-spacing:.02em; }
-.cp-stage h2{ font-family:var(--font-display); font-weight:500; font-size:clamp(1.5rem,3.2vw,2.1rem); margin:.1em 0 .5em; line-height:1.08; }
-.cp-actors{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px; }
-.cp-actor{ font:600 .74rem var(--font-body); padding:4px 11px; border-radius:100px; }
-.cp-actor.litigant{ background:var(--green-soft); color:#12503a; }
-.cp-actor.advocate{ background:var(--pink-soft); color:#8a2f63; }
-.cp-actor.court{ background:#e3ddf0; color:#3f356b; }
-.cp-actor.external{ background:var(--cream-deep); color:var(--ink-soft); }
+/* the scroll board: fixed height, sticky header, both axes scroll inside */
+.cp-board{ position:relative; height:clamp(520px,76vh,880px); overflow:auto; border:1px solid rgba(244,239,230,.12); border-radius:20px; background:linear-gradient(180deg, rgba(244,239,230,.02), transparent 40%); }
+.cp-board::-webkit-scrollbar{ height:12px; width:12px; }
+.cp-board::-webkit-scrollbar-thumb{ background:rgba(244,239,230,.18); border-radius:20px; border:3px solid var(--indigo); }
 
-.cp-grid{ display:grid; grid-template-columns:minmax(0,300px) minmax(0,1fr); gap:clamp(20px,3vw,44px); align-items:start; }
-.cp-story{ position:sticky; top:88px; border-left:3px solid var(--green); padding:3px 0 3px 22px; }
-.cp-story .k{ display:block; font:700 .68rem var(--font-body); letter-spacing:.16em; text-transform:uppercase; color:var(--forest); margin-bottom:14px; }
-.cp-story p{ font-family:var(--font-display); font-weight:500; font-size:clamp(1.12rem,1.4vw,1.35rem); line-height:1.5; color:var(--ink); }
-.cp-story i{ display:block; margin-top:1.1em; font:400 .92rem/1.55 var(--font-body); font-style:normal; color:var(--ink-soft); padding-left:14px; border-left:2px solid var(--line); }
-.cp-story b{ font-weight:600; }
+/* shared sticky stage-column header */
+.cp-head{ position:sticky; top:0; z-index:10; display:grid; background:var(--indigo-2); box-shadow:0 1px 0 rgba(244,239,230,.12); }
+.cp-head .corner{ position:sticky; left:0; z-index:2; background:var(--indigo-2); display:flex; align-items:flex-end; padding:12px 14px; font:700 .64rem var(--font-body); letter-spacing:.16em; text-transform:uppercase; color:rgba(244,239,230,.5); border-right:1px solid rgba(244,239,230,.1); }
+.cp-col{ padding:12px 16px; border-right:1px solid rgba(244,239,230,.08); }
+.cp-col .cn{ font-family:var(--font-display); font-weight:600; font-size:.82rem; color:var(--green); }
+.cp-col .ct{ font-weight:600; font-size:.98rem; color:var(--paper2); line-height:1.2; margin-top:3px; }
 
-/* chart card — a real PUCAR card */
-.cp-card{ position:relative; background:var(--paper); border:1px solid var(--line); border-radius:22px; box-shadow:0 22px 50px -34px rgba(36,30,26,.5); overflow:hidden; }
-.cp-expand{ position:absolute; top:12px; right:12px; z-index:6; display:inline-flex; align-items:center; gap:6px; cursor:pointer; font:600 .76rem var(--font-body); color:var(--ink-soft); background:var(--cream); border:1px solid var(--line); border-radius:100px; padding:6px 12px; transition:all .2s ease; }
-.cp-expand:hover{ color:var(--ink); border-color:var(--muted); transform:translateY(-1px); }
+/* body wrappers share the same grid width */
+.cp-body{ position:relative; }
 
-/* ---- React Flow canvas + nodes ---- */
-.rf-canvas{ width:100%; }
+/* ---- flowchart (React Flow) ---- */
+.rf-wrap{ position:relative; }
 .react-flow__attribution{ display:none; }
-.react-flow__node{ font-family:var(--font-body); }
 .react-flow__handle{ opacity:0; width:1px; height:1px; min-width:0; min-height:0; border:0; }
-.react-flow__node-card{ background:none; border:0; padding:0; box-shadow:none; border-radius:0; width:auto; }
+.react-flow__node-card, .react-flow__node-band{ background:none; border:0; padding:0; box-shadow:none; }
+.react-flow__node{ font-family:var(--font-body); }
+
+.rf-band{ width:100%; height:100%; border-right:1px solid rgba(244,239,230,.08); background:linear-gradient(180deg, rgba(244,239,230,.035), rgba(244,239,230,.012)); }
+.rf-band:nth-child(even){ background:linear-gradient(180deg, rgba(244,239,230,.02), transparent); }
+.rf-band-n{ display:none; }
 
 .rfnode{ position:relative; box-sizing:border-box; }
-.rfnode.step, .rfnode.start, .rfnode.outcome{
-  width:224px; min-height:56px; display:flex; align-items:center; justify-content:center; text-align:center;
-  padding:13px 16px; border-radius:14px; font-weight:600; font-size:.9rem; line-height:1.3; color:var(--ink);
-  background:var(--paper); border:1px solid rgba(36,30,26,.18); box-shadow:0 6px 16px -12px rgba(36,30,26,.6);
-}
-.rfnode.start{ background:var(--forest); border-color:var(--forest); color:var(--paper); font-weight:700; }
-.rfnode.outcome{ background:var(--green-soft); border-color:#8fd9bd; color:#0f3d2c; font-weight:700; }
-.rfnode.decision{ width:172px; height:172px; display:grid; place-items:center; }
-.rfnode.decision::before{ content:""; position:absolute; inset:16px; transform:rotate(45deg); background:var(--pink-soft); border:1.5px solid #cf7aa9; border-radius:14px; box-shadow:0 6px 16px -12px rgba(36,30,26,.6); }
-.rfnode.decision .rf-label{ position:relative; z-index:1; max-width:120px; text-align:center; font-weight:700; font-size:.86rem; line-height:1.25; color:#7a2b57; }
-.rfnode.decision .rf-tag{ position:relative; z-index:1; display:block; font:800 .58rem var(--font-body); letter-spacing:.14em; text-transform:uppercase; color:#b8629a; margin-bottom:3px; }
+.rfnode.step{ width:216px; min-height:52px; display:flex; align-items:center; text-align:left; padding:11px 14px; border-radius:12px; font-weight:600; font-size:.86rem; line-height:1.3; color:var(--paper2); background:rgba(244,239,230,.06); border:1px solid rgba(244,239,230,.16); border-left:3px solid rgba(244,239,230,.3); backdrop-filter:blur(2px); }
+.rfnode.step[data-actor="litigant"]{ border-left-color:var(--a-litigant); }
+.rfnode.step[data-actor="respondent"]{ border-left-color:var(--a-respondent); }
+.rfnode.step[data-actor="advocate"]{ border-left-color:var(--a-advocate); }
+.rfnode.step[data-actor="judge"]{ border-left-color:var(--a-judge); }
+.rfnode.step[data-actor="courtstaff"]{ border-left-color:var(--a-courtstaff); }
+.rfnode.step[data-actor="external"]{ border-left-color:var(--a-external); }
+.rfnode.start{ width:200px; min-height:46px; display:flex; align-items:center; justify-content:center; text-align:center; padding:10px 16px; border-radius:999px; font-weight:700; font-size:.9rem; color:#08130d; background:var(--green); border:0; }
+.rfnode.outcome{ width:206px; min-height:48px; display:flex; align-items:center; justify-content:center; text-align:center; padding:10px 16px; border-radius:999px; font-weight:700; font-size:.86rem; line-height:1.25; color:#c8f0dd; background:rgba(48,207,140,.14); border:1.5px solid rgba(48,207,140,.6); }
+.rfnode.decision{ display:grid; place-items:center; }
+.rfnode.decision::before{ content:""; position:absolute; inset:14px; transform:rotate(45deg); background:rgba(218,110,170,.16); border:1.5px solid rgba(218,110,170,.75); border-radius:12px; }
+.rfnode.decision .rf-label{ position:relative; z-index:1; text-align:center; font-weight:700; font-size:.82rem; line-height:1.22; color:#f3cbe1; }
 
-.react-flow__edge-path{ stroke-linecap:round; }
-.react-flow__controls{ box-shadow:0 10px 24px -14px rgba(36,30,26,.5); border-radius:10px; overflow:hidden; border:1px solid var(--line); }
-.react-flow__controls-button{ background:var(--paper); border-bottom:1px solid var(--line); color:var(--ink-soft); }
-.react-flow__controls-button:hover{ background:var(--cream-deep); }
+.react-flow__controls{ box-shadow:0 10px 24px -14px #000; border-radius:10px; overflow:hidden; border:1px solid rgba(244,239,230,.16); }
+.react-flow__controls-button{ background:var(--indigo-2); border-bottom:1px solid rgba(244,239,230,.12); color:var(--paper2); }
+.react-flow__controls-button:hover{ background:#2a2f57; }
+.react-flow__controls-button svg{ fill:var(--paper2); }
 
-.cp-legend{ display:flex; flex-wrap:wrap; gap:14px 22px; align-items:center; margin:26px 0 4px; padding:14px 20px; border:1px dashed var(--line); border-radius:14px; background:var(--paper); font-size:.83rem; color:var(--ink-soft); }
-.cp-legend .li{ display:flex; align-items:center; gap:8px; }
-.cp-legend .sw{ width:22px; height:15px; border-radius:5px; border:1.5px solid rgba(36,30,26,.35); background:var(--paper); }
-.cp-legend .sw.dia{ rotate:45deg; width:14px; height:14px; border-radius:3px; background:var(--pink-soft); border-color:#cf7aa9; }
-.cp-legend .sw.out{ background:var(--green-soft); border-color:#8fd9bd; }
-.cp-legend .sw.st{ background:var(--forest); border-color:var(--forest); }
-
-/* ---- service blueprint ---- */
-.cp-bp-head{ max-width:64ch; margin:14px 0 22px; }
-.cp-bp-head h2{ font-family:var(--font-display); font-weight:500; font-size:clamp(1.6rem,3vw,2.2rem); margin-bottom:.35em; }
-.cp-bp-head p{ color:var(--ink-soft); font-size:1.05rem; line-height:1.6; }
-.cp-bp{ overflow-x:auto; border:1px solid var(--line); border-radius:22px; background:var(--paper); box-shadow:0 22px 50px -34px rgba(36,30,26,.5); }
-.cp-bp-grid{ display:grid; grid-template-columns:170px repeat(8, minmax(190px,1fr)); }
-.cp-bp-grid > *{ border-bottom:1px solid var(--line); border-right:1px solid var(--line); padding:13px 14px; min-width:0; }
-.cp-bp-corner{ position:sticky; left:0; z-index:3; background:var(--cream-deep); display:flex; align-items:flex-end; font:700 .66rem var(--font-body); letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft); }
-.cp-bp-col{ background:var(--cream-deep); }
-.cp-bp-col .cn{ font-family:var(--font-display); font-weight:600; font-size:.86rem; color:var(--forest); }
-.cp-bp-col .ct{ font-weight:600; font-size:.92rem; color:var(--ink); line-height:1.25; margin-top:2px; }
-.cp-bp-lane{ position:sticky; left:0; z-index:2; display:flex; flex-direction:column; gap:3px; justify-content:center; }
-.cp-bp-lane .ln{ font-weight:700; font-size:.86rem; color:var(--ink); }
-.cp-bp-lane .ld{ font-size:.71rem; color:var(--muted); line-height:1.3; }
-.cp-bp-lane.evidence{ background:#f1ead9; } .cp-bp-lane.actor{ background:var(--green-soft); }
-.cp-bp-lane.front{ background:var(--pink-soft); } .cp-bp-lane.back{ background:#e3ddf0; } .cp-bp-lane.support{ background:#e9e2d3; }
+/* ---- service blueprint (grid, on dark) ---- */
+.cp-bp-grid{ display:grid; }
+.cp-bp-grid > *{ border-bottom:1px solid rgba(244,239,230,.1); border-right:1px solid rgba(244,239,230,.07); padding:12px 14px; min-width:0; }
+.cp-bp-lane{ position:sticky; left:0; z-index:2; display:flex; flex-direction:column; gap:3px; justify-content:center; background:var(--indigo-2); border-right:1px solid rgba(244,239,230,.12); }
+.cp-bp-lane .ln{ font-weight:700; font-size:.85rem; color:var(--paper2); }
+.cp-bp-lane .ld{ font-size:.7rem; color:rgba(244,239,230,.5); line-height:1.3; }
+.cp-bp-lane .dot{ width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:7px; vertical-align:middle; }
 .cp-bp-cell ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
-.cp-bp-cell li{ font-size:.8rem; line-height:1.35; color:var(--ink-soft); background:var(--cream); border:1px solid var(--line); border-radius:9px; padding:7px 9px; }
-.cp-bp-cell.evidence li{ background:#faf6ec; border-style:dashed; }
-.cp-bp-cell.actor li{ border-left:3px solid var(--green); } .cp-bp-cell.front li{ border-left:3px solid var(--pink); } .cp-bp-cell.back li{ border-left:3px solid #6a5fa0; }
-.cp-bp-cell .empty{ color:var(--muted); opacity:.4; }
-.cp-bp-div{ grid-column:1 / -1; border-right:0 !important; background:repeating-linear-gradient(90deg,var(--muted) 0 8px,transparent 8px 16px) center/100% 1.5px no-repeat, var(--cream-deep); display:flex; align-items:center; padding:7px 14px !important; }
-.cp-bp-div span{ background:var(--cream-deep); padding-right:12px; font:700 .66rem var(--font-body); letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft); }
-.cp-bp-grid > *:last-child{ border-bottom:0; }
+.cp-bp-cell li{ font-size:.8rem; line-height:1.35; color:rgba(244,239,230,.82); background:rgba(244,239,230,.05); border:1px solid rgba(244,239,230,.12); border-left-width:3px; border-radius:9px; padding:7px 9px; }
+.cp-bp-cell.evidence li{ border-left-style:dashed; border-left-color:rgba(244,239,230,.4); }
+.cp-bp-cell.actor li{ border-left-color:var(--a-litigant); }
+.cp-bp-cell.front li{ border-left-color:var(--a-advocate); }
+.cp-bp-cell.courtstaff li{ border-left-color:var(--a-courtstaff); }
+.cp-bp-cell.judge li{ border-left-color:var(--a-judge); }
+.cp-bp-cell.support li{ border-left-color:var(--a-external); }
+.cp-bp-cell .empty{ color:rgba(244,239,230,.3); }
+.cp-bp-div{ grid-column:1 / -1; position:sticky; left:0; border-right:0 !important; background:var(--indigo); display:flex; align-items:center; gap:12px; padding:6px 14px !important; }
+.cp-bp-div span{ font:700 .64rem var(--font-body); letter-spacing:.16em; text-transform:uppercase; color:rgba(244,239,230,.5); white-space:nowrap; }
+.cp-bp-div::after{ content:""; flex:1; height:1px; background:repeating-linear-gradient(90deg,rgba(244,239,230,.35) 0 7px,transparent 7px 14px); }
 
-/* fullscreen */
-.cp-modal{ position:fixed; inset:0; z-index:1000; display:none; flex-direction:column; background:rgba(17,31,38,.72); backdrop-filter:blur(4px); padding:clamp(12px,3vw,40px); }
-.cp-modal.open{ display:flex; }
-.cp-modal-bar{ display:flex; justify-content:space-between; align-items:center; color:var(--paper); margin-bottom:10px; }
-.cp-modal-bar b{ font-family:var(--font-display); font-weight:500; font-size:1.15rem; }
-.cp-modal-close{ cursor:pointer; background:var(--paper); border:0; border-radius:100px; padding:8px 16px; font:600 .85rem var(--font-body); color:var(--ink); }
-.cp-modal-stage{ flex:1; background:var(--cream); border:1px solid rgba(251,248,242,.2); border-radius:16px; overflow:hidden; }
+/* legend */
+.cp-legend{ display:flex; flex-wrap:wrap; gap:10px 20px; align-items:center; margin-top:18px; font-size:.82rem; color:rgba(244,239,230,.72); }
+.cp-legend .li{ display:flex; align-items:center; gap:8px; }
+.cp-legend .sw{ width:22px; height:14px; border-radius:5px; border:1.5px solid rgba(244,239,230,.4); }
+.cp-legend .sw.dia{ rotate:45deg; width:13px; height:13px; border-radius:3px; background:rgba(218,110,170,.35); border-color:rgba(218,110,170,.9); }
+.cp-legend .sw.out{ background:rgba(48,207,140,.2); border-color:rgba(48,207,140,.7); border-radius:999px; }
+.cp-legend .sw.st{ background:var(--green); border-color:var(--green); border-radius:999px; }
+.cp-legend .adot{ width:11px; height:11px; border-radius:50%; }
 
-@media (max-width:820px){
-  .cp-grid{ grid-template-columns:1fr; }
-  .cp-story{ position:static; }
-}
-@media (prefers-reduced-motion:reduce){ html{ scroll-behavior:auto; } }
+/* narrative (cream) */
+.cp-narr{ max-width:1240px; margin:0 auto; padding:clamp(40px,6vw,80px) clamp(20px,5vw,64px); }
+.cp-narr > .ey{ display:block; font:600 .78rem var(--font-body); letter-spacing:.12em; text-transform:uppercase; color:var(--forest); margin-bottom:10px; }
+.cp-narr > h2{ font-family:var(--font-display); font-weight:500; font-size:clamp(1.7rem,3.2vw,2.4rem); margin-bottom:34px; }
+.cp-narr-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:34px clamp(30px,4vw,64px); }
+.cp-narr-item{ border-top:1px solid var(--line); padding-top:18px; }
+.cp-narr-item .idx{ font-family:var(--font-display); font-weight:600; font-size:.9rem; color:var(--forest); }
+.cp-narr-item h3{ font-family:var(--font-display); font-weight:500; font-size:1.3rem; margin:.1em 0 .5em; }
+.cp-narr-item .actors{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+.cp-narr-item .ac{ font:600 .72rem var(--font-body); padding:3px 10px; border-radius:100px; background:var(--cream-deep); color:var(--ink-soft); }
+.cp-narr-item p{ color:var(--ink-soft); line-height:1.6; font-size:1rem; }
+.cp-narr-item i{ display:block; margin-top:.9em; font-style:normal; font-size:.9rem; color:var(--muted); padding-left:13px; border-left:2px solid var(--line); }
+.cp-narr-item b{ color:var(--ink); font-weight:600; }
+
+@media (max-width:760px){ .cp-narr-grid{ grid-template-columns:1fr; } }
 </style>
 </head>
 <body class="job-page">
@@ -187,22 +176,23 @@
           <a class="nav-menu-item" role="menuitem" href="/resources/#learning-circles"><span class="nav-menu-title">Learning Circles</span></a>
         </div>
       </div>
-    </nav><nav class="site-nav sub-nav" aria-label="Page sections"><button class="nav-toggle" type="button" data-nav="sub"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 4h12M2 8h12M2 12h12"/></svg>Page Menu</button><a class="nav-home subnav-top" href="#" aria-label="Back to top" data-tip="Back to Top"><svg viewBox="0 0 16 16" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V3M3.5 7.5 8 3l4.5 4.5"/></svg></a><a href="#flow">Flowchart</a><a href="#blueprint">Blueprint</a></nav></div>
+    </nav><nav class="site-nav sub-nav" aria-label="Page sections"><button class="nav-toggle" type="button" data-nav="sub"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 4h12M2 8h12M2 12h12"/></svg>Page Menu</button><a class="nav-home subnav-top" href="#" aria-label="Back to top" data-tip="Back to Top"><svg viewBox="0 0 16 16" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V3M3.5 7.5 8 3l4.5 4.5"/></svg></a><a href="#board">The map</a><a href="#story">The story</a></nav></div>
 </header>
 
 <main class="job-main dristi-main">
   <p class="beat-eyebrow">The Litigant's Journey</p>
   <h1 class="job-title">What actually happens to a bounced cheque in court.</h1>
   <p class="cp-lead">Follow a single <b>§138 Negotiable Instruments Act</b> complaint — from the moment a cheque is dishonoured to the day the respondent stands before a judge. Every hand it passes through, every place it can stall, and every fork in the road. Mapped in Kerala, where e-filing and the Case Information System are integrated.</p>
-
   <div class="about-stats dristi-hero-stats">
     <div class="about-stat"><span class="about-stat-num">10%</span><span class="about-stat-label">of India's criminal pendency is cheque dishonour — the first case type PUCAR is transforming</span></div>
     <div class="about-stat"><span class="about-stat-num">600 → 140</span><span class="about-stat-label">days, filing to disposal, in the redesigned journey</span></div>
     <div class="about-stat"><span class="about-stat-num">8</span><span class="about-stat-label">stages the case moves through, mapped end to end below</span></div>
   </div>
-
-  <div id="app"><!-- React mounts the tabs, flowchart and blueprint here --></div>
+  <div id="tabs"></div>
 </main>
+
+<div id="board"></div>
+<div id="story"></div>
 
 <footer class="site-footer">
   <div class="footer-top">
@@ -235,84 +225,86 @@
 </script>
 
 <script type="module">
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ReactFlow, Background, Controls, Handle, Position, MarkerType } from '@xyflow/react';
 import dagre from '@dagrejs/dagre';
 const h = React.createElement;
 
 /* =========================================================================
-   PROCESS DATA — flowchart view. Edit here.
-     story : narrative pull-quote (HTML ok; wrap side-notes in <i>…</i>)
-     nodes : { id, kind:'start'|'step'|'decision'|'outcome', label }
-     edges : { from, to, label?, dotted? }
+   PROCESS — one entry per stage. Edit here.
+     nodes: { id, kind:'start'|'step'|'decision'|'outcome', label, a?:actor }
+            actor a: 'litigant'|'respondent'|'advocate'|'judge'|'courtstaff'|'external'
+     edges: { from, to, label?, dotted? }   (within a stage)
+     story: narrative for the section below (HTML ok; <i>…</i> = caption)
+   CROSS (below) links each stage's exit to the next stage's entry.
    ========================================================================= */
 const PROCESS = [
   { id:"pre-filing", label:"Pre-Filing", title:"A cheque bounces", actors:["litigant","advocate"],
     story:"For the person holding the cheque, the case begins not in a courtroom but at a bank counter. The <b>return memo</b> — the slip that says the cheque didn't clear — is the first piece of evidence, and everything that follows is built on it.",
     nodes:[
-      {id:"S",kind:"start",label:"Cheque is dishonoured"},
-      {id:"A",kind:"step",label:"Collect cheque & return memo from the bank"},
-      {id:"B",kind:"step",label:"File complaint + notarised affidavit (e-filing + physical copy)"},
-      {id:"E",kind:"outcome",label:"File proceeds to scrutiny"}
+      {id:"S",kind:"start",label:"Cheque is dishonoured",a:"litigant"},
+      {id:"A",kind:"step",label:"Collect cheque & return memo from the bank",a:"litigant"},
+      {id:"B",kind:"step",label:"File complaint + notarised affidavit",a:"advocate"},
+      {id:"E",kind:"outcome",label:"Proceeds to scrutiny"}
     ],
     edges:[{from:"S",to:"A"},{from:"A",to:"B"},{from:"B",to:"E"}] },
 
-  { id:"scrutiny", label:"Scrutiny", title:"The court checks the paperwork", actors:["court","advocate"],
+  { id:"scrutiny", label:"Scrutiny", title:"The court checks the paperwork", actors:["courtstaff","advocate"],
     story:"Before a case is allowed in, a <b>Filing Scrutiny Officer</b> or the judge examines it for defects. This is the first gate — and a common place for a case to bounce back and forth before it ever really starts.",
     nodes:[
-      {id:"A",kind:"step",label:"Scrutiny of the case by Judge / FSO"},
+      {id:"A",kind:"step",label:"Scrutiny by the FSO / judge",a:"courtstaff"},
       {id:"D",kind:"decision",label:"Defect in the filing?"},
-      {id:"E",kind:"step",label:"FSO informs advocate; advocate rectifies the error"},
-      {id:"F",kind:"outcome",label:"File moves for registration"}
+      {id:"E",kind:"step",label:"Advocate is told, and rectifies the error",a:"advocate"},
+      {id:"F",kind:"outcome",label:"Moves for registration"}
     ],
     edges:[{from:"A",to:"D"},{from:"D",to:"E",label:"Yes"},{from:"E",to:"A",label:"Re-submit",dotted:true},{from:"D",to:"F",label:"No"}] },
 
-  { id:"registration", label:"Registration", title:"The case gets a number", actors:["court"],
+  { id:"registration", label:"Registration", title:"The case gets a number", actors:["courtstaff"],
     story:"Registration is the moment the complaint becomes a tracked entity. It's assigned a <b>PCR number</b> — for the Private Complaint Register — and a unique index that follows it across every register it will ever appear in.",
     nodes:[
-      {id:"A",kind:"step",label:"PCR file number allotted"},
-      {id:"B",kind:"step",label:"Unique index allotted for tracking across registers"},
-      {id:"C",kind:"step",label:"Notarised affidavit filed as part of the complaint"},
+      {id:"A",kind:"step",label:"PCR file number allotted",a:"courtstaff"},
+      {id:"B",kind:"step",label:"Unique index allotted for tracking",a:"courtstaff"},
+      {id:"C",kind:"step",label:"Notarised affidavit filed with complaint",a:"courtstaff"},
       {id:"E",kind:"outcome",label:"Case registered"}
     ],
     edges:[{from:"A",to:"B"},{from:"B",to:"C"},{from:"C",to:"E"}] },
 
-  { id:"admission", label:"Admission", title:"The judge takes cognizance", actors:["court"],
+  { id:"admission", label:"Admission", title:"The judge takes cognizance", actors:["courtstaff","judge"],
     story:"Here the case crosses a threshold. When the judge <b>takes cognizance</b>, the private complaint is formally converted into a criminal case — and the machinery for summoning the respondent begins.",
     nodes:[
-      {id:"A",kind:"step",label:"File placed before the judge"},
-      {id:"B",kind:"step",label:"Court takes cognizance of the case"},
-      {id:"E",kind:"outcome",label:"Case admitted — PCR converted to a criminal case"}
+      {id:"A",kind:"step",label:"File placed before the judge",a:"courtstaff"},
+      {id:"B",kind:"step",label:"Judge takes cognizance of the case",a:"judge"},
+      {id:"E",kind:"outcome",label:"Admitted — now a criminal case"}
     ],
     edges:[{from:"A",to:"B"},{from:"B",to:"E"}] },
 
-  { id:"summons", label:"Issuance of Summons", title:"Summoning the respondent", actors:["court","external"],
+  { id:"summons", label:"Issuance of Summons", title:"Summoning the respondent", actors:["judge","courtstaff","litigant"],
     story:"Admission triggers a long, mostly invisible relay inside the court office: fees are checked, an order is drafted and signed, the file is dressed for the post, and — finally — a physical summons leaves the building.<i>In Kerala, e-filing and the CIS are integrated, so hearing dates flow straight into the system.</i>",
     nodes:[
-      {id:"A",kind:"step",label:"Judge orders summons & sets hearing date; typist updates the CIS"},
+      {id:"A",kind:"step",label:"Judge orders summons & sets hearing date",a:"judge"},
       {id:"D",kind:"decision",label:"Sufficient process fee paid?"},
-      {id:"P",kind:"step",label:"Submit any pending process fee"},
-      {id:"B",kind:"step",label:"Draft & print the order"},
-      {id:"C",kind:"step",label:"File referred for address, phone, etc."},
-      {id:"E",kind:"step",label:"Summons signed for the Judicial Officer"},
-      {id:"F",kind:"step",label:"Dispatch prepared by RPAD (stamps + AD card attached)"},
-      {id:"G",kind:"outcome",label:"Post Office collects summons from the Court Keeper"}
+      {id:"P",kind:"step",label:"Complainant submits pending fee",a:"litigant"},
+      {id:"B",kind:"step",label:"Order drafted & printed",a:"courtstaff"},
+      {id:"C",kind:"step",label:"File referred for address, phone, etc.",a:"courtstaff"},
+      {id:"E",kind:"step",label:"Summons signed for the Judicial Officer",a:"courtstaff"},
+      {id:"F",kind:"step",label:"Dispatch prepared by RPAD (stamps + AD card)",a:"courtstaff"},
+      {id:"G",kind:"outcome",label:"Post Office collects the summons"}
     ],
     edges:[{from:"A",to:"D"},{from:"D",to:"P",label:"No"},{from:"P",to:"B"},{from:"D",to:"B",label:"Yes"},{from:"B",to:"C"},{from:"C",to:"E"},{from:"E",to:"F"},{from:"F",to:"G"}] },
 
-  { id:"service", label:"Service of Summons", title:"Reaching the respondent", actors:["external","court"],
+  { id:"service", label:"Service of Summons", title:"Reaching the respondent", actors:["external","courtstaff","judge","respondent"],
     story:"Now the case leaves the court's hands and rides on the postal system. Whether the respondent ever learns they're being sued comes down to a postman, an address, and who happens to be home. This is where §138 cases most often stall.<i>The responsibility to provide an updated, correct address rests with the complainant.</i>",
     nodes:[
-      {id:"A",kind:"step",label:"Postman delivers to the last known address"},
+      {id:"A",kind:"step",label:"Postman delivers to last known address",a:"external"},
       {id:"D1",kind:"decision",label:"Address correct?"},
-      {id:"X1",kind:"step",label:"Postman unable to deliver"},
-      {id:"X2",kind:"step",label:"Unserved summons returned to court"},
-      {id:"X3",kind:"step",label:"Court reissues summons with a new date"},
-      {id:"W",kind:"outcome",label:"BW / NBW may be issued at the judge's discretion"},
-      {id:"D2",kind:"decision",label:"Respondent found at address?"},
-      {id:"Y1",kind:"step",label:"Respondent signs the AD card (refusal still counts as served)"},
-      {id:"S",kind:"outcome",label:"Summons deemed served; AD card returned"},
+      {id:"X1",kind:"step",label:"Postman unable to deliver",a:"external"},
+      {id:"X2",kind:"step",label:"Unserved summons returned to court",a:"courtstaff"},
+      {id:"X3",kind:"step",label:"Court reissues summons, new date",a:"courtstaff"},
+      {id:"W",kind:"outcome",label:"BW / NBW at judge's discretion"},
+      {id:"D2",kind:"decision",label:"Respondent found?"},
+      {id:"Y1",kind:"step",label:"Signs the AD card (refusal still counts)",a:"respondent"},
+      {id:"S",kind:"outcome",label:"Summons deemed served"},
       {id:"Z1",kind:"decision",label:"Representative present?"}
     ],
     edges:[{from:"A",to:"D1"},{from:"D1",to:"X1",label:"No"},{from:"X1",to:"X2"},{from:"X2",to:"X3"},
@@ -320,231 +312,260 @@ const PROCESS = [
       {from:"D1",to:"D2",label:"Yes"},{from:"D2",to:"Y1",label:"Yes"},{from:"Y1",to:"S"},
       {from:"D2",to:"Z1",label:"No"},{from:"Z1",to:"S",label:"Yes"},{from:"Z1",to:"X1",label:"No"}] },
 
-  { id:"appearance", label:"Appearance", title:"Will the respondent show up?", actors:["court","advocate","external"],
+  { id:"appearance", label:"Appearance", title:"Will the respondent show up?", actors:["respondent","judge","advocate","external"],
     story:"Being served is not the same as showing up. The hearing date is the next great filter: a respondent who appears moves the case forward; one who doesn't sets off an escalating chain of exemptions, warrants, and — in the last resort — a public proclamation.<i>Assumption: the respondent is represented by an advocate.</i>",
     nodes:[
-      {id:"A",kind:"decision",label:"Respondent present on the hearing date?"},
+      {id:"A",kind:"decision",label:"Respondent present on hearing date?"},
       {id:"S",kind:"outcome",label:"Proceeds to plea & bail"},
       {id:"B",kind:"decision",label:"Exemption petition filed?"},
       {id:"C",kind:"outcome",label:"Next hearing date given"},
-      {id:"D",kind:"step",label:"Non-bailable warrant issued with next hearing date"},
-      {id:"E",kind:"decision",label:"Police able to execute the warrant?"},
-      {id:"F",kind:"outcome",label:"Respondent produced in court on/before the hearing date"},
-      {id:"G",kind:"outcome",label:"Proclamation order passed; published in a newspaper"}
+      {id:"D",kind:"step",label:"Non-bailable warrant issued, next date",a:"judge"},
+      {id:"E",kind:"decision",label:"Police execute the warrant?"},
+      {id:"F",kind:"outcome",label:"Respondent produced in court"},
+      {id:"G",kind:"outcome",label:"Proclamation order, published in press"}
     ],
     edges:[{from:"A",to:"S",label:"Yes"},{from:"A",to:"B",label:"No"},{from:"B",to:"C",label:"Yes"},{from:"B",to:"D",label:"No"},{from:"D",to:"E"},{from:"E",to:"F",label:"Yes"},{from:"E",to:"G",label:"No"}] },
 
-  { id:"plea-bail", label:"Plea & Bail", title:"Plea, bail, and the order", actors:["court","advocate"],
+  { id:"plea-bail", label:"Plea & Bail", title:"Plea, bail, and the order", actors:["respondent","judge","courtstaff"],
     story:"With the respondent finally in the room, the case takes its recognisable courtroom shape: an appearance is entered, a plea recorded, and bail arranged. A quiet detail with real financial stakes hides here — what happens to a cash surety depends entirely on whether the accused is ultimately convicted.",
     nodes:[
-      {id:"A",kind:"step",label:"Respondent submits vakalat, records plea, files bail application + surety"},
-      {id:"B",kind:"step",label:"Documents & bail bond submitted"},
-      {id:"C",kind:"step",label:"Judge decides bail type & amount (personal or cash surety)"},
-      {id:"G",kind:"outcome",label:"Typist types the order; sends it to the back bench"},
-      {id:"D",kind:"decision",label:"Cash surety — accused convicted?"},
-      {id:"E",kind:"outcome",label:"No refund; bail adjusted against final payment"},
-      {id:"F",kind:"outcome",label:"Bail reclaimed from the cash branch"}
+      {id:"A",kind:"step",label:"Respondent files vakalat, plea, bail application",a:"respondent"},
+      {id:"B",kind:"step",label:"Documents & bail bond submitted",a:"courtstaff"},
+      {id:"C",kind:"step",label:"Judge decides bail type & amount",a:"judge"},
+      {id:"G",kind:"outcome",label:"Order typed → back bench"},
+      {id:"D",kind:"decision",label:"Cash surety — convicted?"},
+      {id:"E",kind:"outcome",label:"No refund; adjusted on final payment"},
+      {id:"F",kind:"outcome",label:"Bail reclaimed from cash branch"}
     ],
     edges:[{from:"A",to:"B"},{from:"B",to:"C"},{from:"C",to:"G"},{from:"C",to:"D"},{from:"D",to:"E",label:"Yes"},{from:"D",to:"F",label:"No"}] }
 ];
+/* stage exit → next stage entry (the case flowing across stages) */
+const CROSS = [
+  ["pre-filing","E","scrutiny","A"], ["scrutiny","F","registration","A"],
+  ["registration","E","admission","A"], ["admission","E","summons","A"],
+  ["summons","G","service","A"], ["service","S","appearance","A"],
+  ["appearance","S","plea-bail","A"]
+];
+
+const STAGES = PROCESS.map(s=>({id:s.id,label:s.label,title:s.title}));
 
 /* =========================================================================
-   BLUEPRINT DATA — service blueprint view. cells[laneId][stageIndex] = list.
+   BLUEPRINT — swimlanes under the SAME stage columns. Judge & Court staff
+   are separate lanes. cells[laneId][stageIndex] = list of short strings.
    ========================================================================= */
-const STAGE_LABELS = PROCESS.map(s=>s.label);
 const BLUEPRINT = {
   lanes:[
-    {id:"evidence",k:"evidence",label:"Evidence",desc:"Physical & digital artefacts"},
-    {id:"actor",k:"actor",label:"Litigant / respondent",desc:"What they do & experience"},
+    {id:"evidence",k:"evidence",label:"Evidence",desc:"Artefacts",dot:"rgba(244,239,230,.5)"},
+    {id:"actor",k:"actor",label:"Litigant / respondent",desc:"The users",dot:"var(--a-litigant)"},
     {divider:"Line of interaction"},
-    {id:"front",k:"front",label:"Frontstage",desc:"Visible to the litigant"},
+    {id:"front",k:"front",label:"Frontstage",desc:"Advocate & counter",dot:"var(--a-advocate)"},
     {divider:"Line of visibility"},
-    {id:"back",k:"back",label:"Backstage",desc:"Court staff & judge, unseen"},
+    {id:"courtstaff",k:"courtstaff",label:"Court staff",desc:"FSO, typist, RPAD",dot:"var(--a-courtstaff)"},
+    {id:"judge",k:"judge",label:"Judge",desc:"Judicial decisions",dot:"var(--a-judge)"},
     {divider:"Line of internal interaction"},
-    {id:"support",k:"support",label:"Support systems",desc:"Tech & partner services"}
+    {id:"support",k:"support",label:"Support systems",desc:"Tech & partners",dot:"var(--a-external)"}
   ],
   cells:{
-    evidence:[["Cheque","Bank return memo","Complaint","Notarised affidavit"],["Filed complaint","Defect memo (if any)"],["PCR file number","Unique tracking index"],["Cognizance order","Criminal case record"],["Process fee","Printed order","Signed summons","AD card + stamps"],["Delivered summons","Signed / returned AD card"],["Exemption petition","Non-bailable warrant","Proclamation notice"],["Vakalat","Bail application","Bail bond / cash","Final order"]],
-    actor:[["Collects cheque & return memo from the bank","Engages an advocate"],[],[],[],["Provides updated correct address","Pays any pending process fee"],["Signs the AD card, or refuses","Or a representative accepts on their behalf"],["Appears in court — or is absent","Advocate files an exemption petition"],["Submits vakalat & records plea","Files bail application + surety","Submits the bail bond"]],
-    front:[["Advocate drafts & files the complaint"],["Advocate is notified of the defect","Rectifies the error & resubmits"],[],[],[],["Postman delivers to the last known address"],["Respondent & advocate appear before the court"],["Respondent produced before the judge"]],
-    back:[[],["FSO / Judge scrutinises for defects","Clears the file or returns it"],["Registers the case","Allots PCR no. & unique index"],["File placed before the judge","Judge takes cognizance → criminal case"],["Judge orders summons & sets the date","Fee evaluated; order drafted, printed, signed","Dispatch prepared by RPAD"],["Court receives unserved summons","Reissues with a new date","May issue BW / NBW on repeated failure"],["Judge issues NBW & sets next date","Passes proclamation order if unexecuted"],["Judge decides bail type & amount","Typist types order → back bench","Cash surety refunded or adjusted on verdict"]],
-    support:[["e-Filing portal"],["CIS"],["Registers / CIS"],["CIS"],["CIS (integrated with e-filing)","Post Office collects from Court Keeper"],["India Post / RPAD tracking"],["Police execute the warrant","Newspaper publication"],["Court cash branch"]]
+    evidence:[["Cheque","Return memo","Complaint","Affidavit"],["Filed complaint","Defect memo"],["PCR number","Tracking index"],["Cognizance order"],["Process fee","Order","Signed summons","AD card"],["Delivered summons","AD card"],["Exemption petition","Warrant","Proclamation"],["Vakalat","Bail bond","Final order"]],
+    actor:[["Collects cheque & return memo","Engages an advocate"],[],[],[],["Provides correct address","Pays pending fee"],["Signs / refuses AD card","Representative may accept"],["Appears — or is absent"],["Files vakalat, plea, bail & surety","Submits bail bond"]],
+    front:[["Advocate drafts & files complaint"],["Advocate told of defect; resubmits"],[],[],[],["Postman delivers to address"],["Respondent & advocate appear"],["Respondent produced before judge"]],
+    courtstaff:[[],["FSO scrutinises for defects"],["Registers case; allots PCR & index"],["Places file before the judge"],["Order drafted, printed & signed","Dispatch prepared by RPAD","Typist updates CIS"],["Receives unserved summons","Reissues with a new date"],["Records the next date"],["Typist types order → back bench"]],
+    judge:[[],[],[],["Takes cognizance → criminal case"],["Orders summons & sets the date"],["May issue BW / NBW"],["Issues NBW; passes proclamation"],["Decides bail type & amount","Refund / adjust on verdict"]],
+    support:[["e-Filing portal"],["CIS"],["Registers / CIS"],["CIS"],["CIS + Post Office pickup"],["India Post / RPAD"],["Police; newspaper"],["Court cash branch"]]
   }
 };
 
-const ACTOR = { litigant:"Litigant", advocate:"Advocate", court:"Court staff & judge", external:"Post / police" };
-const INK="#55493F", GREEN_INK="#12503a", PINK_INK="#8a2f63", CREAM="#F6F1E6";
+const ACTOR = { litigant:"Litigant", respondent:"Respondent", advocate:"Advocate", judge:"Judge", courtstaff:"Court staff", external:"Post / police" };
+const LC="rgba(244,239,230,";
 
-/* ---- layout ---- */
+/* ---- sizing ---- */
 function sizeFor(n){
-  if(n.kind==="decision") return {w:172,h:172};
-  const lines = Math.max(1, Math.ceil(n.label.length/26));
-  return { w:224, h:Math.max(58, 30 + lines*20) };
+  if(n.kind==="decision"){ const s=Math.max(150,Math.min(226,120+n.label.length*3)); return {w:s,h:s}; }
+  if(n.kind==="start"){ return {w:200,h:48}; }
+  if(n.kind==="outcome"){ const l=Math.max(1,Math.ceil(n.label.length/24)); return {w:206,h:Math.max(48,26+l*20)}; }
+  const l=Math.max(1,Math.ceil(n.label.length/24)); return {w:216,h:Math.max(52,26+l*20)};
 }
-function layout(stage){
-  const g = new dagre.graphlib.Graph();
-  g.setGraph({ rankdir:"TB", nodesep:46, ranksep:62, marginx:18, marginy:18 });
-  g.setDefaultEdgeLabel(()=>({}));
+
+/* lay out ONE stage top-to-bottom, return nodes with local top-left pos + bbox */
+function layoutStage(stage){
+  const g=new dagre.graphlib.Graph(); g.setGraph({rankdir:"TB",nodesep:30,ranksep:50,marginx:6,marginy:6}); g.setDefaultEdgeLabel(()=>({}));
   stage.nodes.forEach(n=>{ const s=sizeFor(n); g.setNode(n.id,{width:s.w,height:s.h}); });
-  stage.edges.forEach(e=>{ if(!e.dotted) g.setEdge(e.from,e.to); });
-  // include dotted edges for layout too, but they don't drive rank as strongly
-  stage.edges.forEach(e=>{ if(e.dotted && !g.edge(e.from,e.to)) g.setEdge(e.from,e.to); });
+  stage.edges.forEach(e=>{ if(!g.edge(e.from,e.to)) g.setEdge(e.from,e.to); });
   dagre.layout(g);
-  let maxX=0,maxY=0;
-  const nodes = stage.nodes.map(n=>{
-    const p=g.node(n.id), s=sizeFor(n);
-    const x=p.x-p.width/2, y=p.y-p.height/2;
-    maxX=Math.max(maxX,x+s.w); maxY=Math.max(maxY,y+s.h);
-    return { id:n.id, type:"card", position:{x,y}, draggable:true, data:{kind:n.kind,label:n.label} };
-  });
-  const tone = l => l==="Yes"?GREEN_INK : l==="No"?PINK_INK : INK;
-  const edges = stage.edges.map((e,i)=>({
-    id:stage.id+"-e"+i, source:e.from, target:e.to, label:e.label,
-    type:"smoothstep", animated:true,
-    style:{ stroke:e.dotted?"#8A7E6E":INK, strokeWidth:1.7, strokeDasharray:e.dotted?"2 5":undefined },
-    markerEnd:{ type:MarkerType.ArrowClosed, color:e.dotted?"#8A7E6E":INK, width:15, height:15 },
-    labelStyle:{ fill:tone(e.label), fontWeight:700, fontSize:11, fontFamily:"'Source Sans 3',sans-serif" },
-    labelBgStyle:{ fill:CREAM }, labelBgPadding:[6,3], labelBgBorderRadius:6
+  let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9; const local={};
+  stage.nodes.forEach(n=>{ const p=g.node(n.id),s=sizeFor(n); const x=p.x-s.w/2,y=p.y-s.h/2; local[n.id]={x,y,w:s.w,h:s.h,s}; minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x+s.w);maxY=Math.max(maxY,y+s.h); });
+  return { local, w:maxX-minX, h:maxY-minY, minX, minY };
+}
+
+const GUTTER=176, MINCOL=290, PADX=26, TOP=44, BOT=28;
+
+function buildBoard(){
+  const laid = PROCESS.map(layoutStage);
+  const colW = laid.map(L=>Math.max(MINCOL, Math.round(L.w)+2*PADX));
+  const colX=[]; let acc=GUTTER; colW.forEach((w,i)=>{ colX[i]=acc; acc+=w; });
+  const boardW = acc;
+  const boardH = Math.round(Math.max(...laid.map(L=>L.h))) + TOP + BOT;
+
+  const nodes=[], gid=(si,id)=>PROCESS[si]+"_"+id; // placeholder, replaced below
+  const gidF=(sid,id)=>sid+"_"+id;
+
+  // bands (behind)
+  PROCESS.forEach((s,i)=>{ nodes.push({ id:"band_"+s.id, type:"band", position:{x:colX[i],y:0}, draggable:false, selectable:false, connectable:false, zIndex:-1, style:{width:colW[i],height:boardH}, data:{index:String(i+1).padStart(2,"0"),label:s.label} }); });
+
+  // real nodes, centred in their column
+  PROCESS.forEach((s,i)=>{ const L=laid[i]; const offX=colX[i]+Math.round((colW[i]-L.w)/2)-L.minX; const offY=TOP-L.minY;
+    s.nodes.forEach(n=>{ const lp=L.local[n.id];
+      nodes.push({ id:gidF(s.id,n.id), type:"card", position:{x:lp.x+offX,y:lp.y+offY}, draggable:false, selectable:false, zIndex:1,
+        data:{kind:n.kind,label:n.label,actor:n.a,size:lp.s.w} }); }); });
+
+  // edges
+  const tone=l=> l==="Yes"?"#5fe0a0" : l==="No"?"#f2a0c8" : "#EDE7DA";
+  const edges=[];
+  PROCESS.forEach(s=>s.edges.forEach((e,i)=>edges.push({
+    id:s.id+"_e"+i, source:gidF(s.id,e.from), target:gidF(s.id,e.to), sourceHandle:"out", targetHandle:"in",
+    label:e.label, type:"smoothstep", animated:true, zIndex:0,
+    style:{stroke:e.dotted?LC+".34)":LC+".42)", strokeWidth:1.7, strokeDasharray:e.dotted?"2 5":undefined},
+    markerEnd:{type:MarkerType.ArrowClosed,color:e.dotted?LC+".4)":LC+".5)",width:15,height:15},
+    labelStyle:{fill:tone(e.label),fontWeight:700,fontSize:11,fontFamily:"'Source Sans 3',sans-serif"},
+    labelBgStyle:{fill:"#1b1f3f"},labelBgPadding:[6,3],labelBgBorderRadius:6
+  })));
+  CROSS.forEach((c,i)=>edges.push({
+    id:"x"+i, source:gidF(c[0],c[1]), target:gidF(c[2],c[3]), sourceHandle:"rout", targetHandle:"lin",
+    type:"smoothstep", animated:true, zIndex:0,
+    style:{stroke:LC+".62)",strokeWidth:2.4}, markerEnd:{type:MarkerType.ArrowClosed,color:LC+".7)",width:17,height:17}
   }));
-  return { nodes, edges, width:maxX+18, height:maxY+18 };
+
+  return { nodes, edges, boardW, boardH, colW, colX };
 }
 
+/* ---- components ---- */
 function CardNode({ data }){
-  if(data.kind==="decision"){
-    return h("div",{className:"rfnode decision"},
-      h(Handle,{type:"target",position:Position.Top,isConnectable:false}),
-      h("span",{className:"rf-tag"},"Decision"),
-      h("div",{className:"rf-label"},data.label),
-      h(Handle,{type:"source",position:Position.Bottom,isConnectable:false})
-    );
-  }
-  return h("div",{className:"rfnode "+data.kind},
-    h(Handle,{type:"target",position:Position.Top,isConnectable:false}),
-    h("div",{className:"rf-label"},data.label),
-    h(Handle,{type:"source",position:Position.Bottom,isConnectable:false})
-  );
+  const k=data.kind, s=data.size;
+  const handles=[
+    h(Handle,{key:1,id:"in",type:"target",position:Position.Top,isConnectable:false}),
+    h(Handle,{key:2,id:"out",type:"source",position:Position.Bottom,isConnectable:false}),
+    h(Handle,{key:3,id:"lin",type:"target",position:Position.Left,isConnectable:false}),
+    h(Handle,{key:4,id:"rout",type:"source",position:Position.Right,isConnectable:false})
+  ];
+  const label=h("div",{key:"l",className:"rf-label",style:k==="decision"?{maxWidth:Math.round(s*0.52)}:null},data.label);
+  return h("div",{className:"rfnode "+k, "data-actor":data.actor||null, style:k==="decision"?{width:s,height:s}:null}, handles.concat(label));
 }
-const nodeTypes = { card:CardNode };
+function BandNode({ data }){ return h("div",{className:"rf-band"}, h("span",{className:"rf-band-n"},data.index)); }
+const NT = { card:CardNode, band:BandNode };
 
-function Flow({ stage, big }){
-  const { nodes, edges, height } = useMemo(()=>layout(stage),[stage.id]);
-  const canvasH = big ? "100%" : Math.min(Math.max(height,320),760)+"px";
-  return h("div",{ className:"rf-canvas", style:{ height:canvasH } },
-    h(ReactFlow,{
-      defaultNodes:nodes, defaultEdges:edges, nodeTypes,
-      fitView:true, fitViewOptions:{ padding:0.16 },
-      proOptions:{ hideAttribution:true },
-      nodesDraggable:true, nodesConnectable:false, elementsSelectable:false,
-      zoomOnScroll:false, panOnScroll:false, preventScrolling:false, zoomOnDoubleClick:false,
-      minZoom:0.2, maxZoom:1.75
-    },
-      h(Background,{ gap:22, size:1, color:"rgba(36,30,26,0.06)" }),
-      big ? h(Controls,{ showInteractive:false }) : null
+const BOARD = buildBoard();
+
+function StageHeader(){
+  const cells=[ h("div",{key:"c",className:"corner"},"Stage") ];
+  STAGES.forEach((s,i)=>cells.push(h("div",{key:s.id,className:"cp-col"}, h("div",{className:"cn"},"Stage "+String(i+1).padStart(2,"0")), h("div",{className:"ct"},s.label))));
+  const cols = "var(--gutter) " + BOARD.colW.map(w=>w+"px").join(" ");
+  return h("div",{className:"cp-head", style:{ gridTemplateColumns:cols, "--gutter":GUTTER+"px", width:BOARD.boardW+"px" }}, cells);
+}
+
+function FlowBody(){
+  return h("div",{className:"rf-wrap", style:{ width:BOARD.boardW+"px", height:BOARD.boardH+"px" }},
+    h(ReactFlow,{ defaultNodes:BOARD.nodes, defaultEdges:BOARD.edges, nodeTypes:NT,
+      fitView:false, defaultViewport:{x:0,y:0,zoom:1}, proOptions:{hideAttribution:true},
+      nodesDraggable:false, nodesConnectable:false, elementsSelectable:false,
+      panOnDrag:false, panOnScroll:false, zoomOnScroll:false, zoomOnPinch:false, zoomOnDoubleClick:false, preventScrolling:false },
+      h(Background,{ gap:26, size:1, color:"rgba(244,239,230,0.05)" })
     )
   );
 }
 
-function Stage({ stage, index, refCb }){
-  return h("section",{ className:"cp-stage", id:stage.id, ref:refCb },
-    h("div",{ className:"cp-stage-head" },
-      h("div",{ className:"cp-stage-idx" }, "Stage "+String(index+1).padStart(2,"0")),
-      h("h2",null,stage.title),
-      h("div",{ className:"cp-actors" }, stage.actors.map(a=>h("span",{ key:a, className:"cp-actor "+a }, ACTOR[a])))
-    ),
-    h("div",{ className:"cp-grid" },
-      h("aside",{ className:"cp-story" },
-        stage.story ? [ h("span",{ key:"k", className:"k" },"The story"),
-          h("p",{ key:"p", dangerouslySetInnerHTML:{ __html: stage.story } }) ] : null
+function BlueprintBody(){
+  const cols = "var(--gutter) " + BOARD.colW.map(w=>w+"px").join(" ");
+  const cells=[];
+  BLUEPRINT.lanes.forEach((lane,li)=>{
+    if(lane.divider){ cells.push(h("div",{key:"d"+li,className:"cp-bp-div"}, h("span",null,lane.divider))); return; }
+    cells.push(h("div",{key:"l"+li,className:"cp-bp-lane"},
+      h("span",{className:"ln"}, h("span",{className:"dot",style:{background:lane.dot}}), lane.label),
+      h("span",{className:"ld"},lane.desc)));
+    const row=BLUEPRINT.cells[lane.id]||[];
+    STAGES.forEach((_,i)=>{ const items=row[i]||[];
+      cells.push(h("div",{key:"c"+li+"-"+i,className:"cp-bp-cell "+lane.k},
+        items.length? h("ul",null,items.map((t,j)=>h("li",{key:j},t))) : h("span",{className:"empty"},"·"))); });
+  });
+  return h("div",{className:"cp-bp-grid", style:{ gridTemplateColumns:cols, "--gutter":GUTTER+"px", width:BOARD.boardW+"px" }}, cells);
+}
+
+function adot(c){ return h("span",{className:"adot",style:{background:c}}); }
+
+function App(){
+  const [tab,setTab]=useState("flow");
+  return h(React.Fragment,null,
+    h("div",{className:"cp-tabs"},
+      h("button",{className:"cp-tab"+(tab==="flow"?" on":""), onClick:()=>setTab("flow")},
+        h("svg",{viewBox:"0 0 16 16",fill:"none",stroke:"currentColor",strokeWidth:1.6},
+          h("rect",{x:5.5,y:1.5,width:5,height:3.2,rx:1}),h("rect",{x:1.5,y:10.5,width:5,height:3.2,rx:1}),
+          h("rect",{x:9.5,y:10.5,width:5,height:3.2,rx:1}),h("path",{d:"M8 4.7v2.6M8 7.3H4v3.2M8 7.3h4v3.2"})),"Flowchart"),
+      h("button",{className:"cp-tab"+(tab==="bp"?" on":""), onClick:()=>setTab("bp")},
+        h("svg",{viewBox:"0 0 16 16",fill:"none",stroke:"currentColor",strokeWidth:1.6},
+          h("rect",{x:1.5,y:1.5,width:13,height:13,rx:1.5}),h("path",{d:"M1.5 6h13M1.5 10.5h13M6 1.5v13"})),"Service Blueprint")
+    )
+  );
+}
+
+function DarkBoard(){
+  const [tab,setTab]=useState("flow");
+  window.__cpSetTab = setTab; // let the tab buttons (rendered in #tabs) drive this
+  return h("section",{className:"cp-dark"},
+    h("div",{className:"cp-dark-in"},
+      h("p",{className:"cp-caption"}, tab==="flow"
+        ? "The full case as one map — read a column top-to-bottom to follow a stage; the brighter arrows hand the case from one stage to the next. Scroll within the board to explore."
+        : "The same eight stages as a service blueprint — what the litigant experiences on top, and the court staff, judge, systems and partners working beneath the line of visibility."),
+      h("div",{className:"cp-board", id:"cp-board"},
+        h(StageHeader),
+        h("div",{className:"cp-body"}, tab==="flow" ? h(FlowBody) : h(BlueprintBody))
       ),
-      h("div",{ className:"cp-card" },
-        h("button",{ className:"cp-expand", onClick:()=>window.__cpZoom(stage.id) }, "⤢ Expand"),
-        h(Flow,{ stage })
+      h("div",{className:"cp-legend"},
+        h("span",{className:"li"}, h("span",{className:"sw st"}), "Start"),
+        h("span",{className:"li"}, h("span",{className:"sw"}), "Step"),
+        h("span",{className:"li"}, h("span",{className:"sw dia"}), "Decision"),
+        h("span",{className:"li"}, h("span",{className:"sw out"}), "Outcome"),
+        h("span",{className:"li"}, adot("var(--a-litigant)"),"Litigant"),
+        h("span",{className:"li"}, adot("var(--a-respondent)"),"Respondent"),
+        h("span",{className:"li"}, adot("var(--a-advocate)"),"Advocate"),
+        h("span",{className:"li"}, adot("var(--a-judge)"),"Judge"),
+        h("span",{className:"li"}, adot("var(--a-courtstaff)"),"Court staff"),
+        h("span",{className:"li"}, adot("var(--a-external)"),"Post / police")
       )
     )
   );
 }
 
-function Blueprint(){
-  const cells=[];
-  cells.push(h("div",{ key:"corner", className:"cp-bp-corner" },"Layer"));
-  STAGE_LABELS.forEach((l,i)=>cells.push(h("div",{ key:"col"+i, className:"cp-bp-col" },
-    h("div",{ className:"cn" },"Stage "+String(i+1).padStart(2,"0")), h("div",{ className:"ct" },l))));
-  BLUEPRINT.lanes.forEach((lane,li)=>{
-    if(lane.divider){ cells.push(h("div",{ key:"div"+li, className:"cp-bp-div" }, h("span",null,lane.divider))); return; }
-    cells.push(h("div",{ key:"lane"+li, className:"cp-bp-lane "+lane.k },
-      h("span",{ className:"ln" },lane.label), h("span",{ className:"ld" },lane.desc)));
-    const row=BLUEPRINT.cells[lane.id]||[];
-    STAGE_LABELS.forEach((_,i)=>{
-      const items=row[i]||[];
-      cells.push(h("div",{ key:"c"+li+"-"+i, className:"cp-bp-cell "+lane.k },
-        items.length ? h("ul",null,items.map((t,j)=>h("li",{ key:j },t))) : h("span",{ className:"empty" },"·")));
-    });
-  });
-  return h("div",null,
-    h("div",{ className:"cp-bp-head" },
-      h("h2",null,"Service blueprint"),
-      h("p",null,"The same journey seen as a service blueprint: what the litigant experiences on the surface, and the layers of court staff, systems and partners working beneath the line of visibility to move the case forward. Scroll sideways to follow a stage down through every layer.")),
-    h("div",{ className:"cp-bp" }, h("div",{ className:"cp-bp-grid" }, cells))
+/* the tab bar (in #tabs, on the cream hero) controls the dark board's state */
+function Tabs(){
+  const [tab,setTab]=useState("flow");
+  const pick=t=>{ setTab(t); if(window.__cpSetTab) window.__cpSetTab(t); };
+  const btn=(id,label,svg)=>h("button",{className:"cp-tab"+(tab===id?" on":""), onClick:()=>pick(id)}, svg, label);
+  return h("div",{className:"cp-tabs"},
+    btn("flow","Flowchart", h("svg",{viewBox:"0 0 16 16",fill:"none",stroke:"currentColor",strokeWidth:1.6},
+      h("rect",{x:5.5,y:1.5,width:5,height:3.2,rx:1}),h("rect",{x:1.5,y:10.5,width:5,height:3.2,rx:1}),
+      h("rect",{x:9.5,y:10.5,width:5,height:3.2,rx:1}),h("path",{d:"M8 4.7v2.6M8 7.3H4v3.2M8 7.3h4v3.2"}))),
+    btn("bp","Service Blueprint", h("svg",{viewBox:"0 0 16 16",fill:"none",stroke:"currentColor",strokeWidth:1.6},
+      h("rect",{x:1.5,y:1.5,width:13,height:13,rx:1.5}),h("path",{d:"M1.5 6h13M1.5 10.5h13M6 1.5v13"})))
   );
 }
 
-function App(){
-  const [tab,setTab] = useState("flow");
-  const [active,setActive] = useState(PROCESS[0].id);
-  const [zoom,setZoom] = useState(null);
-  const secRefs = useRef({});
-  useEffect(()=>{ window.__cpZoom = id=>setZoom(id); },[]);
-  useEffect(()=>{
-    function onKey(e){ if(e.key==="Escape") setZoom(null); }
-    document.addEventListener("keydown",onKey); return ()=>document.removeEventListener("keydown",onKey);
-  },[]);
-  useEffect(()=>{
-    if(tab!=="flow") return;
-    const io=new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting) setActive(e.target.id); }); },
-      { rootMargin:"-30% 0px -60% 0px", threshold:0 });
-    Object.values(secRefs.current).forEach(el=>el&&io.observe(el));
-    return ()=>io.disconnect();
-  },[tab]);
-
-  const zoomStage = zoom && PROCESS.find(s=>s.id===zoom);
-  return h(React.Fragment,null,
-    h("div",{ className:"cp-tabs", id:"flow" },
-      h("button",{ className:"cp-tab"+(tab==="flow"?" on":""), onClick:()=>setTab("flow") },
-        h("svg",{ viewBox:"0 0 16 16", fill:"none", stroke:"currentColor", strokeWidth:1.6 },
-          h("rect",{ x:5.5,y:1.5,width:5,height:3.2,rx:1 }),h("rect",{ x:1.5,y:10.5,width:5,height:3.2,rx:1 }),
-          h("rect",{ x:9.5,y:10.5,width:5,height:3.2,rx:1 }),h("path",{ d:"M8 4.7v2.6M8 7.3H4v3.2M8 7.3h4v3.2" })),
-        "Flowchart"),
-      h("button",{ className:"cp-tab"+(tab==="bp"?" on":""), onClick:()=>setTab("bp"), id:"blueprint" },
-        h("svg",{ viewBox:"0 0 16 16", fill:"none", stroke:"currentColor", strokeWidth:1.6 },
-          h("rect",{ x:1.5,y:1.5,width:13,height:13,rx:1.5 }),h("path",{ d:"M1.5 6h13M1.5 10.5h13M6 1.5v13" })),
-        "Service Blueprint")
-    ),
-    tab==="flow" ? h(React.Fragment,null,
-      h("div",{ className:"cp-rail" }, h("div",{ className:"cp-rail-inner" },
-        h("span",{ className:"lbl" },"Stage"),
-        h("div",{ className:"cp-chips" }, PROCESS.map((s,i)=>
-          h("a",{ key:s.id, href:"#"+s.id, className:"cp-chip2"+(active===s.id?" on":"") },
-            h("span",{ className:"n" }, i+1), s.label)))
-      )),
-      PROCESS.map((s,i)=>h(Stage,{ key:s.id, stage:s, index:i, refCb:el=>{ secRefs.current[s.id]=el; } })),
-      h("div",{ className:"cp-legend" },
-        h("span",{ className:"li" }, h("span",{ className:"sw" }), "Step"),
-        h("span",{ className:"li" }, h("span",{ className:"sw dia" }), "Decision"),
-        h("span",{ className:"li" }, h("span",{ className:"sw out" }), "Outcome"),
-        h("span",{ className:"li" }, h("span",{ className:"sw st" }), "Start"),
-        h("span",{ className:"li" }, "Drag nodes to explore · dotted arrows loop back"))
-    ) : h(Blueprint,null),
-
-    zoomStage ? h("div",{ className:"cp-modal open" },
-      h("div",{ className:"cp-modal-bar" },
-        h("b",null,zoomStage.title),
-        h("button",{ className:"cp-modal-close", onClick:()=>setZoom(null) },"Close ✕")),
-      h("div",{ className:"cp-modal-stage" }, h(Flow,{ stage:zoomStage, big:true }))
-    ) : null
+function Story(){
+  return h("section",{className:"cp-narr"},
+    h("span",{className:"ey"},"The story, stage by stage"),
+    h("h2",null,"Eight stages, one long wait"),
+    h("div",{className:"cp-narr-grid"},
+      PROCESS.map((s,i)=>h("div",{key:s.id,className:"cp-narr-item"},
+        h("div",{className:"idx"},"Stage "+String(i+1).padStart(2,"0")),
+        h("h3",null,s.title),
+        h("div",{className:"actors"}, s.actors.map(a=>h("span",{key:a,className:"ac"},ACTOR[a]))),
+        h("p",{dangerouslySetInnerHTML:{__html:s.story}})
+      ))
+    )
   );
 }
 
-createRoot(document.getElementById("app")).render(h(App));
+createRoot(document.getElementById("tabs")).render(h(Tabs));
+createRoot(document.getElementById("board")).render(h(DarkBoard));
+createRoot(document.getElementById("story")).render(h(Story));
 </script>
 </body>
 </html>
