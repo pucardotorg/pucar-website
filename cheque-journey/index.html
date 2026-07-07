@@ -37,35 +37,34 @@
 .cp-lead{ max-width:60ch; font-size:1.06rem; line-height:1.6; color:var(--ink-soft); }
 
 /* ===== cheque scrollytelling intro ===== */
-.cheque-intro{ position:relative; height:440vh; background:var(--cream); }
+.cheque-intro{ position:relative; height:420vh; background:var(--cream); }
 .ci-sticky{ position:sticky; top:0; height:100vh; overflow:hidden; }
-.ci-inner{ position:relative; height:100%; max-width:1240px; margin:0 auto; padding:clamp(96px,14vh,150px) clamp(20px,5vw,64px) 0; }
-.ci-head{ position:relative; z-index:3; max-width:24ch; will-change:opacity,transform; }
-.ci-head .beat-eyebrow{ margin-bottom:12px; }
-.ci-head .job-title{ font-size:clamp(1.75rem,4vw,3.2rem); }
-.ci-story{ position:relative; z-index:3; margin-top:24px; max-width:42ch; height:6.5em; }
-.ci-line{ position:absolute; left:0; top:0; margin:0; font-size:clamp(1.05rem,1.6vw,1.35rem); line-height:1.5; color:var(--ink-soft); opacity:0; transition:opacity .35s ease; }
-.ci-line b{ color:var(--ink); font-weight:600; }
-.ci-cheque{ position:absolute; left:50%; top:50%; width:clamp(340px,52vw,760px); transform:translate(-50%,-50%); z-index:2; will-change:transform,opacity; }
-.ci-float{ position:relative; animation:ciFloat 4.6s ease-in-out infinite; filter:drop-shadow(0 34px 54px rgba(36,30,26,.24)); }
-@keyframes ciFloat{ 0%,100%{ transform:translateY(-11px); } 50%{ transform:translateY(11px); } }
-.ci-chq-img{ display:block; width:100%; height:auto; }
+.ci-inner{ position:relative; height:100%; display:grid; place-items:center; }
+.ci-top{ position:absolute; top:clamp(84px,12vh,138px); left:0; right:0; padding:0 24px; text-align:center; z-index:3; }
+.ci-eyebrow{ display:block; margin-bottom:16px; color:var(--forest); }
+.ci-heads{ position:relative; height:2.6em; max-width:24ch; margin:0 auto; }
+.ci-h{ position:absolute; left:0; right:0; top:0; margin:0; font-family:var(--font-display); font-weight:500; font-size:clamp(1.55rem,3.4vw,2.75rem); line-height:1.14; color:var(--ink); opacity:0; }
+.ci-h b{ font-weight:600; }
+.ci-cheque{ position:relative; width:clamp(340px,58vw,820px); z-index:2; will-change:transform,opacity; }
+.ci-cheque::before{ content:""; position:absolute; inset:-14% -10%; z-index:-1; background:radial-gradient(closest-side, rgba(232,178,96,.30), transparent 72%); filter:blur(22px); }
+.ci-float{ position:relative; animation:ciFloat 5s ease-in-out infinite; filter:drop-shadow(0 42px 62px rgba(36,30,26,.26)); }
+@keyframes ciFloat{ 0%,100%{ transform:translateY(-10px); } 50%{ transform:translateY(10px); } }
+.ci-chq-img{ display:block; width:100%; height:auto; border-radius:4px; }
 .ci-chq-ovl{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
 .fld{ opacity:0; }
 .fld-payee,.fld-words,.fld-num{ font-family:'Caveat',cursive; fill:#17306b; }
 .fld-payee{ font-size:178px; font-weight:600; }
 .fld-words{ font-size:160px; font-weight:600; }
-.fld-num{ font-size:196px; font-weight:700; }
+.fld-num{ font-size:168px; font-weight:700; }
 .fld-sign{ stroke-dasharray:1; stroke-dashoffset:1; }
 .ci-stamp{ transform-box:fill-box; transform-origin:center; transform:rotate(-22deg) scale(1.8); opacity:0; }
 .ci-stamp text{ font-family:'Source Sans 3',sans-serif; font-weight:800; font-size:256px; letter-spacing:6px; }
 .ci-cheque.stamped .ci-stamp{ transform:rotate(-22deg) scale(1); opacity:.92; transition:transform .42s cubic-bezier(.18,1.5,.4,1), opacity .18s ease; }
-@media (max-width:800px){
-  .ci-cheque{ width:90vw; }
-  .ci-story{ height:8.5em; max-width:none; }
-  .ci-head{ max-width:none; }
-}
-@media (prefers-reduced-motion:reduce){ .ci-float{ animation:none; } }
+.ci-scrollcue{ position:absolute; bottom:clamp(20px,5vh,46px); left:0; right:0; z-index:3; display:flex; flex-direction:column; align-items:center; gap:6px; font:700 .72rem var(--font-body); letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
+.ci-scrollcue svg{ width:18px; height:18px; animation:ciBounce 1.6s ease-in-out infinite; }
+@keyframes ciBounce{ 0%,100%{ transform:translateY(0); opacity:.55; } 50%{ transform:translateY(5px); opacity:1; } }
+@media (max-width:800px){ .ci-cheque{ width:92vw; } .ci-heads{ max-width:none; } }
+@media (prefers-reduced-motion:reduce){ .ci-float,.ci-scrollcue svg{ animation:none; } }
 
 
 .cp-tabs{ display:flex; gap:26px; border-bottom:1px solid var(--line); margin:34px 0 0; }
@@ -291,16 +290,16 @@
   <section class="cheque-intro" id="intro" aria-label="The story of a bounced cheque">
     <div class="ci-sticky">
       <div class="ci-inner">
-        <div class="ci-head">
-          <p class="beat-eyebrow">The Litigant's Journey</p>
-          <h1 class="job-title">What actually happens to a bounced cheque in court.</h1>
-        </div>
-        <div class="ci-story" aria-live="polite">
-          <p class="ci-line" data-line="0">Meet <b>Lily Abraham</b>. She supplies goods to a local supermarket chain.</p>
-          <p class="ci-line" data-line="1">For the first batch, the owner writes her a cheque, twenty-five thousand rupees.</p>
-          <p class="ci-line" data-line="2">Lily takes it to her bank to pay it in.</p>
-          <p class="ci-line" data-line="3">The bank stamps it: <b>insufficient funds</b>. The cheque has bounced.</p>
-          <p class="ci-line" data-line="4">A dishonoured cheque &mdash; and the start of a long road through the courts. &darr;</p>
+        <div class="ci-top">
+          <p class="beat-eyebrow ci-eyebrow">A Cheque's Journey</p>
+          <div class="ci-heads" aria-live="polite">
+            <h2 class="ci-h" data-b="0">Meet <b>Lily Abraham</b>.</h2>
+            <h2 class="ci-h" data-b="1">The supermarket owner writes her a cheque.</h2>
+            <h2 class="ci-h" data-b="2">Twenty-five thousand rupees, for the first batch of goods.</h2>
+            <h2 class="ci-h" data-b="3">She takes it to her bank to pay it in.</h2>
+            <h2 class="ci-h" data-b="4">Insufficient funds. The cheque has bounced.</h2>
+            <h2 class="ci-h" data-b="5">And so begins its long journey through the courts.</h2>
+          </div>
         </div>
         <div class="ci-cheque" id="ciCheque">
           <div class="ci-float">
@@ -308,7 +307,7 @@
             <svg class="ci-chq-ovl" viewBox="0 0 5268 2703" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid meet">
               <text class="fld fld-payee" x="900" y="835">Lily Abraham</text>
               <text class="fld fld-words" x="905" y="1150">Twenty five thousand only</text>
-              <text class="fld fld-num" x="4085" y="1365" text-anchor="middle">&#8377;25,000</text>
+              <text class="fld fld-num" x="4460" y="1300" text-anchor="middle">&#8377;25,000</text>
               <path class="fld-sign" d="M4270 1705 c 52 -56 96 34 146 -6 c 38 -30 18 52 76 22 c 42 -22 28 44 84 12 c 64 -34 132 24 188 -22 c 36 -30 -6 50 64 26 c 42 -14 94 -30 140 -60" fill="none" stroke="#17306b" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" pathLength="1" />
               <g class="ci-stamp">
                 <rect x="972" y="1024" width="3324" height="654" rx="50" fill="rgba(198,40,40,0.10)" stroke="#c62828" stroke-width="26" />
@@ -317,6 +316,7 @@
             </svg>
           </div>
         </div>
+        <div class="ci-scrollcue" id="ciCue"><span>Keep scrolling</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></div>
       </div>
     </div>
   </section>
@@ -686,8 +686,8 @@ createRoot(document.getElementById("board")).render(h(Board));
   var sec = document.querySelector(".cheque-intro");
   if(!sec) return;
   var cheque = document.getElementById("ciCheque");
-  var head   = sec.querySelector(".ci-head");
-  var lines  = [].slice.call(sec.querySelectorAll(".ci-line"));
+  var heads  = [].slice.call(sec.querySelectorAll(".ci-h"));
+  var cue    = sec.querySelector(".ci-scrollcue");
   var payee  = sec.querySelector(".fld-payee");
   var words  = sec.querySelector(".fld-words");
   var num    = sec.querySelector(".fld-num");
@@ -695,28 +695,24 @@ createRoot(document.getElementById("board")).render(h(Board));
   function clamp(v){ return v<0?0:(v>1?1:v); }
   function seg(p,a,b){ return clamp((p-a)/(b-a)); }
   function band(p,a,b,f){ if(p<a-f||p>b+f) return 0; if(p<a) return (p-(a-f))/f; if(p>b) return 1-(p-b)/f; return 1; }
-  var STORY = [[0,0.13],[0.16,0.40],[0.44,0.62],[0.66,0.83],[0.87,1.25]];
+  var HB = [[0,0.12],[0.15,0.32],[0.35,0.5],[0.53,0.63],[0.66,0.82],[0.85,1.25]];
   var ticking=false;
   function update(){
     ticking=false;
     var total = sec.offsetHeight - window.innerHeight;
     var p = clamp((-sec.getBoundingClientRect().top) / (total||1));
-    var mv = seg(p,0.14,0.40);                 // right -> centre
-    var offX = (1-mv)*20;                       // vw
-    var shrink = seg(p,0.84,1);                 // fly down into the flowchart
-    var offY = (1-mv)*(-3) + mv*7 + shrink*46;  // vh
-    var scale = (0.84 + mv*0.20) * (1 - shrink*0.95);
+    var shrink = seg(p,0.84,1);                 // cheque flies down into the flowchart
     if(cheque){
-      cheque.style.transform = "translate(-50%,-50%) translate("+offX+"vw,"+offY+"vh) scale("+scale+")";
+      cheque.style.transform = "translateY("+(shrink*48)+"vh) scale("+(1 - shrink*0.94)+")";
       cheque.style.opacity = String(1 - seg(p,0.9,1));
-      if(p>0.64) cheque.classList.add("stamped"); else cheque.classList.remove("stamped");
+      if(p>0.66) cheque.classList.add("stamped"); else cheque.classList.remove("stamped");
     }
-    if(head){ var hh=seg(p,0.10,0.30); head.style.opacity=String(1-hh); head.style.transform="translateY("+(-hh*36)+"px)"; }
-    if(payee) payee.style.opacity = String(seg(p,0.18,0.24));
-    if(words) words.style.opacity = String(seg(p,0.25,0.31));
-    if(num)   num.style.opacity   = String(seg(p,0.31,0.37));
-    if(sign)  sign.style.strokeDashoffset = String(1 - seg(p,0.40,0.55));
-    for(var i=0;i<lines.length;i++){ lines[i].style.opacity = String(band(p,STORY[i][0],STORY[i][1],0.05)); }
+    if(payee) payee.style.opacity = String(seg(p,0.16,0.22));
+    if(words) words.style.opacity = String(seg(p,0.35,0.41));
+    if(num)   num.style.opacity   = String(seg(p,0.41,0.47));
+    if(sign)  sign.style.strokeDashoffset = String(1 - seg(p,0.47,0.58));
+    for(var i=0;i<heads.length;i++){ var o=band(p,HB[i][0],HB[i][1],0.05); heads[i].style.opacity=String(o); heads[i].style.transform="translateY("+((1-o)*10)+"px)"; }
+    if(cue) cue.style.opacity = String(1 - seg(p,0.06,0.18));
   }
   function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(update); } }
   window.addEventListener("scroll",onScroll,{passive:true});
