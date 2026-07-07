@@ -40,10 +40,10 @@
 .cheque-intro{ position:relative; height:420vh; background:var(--cream); }
 .ci-sticky{ position:sticky; top:0; height:100vh; overflow:hidden; }
 .ci-inner{ position:relative; height:100%; }
-.ci-top{ position:absolute; top:clamp(58px,8vh,104px); left:0; right:0; padding:0 24px; text-align:center; z-index:3; }
-.ci-eyebrow{ display:block; margin-bottom:14px; color:var(--forest); }
-.ci-heads{ position:relative; height:2.5em; max-width:min(940px,92vw); margin:0 auto; }
-.ci-h{ position:absolute; inset:0; margin:0; display:flex; align-items:center; justify-content:center; text-align:center; font-family:var(--font-display); font-weight:500; font-size:clamp(1.5rem,3.1vw,2.5rem); line-height:1.16; color:var(--ink); opacity:0; }
+.ci-top{ position:absolute; top:clamp(112px,15vh,182px); left:0; right:0; padding:0 24px; text-align:center; z-index:3; }
+.ci-eyebrow{ display:block; margin-bottom:24px; color:var(--forest); }
+.ci-heads{ display:grid; max-width:min(940px,92vw); margin:0 auto; }
+.ci-h{ grid-area:1 / 1; place-self:center; margin:0; text-align:center; font-family:var(--font-display); font-weight:500; font-size:clamp(1.5rem,3.1vw,2.5rem); line-height:1.2; color:var(--ink); opacity:0; }
 .ci-h b{ font-weight:600; }
 .ci-cheque{ position:absolute; left:50%; top:59%; width:clamp(340px,54vw,760px); transform:translate(-50%,-50%); z-index:2; will-change:transform,opacity; }
 .ci-cheque::before{ content:""; position:absolute; inset:-14% -10%; z-index:-1; background:radial-gradient(closest-side, rgba(232,178,96,.28), transparent 72%); filter:blur(22px); }
