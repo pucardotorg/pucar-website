@@ -198,13 +198,14 @@
 .cp-legend2 .sw.dia{ rotate:45deg; width:12px; height:12px; border-radius:3px; background:rgba(218,110,170,.35); border-color:rgba(218,110,170,.9); }
 .cp-legend2 .sw.out{ background:rgba(48,207,140,.2); border-color:rgba(48,207,140,.7); border-radius:999px; }
 .cp-legend2 .sw.st{ background:var(--green); border-color:var(--green); border-radius:6px; }
-/* tinted, prominent "go full screen" prompt (shows ~3s when canvas comes into view) */
-.cp-fs-prompt{ position:absolute; inset:0; z-index:8; display:grid; place-items:center; background:rgba(9,12,28,0); opacity:0; pointer-events:none; transition:opacity .4s ease, background .4s ease; }
-.cp-fs-prompt.show{ opacity:1; background:rgba(9,12,28,.55); }
-.cp-fs-big{ display:inline-flex; align-items:center; gap:12px; cursor:pointer; border:0; border-radius:100px; padding:20px 40px; font:800 1.28rem var(--font-body); color:#08130d; background:var(--green); box-shadow:0 26px 60px -14px rgba(48,207,140,.6); transform:scale(.92); transition:transform .4s cubic-bezier(.2,1.3,.4,1); }
-.cp-fs-prompt.show .cp-fs-big{ pointer-events:auto; transform:scale(1); animation:cpPulse 1.8s ease-in-out infinite; }
-@keyframes cpPulse{ 0%,100%{ box-shadow:0 26px 60px -14px rgba(48,207,140,.55); } 50%{ box-shadow:0 26px 74px -8px rgba(48,207,140,.9); } }
-.cp-fs-big svg{ width:24px; height:24px; }
+/* persistent, prominent "enter full screen" prompt — the canvas is locked until then */
+.cp-fs-prompt{ position:absolute; inset:0; z-index:8; display:grid; place-items:center; background:rgba(9,12,28,.62); backdrop-filter:blur(1.5px); }
+.cp-fs-big{ display:inline-flex; flex-direction:column; align-items:center; gap:5px; cursor:pointer; border:0; border-radius:22px; padding:22px 48px; background:var(--green); color:#06160e; box-shadow:0 26px 64px -12px rgba(48,207,140,.75), 0 0 0 6px rgba(48,207,140,.18); animation:cpBtn 2.2s ease-in-out infinite; }
+.cp-fs-big .lbl{ display:inline-flex; align-items:center; gap:11px; font:800 1.4rem var(--font-body); }
+.cp-fs-big .cp-fs-sub{ font:700 .78rem var(--font-body); letter-spacing:.14em; text-transform:uppercase; color:rgba(6,22,14,.7); }
+.cp-fs-big:hover{ filter:brightness(1.06); }
+@keyframes cpBtn{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.04); } }
+.cp-fs-big svg{ width:26px; height:26px; }
 /* floating story overlay (fades in per stage) */
 .cp-story-ov{ position:absolute; left:16px; top:84px; z-index:5; max-width:min(320px,42vw); pointer-events:none; padding:18px 20px; border-radius:16px; background:rgba(12,14,34,.82); backdrop-filter:blur(8px); border:1px solid rgba(244,239,230,.12); box-shadow:0 24px 60px -30px #000; animation:cpfade .45s ease; }
 @keyframes cpfade{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
@@ -218,7 +219,7 @@
 .cp-story-ov b{ color:var(--paper2); font-weight:600; }
 .cp-story-ov i{ display:block; margin-top:.9em; font-style:normal; font-size:.88rem; color:rgba(244,239,230,.62); padding-left:12px; border-left:1px solid rgba(244,239,230,.22); }
 /* glossary jump + blueprint full-bleed */
-.cp-glosslink{ position:absolute; bottom:18px; left:50%; transform:translateX(-50%); z-index:6; font:600 .8rem var(--font-body); color:var(--paper2); text-decoration:none; background:rgba(20,23,50,.84); border:1px solid rgba(244,239,230,.16); border-radius:100px; padding:8px 17px; backdrop-filter:blur(8px); }
+.cp-glosslink{ position:absolute; bottom:18px; left:50%; transform:translateX(-50%); z-index:6; cursor:pointer; font:600 .8rem var(--font-body); color:var(--paper2); text-decoration:none; background:rgba(20,23,50,.84); border:1px solid rgba(244,239,230,.16); border-radius:100px; padding:8px 17px; backdrop-filter:blur(8px); }
 .cp-glosslink:hover{ background:rgba(244,239,230,.14); }
 .cp-bp-full{ padding:clamp(28px,4vw,52px) clamp(16px,4vw,40px) clamp(44px,6vw,72px); }
 @media (max-width:820px){
@@ -590,54 +591,58 @@ const NT = { card:CardNode, divider:DividerNode };
 function Canvas(){
   const rf=useRef(null), paneRef=useRef(null);
   const [active,setActive]=useState(PROCESS[0].id);
-  const [showFs,setShowFs]=useState(false);
   const [isFs,setIsFs]=useState(false);
   const [cssFs,setCssFs]=useState(false);
   const fsOn = isFs || cssFs;
+  const cssRef=useRef(false), isRef=useRef(false), autoRef=useRef(false);
+  useEffect(()=>{ cssRef.current=cssFs; },[cssFs]);
+  useEffect(()=>{ isRef.current=isFs; },[isFs]);
+  const EXT = [[-360,-360],[ONE.w+360, ONE.h+360]];
   function rect(i){ const sid=ONE.order[i], y=ONE.yr[sid], x=ONE.xr[sid]; return {x:x.min-50,y:y.min-50,width:(x.max-x.min)+100,height:(y.max-y.min)+100}; }
   function jump(i){ if(rf.current) rf.current.fitBounds(rect(i),{padding:0.12,duration:600}); }
   function recompute(){ const inst=rf.current, pane=paneRef.current; if(!inst||!pane) return; const r=pane.getBoundingClientRect(); var c; try{ c=inst.screenToFlowPosition({x:r.left+r.width/2,y:r.top+r.height/2}); }catch(e){ return; } let a=ONE.order[0]; ONE.order.forEach(sid=>{ if(c.y>=ONE.yr[sid].min-70) a=sid; }); setActive(a); }
   function onInit(inst){ rf.current=inst; try{ inst.fitBounds(rect(0),{padding:0.16,duration:0}); }catch(e){} recompute(); }
   const setZoom=(z)=>{ if(rf.current) rf.current.zoomTo(z,{duration:300}); };
   const fitAll=()=>{ if(rf.current) rf.current.fitView({padding:0.1,duration:450}); };
-  function enterFs(){ const el=paneRef.current; if(!el){ return; } const rq=el.requestFullscreen||el.webkitRequestFullscreen; if(rq){ try{ var pr=rq.call(el); if(pr&&pr.catch) pr.catch(function(){ setCssFs(true); }); return; }catch(e){} } setCssFs(true); }
-  function exitFs(){ if(document.fullscreenElement){ try{ (document.exitFullscreen||document.webkitExitFullscreen).call(document); }catch(e){} } setCssFs(false); }
-  function toggleFs(){ if(fsOn) exitFs(); else enterFs(); }
+  function enterNative(){ const el=paneRef.current; if(!el){ setCssFs(true); return; } const rq=el.requestFullscreen||el.webkitRequestFullscreen; if(rq){ try{ var pr=rq.call(el); if(pr&&pr.catch) pr.catch(function(){ setCssFs(true); }); return; }catch(e){} } setCssFs(true); }
+  function exitFs(){ autoRef.current=true; if(document.fullscreenElement){ try{ (document.exitFullscreen||document.webkitExitFullscreen).call(document); }catch(e){} } setCssFs(false); }
+  function toGlossary(){ exitFs(); setTimeout(function(){ var g=document.getElementById("glossary"); if(g) g.scrollIntoView({behavior:"smooth"}); },100); }
   useEffect(()=>{ const onFs=()=>setIsFs(!!document.fullscreenElement); document.addEventListener("fullscreenchange",onFs); document.addEventListener("webkitfullscreenchange",onFs); return ()=>{ document.removeEventListener("fullscreenchange",onFs); document.removeEventListener("webkitfullscreenchange",onFs); }; },[]);
-  useEffect(()=>{ const onKey=(e)=>{ if(e.key==="Escape") setCssFs(false); }; document.addEventListener("keydown",onKey); return ()=>document.removeEventListener("keydown",onKey); },[]);
-  useEffect(()=>{ const el=paneRef.current; if(!el||!window.IntersectionObserver) return; var t; const io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ setShowFs(true); clearTimeout(t); t=setTimeout(function(){ setShowFs(false); },3000); } else { clearTimeout(t); setShowFs(false); } }); },{threshold:0.5}); io.observe(el); return function(){ io.disconnect(); clearTimeout(t); }; },[]);
+  useEffect(()=>{ const onKey=(e)=>{ if(e.key==="Escape") exitFs(); }; document.addEventListener("keydown",onKey); return ()=>document.removeEventListener("keydown",onKey); },[]);
+  useEffect(()=>{ const el=paneRef.current; if(!el||!window.IntersectionObserver) return; const io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting && e.intersectionRatio>=0.62){ if(!autoRef.current && !cssRef.current && !isRef.current){ autoRef.current=true; setCssFs(true); } } else if(!e.isIntersecting){ autoRef.current=false; } }); },{threshold:[0,0.62]}); io.observe(el); return function(){ io.disconnect(); }; },[]);
   const s=PROCESS.find(p=>p.id===active), idx=PROCESS.findIndex(p=>p.id===active);
   return h("div",{className:"cp-canvas"+(cssFs?" cp-fs-on":""), ref:paneRef},
     h(ReactFlow,{ defaultNodes:ONE.nodes, defaultEdges:ONE.edges, nodeTypes:NT, onInit:onInit, onMove:recompute,
-      minZoom:0.08, maxZoom:3, proOptions:{hideAttribution:true}, nodesDraggable:false, nodesConnectable:false, elementsSelectable:false,
-      panOnDrag:true, panOnScroll:true, zoomOnScroll:false, zoomOnPinch:true, zoomOnDoubleClick:false },
+      minZoom:0.2, maxZoom:3, translateExtent:EXT, proOptions:{hideAttribution:true}, nodesDraggable:false, nodesConnectable:false, elementsSelectable:false,
+      panOnDrag:fsOn, panOnScroll:fsOn, zoomOnScroll:false, zoomOnPinch:fsOn, zoomOnDoubleClick:false, preventScrolling:fsOn },
       h(Background,{gap:28,size:1,color:"rgba(244,239,230,0.05)"})
     ),
-    h("div",{className:"cp-stagenav"}, PROCESS.map((p,i)=>h("button",{key:p.id, className:"cp-snav"+(active===p.id?" on":""), onClick:()=>jump(i), title:p.label}, h("span",{className:"n"},i+1), h("span",{className:"t"},p.label)))),
-    h("div",{className:"cp-zoombar"},
-      h("button",{className:"cp-zb cp-zb-alt", onClick:toggleFs, title:"Full screen"}, fsOn?"Exit":"Full screen"),
+    fsOn ? h("div",{className:"cp-stagenav"}, PROCESS.map((p,i)=>h("button",{key:p.id, className:"cp-snav"+(active===p.id?" on":""), onClick:()=>jump(i), title:p.label}, h("span",{className:"n"},i+1), h("span",{className:"t"},p.label)))) : null,
+    fsOn ? h("div",{className:"cp-zoombar"},
+      h("button",{className:"cp-zb cp-zb-alt", onClick:exitFs},"Exit full screen"),
       h("button",{className:"cp-zb", onClick:fitAll},"Fit"),
       h("button",{className:"cp-zb", onClick:()=>setZoom(1)},"1×"),
       h("button",{className:"cp-zb", onClick:()=>setZoom(2)},"2×"),
       h("button",{className:"cp-zb", onClick:()=>setZoom(3)},"3×")
-    ),
-    h("aside",{className:"cp-story-ov", key:active},
+    ) : null,
+    fsOn ? h("aside",{className:"cp-story-ov", key:active},
       h("div",{className:"idx"}, "Stage "+String(idx+1).padStart(2,"0")+" · "+s.label),
       h("h3",null,s.title),
       h("div",{className:"who"}, s.actors.map(a=>h("span",{key:a,className:"c"}, Icon(ACTOR_ICON[a]), ACTOR[a]))),
       h("p",{dangerouslySetInnerHTML:{__html:s.story}})
-    ),
-    h("div",{className:"cp-legend2"},
+    ) : null,
+    fsOn ? h("div",{className:"cp-legend2"},
       h("span",{className:"li"}, h("span",{className:"sw st"}),"Start"),
       h("span",{className:"li"}, h("span",{className:"sw"}),"Step"),
       h("span",{className:"li"}, h("span",{className:"sw dia"}),"Decision"),
       h("span",{className:"li"}, h("span",{className:"sw out"}),"Outcome")
-    ),
-    h("a",{className:"cp-glosslink", href:"#glossary"}, "Read the glossary"),
-    h("div",{className:"cp-fs-prompt"+((showFs&&!fsOn)?" show":"")},
-      h("button",{className:"cp-fs-big", onClick:toggleFs},
-        h("svg",{viewBox:"0 0 16 16",width:24,height:24,fill:"none",stroke:"currentColor",strokeWidth:1.7,strokeLinecap:"round",strokeLinejoin:"round"},h("path",{d:"M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"})),
-        "Go full screen"))
+    ) : null,
+    fsOn ? h("button",{className:"cp-glosslink", onClick:toGlossary}, "Read the glossary") : null,
+    !fsOn ? h("div",{className:"cp-fs-prompt"},
+      h("button",{className:"cp-fs-big", onClick:enterNative},
+        h("span",{className:"lbl"}, h("svg",{viewBox:"0 0 16 16",width:26,height:26,fill:"none",stroke:"currentColor",strokeWidth:1.8,strokeLinecap:"round",strokeLinejoin:"round"},h("path",{d:"M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"})), "Explore the flowchart"),
+        h("span",{className:"cp-fs-sub"},"Enter full screen"))
+    ) : null
   );
 }
 
