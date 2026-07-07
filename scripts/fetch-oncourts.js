@@ -55,18 +55,22 @@ async function fetchScalar(field, dash, card) {
     catch (e) { clearTimeout(to); if (i === 0) console.error("  " + field + ": fetch error " + (e && e.message)); await sleep(2500); continue; }
     clearTimeout(to);
     last = res.status;
-    if (res.status === 200) {
-      let j; try { j = await res.json(); } catch (e) { return null; }
+    // This Metabase returns 202 *with the full result body already populated*
+    // (not an empty "still running" envelope), so parse the body on 202 too.
+    if (res.status === 200 || res.status === 202) {
+      let j = null; try { j = await res.json(); } catch (e) {}
       const rows = j && j.data && j.data.rows;
       if (rows && rows.length && rows[0].length) {
         const v = Number(rows[0][0]);
         if (Number.isFinite(v)) return v;
       }
-      console.error("  " + field + ": 200 but no numeric row");
-      return null;
+      // Genuinely empty body: 200 → give up; 202 → still computing, retry.
+      if (res.status === 200) { console.error("  " + field + ": 200 but no numeric row"); return null; }
+      await sleep(2500);
+      continue;
     }
     if (res.status >= 400 && res.status !== 429) { console.error("  " + field + ": HTTP " + res.status + " (giving up)"); return null; }
-    // 202 (query still running) / 429 / 5xx: wait and retry
+    // 429 / 5xx: wait and retry
     await sleep(2500);
   }
   console.error("  " + field + ": no result after retries (last status " + last + ")");
