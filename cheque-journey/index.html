@@ -40,9 +40,9 @@
 .cheque-intro{ position:relative; height:440vh; background:var(--cream); }
 .ci-sticky{ position:sticky; top:0; height:100vh; overflow:hidden; }
 .ci-inner{ position:relative; height:100%; max-width:1240px; margin:0 auto; padding:clamp(96px,14vh,150px) clamp(20px,5vw,64px) 0; }
-.ci-head{ position:relative; z-index:3; max-width:20ch; }
+.ci-head{ position:relative; z-index:3; max-width:24ch; will-change:opacity,transform; }
 .ci-head .beat-eyebrow{ margin-bottom:12px; }
-.ci-head .job-title{ font-size:clamp(1.9rem,4.6vw,3.7rem); }
+.ci-head .job-title{ font-size:clamp(1.75rem,4vw,3.2rem); }
 .ci-story{ position:relative; z-index:3; margin-top:24px; max-width:42ch; height:6.5em; }
 .ci-line{ position:absolute; left:0; top:0; margin:0; font-size:clamp(1.05rem,1.6vw,1.35rem); line-height:1.5; color:var(--ink-soft); opacity:0; transition:opacity .35s ease; }
 .ci-line b{ color:var(--ink); font-weight:600; }
@@ -53,12 +53,12 @@
 .ci-chq-ovl{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
 .fld{ opacity:0; }
 .fld-payee,.fld-words,.fld-num{ font-family:'Caveat',cursive; fill:#17306b; }
-.fld-payee{ font-size:190px; font-weight:600; }
-.fld-words{ font-size:172px; font-weight:600; }
-.fld-num{ font-size:210px; font-weight:700; }
+.fld-payee{ font-size:178px; font-weight:600; }
+.fld-words{ font-size:160px; font-weight:600; }
+.fld-num{ font-size:196px; font-weight:700; }
 .fld-sign{ stroke-dasharray:1; stroke-dashoffset:1; }
 .ci-stamp{ transform-box:fill-box; transform-origin:center; transform:rotate(-22deg) scale(1.8); opacity:0; }
-.ci-stamp text{ font-family:'Source Sans 3',sans-serif; font-weight:800; font-size:300px; letter-spacing:16px; }
+.ci-stamp text{ font-family:'Source Sans 3',sans-serif; font-weight:800; font-size:256px; letter-spacing:6px; }
 .ci-cheque.stamped .ci-stamp{ transform:rotate(-22deg) scale(1); opacity:.92; transition:transform .42s cubic-bezier(.18,1.5,.4,1), opacity .18s ease; }
 @media (max-width:800px){
   .ci-cheque{ width:90vw; }
@@ -298,13 +298,13 @@
           <div class="ci-float">
             <img class="ci-chq-img" src="/assets/cheque-sample.svg" alt="A sample cheque made out to Lily Abraham for twenty-five thousand rupees" width="5268" height="2703" />
             <svg class="ci-chq-ovl" viewBox="0 0 5268 2703" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid meet">
-              <text class="fld fld-payee" x="900" y="1055">Lily Abraham</text>
-              <text class="fld fld-words" x="1180" y="1330">Twenty five thousand only</text>
-              <text class="fld fld-num" x="4330" y="1450">&#8377;25,000</text>
-              <path class="fld-sign" d="M4250 2175 c 60 -70 110 42 165 -6 c 42 -34 20 60 82 26 c 46 -26 30 46 92 14 c 70 -36 150 26 210 -26 c 40 -34 -6 56 70 30 c 46 -16 104 -36 156 -74" fill="none" stroke="#17306b" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" pathLength="1" />
+              <text class="fld fld-payee" x="900" y="835">Lily Abraham</text>
+              <text class="fld fld-words" x="905" y="1150">Twenty five thousand only</text>
+              <text class="fld fld-num" x="4085" y="1365" text-anchor="middle">&#8377;25,000</text>
+              <path class="fld-sign" d="M4270 1705 c 52 -56 96 34 146 -6 c 38 -30 18 52 76 22 c 42 -22 28 44 84 12 c 64 -34 132 24 188 -22 c 36 -30 -6 50 64 26 c 42 -14 94 -30 140 -60" fill="none" stroke="#17306b" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" pathLength="1" />
               <g class="ci-stamp">
-                <rect x="1234" y="1041" width="2800" height="620" rx="48" fill="rgba(198,40,40,0.10)" stroke="#c62828" stroke-width="26" />
-                <text x="2634" y="1440" text-anchor="middle" fill="#c62828">INSUFFICIENT FUNDS</text>
+                <rect x="972" y="1024" width="3324" height="654" rx="50" fill="rgba(198,40,40,0.10)" stroke="#c62828" stroke-width="26" />
+                <text x="2634" y="1444" text-anchor="middle" fill="#c62828">INSUFFICIENT FUNDS</text>
               </g>
             </svg>
           </div>
@@ -669,6 +669,7 @@ createRoot(document.getElementById("board")).render(h(Board));
   var sec = document.querySelector(".cheque-intro");
   if(!sec) return;
   var cheque = document.getElementById("ciCheque");
+  var head   = sec.querySelector(".ci-head");
   var lines  = [].slice.call(sec.querySelectorAll(".ci-line"));
   var payee  = sec.querySelector(".fld-payee");
   var words  = sec.querySelector(".fld-words");
@@ -684,15 +685,16 @@ createRoot(document.getElementById("board")).render(h(Board));
     var total = sec.offsetHeight - window.innerHeight;
     var p = clamp((-sec.getBoundingClientRect().top) / (total||1));
     var mv = seg(p,0.14,0.40);                 // right -> centre
-    var offX = (1-mv)*22;                       // vw
-    var offY = (1-mv)*(-3) + mv*7;              // vh
-    var shrink = seg(p,0.85,1);                 // shrink into the flowchart
-    var scale = (0.82 + mv*0.20) * (1 - shrink*0.92);
+    var offX = (1-mv)*20;                       // vw
+    var shrink = seg(p,0.84,1);                 // fly down into the flowchart
+    var offY = (1-mv)*(-3) + mv*7 + shrink*46;  // vh
+    var scale = (0.84 + mv*0.20) * (1 - shrink*0.95);
     if(cheque){
       cheque.style.transform = "translate(-50%,-50%) translate("+offX+"vw,"+offY+"vh) scale("+scale+")";
-      cheque.style.opacity = String(1 - shrink);
-      if(p>0.66) cheque.classList.add("stamped"); else cheque.classList.remove("stamped");
+      cheque.style.opacity = String(1 - seg(p,0.9,1));
+      if(p>0.64) cheque.classList.add("stamped"); else cheque.classList.remove("stamped");
     }
+    if(head){ var hh=seg(p,0.10,0.30); head.style.opacity=String(1-hh); head.style.transform="translateY("+(-hh*36)+"px)"; }
     if(payee) payee.style.opacity = String(seg(p,0.18,0.24));
     if(words) words.style.opacity = String(seg(p,0.25,0.31));
     if(num)   num.style.opacity   = String(seg(p,0.31,0.37));
