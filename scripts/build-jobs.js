@@ -960,13 +960,24 @@ function dristiPage() {
      cards in one row read as noise; the story is volume + speed). Each
      carries an icon from the site's inline stroke set (same style as the
      resources type icons) so the numbers read at a glance. */
+  /* Stat NUMBERS are refreshed daily from the public ON Courts (Metabase)
+     dashboard by scripts/fetch-oncourts.js -> content/dristi-stats.json
+     (committed by .github/workflows/oncourts-refresh.yml). If that file is
+     missing or a field is absent, fall back to these known-good figures so
+     the page always renders. The 98% ("held as scheduled") has no matching
+     dashboard card, so it is edited here. */
+  var dsFallback = { filed: 1920, timeToDisposalDays: 164, hearingsToDisposal: 7, hearingsHeldPct: 98, advocates: 851, litigants: 1758 };
+  var ds = dsFallback;
+  try { ds = Object.assign({}, dsFallback, JSON.parse(fs.readFileSync(path.join(__dirname, "..", "content", "dristi-stats.json"), "utf8"))); } catch (e) {}
+  var nf = function (n) { return Number(n).toLocaleString("en-IN"); };
+
   const kstatsHtml =
-'      <div class="dristi-stat is-big"><span class="dristi-stat-num">1,920</span><span class="dristi-stat-label">cases filed in a court that did not exist two years ago</span></div>\n' +
-'      <div class="dristi-stat is-big"><span class="dristi-stat-num">164 <em>days</em></span><span class="dristi-stat-label">median time to disposal. The conventional baseline: about 2 years</span></div>\n' +
-'      <div class="dristi-stat"><span class="dristi-stat-num">7</span><span class="dristi-stat-label">Median hearings to disposal</span></div>\n' +
-'      <div class="dristi-stat"><span class="dristi-stat-num">98%</span><span class="dristi-stat-label">Hearings held as scheduled</span></div>\n' +
-'      <div class="dristi-stat"><span class="dristi-stat-num">851</span><span class="dristi-stat-label">Advocates on the platform</span></div>\n' +
-'      <div class="dristi-stat"><span class="dristi-stat-num">1,758</span><span class="dristi-stat-label">Litigants using it</span></div>';
+'      <div class="dristi-stat is-big"><span class="dristi-stat-num">' + nf(ds.filed) + '</span><span class="dristi-stat-label">cases filed in a court that did not exist two years ago</span></div>\n' +
+'      <div class="dristi-stat is-big"><span class="dristi-stat-num">' + ds.timeToDisposalDays + ' <em>days</em></span><span class="dristi-stat-label">median time to disposal. The conventional baseline: about 2 years</span></div>\n' +
+'      <div class="dristi-stat"><span class="dristi-stat-num">' + ds.hearingsToDisposal + '</span><span class="dristi-stat-label">Median hearings to disposal</span></div>\n' +
+'      <div class="dristi-stat"><span class="dristi-stat-num">' + ds.hearingsHeldPct + '%</span><span class="dristi-stat-label">Hearings held as scheduled</span></div>\n' +
+'      <div class="dristi-stat"><span class="dristi-stat-num">' + nf(ds.advocates) + '</span><span class="dristi-stat-label">Advocates on the platform</span></div>\n' +
+'      <div class="dristi-stat"><span class="dristi-stat-num">' + nf(ds.litigants) + '</span><span class="dristi-stat-label">Litigants using it</span></div>';
 
   const main =
 '  <p class="beat-eyebrow">DRISTI</p>\n' +

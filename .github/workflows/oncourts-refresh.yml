@@ -1,0 +1,38 @@
+name: Refresh ON Courts dashboard stats
+
+# Pulls the DRISTI numbers from the public ON Courts (Metabase) dashboard
+# once a day and commits content/dristi-stats.json. That commit triggers a
+# Netlify rebuild, which regenerates /dristi/ with the fresh figures.
+
+on:
+  schedule:
+    - cron: "30 1 * * *"   # 01:30 UTC daily = 07:00 IST
+  workflow_dispatch: {}      # allow manual runs from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Fetch latest dashboard numbers
+        run: node scripts/fetch-oncourts.js
+
+      - name: Commit if changed
+        run: |
+          if [ -n "$(git status --porcelain content/dristi-stats.json)" ]; then
+            git config user.name "pucar-bot"
+            git config user.email "actions@users.noreply.github.com"
+            git add content/dristi-stats.json
+            git commit -m "chore: refresh ON Courts dashboard stats"
+            git push
+          else
+            echo "No change in dashboard numbers."
+          fi
