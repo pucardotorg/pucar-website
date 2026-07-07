@@ -4,10 +4,13 @@
   "location": "Remote · India",
   "commitment": "Part-time · 2 days a week",
   "summary": "Turn court data into evidence that travels: dashboards, cohort analyses and baseline studies that show what people-centric courts change for litigants.",
-  "tags": ["Data", "Research"],
+  "tags": [
+    "Data",
+    "Research"
+  ],
   "apply_url": "mailto:collaborate@pucar.org?subject=Role%20-%20Data%20and%20Impact%20Analyst",
   "status": "Open",
   "posted": "2026-07-06",
-  "published": true,
+  "published": false,
   "body": "## The role\n\nThe ON Court model spreads because its results are public and measurable: 164 days median to disposal, 98% of hearings held as scheduled. Someone has to keep that evidence honest, current and legible. That is you.\n\n[draft description, refine before publishing]\n\n## What you'll do\n\n- Maintain and extend the public dashboard and its analyses\n- Run cohort studies (survival analysis, stage medians) comparing ON Courts with conventional baselines\n- Package findings for judges, policymakers and the public\n\n## Who this suits\n\n- Strong statistics and data-storytelling skills; SQL and Python or R\n- Care for methodological honesty over impressive numbers\n- 2 days a week, flexibly scheduled\n\n## How it works\n\nPaid part-time engagement through a PUCAR collective member organisation."
 }

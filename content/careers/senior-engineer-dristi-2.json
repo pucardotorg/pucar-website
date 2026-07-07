@@ -4,10 +4,14 @@
   "location": "Remote · India",
   "commitment": "Full-time",
   "summary": "Own core services of the AI-native rebuild of DRISTI: a court platform light enough to run on a court's own hardware and configurable by its own staff.",
-  "tags": ["Engineering", "AI", "Open source"],
+  "tags": [
+    "Engineering",
+    "AI",
+    "Open source"
+  ],
   "apply_url": "mailto:collaborate@pucar.org?subject=Role%20-%20Senior%20Full-stack%20Engineer%2C%20DRISTI%202.0",
   "status": "Open",
   "posted": "2026-07-06",
-  "published": true,
+  "published": false,
   "body": "## The role\n\nDRISTI 1.0 proved that a redesigned court works: the 24x7 ON Court in Kollam has taken the 600-day cheque dishonour journey down to a median of 164 days. DRISTI 2.0 starts from everything that court taught us, and you will build it.\n\n[draft description, refine before publishing]\n\n## What you'll do\n\n- Design and build core services of DRISTI 2.0: AI-native, standards-compliant, one deployable that runs on-premise\n- Turn hard-coded case logic into configuration a court's own staff can manage\n- Work in the open: public repos, public docs, a community of contributors around you\n\n## Who this suits\n\n- 5+ years building production systems end to end\n- Comfort owning architecture decisions and their consequences\n- Care for the person at the end of the system, not just the system\n\n## How it works\n\nFull-time role with a PUCAR collective member organisation. Remote within India, with occasional travel to partner courts."
 }

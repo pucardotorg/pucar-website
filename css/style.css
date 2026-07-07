@@ -5801,4 +5801,8 @@ body.jdm-open{ overflow:hidden; }
   padding:3px 10px; border-radius:999px; white-space:nowrap; }
 .career-row-title .career-openings{ margin-left:8px; position:relative; top:-1px; }
 .jdm-openings{ margin:0 0 12px; }
+/* careers page with no hero/intro: collapse the empty <main> so the roles
+   board sits directly under the header */
+main.job-main.careers-lean{ padding:0; min-height:0; }
+.careers-board-lead{ padding-top:clamp(84px,10vw,120px); }
 @media (prefers-reduced-motion:reduce){ .jdm-dialog{ animation:none; } }

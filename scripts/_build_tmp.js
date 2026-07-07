@@ -1544,6 +1544,7 @@ function careerPage(role) {
     (role.status === "Open"
       ? '    <a class="btn btn-primary" href="' + esc(role.apply_url || "mailto:collaborate@pucar.org") + '">Apply for this role</a>\n'
       : '    <span class="btn btn-outline is-disabled">' + esc(role.status) + "</span>\n") +
+    (role.pdf ? '    <a class="btn btn-ghost" href="' + esc(role.pdf) + '" download>Download JD (PDF)</a>\n' : '') +
     '    <a class="btn btn-outline" href="/careers/">All open roles</a>\n  </div>';
   return pageShell({
     title: role.title + " | Careers at PUCAR",
@@ -1593,6 +1594,7 @@ function careersPage() {
         (r.status === "Open"
           ? '<a class="btn btn-primary" href="' + esc(r.apply_url || "mailto:collaborate@pucar.org") + '">Apply for this role</a>'
           : '<span class="btn btn-outline is-disabled">' + esc(r.status) + '</span>') +
+        (r.pdf ? '<a class="btn btn-ghost" href="' + esc(r.pdf) + '" download>Download JD (PDF)</a>' : '') +
       '</div>' +
     '</div>';
   }
@@ -1605,25 +1607,10 @@ function careersPage() {
       '</div>' +
     '</div>';
 
-  const WHY = [
-    { t: "Work that ships to a real court", b: "This is not a lab. The 24x7 ON Court in Kollam runs on what this team builds, and litigants feel every improvement within weeks, not years." },
-    { t: "A problem worthy of a career", b: "5.5 crore cases are waiting in India’s courts. Cutting one journey from 600 days to 164 is the proof; carrying it to every case type is the work of a generation." },
-    { t: "Built in the open, with the best", b: "You join a collective of 100+ contributors across law, technology, design and government, and everything you make is a public good." }
-  ];
-  const whyHtml = WHY.map(function (s, i) {
-    return '    <div class="about-step">\n' +
-      '      <span class="about-step-num">0' + (i + 1) + '</span>\n' +
-      "      <h3>" + esc(s.t) + "</h3>\n" +
-      "      <p>" + esc(s.b) + "</p>\n" +
-      "    </div>";
-  }).join("\n");
-
   const main =
-'  <div class="job-body prose about-steps-head about-steps-lead"><h2>Why build here</h2></div>\n' +
-'  <div class="about-steps">\n' + whyHtml + "\n  </div>\n" +
 "</main>\n" +
 
-'<section class="collaborate careers-board" id="roles">\n' +
+'<section class="collaborate careers-board careers-board-lead" id="roles">\n' +
 '  <div class="collab-head">\n' +
 '    <p class="beat-eyebrow">Open roles</p>\n' +
 '    <h2 class="collab-title-main">The bench is forming. Take your seat.</h2>\n' +
@@ -1638,7 +1625,7 @@ jdSources + "\n" + jdModal + "\n" +
 
   return pageShell({
     title: "Careers | PUCAR",
-    mainClass: "dristi-main",
+    mainClass: "dristi-main careers-lean",
     desc: "Help build the future of courts. Permanent roles at PUCAR, the collective behind India's 24x7 people-centric ON Courts.",
     url: "/careers/",
     jsonLd: { "@context": "https://schema.org", "@type": "CollectionPage", name: "Careers at PUCAR",
