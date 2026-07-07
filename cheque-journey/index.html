@@ -129,22 +129,43 @@
 
 /* ===== full-viewport canvas ===== */
 .cp-stage-flow{ background:var(--indigo); color:var(--paper2); }
-.cp-canvas{ position:relative; width:100%; height:100vh; }
+/* tabs on the dark canvas background */
+.cp-dtabs{ display:flex; gap:26px; align-items:center; max-width:1400px; margin:0 auto; padding:16px clamp(16px,4vw,40px) 0; border-bottom:1px solid rgba(244,239,230,.12); }
+.cp-dtab{ appearance:none; background:none; border:0; cursor:pointer; padding:10px 2px 14px; margin-bottom:-1px; border-bottom:2px solid transparent; font:600 1rem var(--font-body); color:rgba(244,239,230,.64); display:inline-flex; align-items:center; gap:9px; transition:color .2s,border-color .2s; }
+.cp-dtab svg{ width:16px; height:16px; opacity:.7; }
+.cp-dtab:hover{ color:var(--paper2); }
+.cp-dtab.on{ color:var(--paper2); border-bottom-color:var(--green); font-weight:700; }
+.cp-dtab.on svg{ opacity:1; color:var(--green); }
+.cp-canvas{ position:relative; width:100%; height:calc(100vh - 54px); background:var(--indigo); }
+.cp-canvas:fullscreen{ width:100vw; height:100vh; }
+.cp-canvas:-webkit-full-screen{ width:100vw; height:100vh; }
 .cp-canvas .react-flow{ width:100%; height:100%; }
 .react-flow__pane{ cursor:grab; }
 .react-flow__pane.dragging{ cursor:grabbing; }
 .react-flow__minimap{ border:1px solid rgba(244,239,230,.14); border-radius:12px; overflow:hidden; }
 /* stage navigator (top, pill row) */
-.cp-stagenav{ position:absolute; top:16px; left:50%; transform:translateX(-50%); z-index:6; display:flex; gap:5px; max-width:min(940px,92vw); overflow-x:auto; padding:6px; background:rgba(20,23,50,.84); backdrop-filter:blur(8px); border:1px solid rgba(244,239,230,.14); border-radius:100px; scrollbar-width:none; }
-.cp-stagenav::-webkit-scrollbar{ display:none; }
-.cp-snav{ flex:0 0 auto; display:inline-flex; align-items:center; gap:7px; cursor:pointer; border:0; background:transparent; color:rgba(244,239,230,.72); font:600 .8rem var(--font-body); padding:6px 13px 6px 6px; border-radius:100px; white-space:nowrap; transition:background .2s,color .2s; }
-.cp-snav .n{ width:19px; height:19px; border-radius:50%; display:grid; place-items:center; font-size:.7rem; font-weight:700; background:rgba(244,239,230,.1); color:rgba(244,239,230,.82); }
-.cp-snav:hover{ color:var(--paper2); background:rgba(244,239,230,.08); }
-.cp-snav.on{ background:var(--green); color:#08130d; } .cp-snav.on .n{ background:#0a3325; color:var(--green); }
+.cp-stagenav{ position:absolute; top:14px; left:12px; right:12px; z-index:6; display:flex; flex-wrap:wrap; justify-content:center; gap:6px; pointer-events:none; }
+.cp-snav{ pointer-events:auto; display:inline-flex; align-items:center; gap:6px; cursor:pointer; border:1px solid rgba(244,239,230,.14); background:rgba(20,23,50,.82); backdrop-filter:blur(8px); color:rgba(244,239,230,.74); font:600 .76rem var(--font-body); padding:6px 12px 6px 6px; border-radius:100px; white-space:nowrap; transition:background .2s,color .2s,border-color .2s; }
+.cp-snav .n{ width:18px; height:18px; border-radius:50%; display:grid; place-items:center; font-size:.68rem; font-weight:700; background:rgba(244,239,230,.12); color:rgba(244,239,230,.82); }
+.cp-snav:hover{ color:var(--paper2); border-color:rgba(244,239,230,.34); }
+.cp-snav.on{ background:var(--green); border-color:var(--green); color:#08130d; } .cp-snav.on .n{ background:#0a3325; color:var(--green); }
 /* simple zoom presets */
 .cp-zoombar{ position:absolute; top:16px; right:16px; z-index:6; display:flex; gap:4px; background:rgba(20,23,50,.84); backdrop-filter:blur(8px); border:1px solid rgba(244,239,230,.14); border-radius:100px; padding:5px; }
 .cp-zb{ cursor:pointer; border:0; background:transparent; color:rgba(244,239,230,.78); font:700 .82rem var(--font-body); padding:6px 13px; border-radius:100px; transition:background .2s,color .2s; }
 .cp-zb:hover{ background:rgba(244,239,230,.12); color:var(--paper2); }
+.cp-zb-alt{ color:var(--green); }
+.cp-zb-alt:hover{ color:#8fe9c1; }
+/* sticky bottom-left legend */
+.cp-legend2{ position:absolute; left:16px; bottom:16px; z-index:6; display:flex; flex-direction:column; gap:8px; background:rgba(20,23,50,.82); backdrop-filter:blur(8px); border:1px solid rgba(244,239,230,.14); border-radius:14px; padding:12px 15px; font-size:.78rem; color:rgba(244,239,230,.8); }
+.cp-legend2 .li{ display:flex; align-items:center; gap:8px; }
+.cp-legend2 .sw{ width:20px; height:13px; border-radius:5px; border:1.5px solid rgba(244,239,230,.4); }
+.cp-legend2 .sw.dia{ rotate:45deg; width:12px; height:12px; border-radius:3px; background:rgba(218,110,170,.35); border-color:rgba(218,110,170,.9); }
+.cp-legend2 .sw.out{ background:rgba(48,207,140,.2); border-color:rgba(48,207,140,.7); border-radius:999px; }
+.cp-legend2 .sw.st{ background:var(--green); border-color:var(--green); border-radius:6px; }
+/* big "go full screen" button (shows ~3s when the canvas comes into view) */
+.cp-fs-big{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%) scale(.96); z-index:7; display:inline-flex; align-items:center; gap:10px; cursor:pointer; border:0; border-radius:100px; padding:16px 30px; font:700 1.05rem var(--font-body); color:#08130d; background:var(--green); box-shadow:0 22px 55px -16px rgba(48,207,140,.55); opacity:0; pointer-events:none; transition:opacity .4s ease, transform .4s ease; }
+.cp-fs-big.show{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1); }
+.cp-fs-big svg{ width:20px; height:20px; }
 /* floating story overlay (fades in per stage) */
 .cp-story-ov{ position:absolute; left:clamp(16px,3.4vw,54px); top:52%; transform:translateY(-50%); z-index:5; max-width:min(360px,40vw); pointer-events:none; padding:20px 22px; border-radius:16px; background:rgba(15,17,40,.72); backdrop-filter:blur(7px); border:1px solid rgba(244,239,230,.1); box-shadow:0 24px 60px -30px #000; animation:cpfade .45s ease; }
 @keyframes cpfade{ from{ opacity:0; transform:translateY(calc(-50% + 12px)); } to{ opacity:1; transform:translateY(-50%); } }
@@ -165,7 +186,7 @@
   .cp-story-ov{ left:12px; right:12px; max-width:none; top:auto; bottom:78px; transform:none; animation:cpfadem .45s ease; }
   @keyframes cpfadem{ from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:none;} }
   .cp-story-ov h3{ font-size:1.4rem; }
-  .cp-stagenav{ max-width:94vw; }
+  .cp-legend2{ display:none; }
 }
 
 /* plain-language glossary */
@@ -230,10 +251,9 @@
   <p class="beat-eyebrow">The Litigant's Journey</p>
   <h1 class="job-title">What actually happens to a bounced cheque in court.</h1>
   <p class="cp-lead">Follow a single <b>§138 Negotiable Instruments Act</b> complaint, from the moment a cheque is dishonoured to the day the respondent stands before a judge. Every hand it passes through, every place it can stall, and every fork in the road. Mapped in Kerala, where e-filing and the Case Information System are integrated.</p>
-  <div id="tabs"></div>
 </main>
 
-<div id="board"></div>
+<div id="board" class="cp-darkzone"></div>
 
 <section class="cp-glossary" id="glossary">
   <div class="cp-glossary-in">
@@ -291,7 +311,7 @@
 <script type="module">
 import React, { useState, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ReactFlow, Background, MiniMap, Handle, Position, MarkerType } from '@xyflow/react';
+import { ReactFlow, Background, Handle, Position, MarkerType } from '@xyflow/react';
 import dagre from '@dagrejs/dagre';
 const h = React.createElement;
 
@@ -495,26 +515,30 @@ function CardNode({ data }){
 const NT = { card:CardNode };
 
 /* ===== full-viewport canvas: grab to pan, simple zoom presets, floating story ===== */
-function minimapColor(n){ const k=n.data&&n.data.kind; return k==="start"?"#30CF8C":k==="outcome"?"#46c893":k==="decision"?"#DA6EAA":"rgba(244,239,230,.34)"; }
 function Canvas(){
   const rf=useRef(null), paneRef=useRef(null);
   const [active,setActive]=useState(PROCESS[0].id);
+  const [showFs,setShowFs]=useState(false);
+  const [isFs,setIsFs]=useState(false);
   function rect(i){ const sid=ONE.order[i], y=ONE.yr[sid], x=ONE.xr[sid]; return {x:x.min-50,y:y.min-50,width:(x.max-x.min)+100,height:(y.max-y.min)+100}; }
   function jump(i){ if(rf.current) rf.current.fitBounds(rect(i),{padding:0.12,duration:600}); }
   function recompute(){ const inst=rf.current, pane=paneRef.current; if(!inst||!pane) return; const r=pane.getBoundingClientRect(); var c; try{ c=inst.screenToFlowPosition({x:r.left+r.width/2,y:r.top+r.height/2}); }catch(e){ return; } let a=ONE.order[0]; ONE.order.forEach(sid=>{ if(c.y>=ONE.yr[sid].min-70) a=sid; }); setActive(a); }
   function onInit(inst){ rf.current=inst; try{ inst.fitBounds(rect(0),{padding:0.16,duration:0}); }catch(e){} recompute(); }
   const setZoom=(z)=>{ if(rf.current) rf.current.zoomTo(z,{duration:300}); };
   const fitAll=()=>{ if(rf.current) rf.current.fitView({padding:0.1,duration:450}); };
+  function toggleFs(){ const el=paneRef.current; if(!el) return; if(document.fullscreenElement){ if(document.exitFullscreen) document.exitFullscreen(); } else { const rq=el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen; if(rq) rq.call(el); } }
+  useEffect(()=>{ const onFs=()=>setIsFs(!!document.fullscreenElement); document.addEventListener("fullscreenchange",onFs); return ()=>document.removeEventListener("fullscreenchange",onFs); },[]);
+  useEffect(()=>{ const el=paneRef.current; if(!el||!window.IntersectionObserver) return; var t; const io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ setShowFs(true); clearTimeout(t); t=setTimeout(function(){ setShowFs(false); },3000); } else { clearTimeout(t); setShowFs(false); } }); },{threshold:0.55}); io.observe(el); return function(){ io.disconnect(); clearTimeout(t); }; },[]);
   const s=PROCESS.find(p=>p.id===active), idx=PROCESS.findIndex(p=>p.id===active);
   return h("div",{className:"cp-canvas", ref:paneRef},
     h(ReactFlow,{ defaultNodes:ONE.nodes, defaultEdges:ONE.edges, nodeTypes:NT, onInit:onInit, onMove:recompute,
       minZoom:0.08, maxZoom:3, proOptions:{hideAttribution:true}, nodesDraggable:true, nodesConnectable:false, elementsSelectable:false,
       panOnDrag:true, panOnScroll:false, zoomOnScroll:false, zoomOnPinch:true, zoomOnDoubleClick:false, preventScrolling:false },
-      h(Background,{gap:28,size:1,color:"rgba(244,239,230,0.05)"}),
-      h(MiniMap,{position:"bottom-left", pannable:true, zoomable:true, maskColor:"rgba(15,17,40,.66)", nodeColor:minimapColor, style:{backgroundColor:"#12142b"}})
+      h(Background,{gap:28,size:1,color:"rgba(244,239,230,0.05)"})
     ),
     h("div",{className:"cp-stagenav"}, PROCESS.map((p,i)=>h("button",{key:p.id, className:"cp-snav"+(active===p.id?" on":""), onClick:()=>jump(i), title:p.label}, h("span",{className:"n"},i+1), h("span",{className:"t"},p.label)))),
     h("div",{className:"cp-zoombar"},
+      h("button",{className:"cp-zb cp-zb-alt", onClick:toggleFs, title:"Full screen"}, isFs?"Exit full screen":"Full screen"),
       h("button",{className:"cp-zb", onClick:fitAll},"Fit"),
       h("button",{className:"cp-zb", onClick:()=>setZoom(1)},"1×"),
       h("button",{className:"cp-zb", onClick:()=>setZoom(2)},"2×"),
@@ -526,7 +550,16 @@ function Canvas(){
       h("div",{className:"who"}, s.actors.map(a=>h("span",{key:a,className:"c"}, Icon(ACTOR_ICON[a]), ACTOR[a]))),
       h("p",{dangerouslySetInnerHTML:{__html:s.story}})
     ),
-    h("a",{className:"cp-glosslink", href:"#glossary"}, "Read the glossary")
+    h("div",{className:"cp-legend2"},
+      h("span",{className:"li"}, h("span",{className:"sw st"}),"Start"),
+      h("span",{className:"li"}, h("span",{className:"sw"}),"Step"),
+      h("span",{className:"li"}, h("span",{className:"sw dia"}),"Decision"),
+      h("span",{className:"li"}, h("span",{className:"sw out"}),"Outcome")
+    ),
+    h("a",{className:"cp-glosslink", href:"#glossary"}, "Read the glossary"),
+    h("button",{className:"cp-fs-big"+((showFs&&!isFs)?" show":""), onClick:toggleFs},
+      h("svg",{viewBox:"0 0 16 16",width:20,height:20,fill:"none",stroke:"currentColor",strokeWidth:1.7,strokeLinecap:"round",strokeLinejoin:"round"},h("path",{d:"M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"})),
+      "Go full screen")
   );
 }
 
@@ -551,22 +584,21 @@ function BlueprintFull(){
     h("div",{className:"cp-bp-scroll"}, h(BlueprintGrid))
   );
 }
-function Board(){
-  const [tab,setTab]=useState("flow");
-  window.__cpSetTab=setTab;
-  return h("div",{className:"cp-stage-flow", id:"board-inner"}, tab==="flow" ? h(Canvas) : h(BlueprintFull));
-}
-function Tabs(){
-  const [tab,setTab]=useState("flow");
-  const pick=t=>{ setTab(t); if(window.__cpSetTab) window.__cpSetTab(t); };
-  const btn=(id,label,svg)=>h("button",{className:"cp-tab"+(tab===id?" on":""), onClick:()=>pick(id)}, svg, label);
-  return h("div",{className:"cp-tabs"},
+function DarkTabs(props){
+  const tab=props.tab, setTab=props.setTab;
+  const btn=(id,label,svg)=>h("button",{className:"cp-dtab"+(tab===id?" on":""), onClick:function(){ setTab(id); }}, svg, label);
+  return h("div",{className:"cp-dtabs"},
     btn("flow","Flowchart", h("svg",{viewBox:"0 0 16 16",fill:"none",stroke:"currentColor",strokeWidth:1.6},h("rect",{x:5.5,y:1.5,width:5,height:3.2,rx:1}),h("rect",{x:1.5,y:10.5,width:5,height:3.2,rx:1}),h("rect",{x:9.5,y:10.5,width:5,height:3.2,rx:1}),h("path",{d:"M8 4.7v2.6M8 7.3H4v3.2M8 7.3h4v3.2"}))),
     btn("bp","Service Blueprint", h("svg",{viewBox:"0 0 16 16",fill:"none",stroke:"currentColor",strokeWidth:1.6},h("rect",{x:1.5,y:1.5,width:13,height:13,rx:1.5}),h("path",{d:"M1.5 6h13M1.5 10.5h13M6 1.5v13"})))
   );
 }
-
-createRoot(document.getElementById("tabs")).render(h(Tabs));
+function Board(){
+  const [tab,setTab]=useState("flow");
+  return h("div",{className:"cp-stage-flow", id:"board-inner"},
+    h(DarkTabs,{tab:tab,setTab:setTab}),
+    tab==="flow" ? h(Canvas) : h(BlueprintFull)
+  );
+}
 createRoot(document.getElementById("board")).render(h(Board));
 </script>
 </body>
