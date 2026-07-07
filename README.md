@@ -53,6 +53,14 @@ dristi/                GENERATED (dristiPage): the DRISTI platform page — live
                        growth chart, journey, race, state/district deployment tabs, board.
 approach/              GENERATED (approachPage): people-centric lens + 3 pillars +
                        unit-of-change. NOT IN NAV YET (awaiting user review).
+cheque-journey/        HAND-AUTHORED (index.html, NOT build-generated): interactive map
+                       of the §138 cheque-bounce court process. A single connected
+                       flowchart + a service blueprint, built with React Flow + dagre
+                       loaded from esm.sh (no bundler) via an importmap; layout/edges
+                       auto-routed. Left column carries the per-stage story (syncs on
+                       scroll); a plain-language glossary sits below. Self-contained:
+                       inline CSS + one <script type="module">; only /cheque-journey/ is
+                       added to the sitemap urls array in build-jobs.js. NOT IN NAV YET.
 careers/               GENERATED (careersPage/careerPage): open-roles page + one page per
                        role. NOT IN NAV YET (awaiting user review); listings are DRAFTS.
 team/                  GENERATED redirect stub → /about/#team (teamPage() in build script).

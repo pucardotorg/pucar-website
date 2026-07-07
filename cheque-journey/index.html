@@ -4,15 +4,30 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>The Journey of a Cheque-Bounce Case | PUCAR</title>
-<meta name="description" content="An interactive flowchart and service blueprint of what actually happens to a cheque-bounce (§138 NI Act) complaint once it enters the court system." />
-<link rel="canonical" href="https://pucar.netlify.app/court-process/" />
+<meta name="description" content="A step-by-step, interactive map of what actually happens to a cheque-bounce (§138 NI Act) complaint in an Indian court, from a dishonoured cheque to the day the respondent stands before a judge." />
+<link rel="canonical" href="https://pucar.netlify.app/cheque-journey/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="PUCAR" />
+<meta property="og:title" content="The Journey of a Cheque-Bounce Case | PUCAR" />
+<meta property="og:description" content="A step-by-step, interactive flowchart and service blueprint of the §138 cheque-dishonour court process in India." />
+<meta property="og:url" content="https://pucar.netlify.app/cheque-journey/" />
+<meta property="og:image" content="https://pucar.netlify.app/assets/graph-photo.webp" />
+<meta property="og:image:width" content="1920" />
+<meta property="og:image:height" content="1080" />
+<meta property="og:image:type" content="image/webp" />
+<meta property="og:image:alt" content="The Journey of a Cheque-Bounce Case | PUCAR" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="The Journey of a Cheque-Bounce Case | PUCAR" />
+<meta name="twitter:description" content="A step-by-step, interactive flowchart and service blueprint of the §138 cheque-dishonour court process in India." />
+<meta name="twitter:image" content="https://pucar.netlify.app/assets/graph-photo.webp" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"The Journey of a Cheque-Bounce Case","description":"An interactive flowchart and service blueprint of the §138 cheque-dishonour court process in India, mapped in Kerala."}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="/css/style.css" />
 <link rel="stylesheet" href="https://esm.sh/@xyflow/react@12.3.5/dist/style.css" />
-<link rel="icon" type="image/png" href="assets/pucar-new-favicon.png" />
-<link rel="apple-touch-icon" href="assets/pucar-new-favicon.png" />
+<link rel="icon" type="image/png" href="/assets/pucar-new-favicon.png" />
+<link rel="apple-touch-icon" href="/assets/pucar-new-favicon.png" />
 
 <style>
 :root{ --indigo:#141732; --indigo-2:#1b1f3f; --paper2:#F4EFE6;
@@ -40,7 +55,7 @@
 .cp-fstory .who{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
 .cp-fstory .who .c{ display:inline-flex; align-items:center; gap:7px; font:600 .74rem var(--font-body); color:rgba(244,239,230,.88); background:rgba(244,239,230,.07); border:1px solid rgba(244,239,230,.14); border-radius:100px; padding:5px 12px 5px 9px; }
 .cp-fstory .who .c svg{ width:14px; height:14px; opacity:.9; }
-.cp-fstory p{ font-family:var(--font-display); font-weight:500; font-size:clamp(1.06rem,1.35vw,1.28rem); line-height:1.52; color:rgba(244,239,230,.9); }
+.cp-fstory p{ font-family:var(--font-body); font-weight:400; font-size:clamp(1rem,1.05vw,1.12rem); line-height:1.65; color:rgba(244,239,230,.84); }
 .cp-fstory i{ display:block; margin-top:1em; font-family:var(--font-body); font-style:normal; font-size:.9rem; line-height:1.55; color:rgba(244,239,230,.6); padding-left:13px; border-left:1px solid rgba(244,239,230,.22); }
 .cp-fstory b{ color:var(--paper2); font-weight:600; }
 
@@ -111,26 +126,36 @@
 .cp-bp-div::after{ content:""; flex:1; height:1px; background:repeating-linear-gradient(90deg,rgba(244,239,230,.35) 0 7px,transparent 7px 14px); }
 
 @media (max-width:840px){ .cp-scrolly{ grid-template-columns:1fr; } .cp-fstory{ position:static; margin-bottom:8px; } }
+
+/* plain-language glossary */
+.cp-glossary-in{ max-width:1240px; margin:0 auto; padding:clamp(48px,7vw,88px) clamp(20px,5vw,64px); }
+.cp-gloss-h{ font-family:var(--font-display); font-weight:500; font-size:clamp(1.7rem,3.2vw,2.4rem); margin:8px 0 8px; }
+.cp-gloss-sub{ color:var(--ink-soft); font-size:1.02rem; line-height:1.6; max-width:60ch; margin-bottom:34px; }
+.cp-gloss-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px clamp(30px,4vw,64px); margin:0; }
+.cp-gloss-grid > div{ border-top:1px solid var(--line); padding-top:15px; }
+.cp-gloss-grid dt{ font-family:var(--font-display); font-weight:600; font-size:1.08rem; color:var(--ink); margin-bottom:5px; }
+.cp-gloss-grid dd{ margin:0; font-size:.97rem; line-height:1.55; color:var(--ink-soft); }
+@media (max-width:720px){ .cp-gloss-grid{ grid-template-columns:1fr; } }
 </style>
 </head>
 <body class="job-page">
-<script src="js/nav.js" defer></script>
-<script src="js/mobile-nav.js" defer></script>
+<script src="/js/nav.js" defer></script>
+<script src="/js/mobile-nav.js" defer></script>
 
 <header class="site-header">
   <a class="logo" href="/">
-    <img class="logo-light logo-light-long" src="assets/pucar-normal-expanded.png" alt="PUCAR: Public Collective for Avoidance and Resolution of Disputes" width="777" height="93" />
-    <img class="logo-light logo-light-short" src="assets/logo-pucar-green.avif" alt="PUCAR" width="401" height="100" />
-    <img class="logo-dark logo-dark-long" src="assets/pucar-white-expanded.avif" alt="PUCAR: Public Collective for Avoidance and Resolution of Disputes" width="835" height="100" />
-    <img class="logo-dark logo-dark-short" src="assets/pucar-white-short.png" alt="PUCAR" width="379" height="87" />
-    <img class="logo-p" src="assets/pacar-p-icon.png" alt="PUCAR" width="250" height="250" />
+    <img class="logo-light logo-light-long" src="/assets/pucar-normal-expanded.png" alt="PUCAR: Public Collective for Avoidance and Resolution of Disputes" width="777" height="93" />
+    <img class="logo-light logo-light-short" src="/assets/logo-pucar-green.avif" alt="PUCAR" width="401" height="100" />
+    <img class="logo-dark logo-dark-long" src="/assets/pucar-white-expanded.avif" alt="PUCAR: Public Collective for Avoidance and Resolution of Disputes" width="835" height="100" />
+    <img class="logo-dark logo-dark-short" src="/assets/pucar-white-short.png" alt="PUCAR" width="379" height="87" />
+    <img class="logo-p" src="/assets/pacar-p-icon.png" alt="PUCAR" width="250" height="250" />
   </a>
   <div class="brand-switch">
     <button class="brand-switch-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Visit Agami and OpenNyAI"><svg viewBox="0 0 10 6" width="11" height="7" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <div class="brand-menu" role="menu" aria-label="Agami missions">
       <p class="brand-menu-label">Also visit</p>
-      <a class="brand-menu-item" role="menuitem" href="https://www.agami.in" target="_blank" rel="noopener"><img src="assets/agami-logo.svg" alt="Agami" width="692" height="162" /><span class="brand-menu-desc">A movement of ideas and people reshaping law and justice in India. PUCAR is one of its collaborative missions.</span></a>
-      <a class="brand-menu-item" role="menuitem" href="https://opennyai.org" target="_blank" rel="noopener"><img src="assets/opennyai-logo.svg" alt="OpenNyAI" width="506" height="101" /><span class="brand-menu-desc">A sibling Agami mission building open AI public goods to transform how India accesses justice.</span></a>
+      <a class="brand-menu-item" role="menuitem" href="https://www.agami.in" target="_blank" rel="noopener"><img src="/assets/agami-logo.svg" alt="Agami" width="692" height="162" /><span class="brand-menu-desc">A movement of ideas and people reshaping law and justice in India. PUCAR is one of its collaborative missions.</span></a>
+      <a class="brand-menu-item" role="menuitem" href="https://opennyai.org" target="_blank" rel="noopener"><img src="/assets/opennyai-logo.svg" alt="OpenNyAI" width="506" height="101" /><span class="brand-menu-desc">A sibling Agami mission building open AI public goods to transform how India accesses justice.</span></a>
     </div>
   </div>
   <div class="nav-cluster"><nav class="site-nav main-nav is-collapsed"><button class="nav-toggle" type="button" data-nav="main"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 4h12M2 8h12M2 12h12"/></svg>Main Menu</button>
@@ -169,10 +194,33 @@
 
 <div id="board"></div>
 
+<section class="cp-glossary">
+  <div class="cp-glossary-in">
+    <p class="beat-eyebrow">Plain-language glossary</p>
+    <h2 class="cp-gloss-h">The jargon, decoded</h2>
+    <p class="cp-gloss-sub">The court process runs on a vocabulary of its own. Here is what the terms on this page actually mean.</p>
+    <dl class="cp-gloss-grid">
+      <div><dt>§138, Negotiable Instruments Act</dt><dd>The law that makes issuing a cheque that later bounces a criminal offence, and sets out how the complaint is filed and tried.</dd></div>
+      <div><dt>Return memo</dt><dd>The slip a bank issues when a cheque is dishonoured, stating why it didn't clear. It is the founding piece of evidence for the case.</dd></div>
+      <div><dt>Scrutiny &amp; the FSO</dt><dd>The court's first check that a new complaint is complete and correctly filed, carried out by the Filing Scrutiny Officer (a court clerk) or the judge.</dd></div>
+      <div><dt>Registration &amp; PCR number</dt><dd>Logging the complaint into the court's records. It is entered in the Private Complaint Register (PCR) and given a number that tracks it thereafter.</dd></div>
+      <div><dt>Cognizance</dt><dd>The judge formally deciding there is enough in the complaint to proceed, at which point a private complaint becomes a criminal case.</dd></div>
+      <div><dt>Summons</dt><dd>The court's official order telling the respondent to appear on a given date.</dd></div>
+      <div><dt>Process fee</dt><dd>The charge the complainant pays to cover the cost of preparing and delivering the summons.</dd></div>
+      <div><dt>RPAD &amp; AD card</dt><dd>Registered Post with Acknowledgement Due: registered post whose acknowledgement-due (AD) card is signed on delivery and returned to court as proof of service.</dd></div>
+      <div><dt>CIS</dt><dd>The Case Information System, the software that tracks the status, dates and orders of every case. In Kerala it is integrated with e-filing.</dd></div>
+      <div><dt>Vakalat</dt><dd>The document by which a litigant authorises an advocate to represent them in the case.</dd></div>
+      <div><dt>Bail &amp; surety</dt><dd>Bail is the accused's conditional release pending trial; a surety, a person or a cash deposit, guarantees they will keep attending hearings.</dd></div>
+      <div><dt>BW / NBW</dt><dd>A Bailable or Non-Bailable Warrant: an order to secure the respondent's presence when they fail to appear despite being summoned.</dd></div>
+      <div><dt>Proclamation</dt><dd>A public notice, published in a newspaper, ordering a person who is evading the court to appear, used when a warrant cannot be executed.</dd></div>
+    </dl>
+  </div>
+</section>
+
 <footer class="site-footer">
   <div class="footer-top">
-    <img class="logo logo-long" src="assets/pucar-white-expanded.avif" alt="PUCAR: Public Collective for Avoidance and Resolution of Disputes" width="835" height="100" />
-    <img class="logo logo-short" src="assets/pucar-white-short.png" alt="PUCAR" width="379" height="87" />
+    <img class="logo logo-long" src="/assets/pucar-white-expanded.avif" alt="PUCAR: Public Collective for Avoidance and Resolution of Disputes" width="835" height="100" />
+    <img class="logo logo-short" src="/assets/pucar-white-short.png" alt="PUCAR" width="379" height="87" />
     <p>PUCAR is an unregistered non-profit public mission facilitating a collective of individuals and organizations to contribute their experience and expertise to advance new ideas and approaches in dispute resolution systems.</p>
     <div class="footer-social">
       <a href="https://github.com/pucardotorg" target="_blank" rel="noopener" aria-label="PUCAR on GitHub"><svg viewBox="0 0 16 16" width="17" height="17" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.42 7.42 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
@@ -218,7 +266,7 @@ const PROCESS = [
     ], edges:[{from:"S",to:"A"},{from:"A",to:"B"},{from:"B",to:"E"}] },
 
   { id:"scrutiny", label:"Scrutiny", title:"The court checks the paperwork", actors:["courtstaff","advocate"],
-    story:"Before a case is allowed in, a <b>Filing Scrutiny Officer</b> or the judge examines it for defects. This is the first gate, and a common place for a case to bounce back and forth before it ever really starts.",
+    story:"Before a case is allowed in, it goes through <b>scrutiny</b>: a Filing Scrutiny Officer, the court clerk who vets new filings, or the judge, checks that the complaint is complete and correctly filed. This is the first gate, and a common place for a case to bounce back and forth before it ever really starts.",
     nodes:[
       {id:"A",kind:"step",label:"Scrutiny by the FSO / judge",a:"courtstaff"},
       {id:"D",kind:"decision",label:"Defect in the filing?"},
@@ -236,7 +284,7 @@ const PROCESS = [
     ], edges:[{from:"A",to:"B"},{from:"B",to:"C"},{from:"C",to:"E"}] },
 
   { id:"admission", label:"Admission", title:"The judge takes cognizance", actors:["courtstaff","judge"],
-    story:"Here the case crosses a threshold. When the judge <b>takes cognizance</b>, the private complaint is formally converted into a criminal case, and the machinery for summoning the respondent begins.",
+    story:"Here the case crosses a threshold. When the judge <b>takes cognizance</b>, formally deciding there is enough in the complaint to proceed, the private complaint is converted into a criminal case, and the machinery for summoning the respondent begins.",
     nodes:[
       {id:"A",kind:"step",label:"File placed before the judge",a:"courtstaff"},
       {id:"B",kind:"step",label:"Judge takes cognizance of the case",a:"judge"},
@@ -244,7 +292,7 @@ const PROCESS = [
     ], edges:[{from:"A",to:"B"},{from:"B",to:"E"}] },
 
   { id:"summons", label:"Issuance of Summons", title:"Summoning the respondent", actors:["judge","courtstaff","litigant"],
-    story:"Admission triggers a long, mostly invisible relay inside the court office: fees are checked, an order is drafted and signed, the file is dressed for the post, and a physical summons finally leaves the building.<i>In Kerala, e-filing and the CIS are integrated, so hearing dates flow straight into the system.</i>",
+    story:"Admission triggers a long, mostly invisible relay inside the court office. A <b>summons</b>, the court's official order telling the respondent to appear, has to be prepared: the <b>process fee</b> that covers sending it is checked, an order is drafted and signed, the file is dressed for the post, and a physical summons finally leaves the building.<i>In Kerala, e-filing and the CIS, the Case Information System that tracks every case online, are integrated, so hearing dates flow straight into the system.</i>",
     nodes:[
       {id:"A",kind:"step",label:"Judge orders summons & sets hearing date",a:"judge"},
       {id:"D",kind:"decision",label:"Sufficient process fee paid?"},
@@ -257,7 +305,7 @@ const PROCESS = [
     ], edges:[{from:"A",to:"D"},{from:"D",to:"P",label:"No"},{from:"P",to:"B"},{from:"D",to:"B",label:"Yes"},{from:"B",to:"C"},{from:"C",to:"E"},{from:"E",to:"F"},{from:"F",to:"G"}] },
 
   { id:"service", label:"Service of Summons", title:"Reaching the respondent", actors:["external","courtstaff","judge","respondent"],
-    story:"Now the case leaves the court's hands and rides on the postal system. Whether the respondent ever learns they're being sued comes down to a postman, an address, and who happens to be home. This is where §138 cases most often stall.<i>The responsibility to provide an updated, correct address rests with the complainant.</i>",
+    story:"Now the case leaves the court's hands and rides on the postal system, sent by <b>RPAD</b>, registered post that returns an acknowledgement-due (AD) card as proof of delivery. Whether the respondent ever learns they're being sued comes down to a postman, an address, and who happens to be home. This is where §138 cases most often stall.<i>The responsibility to provide an updated, correct address rests with the complainant.</i>",
     nodes:[
       {id:"A",kind:"step",label:"Postman delivers to last known address",a:"external"},
       {id:"D1",kind:"decision",label:"Address correct?"},
@@ -288,7 +336,7 @@ const PROCESS = [
     ], edges:[{from:"A",to:"S",label:"Yes"},{from:"A",to:"B",label:"No"},{from:"B",to:"C",label:"Yes"},{from:"B",to:"D",label:"No"},{from:"D",to:"E"},{from:"E",to:"F",label:"Yes"},{from:"E",to:"G",label:"No"}] },
 
   { id:"plea-bail", label:"Plea & Bail", title:"Plea, bail, and the order", actors:["respondent","judge","courtstaff"],
-    story:"With the respondent finally in the room, the case takes its recognisable courtroom shape: an appearance is entered, a plea recorded, and bail arranged. A quiet detail with real financial stakes hides here: what happens to a cash surety depends entirely on whether the accused is ultimately convicted.",
+    story:"With the respondent finally in the room, the case takes its recognisable courtroom shape. The lawyer files a <b>vakalat</b>, the document authorising them to act, a plea is recorded, and <b>bail</b> is arranged against a <b>surety</b>, a person or a cash deposit guaranteeing the accused will keep attending. A quiet detail with real financial stakes hides here: what happens to a cash surety depends entirely on whether the accused is ultimately convicted.",
     nodes:[
       {id:"A",kind:"step",label:"Respondent files vakalat, plea, bail application",a:"respondent"},
       {id:"B",kind:"step",label:"Documents & bail bond submitted",a:"courtstaff"},
