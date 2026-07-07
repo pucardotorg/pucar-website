@@ -1010,7 +1010,6 @@ function tenUnlocksHtml() {
     '    <button type="button" class="uf" data-dim="seamlessness">Seamlessness</button>\n' +
     "  </div>\n" +
     '  <div class="unlocks-grid">\n' + cards + "\n  </div>\n" +
-    '  <p class="unlocks-foot">Six of the ten replicate across states with little change; four need local adaptation. The platform behind them, <a href="https://pucar.gitbook.io/dristi" target="_blank" rel="noopener">DRISTI</a>, is open-source — but technology alone won’t replicate this: it took committed court leadership, policy change and a steady, data-driven governance cadence.</p>\n' +
     '  <script src="/js/unlocks.js" defer></script>\n' +
     "</section>\n";
 }
@@ -1150,11 +1149,6 @@ function dristiPage() {
 "    <p>DRISTI, the Dispute Resolution Intelligent System for Transformation, is the open-source platform that powers PUCAR\u2019s 24x7 Open and Networked Courts. It is not a digitisation of paper processes: it redesigns the court journey end to end, so that filing, scrutiny, summons, bail, hearings and orders all work the way you would build them today, natively digital, rule-based, and connected to the institutions around the court.</p>\n" +
 "    <p>Built in the open as a Digital Public Good, DRISTI is PUCAR\u2019s contribution to Phase III of India\u2019s eCourts project, which calls for exactly this: open, interoperable infrastructure, shared data standards, and reimagined processes. A litigant should be proactively informed, a lawyer should file in minutes from anywhere, a judge should act on structured information, and none of them should run pillar to post.</p>\n" +
 "  </article>\n" +
-'  <div class="about-stats dristi-hero-stats">\n' +
-'    <div class="about-stat"><span class="about-stat-num">10%</span><span class="about-stat-label">of India\u2019s criminal pendency is cheque dishonour, the first case type</span></div>\n' +
-'    <div class="about-stat"><span class="about-stat-num">600 \u2192 140</span><span class="about-stat-label">days, filing to disposal, in the redesigned journey</span></div>\n' +
-'    <div class="about-stat"><span class="about-stat-num">24x7</span><span class="about-stat-label">the court accepts filings and requests around the clock</span></div>\n' +
-"  </div>\n" +
 '  <div class="job-body prose about-steps-head"><h2>Five levers of transformation</h2></div>\n' +
 '  <div class="about-steps dristi-steps">\n' + leversHtml + "\n  </div>\n" +
 "</main>\n" +

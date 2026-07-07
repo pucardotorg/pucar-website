@@ -5694,7 +5694,7 @@ button.circle-card{
 .u-efficiency{ color:#30CF8C; }
 .u-predictability{ color:#E9B94A; }
 .u-seamlessness{ color:#DA6EAA; }
-.unlock-title{ font-family:var(--font-display); font-size:1.12rem; line-height:1.22; font-weight:600; }
+.unlock-title{ font-family:var(--font-display); font-size:1.35rem; line-height:1.15; font-weight:500; }
 .unlock-metric{ align-self:flex-start; display:inline-flex; align-items:center; gap:6px; font-size:.8rem; font-weight:700; color:var(--green); background:rgba(48,207,140,.12); padding:4px 11px; border-radius:99px; }
 .unlock-cue{ font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:rgba(251,248,242,.4); }
 .unlock-cue .uc-open{ display:none; color:var(--green); }
