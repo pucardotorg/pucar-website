@@ -5796,4 +5796,9 @@ body.jdm-open{ overflow:hidden; }
 .jdm-body .job-body{ margin-top:4px; }
 .jdm-cta{ margin-top:24px; }
 .career-row{ cursor:pointer; }
+.career-openings{ display:inline-block; vertical-align:middle; font-family:var(--font-body); font-weight:700;
+  font-size:.7rem; letter-spacing:.04em; text-transform:uppercase; color:#08281b; background:var(--green);
+  padding:3px 10px; border-radius:999px; white-space:nowrap; }
+.career-row-title .career-openings{ margin-left:8px; position:relative; top:-1px; }
+.jdm-openings{ margin:0 0 12px; }
 @media (prefers-reduced-motion:reduce){ .jdm-dialog{ animation:none; } }

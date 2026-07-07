@@ -1557,6 +1557,11 @@ function careersPage() {
     ["Permanent", "Permanent roles", "Full-time seats at the heart of the mission."]
   ];
   const open = careerRoles.filter(function (r) { return r.status === "Open"; });
+  function openingsLabel(r) {
+    var n = parseInt(r.positions, 10);
+    if (!n || n < 1) n = 1;
+    return n + (n === 1 ? " position open" : " positions open");
+  }
   const groupsHtml = GROUPS.map(function (g) {
     const rows = open.filter(function (r) { return r.type === g[0]; });
     if (!rows.length) return "";
@@ -1564,7 +1569,8 @@ function careersPage() {
       '    <div class="career-group-head"><h3>' + esc(g[1]) + '</h3><p>' + esc(g[2]) + "</p></div>\n" +
       rows.map(function (r) {
         return '    <a class="career-row" href="' + r.url + '" data-jd="' + esc(r.slug) + '">\n' +
-          '      <span class="career-row-main"><span class="career-row-title">' + esc(r.title) + '</span>' +
+          '      <span class="career-row-main"><span class="career-row-title">' + esc(r.title) +
+          ' <span class="career-openings">' + openingsLabel(r) + '</span></span>' +
           '<span class="career-row-sum">' + esc(r.summary) + "</span></span>\n" +
           '      <span class="career-row-meta"><span>' + esc(r.commitment || "") + "</span><span>" + esc(r.location || "") + "</span></span>\n" +
           '      <span class="career-row-arrow" aria-hidden="true">&rarr;</span>\n' +
@@ -1577,6 +1583,7 @@ function careersPage() {
     return '<div class="jd-src" id="jd-' + esc(r.slug) + '" hidden>' +
       '<p class="beat-eyebrow jdm-eyebrow">' + esc(r.type) + ' role</p>' +
       '<h2 class="jdm-title">' + esc(r.title) + '</h2>' +
+      '<p class="jdm-openings"><span class="career-openings">' + openingsLabel(r) + '</span></p>' +
       '<p class="jdm-summary">' + esc(r.summary) + '</p>' +
       '<ul class="job-chips">' +
         [r.commitment, r.location].concat(r.tags || []).filter(Boolean).map(function (c) { return '<li>' + esc(c) + '</li>'; }).join("") +
