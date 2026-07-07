@@ -316,7 +316,7 @@
   }
 
   /* ---- dark-section detection ---- */
-  var darkSections = document.querySelectorAll(".collaborate, .site-footer, .policy-band");
+  var darkSections = document.querySelectorAll(".collaborate, .site-footer, .policy-band, .cp-dark");
   if (!darkSections.length) return;
   var ticking = false;
   function update() {
