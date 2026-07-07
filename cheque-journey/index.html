@@ -207,8 +207,19 @@
 @keyframes cpBtn{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.04); } }
 .cp-fs-big svg{ width:26px; height:26px; }
 /* floating story overlay (fades in per stage) */
-.cp-story-ov{ position:absolute; left:16px; top:84px; z-index:5; max-width:min(320px,42vw); pointer-events:none; padding:18px 20px; border-radius:16px; background:rgba(12,14,34,.82); backdrop-filter:blur(8px); border:1px solid rgba(244,239,230,.12); box-shadow:0 24px 60px -30px #000; animation:cpfade .45s ease; }
+.cp-story-ov{ position:absolute; left:16px; top:84px; z-index:5; max-width:min(320px,42vw); pointer-events:none; padding:18px 20px; border-radius:16px; background:rgba(12,14,34,.82); backdrop-filter:blur(8px); border:1px solid rgba(244,239,230,.12); box-shadow:0 24px 60px -30px #000; animation:cpfade .45s ease; transition:transform .4s cubic-bezier(.4,0,.2,1), opacity .3s ease; }
+.cp-story-ov.min{ transform:translateX(calc(-100% - 30px)); opacity:0; }
 @keyframes cpfade{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+.cp-story-col{ position:absolute; top:10px; right:11px; width:26px; height:26px; display:grid; place-items:center; cursor:pointer; pointer-events:auto; border:1px solid rgba(244,239,230,.16); background:rgba(244,239,230,.06); color:rgba(244,239,230,.82); border-radius:8px; font:700 1.05rem var(--font-body); line-height:1; }
+.cp-story-col:hover{ color:var(--paper2); background:rgba(244,239,230,.13); }
+.cp-story-handle{ position:absolute; left:0; top:96px; z-index:6; width:30px; height:48px; display:grid; place-items:center; cursor:pointer; border:1px solid rgba(244,239,230,.16); border-left:0; background:rgba(20,23,50,.92); color:var(--green); border-radius:0 12px 12px 0; box-shadow:0 12px 30px -14px #000; animation:cpHandleIn .3s ease; }
+.cp-story-handle:hover{ background:rgba(20,23,50,1); }
+@keyframes cpHandleIn{ from{ opacity:0; transform:translateX(-8px); } to{ opacity:1; transform:none; } }
+.cp-exithint{ position:absolute; bottom:62px; right:16px; z-index:9; max-width:292px; background:rgba(20,23,50,.95); border:1px solid rgba(48,207,140,.4); border-radius:12px; padding:11px 14px; font:600 .82rem/1.45 var(--font-body); color:var(--paper2); box-shadow:0 16px 40px -14px #000; animation:cpHintIn .4s ease; }
+.cp-exithint kbd{ font:700 .72rem var(--font-body); background:rgba(244,239,230,.14); border:1px solid rgba(244,239,230,.26); border-radius:5px; padding:1px 6px; }
+.cp-exithint b{ color:var(--green); }
+.cp-exithint::after{ content:""; position:absolute; right:36px; bottom:-8px; width:14px; height:14px; background:rgba(20,23,50,.95); border-right:1px solid rgba(48,207,140,.4); border-bottom:1px solid rgba(48,207,140,.4); transform:rotate(45deg); }
+@keyframes cpHintIn{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:none; } }
 .cp-story-ov .idx{ display:inline-flex; align-items:center; gap:9px; font:700 .68rem var(--font-body); letter-spacing:.14em; text-transform:uppercase; color:var(--green); margin-bottom:11px; }
 .cp-story-ov .idx::before{ content:""; width:20px; height:1px; background:var(--green); opacity:.6; }
 .cp-story-ov h3{ font-family:var(--font-display); font-weight:500; font-size:clamp(1.5rem,2.4vw,2.05rem); line-height:1.08; color:var(--paper2); margin-bottom:13px; }
@@ -294,9 +305,9 @@
         <div class="ci-top">
           <p class="beat-eyebrow ci-eyebrow">A Cheque's Journey</p>
           <div class="ci-heads" aria-live="polite">
-            <h2 class="ci-h" data-b="0">Meet <b>Lily Abraham</b>.</h2>
-            <h2 class="ci-h" data-b="1">The supermarket owner writes her a cheque.</h2>
-            <h2 class="ci-h" data-b="2">Twenty-five thousand rupees, for the first batch of goods.</h2>
+            <h2 class="ci-h" data-b="0">Meet <b>Lily Abraham</b>, whose jam is a local favourite.</h2>
+            <h2 class="ci-h" data-b="1">A supermarket owner writes her a cheque for 10 cases of it.</h2>
+            <h2 class="ci-h" data-b="2">Twenty-five thousand rupees for the order.</h2>
             <h2 class="ci-h" data-b="3">She takes it to her bank to pay it in.</h2>
             <h2 class="ci-h" data-b="4">Insufficient funds. The cheque has bounced.</h2>
             <h2 class="ci-h" data-b="5">And so begins its long journey through the courts.</h2>
@@ -593,6 +604,8 @@ function Canvas(){
   const [active,setActive]=useState(PROCESS[0].id);
   const [isFs,setIsFs]=useState(false);
   const [cssFs,setCssFs]=useState(false);
+  const [storyMin,setStoryMin]=useState(false);
+  const [showExitHint,setShowExitHint]=useState(false);
   const fsOn = isFs || cssFs;
   const cssRef=useRef(false), isRef=useRef(false), autoRef=useRef(false);
   useEffect(()=>{ cssRef.current=cssFs; },[cssFs]);
@@ -609,7 +622,8 @@ function Canvas(){
   function toGlossary(){ exitFs(); setTimeout(function(){ var g=document.getElementById("glossary"); if(g) g.scrollIntoView({behavior:"smooth"}); },100); }
   useEffect(()=>{ const onFs=()=>setIsFs(!!document.fullscreenElement); document.addEventListener("fullscreenchange",onFs); document.addEventListener("webkitfullscreenchange",onFs); return ()=>{ document.removeEventListener("fullscreenchange",onFs); document.removeEventListener("webkitfullscreenchange",onFs); }; },[]);
   useEffect(()=>{ const onKey=(e)=>{ if(e.key==="Escape") exitFs(); }; document.addEventListener("keydown",onKey); return ()=>document.removeEventListener("keydown",onKey); },[]);
-  useEffect(()=>{ const el=paneRef.current; if(!el||!window.IntersectionObserver) return; const io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting && e.intersectionRatio>=0.62){ if(!autoRef.current && !cssRef.current && !isRef.current){ autoRef.current=true; setCssFs(true); } } else if(!e.isIntersecting){ autoRef.current=false; } }); },{threshold:[0,0.62]}); io.observe(el); return function(){ io.disconnect(); }; },[]);
+  useEffect(()=>{ const el=paneRef.current; if(!el||!window.IntersectionObserver) return; const io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting && e.intersectionRatio>=0.62){ if(!autoRef.current && !cssRef.current && !isRef.current){ autoRef.current=true; setCssFs(true); } } }); },{threshold:[0,0.62]}); io.observe(el); return function(){ io.disconnect(); }; },[]);
+  useEffect(()=>{ if(fsOn){ setShowExitHint(true); const t=setTimeout(function(){ setShowExitHint(false); },6000); return function(){ clearTimeout(t); }; } setShowExitHint(false); setStoryMin(false); },[fsOn]);
   const s=PROCESS.find(p=>p.id===active), idx=PROCESS.findIndex(p=>p.id===active);
   return h("div",{className:"cp-canvas"+(cssFs?" cp-fs-on":""), ref:paneRef},
     h(ReactFlow,{ defaultNodes:ONE.nodes, defaultEdges:ONE.edges, nodeTypes:NT, onInit:onInit, onMove:recompute,
@@ -625,12 +639,15 @@ function Canvas(){
       h("button",{className:"cp-zb", onClick:()=>setZoom(2)},"2×"),
       h("button",{className:"cp-zb", onClick:()=>setZoom(3)},"3×")
     ) : null,
-    fsOn ? h("aside",{className:"cp-story-ov", key:active},
+    fsOn ? h("aside",{className:"cp-story-ov"+(storyMin?" min":""), key:active},
+      h("button",{className:"cp-story-col", onClick:()=>setStoryMin(true), title:"Hide details", "aria-label":"Hide details"}, "‹"),
       h("div",{className:"idx"}, "Stage "+String(idx+1).padStart(2,"0")+" · "+s.label),
       h("h3",null,s.title),
       h("div",{className:"who"}, s.actors.map(a=>h("span",{key:a,className:"c"}, Icon(ACTOR_ICON[a]), ACTOR[a]))),
       h("p",{dangerouslySetInnerHTML:{__html:s.story}})
     ) : null,
+    (fsOn && storyMin) ? h("button",{className:"cp-story-handle", onClick:()=>setStoryMin(false), title:"Show the story", "aria-label":"Show the story"}, h("svg",{viewBox:"0 0 16 16",width:15,height:15,fill:"none",stroke:"currentColor",strokeWidth:2,strokeLinecap:"round",strokeLinejoin:"round"},h("path",{d:"M6 3l5 5-5 5"}))) : null,
+    (fsOn && showExitHint) ? h("div",{className:"cp-exithint"}, h("span",null,"Done exploring? Press ", h("kbd",null,"Esc"), " or tap ", h("b",null,"Exit full screen"), " below.")) : null,
     fsOn ? h("div",{className:"cp-legend2"},
       h("span",{className:"li"}, h("span",{className:"sw st"}),"Start"),
       h("span",{className:"li"}, h("span",{className:"sw"}),"Step"),
