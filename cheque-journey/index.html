@@ -39,14 +39,14 @@
 /* ===== cheque scrollytelling intro ===== */
 .cheque-intro{ position:relative; height:420vh; background:var(--cream); }
 .ci-sticky{ position:sticky; top:0; height:100vh; overflow:hidden; }
-.ci-inner{ position:relative; height:100%; display:grid; place-items:center; }
-.ci-top{ position:absolute; top:clamp(84px,12vh,138px); left:0; right:0; padding:0 24px; text-align:center; z-index:3; }
-.ci-eyebrow{ display:block; margin-bottom:16px; color:var(--forest); }
-.ci-heads{ position:relative; height:2.6em; max-width:24ch; margin:0 auto; }
-.ci-h{ position:absolute; left:0; right:0; top:0; margin:0; font-family:var(--font-display); font-weight:500; font-size:clamp(1.55rem,3.4vw,2.75rem); line-height:1.14; color:var(--ink); opacity:0; }
+.ci-inner{ position:relative; height:100%; }
+.ci-top{ position:absolute; top:clamp(58px,8vh,104px); left:0; right:0; padding:0 24px; text-align:center; z-index:3; }
+.ci-eyebrow{ display:block; margin-bottom:14px; color:var(--forest); }
+.ci-heads{ position:relative; height:2.5em; max-width:min(940px,92vw); margin:0 auto; }
+.ci-h{ position:absolute; inset:0; margin:0; display:flex; align-items:center; justify-content:center; text-align:center; font-family:var(--font-display); font-weight:500; font-size:clamp(1.5rem,3.1vw,2.5rem); line-height:1.16; color:var(--ink); opacity:0; }
 .ci-h b{ font-weight:600; }
-.ci-cheque{ position:relative; width:clamp(340px,58vw,820px); z-index:2; will-change:transform,opacity; }
-.ci-cheque::before{ content:""; position:absolute; inset:-14% -10%; z-index:-1; background:radial-gradient(closest-side, rgba(232,178,96,.30), transparent 72%); filter:blur(22px); }
+.ci-cheque{ position:absolute; left:50%; top:59%; width:clamp(340px,54vw,760px); transform:translate(-50%,-50%); z-index:2; will-change:transform,opacity; }
+.ci-cheque::before{ content:""; position:absolute; inset:-14% -10%; z-index:-1; background:radial-gradient(closest-side, rgba(232,178,96,.28), transparent 72%); filter:blur(22px); }
 .ci-float{ position:relative; animation:ciFloat 5s ease-in-out infinite; filter:drop-shadow(0 42px 62px rgba(36,30,26,.26)); }
 @keyframes ciFloat{ 0%,100%{ transform:translateY(-10px); } 50%{ transform:translateY(10px); } }
 .ci-chq-img{ display:block; width:100%; height:auto; border-radius:4px; }
@@ -307,7 +307,7 @@
             <img class="ci-chq-img" src="/assets/cheque-sample.svg" alt="A sample cheque made out to Lily Abraham for twenty-five thousand rupees" width="5268" height="2703" />
             <svg class="ci-chq-ovl" viewBox="0 0 5268 2703" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid meet">
               <text class="fld fld-payee" x="900" y="835">Lily Abraham</text>
-              <text class="fld fld-words" x="905" y="1150">Twenty five thousand only</text>
+              <text class="fld fld-words" x="905" y="1210">Twenty five thousand only</text>
               <text class="fld fld-num" x="4460" y="1300" text-anchor="middle">&#8377;25,000</text>
               <path class="fld-sign" d="M4270 1705 c 52 -56 96 34 146 -6 c 38 -30 18 52 76 22 c 42 -22 28 44 84 12 c 64 -34 132 24 188 -22 c 36 -30 -6 50 64 26 c 42 -14 94 -30 140 -60" fill="none" stroke="#17306b" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" pathLength="1" />
               <g class="ci-stamp">
@@ -708,7 +708,7 @@ createRoot(document.getElementById("board")).render(h(Board));
     var p = clamp((-sec.getBoundingClientRect().top) / (total||1));
     var shrink = seg(p,0.84,1);                 // cheque flies down into the flowchart
     if(cheque){
-      cheque.style.transform = "translateY("+(shrink*48)+"vh) scale("+(1 - shrink*0.94)+")";
+      cheque.style.transform = "translate(-50%,-50%) translateY("+(shrink*48)+"vh) scale("+(1 - shrink*0.94)+")";
       cheque.style.opacity = String(1 - seg(p,0.9,1));
       if(p>0.66) cheque.classList.add("stamped"); else cheque.classList.remove("stamped");
     }
