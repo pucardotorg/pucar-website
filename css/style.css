@@ -5755,22 +5755,22 @@ button.circle-card{
 .role-stat-cap{ margin-top:8px; font-size:.85rem; color:rgba(251,248,242,.6); max-width:170px; margin-inline:auto; line-height:1.35; }
 .role-benefits{ list-style:none; margin:0; padding:0; display:grid; gap:11px; }
 .role-benefits li{ position:relative; padding-left:28px; font-size:.98rem; line-height:1.45; color:rgba(251,248,242,.86); }
-.role-benefits li::before{ content:""; position:absolute; left:0; top:.2em; width:17px; height:17px; border-radius:50%; background:rgba(48,207,140,.16); }
-.role-benefits li::after{ content:""; position:absolute; left:5px; top:.42em; width:6px; height:3px; border-left:2px solid var(--green); border-bottom:2px solid var(--green); transform:rotate(-45deg); }
+.role-benefits li::before{ content:""; position:absolute; left:0; top:.15em; width:18px; height:18px; border-radius:50%;
+  background:rgba(48,207,140,.16) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.4l2.6 2.6L12 5.2' fill='none' stroke='%2330CF8C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/11px 11px no-repeat; }
 @media (max-width:640px){
   .role-card{ grid-template-columns:1fr; gap:18px; }
   .role-stat{ border-right:0; border-bottom:1px solid rgba(255,255,255,.1); padding:0 0 16px; }
 }
 
-.benefits-survey{ max-width:820px; margin:34px auto 0; padding-top:26px; border-top:1px solid rgba(255,255,255,.1); }
-.survey-eyebrow{ text-align:center; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(251,248,242,.5); margin:0 0 18px; }
-.survey-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px 40px; }
-.survey-group{ display:grid; gap:12px; }
-.survey-grp-label{ font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--green); margin:0; }
-.survey-item{ display:flex; align-items:baseline; gap:12px; }
-.survey-num{ font-family:var(--font-display); font-weight:600; font-size:1.9rem; color:var(--green); min-width:70px; line-height:1; }
-.survey-txt{ font-size:.94rem; color:rgba(251,248,242,.78); line-height:1.4; }
-.survey-src{ text-align:center; margin:20px 0 0; font-size:.8rem; color:rgba(251,248,242,.45); }
+.dristi-survey{ max-width:960px; margin:6px auto 44px; }
+.dristi-survey .beat-eyebrow{ color:var(--green); text-align:center; margin-bottom:22px; }
+.survey-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:28px 60px; }
+.survey-group{ display:grid; gap:22px; }
+.survey-grp-label{ font-size:.8rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--green); margin:0; }
+.survey-item{ display:flex; align-items:baseline; gap:18px; }
+.survey-num{ font-family:var(--font-display); font-weight:600; font-size:clamp(2.6rem,5.5vw,3.7rem); color:var(--green); min-width:118px; line-height:1; }
+.survey-txt{ font-size:1.1rem; color:rgba(251,248,242,.85); line-height:1.35; }
+.survey-src{ text-align:center; margin:28px 0 0; font-size:.82rem; color:rgba(251,248,242,.45); }
 
 @media (prefers-reduced-motion:reduce){
   .role-panel.is-active{ animation:none; }

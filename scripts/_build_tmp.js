@@ -1056,18 +1056,6 @@ function userBenefitsHtml() {
     "  </div>\n" +
     '  <div class="benefits-switch" role="tablist" aria-label="Roles">\n' + btns + "\n  </div>\n" +
     '  <div class="benefits-stage">\n' + panels + "\n  </div>\n" +
-    '  <div class="benefits-survey">\n' +
-    '    <p class="survey-eyebrow">And what they tell us</p>\n' +
-    '    <div class="survey-grid">\n' +
-    '      <div class="survey-group"><p class="survey-grp-label">Advocates</p>' +
-        '<div class="survey-item"><span class="survey-num">94%</span><span class="survey-txt">are satisfied with the overall experience</span></div>' +
-        '<div class="survey-item"><span class="survey-num">76%</span><span class="survey-txt">say it has improved the court process</span></div></div>\n' +
-    '      <div class="survey-group"><p class="survey-grp-label">Litigants</p>' +
-        '<div class="survey-item"><span class="survey-num">66%</span><span class="survey-txt">say SMS updates help them follow their case</span></div>' +
-        '<div class="survey-item"><span class="survey-num">53%</span><span class="survey-txt">say their case is progressing faster</span></div></div>\n' +
-    "    </div>\n" +
-    '    <p class="survey-src">PUCAR user survey, 2025. These figures are collected by survey, not from the live dashboard.</p>\n' +
-    "  </div>\n" +
     '  <script src="/js/benefits.js" defer></script>\n' +
     "</section>\n";
 }
@@ -1282,6 +1270,18 @@ journeyHtml + "\n" +
 '      <p class="race-note">Kaplan-Meier estimates, January 2025 filing cohort, tracked through day 417. "Rest of Kollam" is the district excluding the ON Court. Malappuram is not shown.</p>\n' +
 "    </div>\n" +
 
+'    <div class="dristi-survey">\n' +
+'      <p class="beat-eyebrow">What people tell us</p>\n' +
+'      <div class="survey-grid">\n' +
+'        <div class="survey-group"><p class="survey-grp-label">Advocates</p>' +
+    '<div class="survey-item"><span class="survey-num">94%</span><span class="survey-txt">are satisfied with the overall experience</span></div>' +
+    '<div class="survey-item"><span class="survey-num">76%</span><span class="survey-txt">say it has improved the court process</span></div></div>\n' +
+'        <div class="survey-group"><p class="survey-grp-label">Litigants</p>' +
+    '<div class="survey-item"><span class="survey-num">66%</span><span class="survey-txt">say SMS updates help them follow their case</span></div>' +
+    '<div class="survey-item"><span class="survey-num">53%</span><span class="survey-txt">say their case is progressing faster</span></div></div>\n' +
+'      </div>\n' +
+'      <p class="survey-src">PUCAR user survey, 2025. Collected by survey, not from the live dashboard.</p>\n' +
+"    </div>\n" +
 '    <div class="dristi-voices">\n' +
 '      <blockquote class="dristi-voice"><p>\u201cIn my experience, the court is completely paperless and filing is very easy. Now it only takes me 10 to 20 minutes to file a case.\u201d</p><cite data-initial="A">Asha G.V<br />Advocate, the first filer at the ON Court</cite></blockquote>\n' +
 '      <blockquote class="dristi-voice"><p>\u201cThe launch is just the beginning of the journey. Progress is not a destination, it is an ongoing journey of knowledge, debate, community and continuous refinement.\u201d</p><cite data-initial="J">Justice Raja Vijayaraghavan<br />Computer Committee, High Court of Kerala</cite></blockquote>\n' +
