@@ -28,82 +28,79 @@
 .cp-tab.on{ color:var(--ink); border-bottom-color:var(--green); font-weight:700; }
 .cp-tab.on svg{ opacity:1; color:var(--forest); }
 
-/* full-bleed dark section */
 .cp-dark{ background:var(--indigo); color:var(--paper2); padding:clamp(28px,4vw,48px) 0 clamp(44px,6vw,80px); }
 .cp-dark-in{ max-width:1240px; margin:0 auto; padding:0 clamp(16px,4vw,40px); }
-.cp-toolbar{ display:flex; justify-content:space-between; align-items:center; gap:18px; flex-wrap:wrap; margin-bottom:22px; }
-.cp-toolbar .cap{ color:rgba(244,239,230,.62); font-size:.95rem; max-width:64ch; margin:0; }
+.cp-toolbar{ display:flex; justify-content:space-between; align-items:flex-start; gap:18px; flex-wrap:wrap; margin-bottom:22px; }
+.cp-toolbar .cap{ color:rgba(244,239,230,.62); font-size:.95rem; max-width:62ch; margin:0; line-height:1.5; }
 .cp-fullbtn{ flex:0 0 auto; display:inline-flex; align-items:center; gap:8px; cursor:pointer; font:600 .84rem var(--font-body); color:var(--paper2); background:rgba(244,239,230,.08); border:1px solid rgba(244,239,230,.2); border-radius:100px; padding:9px 16px; transition:background .2s, transform .2s; }
 .cp-fullbtn:hover{ background:rgba(244,239,230,.16); transform:translateY(-1px); }
 .cp-fullbtn svg{ width:15px; height:15px; }
 
-/* ---- per-stage rows: story left (sticky), chart right ---- */
-.cp-row{ display:grid; grid-template-columns:minmax(0,320px) minmax(0,1fr); gap:clamp(22px,3vw,52px); align-items:start; padding:clamp(18px,3vw,30px) 0; }
-.cp-fstory{ position:sticky; top:26px; }
-.cp-fstory .idx{ display:inline-flex; align-items:center; gap:8px; font:700 .7rem var(--font-body); letter-spacing:.16em; text-transform:uppercase; color:var(--green); margin-bottom:12px; }
+/* two-column: sticky story left, one connected chart right */
+.cp-scrolly{ display:grid; grid-template-columns:minmax(0,330px) minmax(0,1fr); gap:clamp(24px,3vw,56px); align-items:start; }
+.cp-fstory{ position:sticky; top:88px; }
+.cp-fstory .idx{ display:inline-flex; align-items:center; gap:9px; font:700 .7rem var(--font-body); letter-spacing:.14em; text-transform:uppercase; color:var(--green); margin-bottom:12px; }
 .cp-fstory .idx::before{ content:""; width:22px; height:1px; background:var(--green); opacity:.6; }
-.cp-fstory h3{ font-family:var(--font-display); font-weight:500; font-size:clamp(1.5rem,2.4vw,2rem); line-height:1.1; color:var(--paper2); margin-bottom:14px; }
-.cp-fstory .who{ display:flex; flex-wrap:wrap; gap:7px; margin-bottom:16px; }
-.cp-fstory .who .c{ display:inline-flex; align-items:center; gap:6px; font:600 .72rem var(--font-body); color:rgba(244,239,230,.86); background:rgba(244,239,230,.07); border:1px solid rgba(244,239,230,.14); border-radius:100px; padding:4px 11px 4px 8px; }
-.cp-fstory .who .c svg{ width:13px; height:13px; }
-.cp-fstory p{ font-family:var(--font-display); font-weight:500; font-size:clamp(1.06rem,1.35vw,1.28rem); line-height:1.5; color:rgba(244,239,230,.9); }
+.cp-fstory h3{ font-family:var(--font-display); font-weight:500; font-size:clamp(1.5rem,2.4vw,2.05rem); line-height:1.1; color:var(--paper2); margin-bottom:14px; }
+.cp-fstory .who{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
+.cp-fstory .who .c{ display:inline-flex; align-items:center; gap:7px; font:600 .74rem var(--font-body); color:rgba(244,239,230,.88); background:rgba(244,239,230,.07); border:1px solid rgba(244,239,230,.14); border-radius:100px; padding:5px 12px 5px 9px; }
+.cp-fstory .who .c svg{ width:14px; height:14px; opacity:.9; }
+.cp-fstory p{ font-family:var(--font-display); font-weight:500; font-size:clamp(1.06rem,1.35vw,1.28rem); line-height:1.52; color:rgba(244,239,230,.9); }
 .cp-fstory i{ display:block; margin-top:1em; font-family:var(--font-body); font-style:normal; font-size:.9rem; line-height:1.55; color:rgba(244,239,230,.6); padding-left:13px; border-left:1px solid rgba(244,239,230,.22); }
 .cp-fstory b{ color:var(--paper2); font-weight:600; }
 
-.cp-chart{ width:100%; }
-.cp-connect{ display:flex; flex-direction:column; align-items:center; gap:4px; padding:2px 0 14px; color:rgba(244,239,230,.4); }
-.cp-connect .line{ width:0; height:26px; border-left:2px dashed rgba(244,239,230,.28); }
-.cp-connect .lab{ font:600 .68rem var(--font-body); letter-spacing:.14em; text-transform:uppercase; }
-.cp-connect svg{ width:16px; height:16px; }
+.cp-one{ width:100%; overflow-x:auto; overflow-y:hidden; }
 
-/* ---- React Flow ---- */
+/* React Flow */
 .react-flow__attribution{ display:none; }
 .react-flow__handle{ opacity:0; width:1px; height:1px; min-width:0; min-height:0; border:0; }
-.react-flow__node-card,.react-flow__node-band{ background:none; border:0; padding:0; box-shadow:none; }
+.react-flow__node-card{ background:none; border:0; padding:0; box-shadow:none; }
+.react-flow__node-band{ background:none; border:0; padding:0; box-shadow:none; pointer-events:none; }
 .react-flow__node{ font-family:var(--font-body); }
 .react-flow__controls{ box-shadow:0 10px 24px -14px #000; border-radius:10px; overflow:hidden; border:1px solid rgba(244,239,230,.16); }
 .react-flow__controls-button{ background:var(--indigo-2); border-bottom:1px solid rgba(244,239,230,.12); color:var(--paper2); }
 .react-flow__controls-button:hover{ background:#2a2f57; }
 .react-flow__controls-button svg{ fill:var(--paper2); }
 
-.rf-band{ width:100%; height:100%; border-right:1px solid rgba(244,239,230,.08); background:linear-gradient(180deg,rgba(244,239,230,.04),rgba(244,239,230,.012)); }
-.rf-band-lab{ position:absolute; top:12px; left:16px; right:12px; }
-.rf-band-lab .n{ font-family:var(--font-display); font-weight:600; font-size:.8rem; color:var(--green); }
-.rf-band-lab .t{ display:block; font-weight:600; font-size:.92rem; color:var(--paper2); margin-top:2px; }
+.rf-band{ width:100%; height:100%; pointer-events:none; border-top:1px solid rgba(244,239,230,.08); background:linear-gradient(180deg,rgba(244,239,230,.032),rgba(244,239,230,.008)); }
+.rf-band:nth-child(2n){ background:linear-gradient(180deg,rgba(244,239,230,.018),transparent); }
+.rf-band-lab{ position:absolute; top:12px; left:22px; }
+.rf-band-lab .n{ font-family:var(--font-display); font-weight:600; font-size:.82rem; color:var(--green); }
+.rf-band-lab .t{ display:block; font-weight:600; font-size:.94rem; color:rgba(244,239,230,.9); margin-top:2px; }
 
 .rfnode{ position:relative; box-sizing:border-box; }
-.rfnode.step{ width:224px; min-height:64px; padding:24px 14px 12px; border-radius:13px; font-weight:600; font-size:.86rem; line-height:1.3; color:var(--paper2); background:rgba(244,239,230,.07); border:1px solid rgba(244,239,230,.18); }
-.rfnode.start{ width:206px; min-height:56px; display:flex; align-items:center; justify-content:center; text-align:center; padding:22px 16px 10px; border-radius:14px; font-weight:700; font-size:.88rem; color:#08130d; background:var(--green); border:0; }
+.rfnode.step{ width:224px; min-height:64px; padding:25px 15px 13px; border-radius:13px; font-weight:600; font-size:.86rem; line-height:1.3; color:var(--paper2); background:rgba(244,239,230,.07); border:1px solid rgba(244,239,230,.18); }
+.rfnode.start{ width:206px; min-height:58px; display:flex; align-items:center; justify-content:center; text-align:center; padding:24px 16px 12px; border-radius:14px; font-weight:700; font-size:.88rem; color:#08130d; background:var(--green); border:0; }
 .rfnode.outcome{ width:210px; min-height:46px; display:flex; align-items:center; justify-content:center; text-align:center; padding:11px 16px; border-radius:999px; font-weight:700; font-size:.85rem; line-height:1.25; color:#cdf1e0; background:rgba(48,207,140,.16); border:1.5px solid rgba(48,207,140,.62); }
 .rfnode.decision{ display:grid; place-items:center; }
 .rfnode.decision::before{ content:""; position:absolute; inset:14px; transform:rotate(45deg); background:rgba(218,110,170,.18); border:1.5px solid rgba(218,110,170,.78); border-radius:12px; }
 .rfnode.decision .rf-label{ position:relative; z-index:1; text-align:center; font-weight:700; font-size:.82rem; line-height:1.22; color:#f4cfe4; }
-/* actor badge, top-left corner, icon + label (no edge highlight) */
-.rf-badge{ position:absolute; top:8px; left:11px; display:inline-flex; align-items:center; gap:5px; font:700 .58rem var(--font-body); letter-spacing:.05em; text-transform:uppercase; }
-.rf-badge svg{ width:12px; height:12px; }
+/* actor badge: icon + label, top-left, no edge highlight */
+.rf-badge{ position:absolute; top:9px; left:12px; display:inline-flex; align-items:center; gap:6px; font:600 .6rem var(--font-body); letter-spacing:.05em; text-transform:uppercase; }
+.rf-badge svg{ width:13px; height:13px; }
 .rf-badge[data-a="litigant"]{ color:var(--a-litigant); } .rf-badge[data-a="respondent"]{ color:var(--a-respondent); }
 .rf-badge[data-a="advocate"]{ color:var(--a-advocate); } .rf-badge[data-a="judge"]{ color:var(--a-judge); }
 .rf-badge[data-a="courtstaff"]{ color:var(--a-courtstaff); } .rf-badge[data-a="external"]{ color:var(--a-external); }
 .rfnode.start .rf-badge{ color:#0a3325; }
 
-/* ---- service blueprint: whole-cell tint, icons, no edge bars ---- */
-.cp-board{ position:relative; overflow:auto; border:1px solid rgba(244,239,230,.12); border-radius:18px; max-height:78vh; }
+/* ---- service blueprint: horizontal scroll only, expands vertically ---- */
+.cp-bp-scroll{ overflow-x:auto; overflow-y:hidden; border:1px solid rgba(244,239,230,.12); border-radius:18px; }
 .cp-bp-grid{ display:grid; min-width:max-content; }
-.cp-bp-grid > *{ border-bottom:1px solid rgba(244,239,230,.09); border-right:1px solid rgba(244,239,230,.07); padding:12px 13px; min-width:0; }
-.cp-bp-head{ position:sticky; top:0; z-index:5; background:var(--indigo-2); }
-.cp-bp-corner{ position:sticky; left:0; z-index:6; background:var(--indigo-2); display:flex; align-items:flex-end; font:700 .62rem var(--font-body); letter-spacing:.14em; text-transform:uppercase; color:rgba(244,239,230,.5); }
+.cp-bp-grid > *{ border-bottom:1px solid rgba(244,239,230,.09); border-right:1px solid rgba(244,239,230,.07); padding:13px 14px; min-width:0; }
+.cp-bp-corner{ position:sticky; left:0; z-index:4; background:var(--indigo-2); display:flex; align-items:flex-end; font:700 .62rem var(--font-body); letter-spacing:.14em; text-transform:uppercase; color:rgba(244,239,230,.5); }
+.cp-bp-col{ background:var(--indigo-2); }
 .cp-bp-col .cn{ font-family:var(--font-display); font-weight:600; font-size:.8rem; color:var(--green); }
 .cp-bp-col .ct{ font-weight:600; font-size:.92rem; color:var(--paper2); line-height:1.2; margin-top:2px; }
-.cp-bp-lane{ position:sticky; left:0; z-index:4; background:var(--indigo-2); display:flex; align-items:center; gap:9px; }
-.cp-bp-lane .li{ flex:0 0 auto; width:28px; height:28px; border-radius:8px; display:grid; place-items:center; }
-.cp-bp-lane .ln{ font-weight:700; font-size:.85rem; color:var(--paper2); }
-.cp-bp-lane .ld{ display:block; font-size:.7rem; color:rgba(244,239,230,.5); font-weight:400; margin-top:1px; }
+.cp-bp-lane{ position:sticky; left:0; z-index:3; background:var(--indigo-2); display:flex; align-items:center; gap:12px; }
+.cp-bp-lane .li{ flex:0 0 auto; width:38px; height:38px; border-radius:11px; display:grid; place-items:center; }
+.cp-bp-lane .li svg{ width:18px; height:18px; }
+.cp-bp-lane .ln{ font-weight:700; font-size:.86rem; color:var(--paper2); }
+.cp-bp-lane .ld{ display:block; font-size:.72rem; color:rgba(244,239,230,.52); font-weight:400; margin-top:2px; }
 .cp-bp-cell ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
-.cp-bp-cell li{ display:flex; gap:7px; align-items:flex-start; font-size:.8rem; line-height:1.35; border-radius:9px; padding:7px 9px; }
-.cp-bp-cell li svg{ flex:0 0 auto; width:13px; height:13px; margin-top:1px; opacity:.85; }
+.cp-bp-cell li{ display:flex; gap:8px; align-items:flex-start; font-size:.8rem; line-height:1.35; border-radius:9px; padding:8px 10px; }
+.cp-bp-cell li svg{ flex:0 0 auto; width:14px; height:14px; margin-top:1px; opacity:.8; }
 .cp-bp-cell .empty{ color:rgba(244,239,230,.28); }
-/* whole-box tint by lane */
-.lane-evidence .li{ background:rgba(244,239,230,.1); color:rgba(244,239,230,.8); }
+.lane-evidence .li{ background:rgba(244,239,230,.1); color:rgba(244,239,230,.82); }
 .cell-evidence li{ background:rgba(244,239,230,.06); border:1px solid rgba(244,239,230,.13); color:rgba(244,239,230,.82); }
 .lane-actor .li{ background:rgba(48,207,140,.16); color:var(--a-litigant); }
 .cell-actor li{ background:rgba(48,207,140,.12); border:1px solid rgba(48,207,140,.28); color:#cdeede; }
@@ -113,32 +110,29 @@
 .cell-courtstaff li{ background:rgba(182,156,224,.13); border:1px solid rgba(182,156,224,.3); color:#e4dcf3; }
 .lane-judge .li{ background:rgba(127,176,232,.18); color:var(--a-judge); }
 .cell-judge li{ background:rgba(127,176,232,.13); border:1px solid rgba(127,176,232,.3); color:#d7e6f8; }
-.lane-support .li{ background:rgba(154,160,166,.2); color:#c4c8cd; }
+.lane-support .li{ background:rgba(154,160,166,.2); color:#c8ccd1; }
 .cell-support li{ background:rgba(154,160,166,.13); border:1px solid rgba(154,160,166,.3); color:#dcdee1; }
-.cp-bp-div{ grid-column:1 / -1; position:sticky; left:0; border-right:0 !important; background:var(--indigo); display:flex; align-items:center; gap:12px; padding:6px 13px !important; }
+.cp-bp-div{ grid-column:1 / -1; position:sticky; left:0; border-right:0 !important; background:var(--indigo); display:flex; align-items:center; gap:12px; padding:7px 14px !important; }
 .cp-bp-div span{ font:700 .62rem var(--font-body); letter-spacing:.16em; text-transform:uppercase; color:rgba(244,239,230,.5); white-space:nowrap; }
 .cp-bp-div::after{ content:""; flex:1; height:1px; background:repeating-linear-gradient(90deg,rgba(244,239,230,.35) 0 7px,transparent 7px 14px); }
 
-.cp-legend{ display:flex; flex-wrap:wrap; gap:10px 20px; align-items:center; margin-top:20px; font-size:.82rem; color:rgba(244,239,230,.72); }
+.cp-legend{ display:flex; flex-wrap:wrap; gap:10px 20px; align-items:center; margin-top:22px; font-size:.82rem; color:rgba(244,239,230,.72); }
 .cp-legend .li{ display:flex; align-items:center; gap:7px; }
 .cp-legend .sw{ width:22px; height:14px; border-radius:5px; border:1.5px solid rgba(244,239,230,.4); }
 .cp-legend .sw.dia{ rotate:45deg; width:13px; height:13px; border-radius:3px; background:rgba(218,110,170,.35); border-color:rgba(218,110,170,.9); }
 .cp-legend .sw.out{ background:rgba(48,207,140,.2); border-color:rgba(48,207,140,.7); border-radius:999px; }
 .cp-legend .sw.st{ background:var(--green); border-color:var(--green); border-radius:6px; }
-.cp-legend .ai{ display:inline-flex; }
 
-/* fullscreen overlay */
-.cp-modal{ position:fixed; inset:0; z-index:1000; display:none; flex-direction:column; background:rgba(10,13,30,.9); backdrop-filter:blur(4px); padding:clamp(10px,2.4vw,28px); }
+/* fullscreen */
+.cp-modal{ position:fixed; inset:0; z-index:1000; display:none; flex-direction:column; background:rgba(10,13,30,.92); backdrop-filter:blur(4px); padding:clamp(10px,2.4vw,26px); }
 .cp-modal.open{ display:flex; }
 .cp-modal-bar{ display:flex; justify-content:space-between; align-items:center; color:var(--paper2); margin-bottom:10px; }
 .cp-modal-bar b{ font-family:var(--font-display); font-weight:500; font-size:1.15rem; }
 .cp-modal-close{ cursor:pointer; background:var(--paper2); border:0; border-radius:100px; padding:8px 16px; font:600 .85rem var(--font-body); color:var(--ink); }
-.cp-modal-stage{ flex:1; background:var(--indigo); border:1px solid rgba(244,239,230,.14); border-radius:16px; overflow:hidden; }
+.cp-modal-stage{ flex:1; background:var(--indigo); border:1px solid rgba(244,239,230,.14); border-radius:16px; overflow:auto; }
+.cp-modal-stage .cp-bp-grid{ min-width:max-content; }
 
-@media (max-width:840px){
-  .cp-row{ grid-template-columns:1fr; }
-  .cp-fstory{ position:static; }
-}
+@media (max-width:840px){ .cp-scrolly{ grid-template-columns:1fr; } .cp-fstory{ position:static; margin-bottom:8px; } }
 </style>
 </head>
 <body class="job-page">
@@ -191,7 +185,7 @@
 <main class="job-main dristi-main">
   <p class="beat-eyebrow">The Litigant's Journey</p>
   <h1 class="job-title">What actually happens to a bounced cheque in court.</h1>
-  <p class="cp-lead">Follow a single <b>§138 Negotiable Instruments Act</b> complaint — from the moment a cheque is dishonoured to the day the respondent stands before a judge. Every hand it passes through, every place it can stall, and every fork in the road. Mapped in Kerala, where e-filing and the Case Information System are integrated.</p>
+  <p class="cp-lead">Follow a single <b>§138 Negotiable Instruments Act</b> complaint, from the moment a cheque is dishonoured to the day the respondent stands before a judge. Every hand it passes through, every place it can stall, and every fork in the road. Mapped in Kerala, where e-filing and the Case Information System are integrated.</p>
   <div id="tabs"></div>
 </main>
 
@@ -229,18 +223,16 @@
 </script>
 
 <script type="module">
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ReactFlow, Background, Controls, Handle, Position, MarkerType } from '@xyflow/react';
 import dagre from '@dagrejs/dagre';
 const h = React.createElement;
 
-/* ===== PROCESS DATA — edit here =====
-   nodes: {id, kind:'start'|'step'|'decision'|'outcome', label, a?:actor}
-   edges: {from, to, label?, dotted?}    story: narrative (HTML; <i>=caption) */
+/* ===== PROCESS DATA (no em-dashes in stories) ===== */
 const PROCESS = [
   { id:"pre-filing", label:"Pre-Filing", title:"A cheque bounces", actors:["litigant","advocate"],
-    story:"For the person holding the cheque, the case begins not in a courtroom but at a bank counter. The <b>return memo</b> — the slip that says the cheque didn't clear — is the first piece of evidence, and everything that follows is built on it.",
+    story:"For the person holding the cheque, the case begins not in a courtroom but at a bank counter. The <b>return memo</b>, the slip that says the cheque didn't clear, is the first piece of evidence, and everything that follows is built on it.",
     nodes:[
       {id:"S",kind:"start",label:"Cheque is dishonoured",a:"litigant"},
       {id:"A",kind:"step",label:"Collect cheque & return memo from the bank",a:"litigant"},
@@ -249,7 +241,7 @@ const PROCESS = [
     ], edges:[{from:"S",to:"A"},{from:"A",to:"B"},{from:"B",to:"E"}] },
 
   { id:"scrutiny", label:"Scrutiny", title:"The court checks the paperwork", actors:["courtstaff","advocate"],
-    story:"Before a case is allowed in, a <b>Filing Scrutiny Officer</b> or the judge examines it for defects. This is the first gate — and a common place for a case to bounce back and forth before it ever really starts.",
+    story:"Before a case is allowed in, a <b>Filing Scrutiny Officer</b> or the judge examines it for defects. This is the first gate, and a common place for a case to bounce back and forth before it ever really starts.",
     nodes:[
       {id:"A",kind:"step",label:"Scrutiny by the FSO / judge",a:"courtstaff"},
       {id:"D",kind:"decision",label:"Defect in the filing?"},
@@ -258,7 +250,7 @@ const PROCESS = [
     ], edges:[{from:"A",to:"D"},{from:"D",to:"E",label:"Yes"},{from:"E",to:"A",label:"Re-submit",dotted:true},{from:"D",to:"F",label:"No"}] },
 
   { id:"registration", label:"Registration", title:"The case gets a number", actors:["courtstaff"],
-    story:"Registration is the moment the complaint becomes a tracked entity. It's assigned a <b>PCR number</b> — for the Private Complaint Register — and a unique index that follows it across every register it will ever appear in.",
+    story:"Registration is the moment the complaint becomes a tracked entity. It's assigned a <b>PCR number</b>, for the Private Complaint Register, and a unique index that follows it across every register it will ever appear in.",
     nodes:[
       {id:"A",kind:"step",label:"PCR file number allotted",a:"courtstaff"},
       {id:"B",kind:"step",label:"Unique index allotted for tracking",a:"courtstaff"},
@@ -267,15 +259,15 @@ const PROCESS = [
     ], edges:[{from:"A",to:"B"},{from:"B",to:"C"},{from:"C",to:"E"}] },
 
   { id:"admission", label:"Admission", title:"The judge takes cognizance", actors:["courtstaff","judge"],
-    story:"Here the case crosses a threshold. When the judge <b>takes cognizance</b>, the private complaint is formally converted into a criminal case — and the machinery for summoning the respondent begins.",
+    story:"Here the case crosses a threshold. When the judge <b>takes cognizance</b>, the private complaint is formally converted into a criminal case, and the machinery for summoning the respondent begins.",
     nodes:[
       {id:"A",kind:"step",label:"File placed before the judge",a:"courtstaff"},
       {id:"B",kind:"step",label:"Judge takes cognizance of the case",a:"judge"},
-      {id:"E",kind:"outcome",label:"Admitted — now a criminal case"}
+      {id:"E",kind:"outcome",label:"Admitted: now a criminal case"}
     ], edges:[{from:"A",to:"B"},{from:"B",to:"E"}] },
 
   { id:"summons", label:"Issuance of Summons", title:"Summoning the respondent", actors:["judge","courtstaff","litigant"],
-    story:"Admission triggers a long, mostly invisible relay inside the court office: fees are checked, an order is drafted and signed, the file is dressed for the post, and — finally — a physical summons leaves the building.<i>In Kerala, e-filing and the CIS are integrated, so hearing dates flow straight into the system.</i>",
+    story:"Admission triggers a long, mostly invisible relay inside the court office: fees are checked, an order is drafted and signed, the file is dressed for the post, and a physical summons finally leaves the building.<i>In Kerala, e-filing and the CIS are integrated, so hearing dates flow straight into the system.</i>",
     nodes:[
       {id:"A",kind:"step",label:"Judge orders summons & sets hearing date",a:"judge"},
       {id:"D",kind:"decision",label:"Sufficient process fee paid?"},
@@ -306,7 +298,7 @@ const PROCESS = [
       {from:"D2",to:"Z1",label:"No"},{from:"Z1",to:"S",label:"Yes"},{from:"Z1",to:"X1",label:"No"}] },
 
   { id:"appearance", label:"Appearance", title:"Will the respondent show up?", actors:["respondent","judge","advocate","external"],
-    story:"Being served is not the same as showing up. The hearing date is the next great filter: a respondent who appears moves the case forward; one who doesn't sets off an escalating chain of exemptions, warrants, and — in the last resort — a public proclamation.<i>Assumption: the respondent is represented by an advocate.</i>",
+    story:"Being served is not the same as showing up. The hearing date is the next great filter: a respondent who appears moves the case forward; one who doesn't sets off an escalating chain of exemptions, warrants, and, in the last resort, a public proclamation.<i>Assumption: the respondent is represented by an advocate.</i>",
     nodes:[
       {id:"A",kind:"decision",label:"Respondent present on hearing date?"},
       {id:"S",kind:"outcome",label:"Proceeds to plea & bail"},
@@ -319,13 +311,13 @@ const PROCESS = [
     ], edges:[{from:"A",to:"S",label:"Yes"},{from:"A",to:"B",label:"No"},{from:"B",to:"C",label:"Yes"},{from:"B",to:"D",label:"No"},{from:"D",to:"E"},{from:"E",to:"F",label:"Yes"},{from:"E",to:"G",label:"No"}] },
 
   { id:"plea-bail", label:"Plea & Bail", title:"Plea, bail, and the order", actors:["respondent","judge","courtstaff"],
-    story:"With the respondent finally in the room, the case takes its recognisable courtroom shape: an appearance is entered, a plea recorded, and bail arranged. A quiet detail with real financial stakes hides here — what happens to a cash surety depends entirely on whether the accused is ultimately convicted.",
+    story:"With the respondent finally in the room, the case takes its recognisable courtroom shape: an appearance is entered, a plea recorded, and bail arranged. A quiet detail with real financial stakes hides here: what happens to a cash surety depends entirely on whether the accused is ultimately convicted.",
     nodes:[
       {id:"A",kind:"step",label:"Respondent files vakalat, plea, bail application",a:"respondent"},
       {id:"B",kind:"step",label:"Documents & bail bond submitted",a:"courtstaff"},
       {id:"C",kind:"step",label:"Judge decides bail type & amount",a:"judge"},
       {id:"G",kind:"outcome",label:"Order typed → back bench"},
-      {id:"D",kind:"decision",label:"Cash surety — convicted?"},
+      {id:"D",kind:"decision",label:"Cash surety: convicted?"},
       {id:"E",kind:"outcome",label:"No refund; adjusted on final payment"},
       {id:"F",kind:"outcome",label:"Bail reclaimed from cash branch"}
     ], edges:[{from:"A",to:"B"},{from:"B",to:"C"},{from:"C",to:"G"},{from:"C",to:"D"},{from:"D",to:"E",label:"Yes"},{from:"D",to:"F",label:"No"}] }
@@ -333,7 +325,6 @@ const PROCESS = [
 const CROSS = [ ["pre-filing","E","scrutiny","A"],["scrutiny","F","registration","A"],["registration","E","admission","A"],["admission","E","summons","A"],["summons","G","service","A"],["service","S","appearance","A"],["appearance","S","plea-bail","A"] ];
 const STAGES = PROCESS.map(s=>({id:s.id,label:s.label,title:s.title}));
 
-/* ===== BLUEPRINT DATA — judge & court staff separate; whole-cell tint; icons ===== */
 const BLUEPRINT = {
   lanes:[
     {id:"evidence",k:"evidence",label:"Evidence",desc:"Artefacts",icon:"doc"},
@@ -348,7 +339,7 @@ const BLUEPRINT = {
   ],
   cells:{
     evidence:[["Cheque","Return memo","Complaint","Affidavit"],["Filed complaint","Defect memo"],["PCR number","Tracking index"],["Cognizance order"],["Process fee","Order","Signed summons","AD card"],["Delivered summons","AD card"],["Exemption petition","Warrant","Proclamation"],["Vakalat","Bail bond","Final order"]],
-    actor:[["Collects cheque & return memo","Engages an advocate"],[],[],[],["Provides correct address","Pays pending fee"],["Signs / refuses AD card","Representative may accept"],["Appears — or is absent"],["Files vakalat, plea, bail & surety","Submits bail bond"]],
+    actor:[["Collects cheque & return memo","Engages an advocate"],[],[],[],["Provides correct address","Pays pending fee"],["Signs / refuses AD card","Representative may accept"],["Appears, or is absent"],["Files vakalat, plea, bail & surety","Submits bail bond"]],
     front:[["Advocate drafts & files complaint"],["Advocate told of defect; resubmits"],[],[],[],["Postman delivers to address"],["Respondent & advocate appear"],["Respondent produced before judge"]],
     courtstaff:[[],["FSO scrutinises for defects"],["Registers case; allots PCR & index"],["Places file before the judge"],["Order drafted, printed & signed","Dispatch prepared by RPAD","Typist updates CIS"],["Receives unserved summons","Reissues with a new date"],["Records the next date"],["Typist types order → back bench"]],
     judge:[[],[],[],["Takes cognizance → criminal case"],["Orders summons & sets the date"],["May issue BW / NBW"],["Issues NBW; passes proclamation"],["Decides bail type & amount","Refund / adjust on verdict"]],
@@ -360,75 +351,65 @@ const ACTOR = { litigant:"Litigant", respondent:"Respondent", advocate:"Advocate
 const ACTOR_ICON = { litigant:"person", respondent:"person", advocate:"briefcase", judge:"gavel", courtstaff:"clipboard", external:"mail" };
 const LC="rgba(244,239,230,";
 
-/* ===== icons ===== */
+/* lighter, thinner icons */
 function Icon(name){
-  const p={viewBox:"0 0 16 16",fill:"none",stroke:"currentColor",strokeWidth:1.5,strokeLinecap:"round",strokeLinejoin:"round","aria-hidden":true};
+  const p={viewBox:"0 0 16 16",fill:"none",stroke:"currentColor",strokeWidth:1.25,strokeLinecap:"round",strokeLinejoin:"round","aria-hidden":true};
   const P=d=>h("path",{d}), C=(cx,cy,r)=>h("circle",{cx,cy,r});
   switch(name){
-    case "person": return h("svg",p, C(8,5,2.4), P("M3.2 13.4c0-2.7 2.2-4.6 4.8-4.6s4.8 1.9 4.8 4.6"));
-    case "briefcase": return h("svg",p, h("rect",{x:2.5,y:5,width:11,height:8,rx:1.4}), P("M6 5V3.6h4V5"), P("M2.5 8.5h11"));
-    case "gavel": return h("svg",p, h("rect",{x:8.3,y:2.6,width:4.6,height:2.7,rx:.7,transform:"rotate(45 10.6 3.95)"}), P("M8.7 5.6 4.2 10.1"), P("M2.6 13.4h6"));
-    case "clipboard": return h("svg",p, h("rect",{x:3.6,y:3,width:8.8,height:11,rx:1.5}), h("rect",{x:6,y:1.9,width:4,height:2.4,rx:.8}), P("M6 8h4M6 11h3"));
-    case "mail": return h("svg",p, h("rect",{x:2.4,y:4,width:11.2,height:8,rx:1.4}), P("M3 5l5 4 5-4"));
-    case "doc": return h("svg",p, P("M4.5 2.4h4.2l3 3v7.7a1 1 0 0 1-1 1H4.5a1 1 0 0 1-1-1V3.4a1 1 0 0 1 1-1z"), P("M8.5 2.4V5.5h3"), P("M5.8 9h4.4M5.8 11.2h4.4"));
-    case "gear": return h("svg",p, C(8,8,2.2), P("M8 2.2v1.6M8 12.2v1.6M2.2 8h1.6M12.2 8h1.6M4 4l1.1 1.1M10.9 10.9 12 12M12 4l-1.1 1.1M5.1 10.9 4 12"));
+    case "person": return h("svg",p, C(8,5.2,2.3), P("M3.4 13.2c0-2.6 2.1-4.4 4.6-4.4s4.6 1.8 4.6 4.4"));
+    case "briefcase": return h("svg",p, h("rect",{x:2.6,y:5.2,width:10.8,height:7.6,rx:1.4}), P("M6.1 5.2V3.8h3.8v1.4"), P("M2.6 8.4h10.8"));
+    case "gavel": return h("svg",p, h("rect",{x:8.4,y:2.9,width:4.3,height:2.5,rx:.7,transform:"rotate(45 10.55 4.15)"}), P("M8.8 5.7 4.4 10.1"), P("M2.8 13.2h5.6"));
+    case "clipboard": return h("svg",p, h("rect",{x:3.8,y:3.1,width:8.4,height:10.6,rx:1.5}), h("rect",{x:6.1,y:2.1,width:3.8,height:2.3,rx:.8}), P("M6.1 8h3.8M6.1 10.7h2.9"));
+    case "mail": return h("svg",p, h("rect",{x:2.6,y:4.2,width:10.8,height:7.6,rx:1.4}), P("M3.2 5.1l4.8 3.8 4.8-3.8"));
+    case "doc": return h("svg",p, P("M4.7 2.6h4l2.9 2.9v7.3a1 1 0 0 1-1 1H4.7a1 1 0 0 1-1-1V3.6a1 1 0 0 1 1-1z"), P("M8.6 2.6V5.6h2.9"), P("M6 9h4.2M6 11.1h4.2"));
+    case "gear": return h("svg",p, C(8,8,2.1), P("M8 2.4v1.5M8 12.1v1.5M2.4 8h1.5M12.1 8h1.5M4.1 4.1l1 1M10.9 10.9 12 12M12 4.1l-1 1M5.1 10.9 4 12"));
     default: return h("svg",p);
   }
 }
+function expandIcon(){ return h("svg",{viewBox:"0 0 16 16",width:15,height:15,fill:"none",stroke:"currentColor",strokeWidth:1.5,strokeLinecap:"round",strokeLinejoin:"round"},h("path",{d:"M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"})); }
 
-/* ===== sizing + layout ===== */
+/* ===== sizing + single connected layout ===== */
 function sizeFor(n){
   if(n.kind==="decision"){ const s=Math.max(150,Math.min(226,120+n.label.length*3)); return {w:s,h:s}; }
-  if(n.kind==="start"){ const l=Math.max(1,Math.ceil(n.label.length/22)); return {w:206,h:Math.max(56,34+l*20)}; }
+  if(n.kind==="start"){ const l=Math.max(1,Math.ceil(n.label.length/22)); return {w:206,h:Math.max(58,36+l*20)}; }
   if(n.kind==="outcome"){ const l=Math.max(1,Math.ceil(n.label.length/22)); return {w:210,h:Math.max(46,26+l*20)}; }
-  const l=Math.max(1,Math.ceil(n.label.length/24)); return {w:224,h:Math.max(64,44+l*20)};
-}
-function layoutStage(stage){
-  const g=new dagre.graphlib.Graph(); g.setGraph({rankdir:"TB",nodesep:38,ranksep:58,marginx:8,marginy:8,edgesep:24}); g.setDefaultEdgeLabel(()=>({}));
-  stage.nodes.forEach(n=>{ const s=sizeFor(n); g.setNode(n.id,{width:s.w,height:s.h}); });
-  stage.edges.forEach(e=>{ if(!g.edge(e.from,e.to)) g.setEdge(e.from,e.to); });
-  dagre.layout(g);
-  let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9; const loc={};
-  stage.nodes.forEach(n=>{ const p=g.node(n.id),s=sizeFor(n); const x=p.x-s.w/2,y=p.y-s.h/2; loc[n.id]={x,y,s}; minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x+s.w);maxY=Math.max(maxY,y+s.h); });
-  return {loc,w:maxX-minX,h:maxY-minY,minX,minY};
+  const l=Math.max(1,Math.ceil(n.label.length/24)); return {w:224,h:Math.max(64,46+l*20)};
 }
 const tone=l=> l==="Yes"?"#5fe0a0" : l==="No"?"#f2a0c8" : "#EDE7DA";
-function edgeObj(idp,e,src,tgt){
+function edgeObj(id,e,src,tgt){
   const dotted=!!e.dotted;
-  return { id:idp, source:src, target:tgt,
-    sourceHandle: dotted?"lout":"out", targetHandle: dotted?"lin":"in",
-    label:e.label, type:"smoothstep", animated:true, pathOptions:{borderRadius:14}, zIndex:2,
+  return { id, source:src, target:tgt, sourceHandle:dotted?"lout":"out", targetHandle:dotted?"lin":"in",
+    label:e.label, type:"smoothstep", animated:true, pathOptions:{borderRadius:16}, zIndex:2,
     style:{stroke:dotted?LC+".34)":LC+".46)", strokeWidth:1.8, strokeDasharray:dotted?"2 5":undefined},
-    markerEnd:{type:MarkerType.ArrowClosed,color:dotted?LC+".4)":LC+".55)",width:15,height:15},
+    markerEnd:{type:MarkerType.ArrowClosed,color:dotted?LC+".4)":LC+".56)",width:15,height:15},
     labelStyle:{fill:tone(e.label),fontWeight:700,fontSize:11,fontFamily:"'Source Sans 3',sans-serif"},
     labelBgStyle:{fill:"#1b1f3f"},labelBgPadding:[6,3],labelBgBorderRadius:6 };
 }
-/* per-stage graph */
-function stageGraph(stage){
-  const L=layoutStage(stage); const offX=12-L.minX, offY=12-L.minY;
-  const nodes=stage.nodes.map(n=>({ id:n.id, type:"card", position:{x:L.loc[n.id].x+offX,y:L.loc[n.id].y+offY}, draggable:false, selectable:false, zIndex:3, data:{kind:n.kind,label:n.label,actor:n.a,size:L.loc[n.id].s.w} }));
-  const edges=stage.edges.map((e,i)=>edgeObj(stage.id+"_e"+i,e,e.from,e.to));
-  return { nodes, edges, w:L.w+24, h:L.h+24 };
-}
-
-/* combined board for fullscreen (columns + bands + cross links) */
-const GUTTER=20, MINCOL=290, PADX=26, TOP=52, BOT=28;
-function buildBoard(){
-  const laid=PROCESS.map(layoutStage);
-  const colW=laid.map(L=>Math.max(MINCOL,Math.round(L.w)+2*PADX));
-  const colX=[]; let acc=GUTTER; colW.forEach((w,i)=>{colX[i]=acc;acc+=w;});
-  const boardW=acc; const boardH=Math.round(Math.max(...laid.map(L=>L.h)))+TOP+BOT;
-  const gid=(sid,id)=>sid+"_"+id; const nodes=[];
-  PROCESS.forEach((s,i)=>nodes.push({ id:"band_"+s.id, type:"band", position:{x:colX[i],y:0}, draggable:false, selectable:false, connectable:false, zIndex:0, style:{width:colW[i],height:boardH}, data:{index:String(i+1).padStart(2,"0"),title:s.label} }));
-  PROCESS.forEach((s,i)=>{ const L=laid[i]; const offX=colX[i]+Math.round((colW[i]-L.w)/2)-L.minX; const offY=TOP-L.minY;
-    s.nodes.forEach(n=>nodes.push({ id:gid(s.id,n.id), type:"card", position:{x:L.loc[n.id].x+offX,y:L.loc[n.id].y+offY}, draggable:false, selectable:false, zIndex:3, data:{kind:n.kind,label:n.label,actor:n.a,size:L.loc[n.id].s.w} })); });
+function buildOne(){
+  const g=new dagre.graphlib.Graph({multigraph:true});
+  g.setGraph({rankdir:"TB",nodesep:62,ranksep:78,edgesep:34,marginx:28,marginy:32});
+  g.setDefaultEdgeLabel(()=>({}));
+  PROCESS.forEach(s=>s.nodes.forEach(n=>{ const z=sizeFor(n); g.setNode(s.id+"_"+n.id,{width:z.w,height:z.h}); }));
+  const meta=[];
+  PROCESS.forEach(s=>s.edges.forEach((e,i)=>{ const v=s.id+"_"+e.from,w=s.id+"_"+e.to; const lab=e.label?{width:e.label.length*7+16,height:16,labelpos:"c"}:{}; g.setEdge(v,w,lab,"e"+s.id+i); meta.push({id:s.id+"_e"+i,v,w,e}); }));
+  CROSS.forEach((c,i)=>{ const v=c[0]+"_"+c[1],w=c[2]+"_"+c[3]; g.setEdge(v,w,{},"x"+i); meta.push({id:"x"+i,v,w,cross:true}); });
+  dagre.layout(g);
+  let maxX=0,maxY=0; const cards=[];
+  PROCESS.forEach(s=>s.nodes.forEach(n=>{ const id=s.id+"_"+n.id,p=g.node(id),z=sizeFor(n); const x=p.x-z.w/2,y=p.y-z.h/2; maxX=Math.max(maxX,x+z.w);maxY=Math.max(maxY,y+z.h);
+    cards.push({id,type:"card",position:{x,y},draggable:true,zIndex:3,data:{kind:n.kind,label:n.label,actor:n.a,size:z.w}}); }));
+  const yr={},order=PROCESS.map(s=>s.id);
+  PROCESS.forEach(s=>{ let mn=1e9,mx=-1e9; s.nodes.forEach(n=>{ const p=g.node(s.id+"_"+n.id),z=sizeFor(n); mn=Math.min(mn,p.y-z.h/2); mx=Math.max(mx,p.y+z.h/2); }); yr[s.id]={min:mn,max:mx}; });
+  const bands=[];
+  order.forEach((sid,i)=>{ let top=yr[sid].min-28,bot=yr[sid].max+28;
+    if(i<order.length-1){ const nt=yr[order[i+1]].min-28; if(bot>nt) bot=(bot+nt)/2; }
+    if(i>0){ const pb=yr[order[i-1]].max+28; if(top<pb) top=(top+pb)/2; }
+    bands.push({id:"band_"+sid,type:"band",position:{x:-26,y:top},draggable:false,selectable:false,connectable:false,zIndex:0,style:{width:maxX+52,height:bot-top},data:{index:String(i+1).padStart(2,"0"),title:PROCESS[i].title}}); });
   const edges=[];
-  PROCESS.forEach(s=>s.edges.forEach((e,i)=>edges.push(edgeObj(s.id+"_e"+i,e,gid(s.id,e.from),gid(s.id,e.to)))));
-  CROSS.forEach((c,i)=>edges.push({ id:"x"+i, source:gid(c[0],c[1]), target:gid(c[2],c[3]), sourceHandle:"rout", targetHandle:"lin", type:"smoothstep", animated:true, zIndex:2, style:{stroke:LC+".62)",strokeWidth:2.4}, markerEnd:{type:MarkerType.ArrowClosed,color:LC+".7)",width:17,height:17} }));
-  return {nodes,edges,boardW,boardH};
+  meta.forEach(o=>{ if(o.cross){ edges.push({id:o.id,source:o.v,target:o.w,sourceHandle:"out",targetHandle:"in",type:"smoothstep",animated:true,zIndex:2,style:{stroke:LC+".6)",strokeWidth:2.4},markerEnd:{type:MarkerType.ArrowClosed,color:LC+".72)",width:16,height:16}}); }
+    else edges.push(edgeObj(o.id,o.e,o.v,o.w)); });
+  return { nodes:[...bands,...cards], edges, w:maxX, h:maxY, yr, order };
 }
 
-/* ===== node components ===== */
 function CardNode({ data }){
   const k=data.kind, s=data.size;
   const handles=[
@@ -439,61 +420,33 @@ function CardNode({ data }){
     h(Handle,{key:5,id:"rout",type:"source",position:Position.Right,isConnectable:false}),
     h(Handle,{key:6,id:"rin",type:"target",position:Position.Right,style:{top:"64%"},isConnectable:false})
   ];
-  const badge = (data.actor && (k==="step"||k==="start"))
-    ? h("span",{key:"bd",className:"rf-badge","data-a":data.actor}, Icon(ACTOR_ICON[data.actor]), h("span",null,ACTOR[data.actor])) : null;
-  const label = h("div",{key:"l",className:"rf-label",style:k==="decision"?{maxWidth:Math.round(s*0.52)}:null}, data.label);
+  const badge=(data.actor && (k==="step"||k==="start")) ? h("span",{key:"b",className:"rf-badge","data-a":data.actor}, Icon(ACTOR_ICON[data.actor]), h("span",null,ACTOR[data.actor])) : null;
+  const label=h("div",{key:"l",className:"rf-label",style:k==="decision"?{maxWidth:Math.round(s*0.52)}:null}, data.label);
   return h("div",{className:"rfnode "+k, style:k==="decision"?{width:s,height:s}:null}, handles.concat([badge,label]));
 }
 function BandNode({ data }){ return h("div",{className:"rf-band"}, h("div",{className:"rf-band-lab"}, h("span",{className:"n"},"Stage "+data.index), h("span",{className:"t"},data.title))); }
 const NT = { card:CardNode, band:BandNode };
-const BOARD = buildBoard();
+const ONE = buildOne();
 
-/* ===== components ===== */
-function StageChart({ stage }){
-  const g=useMemo(()=>stageGraph(stage),[stage.id]);
-  const height=Math.min(600, Math.max(230, Math.round(g.h)+30));
-  return h("div",{className:"cp-chart", style:{height:height+"px"}},
-    h(ReactFlow,{ defaultNodes:g.nodes, defaultEdges:g.edges, nodeTypes:NT, fitView:true, fitViewOptions:{padding:0.14,maxZoom:1.05},
-      proOptions:{hideAttribution:true}, nodesDraggable:false, nodesConnectable:false, elementsSelectable:false,
-      panOnDrag:false, panOnScroll:false, zoomOnScroll:false, zoomOnPinch:false, zoomOnDoubleClick:false, preventScrolling:false },
-      h(Background,{gap:24,size:1,color:"rgba(244,239,230,0.05)"})
+function OneChart({ interactive }){
+  const common={ defaultNodes:ONE.nodes, defaultEdges:ONE.edges, nodeTypes:NT, proOptions:{hideAttribution:true}, nodesDraggable:true, nodesConnectable:false, elementsSelectable:false };
+  if(interactive){
+    return h(ReactFlow, Object.assign({}, common, { fitView:true, fitViewOptions:{padding:0.08}, minZoom:0.15, maxZoom:1.6 }),
+      h(Background,{gap:26,size:1,color:"rgba(244,239,230,0.05)"}), h(Controls,{showInteractive:false}));
+  }
+  return h("div",{className:"cp-one"},
+    h("div",{id:"cp-one-inner", style:{width:(ONE.w+52)+"px", height:(ONE.h+56)+"px"}},
+      h(ReactFlow, Object.assign({}, common, { fitView:false, defaultViewport:{x:0,y:0,zoom:1}, panOnDrag:false, panOnScroll:false, zoomOnScroll:false, zoomOnPinch:false, zoomOnDoubleClick:false, preventScrolling:false }),
+        h(Background,{gap:26,size:1,color:"rgba(244,239,230,0.05)"})
+      )
     )
   );
 }
-function StoryCol({ stage, index }){
-  return h("aside",{className:"cp-fstory"},
-    h("div",{className:"idx"},"Stage "+String(index+1).padStart(2,"0")),
-    h("h3",null,stage.title),
-    h("div",{className:"who"}, stage.actors.map(a=>h("span",{key:a,className:"c"}, Icon(ACTOR_ICON[a]), ACTOR[a]))),
-    h("p",{dangerouslySetInnerHTML:{__html:stage.story}})
-  );
-}
-function FlowView({ onFull }){
-  return h(React.Fragment,null,
-    h("div",{className:"cp-toolbar"},
-      h("p",{className:"cap"},"Read each stage as a small flowchart, with the story alongside. The whole case is interconnected — open the full map to see every stage joined end to end."),
-      h("button",{className:"cp-fullbtn", onClick:onFull}, h("svg",{viewBox:"0 0 16 16",width:15,height:15,fill:"none",stroke:"currentColor",strokeWidth:1.6,strokeLinecap:"round",strokeLinejoin:"round"},h("path",{d:"M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"})), "View full flowchart")
-    ),
-    PROCESS.map((s,i)=>h(React.Fragment,{key:s.id},
-      h("div",{className:"cp-row"}, h(StoryCol,{stage:s,index:i}), h(StageChart,{stage:s})),
-      i<PROCESS.length-1 ? h("div",{className:"cp-connect"},
-        h("span",{className:"lab"},"the case moves on"),
-        h("div",{className:"line"}),
-        h("svg",{viewBox:"0 0 16 16",fill:"none",stroke:"currentColor",strokeWidth:1.8,strokeLinecap:"round",strokeLinejoin:"round"},h("path",{d:"M8 2v11M3.5 8.5 8 13l4.5-4.5"}))
-      ) : null
-    )),
-    h("div",{className:"cp-legend"},
-      h("span",{className:"li"}, h("span",{className:"sw st"}),"Start"),
-      h("span",{className:"li"}, h("span",{className:"sw"}),"Step"),
-      h("span",{className:"li"}, h("span",{className:"sw dia"}),"Decision"),
-      h("span",{className:"li"}, h("span",{className:"sw out"}),"Outcome")
-    )
-  );
-}
-function BlueprintView(){
-  const cols="176px "+STAGES.map(()=>"minmax(190px,1fr)").join(" ");
-  const cells=[ h("div",{key:"cn",className:"cp-bp-corner cp-bp-head"},"Layer / stage") ];
-  STAGES.forEach((s,i)=>cells.push(h("div",{key:"h"+i,className:"cp-bp-col cp-bp-head"}, h("div",{className:"cn"},"Stage "+String(i+1).padStart(2,"0")), h("div",{className:"ct"},s.label))));
+
+function BlueprintGrid(){
+  const cols="184px "+STAGES.map(()=>"minmax(196px,1fr)").join(" ");
+  const cells=[ h("div",{key:"cn",className:"cp-bp-corner"},"Layer / stage") ];
+  STAGES.forEach((s,i)=>cells.push(h("div",{key:"h"+i,className:"cp-bp-col"}, h("div",{className:"cn"},"Stage "+String(i+1).padStart(2,"0")), h("div",{className:"ct"},s.label))));
   BLUEPRINT.lanes.forEach((lane,li)=>{
     if(lane.divider){ cells.push(h("div",{key:"d"+li,className:"cp-bp-div"}, h("span",null,lane.divider))); return; }
     cells.push(h("div",{key:"l"+li,className:"cp-bp-lane lane-"+lane.k}, h("span",{className:"li"},Icon(lane.icon)), h("span",null, h("span",{className:"ln"},lane.label), h("span",{className:"ld"},lane.desc))));
@@ -502,32 +455,69 @@ function BlueprintView(){
       cells.push(h("div",{key:"c"+li+"-"+i,className:"cp-bp-cell cell-"+lane.k},
         items.length? h("ul",null,items.map((t,j)=>h("li",{key:j}, lane.k==="evidence"?Icon("doc"):null, h("span",null,t)))) : h("span",{className:"empty"},"·"))); });
   });
-  return h("div",{className:"cp-toolbar"}, h("p",{className:"cap"},"The same eight stages as a service blueprint: what the litigant experiences on top, and the court staff, judge, systems and partners working beneath the line of visibility. Scroll sideways to follow a stage down through every layer.")),
-    h("div",{className:"cp-board"}, h("div",{className:"cp-bp-grid", style:{gridTemplateColumns:cols}}, cells));
+  return h("div",{className:"cp-bp-grid", style:{gridTemplateColumns:cols}}, cells);
 }
 
-function Modal({ open, onClose }){
-  if(!open) return null;
-  return h("div",{className:"cp-modal open"},
-    h("div",{className:"cp-modal-bar"}, h("b",null,"The full journey — all eight stages"), h("button",{className:"cp-modal-close",onClick:onClose},"Close ✕")),
-    h("div",{className:"cp-modal-stage"},
-      h(ReactFlow,{ defaultNodes:BOARD.nodes, defaultEdges:BOARD.edges, nodeTypes:NT, fitView:true, fitViewOptions:{padding:0.08},
-        proOptions:{hideAttribution:true}, nodesDraggable:false, nodesConnectable:false, elementsSelectable:false, minZoom:0.15, maxZoom:1.6 },
-        h(Background,{gap:26,size:1,color:"rgba(244,239,230,0.05)"}), h(Controls,{showInteractive:false})
-      )
+/* ===== views ===== */
+function FlowView({ onFull }){
+  const [active,setActive]=useState(PROCESS[0].id);
+  useEffect(()=>{
+    const el=document.getElementById("cp-one-inner"); if(!el) return;
+    const onScroll=()=>{ const top=el.getBoundingClientRect().top; const y=window.innerHeight*0.4 - top; let a=ONE.order[0]; ONE.order.forEach(sid=>{ if(y>=ONE.yr[sid].min-40) a=sid; }); setActive(a); };
+    onScroll(); window.addEventListener("scroll",onScroll,{passive:true}); window.addEventListener("resize",onScroll);
+    return ()=>{ window.removeEventListener("scroll",onScroll); window.removeEventListener("resize",onScroll); };
+  },[]);
+  const s=PROCESS.find(p=>p.id===active); const idx=PROCESS.findIndex(p=>p.id===active);
+  return h(React.Fragment,null,
+    h("div",{className:"cp-toolbar"},
+      h("p",{className:"cap"},"One connected map of the whole journey. Scroll the chart and the story on the left follows the stage you're viewing. Drag any box to rearrange, or open full screen to see it all at once."),
+      h("button",{className:"cp-fullbtn", onClick:onFull}, expandIcon(), "Full screen")
+    ),
+    h("div",{className:"cp-scrolly"},
+      h("aside",{className:"cp-fstory"},
+        h("div",{className:"idx"}, "Stage "+String(idx+1).padStart(2,"0")+" · "+s.label),
+        h("h3",null,s.title),
+        h("div",{className:"who"}, s.actors.map(a=>h("span",{key:a,className:"c"}, Icon(ACTOR_ICON[a]), ACTOR[a]))),
+        h("p",{key:active, dangerouslySetInnerHTML:{__html:s.story}})
+      ),
+      h(OneChart,{interactive:false})
+    ),
+    h("div",{className:"cp-legend"},
+      h("span",{className:"li"}, h("span",{className:"sw st"}),"Start"),
+      h("span",{className:"li"}, h("span",{className:"sw"}),"Step"),
+      h("span",{className:"li"}, h("span",{className:"sw dia"}),"Decision"),
+      h("span",{className:"li"}, h("span",{className:"sw out"}),"Outcome")
     )
   );
 }
-
+function BlueprintView({ onFull }){
+  return h(React.Fragment,null,
+    h("div",{className:"cp-toolbar"},
+      h("p",{className:"cap"},"The same eight stages as a service blueprint: what the litigant experiences on top, and the court staff, judge, systems and partners working beneath the line of visibility. Scroll sideways to follow a stage down through every layer."),
+      h("button",{className:"cp-fullbtn", onClick:onFull}, expandIcon(), "Full screen")
+    ),
+    h("div",{className:"cp-bp-scroll"}, h(BlueprintGrid))
+  );
+}
+function Modal({ full, onClose }){
+  if(!full) return null;
+  return h("div",{className:"cp-modal open"},
+    h("div",{className:"cp-modal-bar"},
+      h("b",null, full==="flow" ? "The full journey, all eight stages" : "Service blueprint, all layers"),
+      h("button",{className:"cp-modal-close", onClick:onClose},"Close ✕")),
+    h("div",{className:"cp-modal-stage"}, full==="flow" ? h(OneChart,{interactive:true}) : h(BlueprintGrid))
+  );
+}
 function Board(){
   const [tab,setTab]=useState("flow");
-  const [full,setFull]=useState(false);
+  const [full,setFull]=useState(null);
   window.__cpSetTab=setTab;
+  useEffect(()=>{ const k=e=>{ if(e.key==="Escape") setFull(null); }; document.addEventListener("keydown",k); return ()=>document.removeEventListener("keydown",k); },[]);
   return h(React.Fragment,null,
     h("section",{className:"cp-dark", id:"board-inner"}, h("div",{className:"cp-dark-in"},
-      tab==="flow" ? h(FlowView,{onFull:()=>setFull(true)}) : h(BlueprintView)
+      tab==="flow" ? h(FlowView,{onFull:()=>setFull("flow")}) : h(BlueprintView,{onFull:()=>setFull("bp")})
     )),
-    h(Modal,{open:full,onClose:()=>setFull(false)})
+    h(Modal,{full, onClose:()=>setFull(null)})
   );
 }
 function Tabs(){
