@@ -1058,7 +1058,7 @@ function dristiPage() {
 '    <div class="dristi-panel-head">\n' +
 '      <div class="dristi-panel-copy" data-dcopy="kollam">\n' +
 '        <h3 class="dristi-panel-title">24x7 ON Court, Kollam</h3>\n' +
-'        <p class="dristi-panel-sub">Live since 20 November 2024 under the High Court of Kerala. It accepts cheque dishonour cases under Section 138 of the Negotiable Instruments Act arising from nine police stations in Kollam district, and it never closes: a court that goes to people, instead of people going to courts.</p>\n' +
+'        <p class="dristi-panel-sub">Live since 20 November 2024 under the High Court of Kerala. It accepts cheque dishonour cases under Section 138 of the Negotiable Instruments Act arising from all 20+ police stations in Kollam district, and it never closes: a court that goes to people, instead of people going to courts.</p>\n' +
 "      </div>\n" +
 '      <div class="dristi-panel-copy" data-dcopy="thrissur" hidden>\n' +
 '        <h3 class="dristi-panel-title">24x7 ON Court, Thrissur</h3>\n' +
