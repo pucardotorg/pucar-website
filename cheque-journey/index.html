@@ -171,7 +171,12 @@
 .cp-canvas{ position:relative; width:100%; height:calc(100vh - 54px); background:var(--indigo); }
 .cp-canvas:fullscreen{ width:100vw; height:100vh; }
 .cp-canvas:-webkit-full-screen{ width:100vw; height:100vh; }
+.cp-canvas.cp-fs-on{ position:fixed; inset:0; width:100vw; height:100vh; z-index:9999; }
 .cp-canvas .react-flow{ width:100%; height:100%; }
+/* dotted stage dividers across the canvas */
+.react-flow__node-divider{ background:none; border:0; padding:0; box-shadow:none; pointer-events:none; }
+.rf-div{ width:100%; height:0; border-top:1.5px dashed rgba(244,239,230,.16); position:relative; }
+.rf-div-lab{ position:absolute; left:0; top:-11px; font:700 .7rem var(--font-body); letter-spacing:.1em; text-transform:uppercase; color:rgba(244,239,230,.42); background:var(--indigo); padding:2px 12px 2px 0; white-space:nowrap; }
 .react-flow__pane{ cursor:grab; }
 .react-flow__pane.dragging{ cursor:grabbing; }
 .react-flow__minimap{ border:1px solid rgba(244,239,230,.14); border-radius:12px; overflow:hidden; }
@@ -182,7 +187,7 @@
 .cp-snav:hover{ color:var(--paper2); border-color:rgba(244,239,230,.34); }
 .cp-snav.on{ background:var(--green); border-color:var(--green); color:#08130d; } .cp-snav.on .n{ background:#0a3325; color:var(--green); }
 /* simple zoom presets */
-.cp-zoombar{ position:absolute; top:16px; right:16px; z-index:6; display:flex; gap:4px; background:rgba(20,23,50,.84); backdrop-filter:blur(8px); border:1px solid rgba(244,239,230,.14); border-radius:100px; padding:5px; }
+.cp-zoombar{ position:absolute; bottom:16px; right:16px; z-index:6; display:flex; gap:4px; background:rgba(20,23,50,.86); backdrop-filter:blur(8px); border:1px solid rgba(244,239,230,.14); border-radius:100px; padding:5px; }
 .cp-zb{ cursor:pointer; border:0; background:transparent; color:rgba(244,239,230,.78); font:700 .82rem var(--font-body); padding:6px 13px; border-radius:100px; transition:background .2s,color .2s; }
 .cp-zb:hover{ background:rgba(244,239,230,.12); color:var(--paper2); }
 .cp-zb-alt{ color:var(--green); }
@@ -194,13 +199,16 @@
 .cp-legend2 .sw.dia{ rotate:45deg; width:12px; height:12px; border-radius:3px; background:rgba(218,110,170,.35); border-color:rgba(218,110,170,.9); }
 .cp-legend2 .sw.out{ background:rgba(48,207,140,.2); border-color:rgba(48,207,140,.7); border-radius:999px; }
 .cp-legend2 .sw.st{ background:var(--green); border-color:var(--green); border-radius:6px; }
-/* big "go full screen" button (shows ~3s when the canvas comes into view) */
-.cp-fs-big{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%) scale(.96); z-index:7; display:inline-flex; align-items:center; gap:10px; cursor:pointer; border:0; border-radius:100px; padding:16px 30px; font:700 1.05rem var(--font-body); color:#08130d; background:var(--green); box-shadow:0 22px 55px -16px rgba(48,207,140,.55); opacity:0; pointer-events:none; transition:opacity .4s ease, transform .4s ease; }
-.cp-fs-big.show{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1); }
-.cp-fs-big svg{ width:20px; height:20px; }
+/* tinted, prominent "go full screen" prompt (shows ~3s when canvas comes into view) */
+.cp-fs-prompt{ position:absolute; inset:0; z-index:8; display:grid; place-items:center; background:rgba(9,12,28,0); opacity:0; pointer-events:none; transition:opacity .4s ease, background .4s ease; }
+.cp-fs-prompt.show{ opacity:1; background:rgba(9,12,28,.55); }
+.cp-fs-big{ display:inline-flex; align-items:center; gap:12px; cursor:pointer; border:0; border-radius:100px; padding:20px 40px; font:800 1.28rem var(--font-body); color:#08130d; background:var(--green); box-shadow:0 26px 60px -14px rgba(48,207,140,.6); transform:scale(.92); transition:transform .4s cubic-bezier(.2,1.3,.4,1); }
+.cp-fs-prompt.show .cp-fs-big{ pointer-events:auto; transform:scale(1); animation:cpPulse 1.8s ease-in-out infinite; }
+@keyframes cpPulse{ 0%,100%{ box-shadow:0 26px 60px -14px rgba(48,207,140,.55); } 50%{ box-shadow:0 26px 74px -8px rgba(48,207,140,.9); } }
+.cp-fs-big svg{ width:24px; height:24px; }
 /* floating story overlay (fades in per stage) */
-.cp-story-ov{ position:absolute; left:clamp(16px,3.4vw,54px); top:52%; transform:translateY(-50%); z-index:5; max-width:min(360px,40vw); pointer-events:none; padding:20px 22px; border-radius:16px; background:rgba(15,17,40,.72); backdrop-filter:blur(7px); border:1px solid rgba(244,239,230,.1); box-shadow:0 24px 60px -30px #000; animation:cpfade .45s ease; }
-@keyframes cpfade{ from{ opacity:0; transform:translateY(calc(-50% + 12px)); } to{ opacity:1; transform:translateY(-50%); } }
+.cp-story-ov{ position:absolute; left:16px; top:84px; z-index:5; max-width:min(320px,42vw); pointer-events:none; padding:18px 20px; border-radius:16px; background:rgba(12,14,34,.82); backdrop-filter:blur(8px); border:1px solid rgba(244,239,230,.12); box-shadow:0 24px 60px -30px #000; animation:cpfade .45s ease; }
+@keyframes cpfade{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
 .cp-story-ov .idx{ display:inline-flex; align-items:center; gap:9px; font:700 .68rem var(--font-body); letter-spacing:.14em; text-transform:uppercase; color:var(--green); margin-bottom:11px; }
 .cp-story-ov .idx::before{ content:""; width:20px; height:1px; background:var(--green); opacity:.6; }
 .cp-story-ov h3{ font-family:var(--font-display); font-weight:500; font-size:clamp(1.5rem,2.4vw,2.05rem); line-height:1.08; color:var(--paper2); margin-bottom:13px; }
@@ -527,9 +535,9 @@ function edgeObj(id,e,src,tgt){
   const sh = dotted?"lout" : side?"rout" : "out";
   const th = dotted?"lin"  : side?"rin"  : "in";
   return { id, source:src, target:tgt, sourceHandle:sh, targetHandle:th,
-    type:"smoothstep", pathOptions:{borderRadius:14}, animated:dotted, zIndex:2,
+    type:"smoothstep", pathOptions:{borderRadius:14}, animated:true, zIndex:2,
     label:e.label,
-    style:{stroke:dotted?LC+".4)":LC+".52)", strokeWidth:1.8, strokeDasharray:dotted?"4 5":undefined},
+    style:{stroke:dotted?LC+".4)":LC+".55)", strokeWidth:1.8},
     markerEnd:{type:MarkerType.ArrowClosed,color:dotted?LC+".46)":LC+".62)",width:15,height:15},
     labelStyle:{fill:tone(e.label),fontWeight:700,fontSize:11,fontFamily:"'Source Sans 3',sans-serif"},
     labelBgStyle:{fill:"#1b1f3f"},labelBgPadding:[6,3],labelBgBorderRadius:6 };
@@ -550,10 +558,12 @@ function buildOne(){
   PROCESS.forEach(s=>{ let mn=1e9,mx=-1e9,xmn=1e9,xmx=-1e9; s.nodes.forEach(n=>{ const p=g.node(s.id+"_"+n.id),z=sizeFor(n); mn=Math.min(mn,p.y-z.h/2); mx=Math.max(mx,p.y+z.h/2); xmn=Math.min(xmn,p.x-z.w/2); xmx=Math.max(xmx,p.x+z.w/2); }); yr[s.id]={min:mn,max:mx}; xr[s.id]={min:xmn,max:xmx}; });
   const edges=[];
   meta.forEach(o=>{
-    if(o.kind==="cross"){ edges.push({id:o.id,source:o.v,target:o.w,sourceHandle:"out",targetHandle:"in",type:"smoothstep",pathOptions:{borderRadius:14},zIndex:2,style:{stroke:LC+".62)",strokeWidth:2.4},markerEnd:{type:MarkerType.ArrowClosed,color:LC+".74)",width:16,height:16}}); }
+    if(o.kind==="cross"){ edges.push({id:o.id,source:o.v,target:o.w,sourceHandle:"out",targetHandle:"in",type:"smoothstep",pathOptions:{borderRadius:14},animated:true,zIndex:2,style:{stroke:LC+".62)",strokeWidth:2.4},markerEnd:{type:MarkerType.ArrowClosed,color:LC+".74)",width:16,height:16}}); }
     else edges.push(edgeObj(o.id,o.e,o.v,o.w));
   });
-  return { nodes, edges, w:maxX, h:maxY, yr, xr, order };
+  const dividers=[];
+  order.forEach((sid,i)=>{ dividers.push({ id:"div_"+sid, type:"divider", position:{x:-40,y:yr[sid].min-30}, draggable:false, selectable:false, connectable:false, zIndex:0, style:{width:maxX+80}, data:{label:"Stage "+String(i+1).padStart(2,"0")+" · "+PROCESS[i].label} }); });
+  return { nodes:[...dividers, ...nodes], edges, w:maxX, h:maxY, yr, xr, order };
 }
 const ONE = buildOne();
 
@@ -573,7 +583,8 @@ function CardNode({ data }){
   const label=h("div",{key:"l",className:"rf-label",style:k==="decision"?{maxWidth:Math.round(s*0.54)}:null}, data.label);
   return h("div",{className:"rfnode "+k, style:k==="decision"?{width:s,height:s}:null}, handles.concat([badge,label]));
 }
-const NT = { card:CardNode };
+function DividerNode(props){ return h("div",{className:"rf-div"}, h("span",{className:"rf-div-lab"}, props.data.label)); }
+const NT = { card:CardNode, divider:DividerNode };
 
 /* ===== full-viewport canvas: grab to pan, simple zoom presets, floating story ===== */
 function Canvas(){
@@ -581,25 +592,30 @@ function Canvas(){
   const [active,setActive]=useState(PROCESS[0].id);
   const [showFs,setShowFs]=useState(false);
   const [isFs,setIsFs]=useState(false);
+  const [cssFs,setCssFs]=useState(false);
+  const fsOn = isFs || cssFs;
   function rect(i){ const sid=ONE.order[i], y=ONE.yr[sid], x=ONE.xr[sid]; return {x:x.min-50,y:y.min-50,width:(x.max-x.min)+100,height:(y.max-y.min)+100}; }
   function jump(i){ if(rf.current) rf.current.fitBounds(rect(i),{padding:0.12,duration:600}); }
   function recompute(){ const inst=rf.current, pane=paneRef.current; if(!inst||!pane) return; const r=pane.getBoundingClientRect(); var c; try{ c=inst.screenToFlowPosition({x:r.left+r.width/2,y:r.top+r.height/2}); }catch(e){ return; } let a=ONE.order[0]; ONE.order.forEach(sid=>{ if(c.y>=ONE.yr[sid].min-70) a=sid; }); setActive(a); }
   function onInit(inst){ rf.current=inst; try{ inst.fitBounds(rect(0),{padding:0.16,duration:0}); }catch(e){} recompute(); }
   const setZoom=(z)=>{ if(rf.current) rf.current.zoomTo(z,{duration:300}); };
   const fitAll=()=>{ if(rf.current) rf.current.fitView({padding:0.1,duration:450}); };
-  function toggleFs(){ const el=paneRef.current; if(!el) return; if(document.fullscreenElement){ if(document.exitFullscreen) document.exitFullscreen(); } else { const rq=el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen; if(rq) rq.call(el); } }
-  useEffect(()=>{ const onFs=()=>setIsFs(!!document.fullscreenElement); document.addEventListener("fullscreenchange",onFs); return ()=>document.removeEventListener("fullscreenchange",onFs); },[]);
-  useEffect(()=>{ const el=paneRef.current; if(!el||!window.IntersectionObserver) return; var t; const io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ setShowFs(true); clearTimeout(t); t=setTimeout(function(){ setShowFs(false); },3000); } else { clearTimeout(t); setShowFs(false); } }); },{threshold:0.55}); io.observe(el); return function(){ io.disconnect(); clearTimeout(t); }; },[]);
+  function enterFs(){ const el=paneRef.current; if(!el){ return; } const rq=el.requestFullscreen||el.webkitRequestFullscreen; if(rq){ try{ var pr=rq.call(el); if(pr&&pr.catch) pr.catch(function(){ setCssFs(true); }); return; }catch(e){} } setCssFs(true); }
+  function exitFs(){ if(document.fullscreenElement){ try{ (document.exitFullscreen||document.webkitExitFullscreen).call(document); }catch(e){} } setCssFs(false); }
+  function toggleFs(){ if(fsOn) exitFs(); else enterFs(); }
+  useEffect(()=>{ const onFs=()=>setIsFs(!!document.fullscreenElement); document.addEventListener("fullscreenchange",onFs); document.addEventListener("webkitfullscreenchange",onFs); return ()=>{ document.removeEventListener("fullscreenchange",onFs); document.removeEventListener("webkitfullscreenchange",onFs); }; },[]);
+  useEffect(()=>{ const onKey=(e)=>{ if(e.key==="Escape") setCssFs(false); }; document.addEventListener("keydown",onKey); return ()=>document.removeEventListener("keydown",onKey); },[]);
+  useEffect(()=>{ const el=paneRef.current; if(!el||!window.IntersectionObserver) return; var t; const io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ setShowFs(true); clearTimeout(t); t=setTimeout(function(){ setShowFs(false); },3000); } else { clearTimeout(t); setShowFs(false); } }); },{threshold:0.5}); io.observe(el); return function(){ io.disconnect(); clearTimeout(t); }; },[]);
   const s=PROCESS.find(p=>p.id===active), idx=PROCESS.findIndex(p=>p.id===active);
-  return h("div",{className:"cp-canvas", ref:paneRef},
+  return h("div",{className:"cp-canvas"+(cssFs?" cp-fs-on":""), ref:paneRef},
     h(ReactFlow,{ defaultNodes:ONE.nodes, defaultEdges:ONE.edges, nodeTypes:NT, onInit:onInit, onMove:recompute,
-      minZoom:0.08, maxZoom:3, proOptions:{hideAttribution:true}, nodesDraggable:true, nodesConnectable:false, elementsSelectable:false,
-      panOnDrag:true, panOnScroll:false, zoomOnScroll:false, zoomOnPinch:true, zoomOnDoubleClick:false, preventScrolling:false },
+      minZoom:0.08, maxZoom:3, proOptions:{hideAttribution:true}, nodesDraggable:false, nodesConnectable:false, elementsSelectable:false,
+      panOnDrag:true, panOnScroll:true, zoomOnScroll:false, zoomOnPinch:true, zoomOnDoubleClick:false },
       h(Background,{gap:28,size:1,color:"rgba(244,239,230,0.05)"})
     ),
     h("div",{className:"cp-stagenav"}, PROCESS.map((p,i)=>h("button",{key:p.id, className:"cp-snav"+(active===p.id?" on":""), onClick:()=>jump(i), title:p.label}, h("span",{className:"n"},i+1), h("span",{className:"t"},p.label)))),
     h("div",{className:"cp-zoombar"},
-      h("button",{className:"cp-zb cp-zb-alt", onClick:toggleFs, title:"Full screen"}, isFs?"Exit full screen":"Full screen"),
+      h("button",{className:"cp-zb cp-zb-alt", onClick:toggleFs, title:"Full screen"}, fsOn?"Exit":"Full screen"),
       h("button",{className:"cp-zb", onClick:fitAll},"Fit"),
       h("button",{className:"cp-zb", onClick:()=>setZoom(1)},"1×"),
       h("button",{className:"cp-zb", onClick:()=>setZoom(2)},"2×"),
@@ -618,9 +634,10 @@ function Canvas(){
       h("span",{className:"li"}, h("span",{className:"sw out"}),"Outcome")
     ),
     h("a",{className:"cp-glosslink", href:"#glossary"}, "Read the glossary"),
-    h("button",{className:"cp-fs-big"+((showFs&&!isFs)?" show":""), onClick:toggleFs},
-      h("svg",{viewBox:"0 0 16 16",width:20,height:20,fill:"none",stroke:"currentColor",strokeWidth:1.7,strokeLinecap:"round",strokeLinejoin:"round"},h("path",{d:"M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"})),
-      "Go full screen")
+    h("div",{className:"cp-fs-prompt"+((showFs&&!fsOn)?" show":"")},
+      h("button",{className:"cp-fs-big", onClick:toggleFs},
+        h("svg",{viewBox:"0 0 16 16",width:24,height:24,fill:"none",stroke:"currentColor",strokeWidth:1.7,strokeLinecap:"round",strokeLinejoin:"round"},h("path",{d:"M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"})),
+        "Go full screen"))
   );
 }
 
