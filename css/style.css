@@ -5776,3 +5776,24 @@ button.circle-card{
   .role-panel.is-active{ animation:none; }
   .role-btn:hover{ transform:none; }
 }
+
+/* ================= Careers JD modal ================= */
+.about-steps-lead{ margin-top:10px; }
+.jdm-overlay{ position:fixed; inset:0; z-index:1000; display:flex; align-items:flex-start; justify-content:center;
+  padding:clamp(16px,5vh,64px) 16px; background:rgba(8,10,24,.66); overflow-y:auto; }
+.jdm-overlay[hidden]{ display:none; }
+body.jdm-open{ overflow:hidden; }
+.jdm-dialog{ position:relative; width:min(720px,100%); background:var(--paper); color:var(--ink); border-radius:20px;
+  padding:clamp(28px,4vw,46px); box-shadow:0 30px 80px rgba(0,0,0,.5); animation:jdmIn .3s cubic-bezier(.16,.8,.3,1); }
+@keyframes jdmIn{ from{ opacity:0; transform:translateY(18px); } to{ opacity:1; transform:none; } }
+.jdm-close{ position:absolute; top:14px; right:16px; width:38px; height:38px; border-radius:50%; border:1px solid var(--line);
+  background:transparent; color:var(--ink-soft); font-size:1.5rem; line-height:1; cursor:pointer; transition:background .2s,color .2s; }
+.jdm-close:hover{ background:var(--cream-deep); color:var(--ink); }
+.jdm-eyebrow{ color:var(--green); margin:0 0 10px; }
+.jdm-title{ font-family:var(--font-display); font-weight:500; font-size:clamp(1.6rem,3.4vw,2.2rem); line-height:1.1; margin:0 0 12px; padding-right:40px; }
+.jdm-summary{ font-size:1.05rem; line-height:1.5; color:var(--ink-soft); margin:0 0 16px; }
+.jdm-body .job-chips{ margin:0 0 18px; }
+.jdm-body .job-body{ margin-top:4px; }
+.jdm-cta{ margin-top:24px; }
+.career-row{ cursor:pointer; }
+@media (prefers-reduced-motion:reduce){ .jdm-dialog{ animation:none; } }
