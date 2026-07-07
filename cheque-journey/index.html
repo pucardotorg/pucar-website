@@ -44,10 +44,10 @@
 .cp-tab.on svg{ opacity:1; color:var(--forest); }
 
 .cp-dark{ background:var(--indigo); color:var(--paper2); padding:clamp(28px,4vw,48px) 0 clamp(44px,6vw,80px); }
-.cp-dark-in{ max-width:1400px; margin:0 auto; padding:0 clamp(16px,4vw,40px); }
+.cp-dark-in{ max-width:min(1560px,96vw); margin:0 auto; padding:0 clamp(16px,4vw,40px); }
 .cp-cap{ color:rgba(244,239,230,.62); font-size:.95rem; max-width:64ch; margin:0 0 22px; line-height:1.5; }
 
-.cp-scrolly{ display:grid; grid-template-columns:minmax(0,280px) minmax(0,1fr); gap:clamp(18px,2.2vw,32px); align-items:start; }
+.cp-scrolly{ display:grid; grid-template-columns:minmax(0,240px) minmax(0,1fr); gap:clamp(16px,1.8vw,26px); align-items:start; }
 .cp-fstory{ position:sticky; top:86px; }
 .cp-fstory .idx{ display:inline-flex; align-items:center; gap:9px; font:700 .7rem var(--font-body); letter-spacing:.14em; text-transform:uppercase; color:var(--green); margin-bottom:12px; }
 .cp-fstory .idx::before{ content:""; width:22px; height:1px; background:var(--green); opacity:.6; }
@@ -75,7 +75,7 @@
 .rfnode.start{ width:190px; min-height:56px; display:flex; align-items:center; justify-content:center; text-align:center; padding:22px 14px 12px; border-radius:13px; font-weight:700; font-size:.86rem; color:#08130d; background:var(--green); border:0; }
 .rfnode.outcome{ width:196px; min-height:44px; display:flex; align-items:center; justify-content:center; text-align:center; padding:10px 15px; border-radius:999px; font-weight:700; font-size:.83rem; line-height:1.22; color:#cdf1e0; background:rgba(48,207,140,.16); border:1.5px solid rgba(48,207,140,.62); }
 .rfnode.decision{ display:grid; place-items:center; }
-.rfnode.decision::before{ content:""; position:absolute; inset:13px; transform:rotate(45deg); background:rgba(218,110,170,.18); border:1.5px solid rgba(218,110,170,.78); border-radius:11px; }
+.rfnode.decision::before{ content:""; position:absolute; inset:14.6%; transform:rotate(45deg); background:rgba(218,110,170,.18); border:1.5px solid rgba(218,110,170,.78); border-radius:11px; }
 .rfnode.decision .rf-label{ position:relative; z-index:1; text-align:center; font-weight:700; font-size:.8rem; line-height:1.2; color:#f4cfe4; }
 .rf-badge{ position:absolute; top:8px; left:11px; display:inline-flex; align-items:center; gap:6px; font:600 .58rem var(--font-body); letter-spacing:.05em; text-transform:uppercase; }
 .rf-badge svg{ width:12px; height:12px; }
@@ -250,7 +250,7 @@
 <script type="module">
 import React, { useState, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ReactFlow, Background, Handle, Position, MarkerType, EdgeLabelRenderer } from '@xyflow/react';
+import { ReactFlow, Background, Handle, Position, MarkerType } from '@xyflow/react';
 import dagre from '@dagrejs/dagre';
 const h = React.createElement;
 
@@ -302,7 +302,7 @@ const PROCESS = [
       {id:"E",kind:"step",label:"Summons signed for the Judicial Officer",a:"courtstaff"},
       {id:"F",kind:"step",label:"Dispatch prepared by RPAD",a:"courtstaff"},
       {id:"G",kind:"outcome",label:"Post Office collects the summons"}
-    ], edges:[{from:"A",to:"D"},{from:"D",to:"P",label:"No"},{from:"P",to:"B"},{from:"D",to:"B",label:"Yes"},{from:"B",to:"C"},{from:"C",to:"E"},{from:"E",to:"F"},{from:"F",to:"G"}] },
+    ], edges:[{from:"A",to:"D"},{from:"D",to:"P",label:"No"},{from:"P",to:"B"},{from:"D",to:"B",label:"Yes",side:true},{from:"B",to:"C"},{from:"C",to:"E"},{from:"E",to:"F"},{from:"F",to:"G"}] },
 
   { id:"service", label:"Service of Summons", title:"Reaching the respondent", actors:["external","courtstaff","judge","respondent"],
     story:"Now the case leaves the court's hands and rides on the postal system, sent by <b>RPAD</b>, registered post that returns an acknowledgement-due (AD) card as proof of delivery. Whether the respondent ever learns they're being sued comes down to a postman, an address, and who happens to be home. This is where §138 cases most often stall.<i>The responsibility to provide an updated, correct address rests with the complainant.</i>",
@@ -394,24 +394,27 @@ function Icon(name){
 
 /* ===== sizing + single connected layout ===== */
 function sizeFor(n){
-  if(n.kind==="decision"){ const s=Math.max(140,Math.min(200,108+n.label.length*2.6)); return {w:Math.round(s),h:Math.round(s)}; }
+  if(n.kind==="decision"){ const s=Math.max(160,Math.min(228,124+n.label.length*3)); return {w:Math.round(s),h:Math.round(s)}; }
   if(n.kind==="start"){ const l=Math.max(1,Math.ceil(n.label.length/22)); return {w:190,h:Math.max(56,36+l*20)}; }
   if(n.kind==="outcome"){ const l=Math.max(1,Math.ceil(n.label.length/22)); return {w:196,h:Math.max(44,26+l*20)}; }
   const l=Math.max(1,Math.ceil(n.label.length/23)); return {w:200,h:Math.max(62,46+l*20)};
 }
 const tone=l=> l==="Yes"?"#5fe0a0" : l==="No"?"#f2a0c8" : "#EDE7DA";
-function edgeObj(id,e,src,tgt,pts){
-  const dotted=!!e.dotted;
-  return { id, source:src, target:tgt, sourceHandle:dotted?"lout":"out", targetHandle:dotted?"lin":"in",
-    type:"routed", zIndex:2, data:{dotted, points:pts},
+function edgeObj(id,e,src,tgt){
+  const dotted=!!e.dotted, side=!!e.side;
+  const sh = dotted?"lout" : side?"rout" : "out";
+  const th = dotted?"lin"  : side?"rin"  : "in";
+  return { id, source:src, target:tgt, sourceHandle:sh, targetHandle:th,
+    type:"smoothstep", pathOptions:{borderRadius:14}, animated:dotted, zIndex:2,
     label:e.label,
-    style:{stroke:dotted?LC+".36)":LC+".5)", strokeWidth:1.8, strokeDasharray:dotted?"3 5":undefined},
-    markerEnd:{type:MarkerType.ArrowClosed,color:dotted?LC+".42)":LC+".6)",width:15,height:15},
-    labelStyle:{fill:tone(e.label)} };
+    style:{stroke:dotted?LC+".4)":LC+".52)", strokeWidth:1.8, strokeDasharray:dotted?"4 5":undefined},
+    markerEnd:{type:MarkerType.ArrowClosed,color:dotted?LC+".46)":LC+".62)",width:15,height:15},
+    labelStyle:{fill:tone(e.label),fontWeight:700,fontSize:11,fontFamily:"'Source Sans 3',sans-serif"},
+    labelBgStyle:{fill:"#1b1f3f"},labelBgPadding:[6,3],labelBgBorderRadius:6 };
 }
 function buildOne(){
   const g=new dagre.graphlib.Graph({multigraph:true});
-  g.setGraph({rankdir:"TB",nodesep:46,ranksep:72,edgesep:28,marginx:26,marginy:30});
+  g.setGraph({rankdir:"TB",nodesep:58,ranksep:108,edgesep:38,marginx:30,marginy:36});
   g.setDefaultEdgeLabel(()=>({}));
   PROCESS.forEach(s=>s.nodes.forEach(n=>{ const z=sizeFor(n); g.setNode(s.id+"_"+n.id,{width:z.w,height:z.h}); }));
   const meta=[];
@@ -425,38 +428,14 @@ function buildOne(){
   PROCESS.forEach(s=>{ let mn=1e9,mx=-1e9; s.nodes.forEach(n=>{ const p=g.node(s.id+"_"+n.id),z=sizeFor(n); mn=Math.min(mn,p.y-z.h/2); mx=Math.max(mx,p.y+z.h/2); }); yr[s.id]={min:mn,max:mx}; });
   const edges=[];
   meta.forEach(o=>{
-    const ge=g.edge(o.v,o.w,o.nm); const pts=(ge&&ge.points)?ge.points.map(pp=>({x:pp.x,y:pp.y})):null;
-    if(o.kind==="cross"){ edges.push({id:o.id,source:o.v,target:o.w,sourceHandle:"out",targetHandle:"in",type:"routed",zIndex:2,data:{points:pts,cross:true},style:{stroke:LC+".62)",strokeWidth:2.4},markerEnd:{type:MarkerType.ArrowClosed,color:LC+".74)",width:16,height:16}}); }
-    else edges.push(edgeObj(o.id,o.e,o.v,o.w,pts));
+    if(o.kind==="cross"){ edges.push({id:o.id,source:o.v,target:o.w,sourceHandle:"out",targetHandle:"in",type:"smoothstep",pathOptions:{borderRadius:14},zIndex:2,style:{stroke:LC+".62)",strokeWidth:2.4},markerEnd:{type:MarkerType.ArrowClosed,color:LC+".74)",width:16,height:16}}); }
+    else edges.push(edgeObj(o.id,o.e,o.v,o.w));
   });
   return { nodes, edges, w:maxX, h:maxY, yr, order };
 }
 const ONE = buildOne();
 
-/* ===== routed edge: follows dagre's computed points so lines weave between boxes ===== */
-function lerpPt(from,to,dist){ const dx=to.x-from.x,dy=to.y-from.y,len=Math.hypot(dx,dy)||1; const t=Math.min(dist,len/2)/len; return {x:from.x+dx*t,y:from.y+dy*t}; }
-function roundedPath(pts,r){
-  if(!pts||pts.length<2) return "";
-  if(pts.length===2) return "M"+pts[0].x+","+pts[0].y+" L"+pts[1].x+","+pts[1].y;
-  let d="M"+pts[0].x.toFixed(1)+","+pts[0].y.toFixed(1);
-  for(let i=1;i<pts.length-1;i++){ const p1=pts[i]; const a=lerpPt(p1,pts[i-1],r), b=lerpPt(p1,pts[i+1],r);
-    d+=" L"+a.x.toFixed(1)+","+a.y.toFixed(1)+" Q"+p1.x.toFixed(1)+","+p1.y.toFixed(1)+" "+b.x.toFixed(1)+","+b.y.toFixed(1); }
-  const L=pts[pts.length-1]; d+=" L"+L.x.toFixed(1)+","+L.y.toFixed(1);
-  return d;
-}
-function RoutedEdge(props){
-  const { id, sourceX, sourceY, targetX, targetY, markerEnd, style, data, label, labelStyle } = props;
-  let pts;
-  if(data && data.points && data.points.length>=2){ const mids=data.points.slice(1,-1); pts=[{x:sourceX,y:sourceY},...mids,{x:targetX,y:targetY}]; }
-  else pts=[{x:sourceX,y:sourceY},{x:targetX,y:targetY}];
-  const d=roundedPath(pts,14);
-  const mid=pts[Math.floor(pts.length/2)];
-  return h(React.Fragment,null,
-    h("path",{ id, d, markerEnd, style:Object.assign({fill:"none"},style), className:"react-flow__edge-path"+(data&&data.dotted?" cp-dash":"") }),
-    label ? h(EdgeLabelRenderer,null, h("div",{ className:"cp-elabel", style:{ transform:"translate(-50%,-50%) translate("+mid.x+"px,"+mid.y+"px)", color:(labelStyle&&labelStyle.fill)||"#EDE7DA" } }, label)) : null
-  );
-}
-const ET = { routed:RoutedEdge };
+/* edges use React Flow's built-in smoothstep (elbowed with rounded corners) */
 
 function CardNode({ data }){
   const k=data.kind, s=data.size;
@@ -487,7 +466,7 @@ function OneChart(){
     return ()=>{ ro.disconnect(); window.removeEventListener("resize",fit); };
   },[]);
   return h("div",{className:"cp-one",ref:wrapRef,style:{height:ph+"px"}},
-    h(ReactFlow,{ defaultNodes:ONE.nodes, defaultEdges:ONE.edges, nodeTypes:NT, edgeTypes:ET,
+    h(ReactFlow,{ defaultNodes:ONE.nodes, defaultEdges:ONE.edges, nodeTypes:NT,
       onInit:(inst)=>{ rfRef.current=inst; const wrap=wrapRef.current; if(wrap){ const zoom=Math.min(1,(wrap.clientWidth-2)/(ONE.w+36)); inst.setViewport({x:18,y:18,zoom}); } },
       fitView:false, proOptions:{hideAttribution:true}, nodesDraggable:true, nodesConnectable:false, elementsSelectable:false,
       panOnDrag:false, panOnScroll:false, zoomOnScroll:false, zoomOnPinch:false, zoomOnDoubleClick:false, preventScrolling:false },
