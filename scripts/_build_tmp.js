@@ -1786,7 +1786,7 @@ scEvents.map(eventCard).join("\n") + "\n" +
 /* ---------------- write everything ---------------- */
 
 ["collaborate", "contributors", "sc-ai-policy", "about", "team", "resources"].forEach(function (d) {
-  fs.rmSync(path.join(ROOT, d), { recursive: true, force: true });
+  try { fs.rmSync(path.join(ROOT, d), { recursive: true, force: true }); } catch(e) {}
 });
 fs.mkdirSync(path.join(ROOT, "collaborate"), { recursive: true });
 fs.mkdirSync(path.join(ROOT, "sc-ai-policy"), { recursive: true });

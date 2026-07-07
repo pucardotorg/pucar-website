@@ -5728,3 +5728,56 @@ button.circle-card{
 @media (prefers-reduced-motion:reduce){
   .unlock-lock .shk, .unlock-body, .up-fill, .unlock{ transition:none!important; }
 }
+
+/* ================= Who benefits (DRISTI page) ================= */
+.benefits{
+  background:#141732;
+  color:var(--paper);
+  padding: clamp(64px,9vw,110px) clamp(20px,5vw,72px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.benefits-head{ max-width:720px; margin:0 auto 30px; text-align:center; }
+.benefits .beat-eyebrow{ color:var(--green); }
+.benefits-title{ font-size:clamp(2rem,4.5vw,3.2rem); line-height:1.08; margin-bottom:14px; }
+.benefits-sub{ color:rgba(251,248,242,.72); line-height:1.6; font-size:1.02rem; }
+
+.benefits-switch{ display:flex; flex-wrap:wrap; justify-content:center; gap:12px; max-width:760px; margin:0 auto 24px; }
+.role-btn{ font:inherit; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:9px; width:124px; padding:16px 10px; border-radius:14px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.12); color:rgba(251,248,242,.72); transition:border-color .2s,background .2s,color .2s,transform .2s; }
+.role-btn:hover{ border-color:rgba(48,207,140,.5); color:var(--paper); transform:translateY(-2px); }
+.role-btn.is-active{ background:rgba(48,207,140,.1); border-color:var(--green); color:var(--paper); }
+.role-ic{ width:46px; height:46px; border-radius:50%; display:grid; place-items:center; background:rgba(255,255,255,.06); color:rgba(251,248,242,.6); transition:background .2s,color .2s; }
+.role-btn.is-active .role-ic{ background:var(--green); color:#08281b; }
+.role-ic svg{ width:24px; height:24px; }
+.role-name{ font-size:.92rem; font-weight:600; }
+
+.benefits-stage{ max-width:820px; margin:0 auto; }
+.role-panel{ display:none; }
+.role-panel.is-active{ display:block; animation:benefitIn .45s cubic-bezier(.16,.8,.3,1); }
+@keyframes benefitIn{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:none; } }
+.role-card{ display:grid; grid-template-columns:auto 1fr; gap:26px 34px; align-items:center; background:rgba(255,255,255,.035); border:1px solid rgba(48,207,140,.28); border-radius:18px; padding:28px 30px; }
+.role-stat{ text-align:center; padding-right:28px; border-right:1px solid rgba(255,255,255,.1); }
+.role-stat-num{ font-family:var(--font-display); font-weight:600; font-size:clamp(2.2rem,5vw,3.2rem); color:var(--green); line-height:1; }
+.role-stat-cap{ margin-top:8px; font-size:.85rem; color:rgba(251,248,242,.6); max-width:170px; margin-inline:auto; line-height:1.35; }
+.role-benefits{ list-style:none; margin:0; padding:0; display:grid; gap:11px; }
+.role-benefits li{ position:relative; padding-left:28px; font-size:.98rem; line-height:1.45; color:rgba(251,248,242,.86); }
+.role-benefits li::before{ content:""; position:absolute; left:0; top:.2em; width:17px; height:17px; border-radius:50%; background:rgba(48,207,140,.16); }
+.role-benefits li::after{ content:""; position:absolute; left:5px; top:.42em; width:6px; height:3px; border-left:2px solid var(--green); border-bottom:2px solid var(--green); transform:rotate(-45deg); }
+@media (max-width:640px){
+  .role-card{ grid-template-columns:1fr; gap:18px; }
+  .role-stat{ border-right:0; border-bottom:1px solid rgba(255,255,255,.1); padding:0 0 16px; }
+}
+
+.benefits-survey{ max-width:820px; margin:34px auto 0; padding-top:26px; border-top:1px solid rgba(255,255,255,.1); }
+.survey-eyebrow{ text-align:center; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(251,248,242,.5); margin:0 0 18px; }
+.survey-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px 40px; }
+.survey-group{ display:grid; gap:12px; }
+.survey-grp-label{ font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--green); margin:0; }
+.survey-item{ display:flex; align-items:baseline; gap:12px; }
+.survey-num{ font-family:var(--font-display); font-weight:600; font-size:1.9rem; color:var(--green); min-width:70px; line-height:1; }
+.survey-txt{ font-size:.94rem; color:rgba(251,248,242,.78); line-height:1.4; }
+.survey-src{ text-align:center; margin:20px 0 0; font-size:.8rem; color:rgba(251,248,242,.45); }
+
+@media (prefers-reduced-motion:reduce){
+  .role-panel.is-active{ animation:none; }
+  .role-btn:hover{ transform:none; }
+}
