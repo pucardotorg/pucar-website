@@ -432,17 +432,29 @@
       var reg = regionById[id];
       var ex = document.createElement("div");
       ex.className = "rm-expand";
+      var lk = REGION_LINK[id];
       var lis = reg.courts.map(function (c) {
-        return '<li class="rm-ditem"' + (c.c ? ' data-cx="' + c.c[0] + '" data-cy="' + c.c[1] + '"' : "") + ">" +
+        // live courts link straight to their spot on the DRISTI page
+        var href = c.href || (c.live && lk ? lk.href : null);
+        var nameHtml = href
+          ? '<a class="rm-dname rm-dlink" href="' + href + '">' + c.n + "</a>"
+          : '<span class="rm-dname">' + c.n + "</span>";
+        return '<li class="rm-ditem' + (href ? " is-clickable" : "") + '"' + (c.c ? ' data-cx="' + c.c[0] + '" data-cy="' + c.c[1] + '"' : "") + ">" +
           '<span class="rm-ddot' + (c.live ? " is-live" : "") + '"></span>' +
-          '<span class="rm-dname">' + c.n + "</span>" +
+          nameHtml +
           '<span class="rm-dstatus' + (c.live ? " is-live" : "") + '">' + (c.live ? "Live" : "Coming soon") + "</span></li>";
       }).join("");
-      var lk = REGION_LINK[id];
       var linkHtml = lk ? '<a class="rm-detail" href="' + lk.href + '">' + lk.text +
         ' <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M5 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>' : "";
       ex.innerHTML = '<div class="rm-expand-inner"><ul class="rm-dlist">' + lis + "</ul>" + linkHtml + "</div>";
       ex.querySelectorAll(".rm-ditem").forEach(function (li) {
+        // clicking anywhere on a live row follows its link (the <a> already
+        // handles keyboard/middle-click; this just widens the hit area)
+        var a = li.querySelector(".rm-dlink");
+        if (a) li.addEventListener("click", function (e) {
+          if (e.target.closest("a")) return; // let the real anchor do its thing
+          window.location.href = a.getAttribute("href");
+        });
         var cx = li.getAttribute("data-cx");
         if (cx == null) return;
         li.addEventListener("mouseenter", function () {

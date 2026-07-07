@@ -5552,6 +5552,9 @@ button.circle-card{
 .rm-ddot{ width:8px; height:8px; border-radius:50%; border:1.5px solid var(--green); box-sizing:border-box; flex:0 0 auto; }
 .rm-ddot.is-live{ background:var(--green); }
 .rm-dname{ flex:1 1 auto; }
+.rm-ditem.is-clickable{ cursor:pointer; }
+.rm-dlink{ color:inherit; text-decoration:none; }
+.rm-ditem.is-clickable:hover .rm-dlink{ color:var(--green); text-decoration:underline; text-underline-offset:2px; }
 .rm-dstatus{ font-size:.64rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:rgba(251,248,242,.45); }
 .rm-dstatus.is-live{ color:var(--green); }
 .rm-detail{ display:inline-flex; align-items:center; gap:6px; margin:9px 0 3px 34px; font-size:.82rem; font-weight:600;
