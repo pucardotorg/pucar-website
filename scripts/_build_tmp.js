@@ -1553,6 +1553,31 @@ function careerPage(role) {
   });
 }
 
+/* ---------------- careers: hiring process (visual 4-step timeline) ---- */
+function hiringProcessHtml() {
+  var STEPS = [
+    { t: "Coding challenge", d: "A short, real-shaped task you complete in your own time." },
+    { t: "Pair coding", d: "Build something live with one of our engineers — your tools and AI welcome." },
+    { t: "Interview with the Tech Lead", d: "A deeper look at systems, trade-offs and how you work." },
+    { t: "Interview with the PUCAR team", d: "Mission, collaboration, and working with courts and stakeholders." }
+  ];
+  var steps = STEPS.map(function (s, i) {
+    return '    <li class="hiring-step">' +
+      '<span class="hs-node">' + (i + 1) + '</span>' +
+      '<div class="hs-body"><h3 class="hs-title">' + s.t + '</h3><p class="hs-desc">' + s.d + '</p></div>' +
+    '</li>';
+  }).join("\n");
+  return '<section class="hiring" id="hiring">\n' +
+    '  <div class="hiring-head">\n' +
+    '    <p class="beat-eyebrow">How hiring works</p>\n' +
+    '    <h2 class="hiring-title">A clear, four-step process.</h2>\n' +
+    '    <p class="hiring-sub">We reach out to shortlisted candidates and let you know before it begins. You move through the steps one at a time, and from the first round to a final decision it usually takes about two weeks.</p>\n' +
+    "  </div>\n" +
+    '  <ol class="hiring-steps">\n' + steps + "\n  </ol>\n" +
+    '  <p class="hiring-note"><span class="hiring-badge">≈ 2 weeks</span>from first round to final decision, for candidates who move through every round.</p>\n' +
+    "</section>\n";
+}
+
 function careersPage() {
   const GROUPS = [
     ["Permanent", "Permanent roles", "Full-time seats at the heart of the mission."]
@@ -1619,6 +1644,7 @@ function careersPage() {
 '  <p class="collab-empty">No open roles right now. Check back soon, or write to us anyway: the right person has a way of creating their own role.</p>\n') + "\n" +
 jdSources + "\n" + jdModal + "\n" +
 "</section>\n" +
+hiringProcessHtml() +
 '<script src="/js/careers-modal.js" defer></script>\n' +
 "<main hidden>";
 

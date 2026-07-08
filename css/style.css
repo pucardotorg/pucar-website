@@ -5806,3 +5806,34 @@ body.jdm-open{ overflow:hidden; }
 main.job-main.careers-lean{ padding:0; min-height:0; }
 .careers-board-lead{ padding-top:clamp(84px,10vw,120px); }
 @media (prefers-reduced-motion:reduce){ .jdm-dialog{ animation:none; } }
+
+/* ================= Careers hiring process (4-step timeline) ================= */
+.hiring{ background:var(--paper); color:var(--ink); padding:clamp(64px,9vw,110px) clamp(20px,5vw,72px); }
+.hiring-head{ max-width:720px; margin:0 auto 46px; text-align:center; }
+.hiring .beat-eyebrow{ color:var(--forest); }
+.hiring-title{ font-size:clamp(2rem,4.5vw,3rem); line-height:1.08; margin-bottom:14px; }
+.hiring-sub{ color:var(--ink-soft); line-height:1.6; font-size:1.02rem; }
+.hiring-steps{ position:relative; list-style:none; margin:0 auto; padding:0; max-width:1000px;
+  display:grid; grid-template-columns:repeat(4,1fr); gap:24px; }
+.hiring-steps::before{ content:""; position:absolute; top:31px; left:12.5%; right:12.5%; height:2px;
+  background:rgba(36,30,26,.16); z-index:0; }
+.hiring-step{ position:relative; z-index:1; text-align:center; padding-top:8px; }
+.hs-node{ width:46px; height:46px; border-radius:50%; display:grid; place-items:center; margin:0 auto 16px;
+  font-family:var(--font-display); font-weight:600; font-size:1.2rem; color:#08281b; background:var(--green);
+  box-shadow:0 0 0 6px var(--paper); }
+.hs-title{ font-family:var(--font-display); font-weight:500; font-size:1.1rem; line-height:1.2; margin:0 0 6px; }
+.hs-desc{ font-size:.9rem; line-height:1.45; color:var(--ink-soft); max-width:23ch; margin:0 auto; }
+.hiring-note{ text-align:center; margin:42px 0 0; font-size:.98rem; color:var(--ink-soft); }
+.hiring-badge{ display:inline-block; font-weight:700; font-size:.78rem; letter-spacing:.03em; text-transform:uppercase;
+  color:#08281b; background:var(--green); padding:4px 12px; border-radius:999px; margin-right:9px; }
+@media (max-width:720px){
+  .hiring-steps{ grid-template-columns:1fr; gap:0; max-width:440px; }
+  .hiring-steps::before{ display:none; }
+  .hiring-step{ text-align:left; display:grid; grid-template-columns:46px 1fr; gap:16px; padding:0 0 26px; }
+  .hiring-step::before{ content:""; position:absolute; left:22px; top:46px; bottom:0; width:2px;
+    background:rgba(36,30,26,.16); z-index:0; }
+  .hiring-step:last-child::before{ display:none; }
+  .hs-node{ margin:0; }
+  .hs-title{ margin-top:9px; }
+  .hs-desc{ max-width:none; margin:0; }
+}
