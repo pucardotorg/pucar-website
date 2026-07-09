@@ -11,6 +11,12 @@
   var litigantWalker = document.getElementById("litigantWalker");
   var numBeats = beatEls.length;
 
+  // The scrollytelling story now lives only on /litigant-journey/. On any
+  // page without it (e.g. the home page), skip the whole story engine so
+  // the scroll handlers never touch a null #pin/#story. The other IIFEs
+  // below (collab-strip stack, waving heads) self-guard and still run.
+  if (!story || !pin || !numBeats) return;
+
   if (beatTotalEl) beatTotalEl.textContent = String(numBeats);
 
   var currentBeat = -1;

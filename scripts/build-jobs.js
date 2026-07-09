@@ -1888,7 +1888,7 @@ html = html.slice(0, s + START.length) + "\n" +
 fs.writeFileSync(indexPath, bust(html));
 
 /* sitemap */
-const urls = [SITE + "/", SITE + "/sc-ai-policy/", SITE + "/contributors/", SITE + "/about/", SITE + "/dristi/", SITE + "/approach/", SITE + "/cheque-journey/", SITE + "/careers/", SITE + "/resources/"]
+const urls = [SITE + "/", SITE + "/litigant-journey/", SITE + "/sc-ai-policy/", SITE + "/contributors/", SITE + "/about/", SITE + "/dristi/", SITE + "/approach/", SITE + "/cheque-journey/", SITE + "/careers/", SITE + "/resources/"]
   .concat(jobs.map(function (j) { return SITE + j.url; }))
   .concat(careerRoles.map(function (r) { return SITE + r.url; }))
   .concat(contributors.map(function (c) { return SITE + c.url; }));
