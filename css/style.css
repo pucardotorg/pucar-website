@@ -5526,10 +5526,12 @@ button.circle-card{
 .mission-ink-stroke{
   fill:none;
   stroke:var(--pink);
-  stroke-width:2.4;
+  stroke-width:4.2;
   stroke-linecap:round;
   stroke-linejoin:round;
 }
+/* the lighter, offset second pen pass */
+.mission-ink-stroke--pass2{ stroke-width:3.2; opacity:.55; }
 .mission-cta{ text-align:center; margin-top:clamp(28px,4vh,40px); }
 
 .mission-cards{

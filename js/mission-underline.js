@@ -26,13 +26,24 @@
   var paths = [];
   var drawn = false;
 
-  /* one hand-drawn stroke spanning x0..x1 at vertical y, jittered by r() */
-  function handPath(x0, x1, y, r) {
+  /* append one stroke path to group g, collect it for the draw animation */
+  function addStroke(g, d, extraClass) {
+    var p = document.createElementNS(SVGNS, 'path');
+    p.setAttribute('d', d);
+    p.setAttribute('class', 'mission-ink-stroke' + (extraClass ? ' ' + extraClass : ''));
+    g.appendChild(p);
+    paths.push(p);
+  }
+
+  /* one hand-drawn stroke spanning x0..x1 at vertical y, jittered by r().
+     yShift nudges the whole stroke down a hair so a second pass sits just
+     off the first instead of tracing it exactly. */
+  function handPath(x0, x1, y, r, yShift) {
     var padL = 5 + r() * 7;              // pen starts a touch before the word
     var padR = 5 + r() * 9;              // ...and overshoots a touch after
     x0 -= padL; x1 += padR;
     var len = x1 - x0;
-    var base = y + 3 + r() * 2;          // sit just under the baseline
+    var base = y + 3 + r() * 2 + (yShift || 0);  // sit just under the baseline
     var slant = (r() - 0.5) * 5;         // slight overall tilt
     var drift = (r() - 0.5) * 3;         // whole-stroke vertical drift
     var segs = Math.max(4, Math.round(len / 26));
@@ -89,17 +100,13 @@
       for (var i = 0; i < rects.length; i++) {
         var b = rects[i];
         if (b.width < 6) continue;
-        var d = handPath(
-          b.left - sBox.left,
-          b.right - sBox.left,
-          b.bottom - sBox.top,
-          r
-        );
-        var p = document.createElementNS(SVGNS, 'path');
-        p.setAttribute('d', d);
-        p.setAttribute('class', 'mission-ink-stroke');
-        g.appendChild(p);
-        paths.push(p);
+        var x0 = b.left - sBox.left;
+        var x1 = b.right - sBox.left;
+        var yb = b.bottom - sBox.top;
+        /* two passes: a full-weight base stroke, then a lighter, slightly
+           lower second pass so the pen reads as going over the line twice */
+        addStroke(g, handPath(x0, x1, yb, r, 0), null);
+        addStroke(g, handPath(x0, x1, yb, r, 1.8), 'mission-ink-stroke--pass2');
       }
     }
 
