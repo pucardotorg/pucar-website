@@ -5500,6 +5500,7 @@ button.circle-card{
 }
 .mission-inner{ max-width:1180px; margin:0 auto; }
 .mission-statement{
+  position:relative; /* anchor for the hand-inked underline overlay */
   font-family:var(--font-display);
   font-weight:500;
   font-size:clamp(1.9rem,4.4vw,3.4rem);
@@ -5510,7 +5511,25 @@ button.circle-card{
   margin:0 auto;
 }
 /* pink italic key phrases, echoing the Gates "every / healthy" treatment */
-.mission-statement em{ font-style:italic; color:var(--pink); }
+.mission-statement em{ position:relative; z-index:1; font-style:italic; color:var(--pink); }
+/* hand-inked underlines drawn by js/mission-underline.js: an absolutely
+   positioned SVG layer over the statement, one wobbly stroke per accent
+   word (per line box, so it survives wrapping). Sits behind the text,
+   never intercepts clicks. */
+.mission-ink{
+  position:absolute; left:0; top:0;
+  width:100%; height:100%;
+  overflow:visible;
+  pointer-events:none;
+  z-index:0;
+}
+.mission-ink-stroke{
+  fill:none;
+  stroke:var(--pink);
+  stroke-width:2.4;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
 .mission-cta{ text-align:center; margin-top:clamp(28px,4vh,40px); }
 
 .mission-cards{
