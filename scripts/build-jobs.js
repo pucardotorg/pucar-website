@@ -680,13 +680,13 @@ FUNDERS.map(function (f) {
   });
 }
 
-function resourcesPage() {
+/* THE blog section — a single generator shared by the /resources/ page and
+   the homepage mirror, so the two can never drift. Both read the same
+   content/resources/blog.json; on the homepage this is injected between the
+   <!-- BLOG:START/END --> markers below the map. */
+function blogSection() {
   const resBlog = JSON.parse(fs.readFileSync(path.join(ROOT, "content/resources/blog.json"), "utf8"));
-  const resData = JSON.parse(fs.readFileSync(path.join(ROOT, "content/resources/data.json"), "utf8"));
-  const resCircles = JSON.parse(fs.readFileSync(path.join(ROOT, "content/resources/circles.json"), "utf8"));
-
   const blogTags = Array.from(new Set(resBlog.reduce(function (a, b) { return a.concat(b.tags || []); }, []))).sort();
-
   const CAL_SVG = '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="1.5" y="2.5" width="13" height="12" rx="2"/><path d="M1.5 6h13M5 1v3M11 1v3"/></svg>';
   resBlog.sort(function (a, b) { return new Date(b.date) - new Date(a.date); }); // newest first
   const blogCards = resBlog.map(function (b) {
@@ -699,6 +699,23 @@ function resourcesPage() {
       '  <div class="collab-foot"><span class="collab-btn">Read article</span></div>\n' +
       "</a>";
   }).join("\n");
+  return '<section class="collaborate res-section" id="blog">\n' +
+    '  <div class="collab-head">\n' +
+    '    <p class="beat-eyebrow">Blog</p>\n' +
+    '    <h2 class="collab-title-main">Uncover fresh perspectives.</h2>\n' +
+    '    <p class="collab-sub">Learnings, perspectives and insights published across the press and the collective’s own notes.</p>\n' +
+    "  </div>\n" +
+    '  <div class="res-tagbar" id="blogTagbar">\n' +
+    '      <button type="button" class="res-tab is-active" data-tag="all">All topics</button>\n' +
+    blogTags.map(function (t) { return '      <button type="button" class="res-tab" data-tag="' + esc(t) + '">' + esc(t) + "</button>"; }).join("\n") + "\n" +
+    "  </div>\n" +
+    '  <div class="collab-grid res-grid" id="blogGrid">\n' + blogCards + "\n  </div>\n" +
+    "</section>\n";
+}
+
+function resourcesPage() {
+  const resData = JSON.parse(fs.readFileSync(path.join(ROOT, "content/resources/data.json"), "utf8"));
+  const resCircles = JSON.parse(fs.readFileSync(path.join(ROOT, "content/resources/circles.json"), "utf8"));
 
   /* per-type icons (Lucide-style inline strokes) shown instead of the old
      type pill on data cards, and inside the type-filter pills */
@@ -768,18 +785,7 @@ function resourcesPage() {
 "  </article>\n" +
 "</main>\n" +
 
-'<section class="collaborate res-section" id="blog">\n' +
-'  <div class="collab-head">\n' +
-'    <p class="beat-eyebrow">Blog</p>\n' +
-'    <h2 class="collab-title-main">Uncover fresh perspectives.</h2>\n' +
-'    <p class="collab-sub">Learnings, perspectives and insights published across the press and the collective’s own notes.</p>\n' +
-"  </div>\n" +
-'  <div class="res-tagbar" id="blogTagbar">\n' +
-'      <button type="button" class="res-tab is-active" data-tag="all">All topics</button>\n' +
-blogTags.map(function (t) { return '      <button type="button" class="res-tab" data-tag="' + esc(t) + '">' + esc(t) + "</button>"; }).join("\n") + "\n" +
-"  </div>\n" +
-'  <div class="collab-grid res-grid" id="blogGrid">\n' + blogCards + "\n  </div>\n" +
-"</section>\n" +
+blogSection() +
 
 '<section class="collaborate res-section" id="data-resources">\n' +
 '  <div class="collab-head">\n' +
@@ -1885,6 +1891,17 @@ html = html.slice(0, s + START.length) + "\n" +
   (boardJobs.length ? boardJobs.map(card).join("\n")
     : '<p class="collab-empty">No open work right now — check back soon, or write to us.</p>') +
   "\n" + html.slice(e);
+
+/* mirror the /resources/ blog section on the homepage (below the map),
+   from the same blog.json so the two stay in sync */
+const BSTART = "<!-- BLOG:START -->", BEND = "<!-- BLOG:END -->";
+const bs = html.indexOf(BSTART), be = html.indexOf(BEND);
+if (bs === -1 || be === -1) {
+  console.error("BLOG markers not found in index.html — blog mirror not injected.");
+} else {
+  html = html.slice(0, bs + BSTART.length) + "\n" + blogSection() + html.slice(be);
+}
+
 fs.writeFileSync(indexPath, bust(html));
 
 /* sitemap */
