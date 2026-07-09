@@ -158,4 +158,30 @@
   } else {
     window.addEventListener('load', start);
   }
+
+  /* "Our" -> "Your": ink the handwritten Y in on hover, scrub it out on
+     leave. ink-your keeps the strokes drawn; erase-your plays the eraser
+     wobble on top; on animationend we reset both without a visible un-draw. */
+  (function () {
+    var yWrap = stmt.querySelector('.mission-y');
+    if (!yWrap) return;
+
+    stmt.addEventListener('mouseenter', function () {
+      stmt.classList.remove('erase-your');
+      stmt.classList.add('ink-your');
+    });
+    stmt.addEventListener('mouseleave', function () {
+      if (!stmt.classList.contains('ink-your')) return;
+      stmt.classList.add('erase-your');   // keep ink-your so it stays drawn while erasing
+    });
+    yWrap.addEventListener('animationend', function () {
+      if (!stmt.classList.contains('erase-your')) return;
+      var ps = yWrap.querySelectorAll('path');
+      for (var i = 0; i < ps.length; i++) ps[i].style.transition = 'none';
+      stmt.classList.remove('ink-your');
+      stmt.classList.remove('erase-your');
+      void yWrap.offsetWidth;             // reflow so the reset isn't animated
+      for (var j = 0; j < ps.length; j++) ps[j].style.transition = '';
+    });
+  })();
 })();
