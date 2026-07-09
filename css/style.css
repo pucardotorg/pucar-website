@@ -2209,6 +2209,52 @@ button.btn.btn-outline{ border:1px solid var(--line); }
   margin-right:6px;
 }
 .skip-journey:hover{ opacity:1; text-decoration:underline; text-underline-offset:3px; }
+
+/* ---------------- beat jumper (litigant-journey only) ----------------
+   Two small chevron buttons pinned to the right edge, vertically centred in
+   the text column's right margin. Built by js/journey-nav.js; only shown
+   while the story fills the viewport (.is-visible), and slid away during the
+   cinematic film beat (body.film-playing), mirroring the progress rail. Dark
+   translucent so they read on both the light and dark beat backgrounds. */
+.journey-nav{
+  position:fixed;
+  right:clamp(12px,2vw,26px);
+  top:50%;
+  transform:translateY(-50%) translateX(14px);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  z-index:55;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .35s ease, transform .35s ease;
+}
+.journey-nav.is-visible{ opacity:1; transform:translateY(-50%); pointer-events:auto; }
+body.film-playing .journey-nav{ opacity:0; pointer-events:none; }
+.journey-nav-btn{
+  width:46px; height:46px;
+  border-radius:50%;
+  display:grid; place-items:center;
+  border:1px solid rgba(246,241,230,.38);
+  background:rgba(17,31,38,.72);
+  color:var(--paper);
+  cursor:pointer;
+  box-shadow:0 6px 20px rgba(10,21,26,.28);
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  transition:background .2s ease, transform .15s ease, opacity .2s ease, border-color .2s ease;
+}
+.journey-nav-btn:hover{ background:var(--forest); border-color:rgba(246,241,230,.6); transform:translateY(-1px); }
+.journey-nav-btn:active{ transform:scale(.93); }
+.journey-nav-btn:focus-visible{ outline:2px solid var(--green); outline-offset:2px; }
+.journey-nav-btn:disabled{ opacity:.28; cursor:default; pointer-events:none; box-shadow:none; }
+.journey-nav-btn svg{ display:block; }
+@media (max-width:600px){
+  .journey-nav{ gap:10px; }
+  .journey-nav-btn{ width:40px; height:40px; }
+}
+@media (prefers-reduced-motion: reduce){
+  .journey-nav{ transition:opacity .2s ease; }
+}
 .progress-rail{
   position:absolute;
   right:20px;
