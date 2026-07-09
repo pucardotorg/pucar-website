@@ -5532,6 +5532,39 @@ button.circle-card{
 }
 /* the lighter, offset second pen pass */
 .mission-ink-stroke--pass2{ stroke-width:3.2; opacity:.55; }
+
+/* "Our" -> "Your": a handwritten Y is inked in just before the O on hover
+   (js/mission-underline.js toggles .ink-your / .erase-your on the h2) and
+   scrubbed out like an eraser on mouse-out. Absolutely positioned so it
+   never reflows the centred statement. */
+.mission-your{ position:relative; }
+.mission-y{
+  position:absolute; right:100%; bottom:-.14em;
+  width:.58em; height:1.12em; margin-right:.05em;
+  overflow:visible; pointer-events:none;
+}
+.mission-y svg{ width:100%; height:100%; display:block; overflow:visible; }
+.mission-y path{
+  fill:none; stroke:var(--pink);
+  stroke-width:16; stroke-linecap:round; stroke-linejoin:round;  /* bolder than the underlines */
+  stroke-dasharray:1; stroke-dashoffset:1;      /* pathLength=1 -> undrawn */
+  transition:stroke-dashoffset .4s ease;
+}
+.mission-y .my-arm2{ transition-delay:.12s; }   /* second arm follows the first */
+.mission-statement.ink-your .mission-y path{ stroke-dashoffset:0; }
+.mission-statement.erase-your .mission-y{ animation:missionYourErase .44s ease forwards; }
+@keyframes missionYourErase{
+  0%{   opacity:1;   transform:translateX(0)  rotate(0);    filter:blur(0); }
+  20%{  transform:translateX(-2px) rotate(-2deg); }
+  40%{  transform:translateX(2px)  rotate(2deg); }
+  60%{  transform:translateX(-2px) rotate(-1deg); opacity:.7; }
+  80%{  transform:translateX(1px)  rotate(1deg);  opacity:.35; filter:blur(.8px); }
+  100%{ opacity:0; transform:translateX(0) scale(.88); filter:blur(1.6px); }
+}
+@media (prefers-reduced-motion: reduce){
+  .mission-y path{ transition:none; }
+  .mission-statement.erase-your .mission-y{ animation:none; opacity:0; }
+}
 .mission-cta{ text-align:center; margin-top:clamp(28px,4vh,40px); }
 
 .mission-cards{
