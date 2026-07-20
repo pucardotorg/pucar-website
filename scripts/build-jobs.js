@@ -1530,6 +1530,39 @@ const careerRoles = fs.readdirSync(path.join(ROOT, "content/careers"))
   })
   .filter(function (r) { return r.published !== false; });
 
+/* every careers role applies to supriya@pucar.org, CC varun@pucar.org, with a
+   per-role subject (centralised so it's consistent across ALL roles). */
+function applyMailto(role) {
+  return "mailto:supriya@pucar.org?cc=varun@pucar.org&subject=" +
+    encodeURIComponent("Role - " + (role.title || ""));
+}
+function openingsLabel(r) {
+  if (r.openings) return r.openings;   // explicit override, e.g. "3–4 roles available"
+  var n = parseInt(r.positions, 10);
+  if (!n || n < 1) n = 1;
+  return n + (n === 1 ? " position open" : " positions open");
+}
+/* compact "how hiring works" block embedded INSIDE each role's JD (modal +
+   role page) instead of a standalone section on /careers/ */
+function hiringInlineHtml() {
+  var STEPS = [
+    { t: "Coding challenge", d: "A short, real-shaped task you complete in your own time." },
+    { t: "Pair coding", d: "Build something live with one of our engineers — your tools and AI welcome." },
+    { t: "Interview with the Tech Lead", d: "A deeper look at systems, trade-offs and how you work." },
+    { t: "Interview with the PUCAR team", d: "Mission, collaboration, and working with courts and stakeholders." }
+  ];
+  var steps = STEPS.map(function (s, i) {
+    return '<li><span class="jhs-node">' + (i + 1) + '</span>' +
+      '<div><strong>' + s.t + '</strong><span>' + s.d + '</span></div></li>';
+  }).join("");
+  return '<div class="jd-hiring">' +
+    '<p class="jd-hiring-eyebrow">How hiring works</p>' +
+    '<h3 class="jd-hiring-title">A clear, four-step process.</h3>' +
+    '<ol class="jd-hiring-steps">' + steps + '</ol>' +
+    '<p class="jd-hiring-note"><span class="jd-hiring-badge">≈ 2 weeks</span>from the first round to a final decision, for candidates who move through every round.</p>' +
+  '</div>';
+}
+
 function careerPage(role) {
   const jsonLd = {
     "@context": "https://schema.org", "@type": "JobPosting",
@@ -1542,15 +1575,17 @@ function careerPage(role) {
   const main =
     '  <p class="beat-eyebrow">' + esc(role.type) + " role</p>\n" +
     '  <h1 class="job-title">' + esc(role.title) + "</h1>\n" +
+    '  <p class="job-openings"><span class="career-openings">' + esc(openingsLabel(role)) + "</span></p>\n" +
     '  <p class="job-summary">' + esc(role.summary) + "</p>\n" +
     '  <ul class="job-chips">' +
-    [role.commitment, role.location].concat(role.tags || []).filter(Boolean)
+    [role.commitment, role.location, role.experience].concat(role.tags || []).filter(Boolean)
       .map(function (c) { return '<li title="' + esc(c) + '">' + esc(c) + "</li>"; }).join("") +
     "</ul>\n" +
     '  <article class="job-body">\n' + mdToHtml(role.body || "") + "\n  </article>\n" +
+    hiringInlineHtml() + "\n" +
     '  <div class="cta-row">\n' +
     (role.status === "Open"
-      ? '    <a class="btn btn-primary" href="' + esc(role.apply_url || "mailto:collaborate@pucar.org") + '">Apply for this role</a>\n'
+      ? '    <a class="btn btn-primary" href="' + esc(applyMailto(role)) + '">Apply for this role</a>\n'
       : '    <span class="btn btn-outline is-disabled">' + esc(role.status) + "</span>\n") +
     (role.pdf ? '    <a class="btn btn-ghost" href="' + esc(role.pdf) + '" download>Download JD (PDF)</a>\n' : '') +
     '    <a class="btn btn-outline" href="/careers/">All open roles</a>\n  </div>';
@@ -1590,12 +1625,8 @@ function careersPage() {
   const GROUPS = [
     ["Permanent", "Permanent roles", "Full-time seats at the heart of the mission."]
   ];
-  const open = careerRoles.filter(function (r) { return r.status === "Open"; });
-  function openingsLabel(r) {
-    var n = parseInt(r.positions, 10);
-    if (!n || n < 1) n = 1;
-    return n + (n === 1 ? " position open" : " positions open");
-  }
+  const open = careerRoles.filter(function (r) { return r.status === "Open"; })
+    .sort(function (a, b) { return (a.order || 99) - (b.order || 99) || String(a.title).localeCompare(b.title); });
   const groupsHtml = GROUPS.map(function (g) {
     const rows = open.filter(function (r) { return r.type === g[0]; });
     if (!rows.length) return "";
@@ -1619,12 +1650,13 @@ function careersPage() {
       '<h2 class="jdm-title">' + esc(r.title) + '</h2>' +
       '<p class="jdm-openings"><span class="career-openings">' + openingsLabel(r) + '</span></p>' +
       '<ul class="job-chips">' +
-        [r.commitment, r.location].concat(r.tags || []).filter(Boolean).map(function (c) { return '<li>' + esc(c) + '</li>'; }).join("") +
+        [r.commitment, r.location, r.experience].concat(r.tags || []).filter(Boolean).map(function (c) { return '<li>' + esc(c) + '</li>'; }).join("") +
       '</ul>' +
       '<div class="job-body">' + mdToHtml(r.body || "") + '</div>' +
+      hiringInlineHtml() +
       '<div class="cta-row jdm-cta">' +
         (r.status === "Open"
-          ? '<a class="btn btn-primary" href="' + esc(r.apply_url || "mailto:collaborate@pucar.org") + '">Apply for this role</a>'
+          ? '<a class="btn btn-primary" href="' + esc(applyMailto(r)) + '">Apply for this role</a>'
           : '<span class="btn btn-outline is-disabled">' + esc(r.status) + '</span>') +
         (r.pdf ? '<a class="btn btn-ghost" href="' + esc(r.pdf) + '" download>Download JD (PDF)</a>' : '') +
       '</div>' +
@@ -1652,7 +1684,6 @@ function careersPage() {
 '  <p class="collab-empty">No open roles right now. Check back soon, or write to us anyway: the right person has a way of creating their own role.</p>\n') + "\n" +
 jdSources + "\n" + jdModal + "\n" +
 "</section>\n" +
-hiringProcessHtml() +
 '<script src="/js/careers-modal.js" defer></script>\n' +
 "<main hidden>";
 

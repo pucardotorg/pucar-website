@@ -5947,6 +5947,23 @@ body.jdm-open{ overflow:hidden; }
   padding:3px 10px; border-radius:999px; white-space:nowrap; }
 .career-row-title .career-openings{ margin-left:8px; position:relative; top:-1px; }
 .jdm-openings{ margin:0 0 12px; }
+.job-openings{ margin:0 0 14px; }
+/* compact "how hiring works" block embedded inside each role's JD (modal +
+   role page) — a vertical 4-step timeline that fits the narrow dialog */
+.jd-hiring{ margin:30px 0 6px; padding:22px 24px; border:1px solid rgba(36,30,26,.14); border-radius:16px;
+  background:rgba(48,207,140,.06); }
+.jd-hiring-eyebrow{ text-transform:uppercase; letter-spacing:.12em; font-size:.72rem; font-weight:700; color:var(--forest); margin:0 0 5px; }
+.jd-hiring-title{ font-family:var(--font-display); font-size:1.35rem; line-height:1.12; margin:0 0 18px; }
+.jd-hiring-steps{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:14px; }
+.jd-hiring-steps li{ display:flex; gap:13px; align-items:flex-start; }
+.jhs-node{ flex:0 0 auto; width:27px; height:27px; border-radius:50%; background:var(--green); color:#08281b;
+  font-weight:700; font-size:.9rem; display:flex; align-items:center; justify-content:center; }
+.jd-hiring-steps li > div{ display:flex; flex-direction:column; gap:2px; }
+.jd-hiring-steps strong{ font-size:1rem; color:var(--ink); }
+.jd-hiring-steps span{ color:var(--ink-soft); font-size:.92rem; line-height:1.45; }
+.jd-hiring-note{ margin:16px 0 0; font-size:.88rem; color:var(--ink-soft); line-height:1.5; }
+.jd-hiring-badge{ display:inline-block; background:var(--green); color:#08281b; font-weight:700; font-size:.72rem;
+  letter-spacing:.04em; padding:4px 10px; border-radius:999px; margin-right:9px; }
 /* careers page with no hero/intro: collapse the empty <main> so the roles
    board sits directly under the header */
 main.job-main.careers-lean{ padding:0; min-height:0; }

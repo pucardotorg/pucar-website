@@ -1,9 +1,12 @@
 {
   "title": "Full-Stack Developer, DRISTI",
   "type": "Permanent",
+  "order": 1,
   "location": "Hybrid · Kollam, Ahmedabad, Bengaluru, Chandigarh",
   "commitment": "Full-time · Hybrid",
-  "positions": 8,
+  "positions": 4,
+  "openings": "3–4 roles available",
+  "experience": "10–15+ years experience",
   "summary": "Full-stack engineering on the AI-enabled platform behind the 24x7 ON Courts. Hybrid, with regular travel and possible relocation.",
   "tags": ["TypeScript", "Next.js", "PostgreSQL", "AI-native"],
   "apply_url": "mailto:collaborate@pucar.org?subject=Role%20-%20Full-Stack%20Developer%2C%20DRISTI",
