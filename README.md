@@ -2441,6 +2441,14 @@ State of the site at that handover:
 
 ## 8. Known placeholders / TODO before launch (updated July 2026)
 
+- ARCHIVED (Jul 2026, may return on a different page): the DRISTI page's **"The
+  10 Unlocks"** section (`tenUnlocksHtml()` + `js/unlocks.js` + `.unlocks` CSS)
+  and **"Who benefits"** section (`userBenefitsHtml()` + `js/benefits.js` +
+  `.benefits` CSS) were REMOVED from `/dristi/` at the user's request. Nothing was
+  deleted — the generator functions in `scripts/build-jobs.js`, the two JS files
+  and their CSS all remain. To bring a section back, re-add its call in
+  `dristiPage` (where the ARCHIVED comment sits, just before the collaborate
+  board) and rebuild.
 - robots.txt is now generated at build time (allow-all + sitemap pointer);
   previously missing entirely.
 - /team/ shows the real 10-person team (Jul 2026); all ten headshots are

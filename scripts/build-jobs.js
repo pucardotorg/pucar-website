@@ -1365,9 +1365,11 @@ fs.readFileSync(path.join(ROOT, "assets", "gj-map.svg"), "utf8") + "\n" +
 "  </div>\n" +
 "</section>\n" +
 
-tenUnlocksHtml() +
-
-userBenefitsHtml() +
+/* ARCHIVED (Jul 2026): the "10 Unlocks" (tenUnlocksHtml) and "Who benefits"
+   (userBenefitsHtml) sections were removed from /dristi/ at the user's request
+   and may return on a different page later. The generator functions above and
+   js/unlocks.js + js/benefits.js + their CSS are kept intact — to bring a
+   section back, re-add its call here. See README §8. */
 
 '<section class="collaborate dristi-board" id="collaborate">\n' +
 '  <div class="collab-head">\n' +
