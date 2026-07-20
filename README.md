@@ -18,13 +18,35 @@ developer picking this up — read this top to bottom before touching anything.
 ## 1. Repository map
 
 ```
-index.html             Single-page story (8 scroll beats) + collaborate board + job modal.
-                       PARTLY GENERATED: cards between <!-- COLLAB:START/END --> markers
-                       are injected by the build script — don't hand-edit that region.
+index.html             HOME PAGE (restructured Jul 2026). Top to bottom: intro hero ->
+                       mission band (#mission) -> interactive India map (#reach) -> blog
+                       (#blog) -> collaborate board (#collaborate). Mostly HAND-AUTHORED;
+                       the 8-beat scrollytelling STORY that used to live here moved out to
+                       /litigant-journey/. PARTLY GENERATED: the collaborate cards
+                       (<!-- COLLAB:START/END -->) and the blog section
+                       (<!-- BLOG:START/END -->) are injected by the build — don't hand-edit
+                       those two regions.
 css/style.css          Everything visual: palette vars, story layout, litigant animations,
-                       collaborate board, filters, modal, job/contributor page styles.
-js/script.js           Story engine: beat switching, count-up stats, is-walking and
-                       is-idle classes driven by scroll.
+                       mission band, India-map section, collaborate board, filters, modal,
+                       job/contributor page styles.
+js/script.js           Story engine (drives /litigant-journey/ now): beat switching,
+                       count-up stats, is-walking/is-idle classes; also the homepage nav
+                       glider + dark-section flip.
+js/india-map.js        HOME #reach: the interactive "Where we're building" India map —
+                       renders states/districts/dots from india-map-data.js, hover-activate
+                       region cards, per-region zoom, district accordion (see §6.8).
+js/india-map-data.js   GENERATED DATA for the map: projected state + district SVG paths,
+                       centroids and court dots (from the datta07 Indian shapefiles, incl.
+                       PoK/Aksai Chin). Regenerate via the browser pipeline (see §6.8).
+js/mission-underline.js  HOME #mission: hand-inked draw-on underlines under the mission
+                       statement's <em> accents.
+js/resources.js        /resources/ + the home blog section behaviour.
+js/journey-nav.js      /litigant-journey/: up/down beat-jump arrows.
+js/unlocks.js          /dristi/: "The 10 Unlocks" interactive section.
+js/benefits.js         /dristi/: "Who benefits" section.
+js/careers-modal.js    /careers/: job-description modal.
+js/policy-countdown.js /sc-ai-policy/ (and the map's policy references): live countdown.
+js/team.js             /about/#team team-wall behaviour.
 js/collaborate.js      Board enhancement: filters, closes-in labels, modal + pushState.
 js/contact.js          Get-in-touch modal + Netlify form AJAX + themed validation.
 js/perspectives.js     sc-ai-policy: perspective-card modal + live CIVIS respondent count.
@@ -53,14 +75,21 @@ dristi/                GENERATED (dristiPage): the DRISTI platform page — live
                        growth chart, journey, race, state/district deployment tabs, board.
 approach/              GENERATED (approachPage): people-centric lens + 3 pillars +
                        unit-of-change. NOT IN NAV YET (awaiting user review).
+litigant-journey/      HAND-AUTHORED (index.html, NOT build-generated): the 8-beat
+                       scrollytelling story + the litigant SVG, MOVED here off the home
+                       page (Jul 2026). Driven by js/script.js; js/journey-nav.js adds
+                       up/down beat-jump arrows. IN NAV as "The Journey". In the sitemap.
 cheque-journey/        HAND-AUTHORED (index.html, NOT build-generated): interactive map
                        of the §138 cheque-bounce court process. A single connected
                        flowchart + a service blueprint, built with React Flow + dagre
                        loaded from esm.sh (no bundler) via an importmap; layout/edges
                        auto-routed. Left column carries the per-stage story (syncs on
                        scroll); a plain-language glossary sits below. Self-contained:
-                       inline CSS + one <script type="module">; only /cheque-journey/ is
-                       added to the sitemap urls array in build-jobs.js. NOT IN NAV YET.
+                       inline CSS + one <script type="module">. Has an IMMERSIVE FULLSCREEN
+                       ("canvas") mode: auto-expands when scrolled into view, a solid-green
+                       Enter-Full-Screen button, navigation locked until fullscreen, bounded
+                       panning (translateExtent) so the map can't drift off-screen, Esc/Exit
+                       hint that fades. In the sitemap; NOT IN NAV YET.
 careers/               GENERATED (careersPage/careerPage): open-roles page + one page per
                        role. NOT IN NAV YET (awaiting user review); listings are DRAFTS.
 team/                  GENERATED redirect stub → /about/#team (teamPage() in build script).
@@ -70,6 +99,7 @@ assets/litigant-source.svg  Cleaned copy of the litigant illustration (same as i
 assets/kerala-map.svg / ph-map.svg / gj-map.svg  State district maps (INLINED into
                        /dristi/ by the build; regenerate via the browser pipeline
                        documented in the deployments section, don't hand-edit paths).
+assets/our-journey.jpg / pucar-team.jpg / dristi-shot.jpg  Home mission-card photos.
 netlify.toml           publish=".", command="node scripts/build-jobs.js", security headers.
 ```
 
@@ -351,7 +381,82 @@ no Netlify to receive it) show an inline fallback with the collaborate@
 email. Submissions appear in the Netlify dashboard under Forms;
 notification emails can be configured there.
 
-## 4. The story (scrollytelling)
+## 3.4 Home page structure (Jul 2026 restructure) — read this
+
+The home page is no longer the scrollytelling story. `index.html` is now, top
+to bottom:
+
+1. **Intro hero** (`#intro`) — unchanged (see §3.1).
+2. **Mission band** (`#mission`) — see below.
+3. **"Where we're building" India map** (`#reach`) — see §3.5.
+4. **Blog** (`#blog`) — GENERATED between `<!-- BLOG:START -->` / `<!-- BLOG:END -->`
+   by `blogSection()` in the build (shared with `/resources/`, always in sync).
+5. **Collaborate board** (`#collaborate`) — unchanged (see §6), cards generated
+   between the COLLAB markers.
+
+The 8-beat **story + litigant figure moved to `/litigant-journey/`** (§4, §5
+still describe it; it just lives on that page now, driven by the same
+`js/script.js`, with `js/journey-nav.js` adding up/down beat-jump arrows).
+
+**Mission band (`#mission`, hand-authored).** A one-sentence mission statement
+whose `<em>` accents get hand-inked, draw-on underlines (`js/mission-underline.js`),
+a "Learn more about our approach" ghost button, and **three "door" cards**
+(`.mission-card`): *Our journey* → `/litigant-journey/`, *About us* → `/about/`,
+*About DRISTI* → `/dristi/`, each with a real photo
+(`assets/our-journey.jpg` / `pucar-team.jpg` / `dristi-shot.jpg`).
+
+## 3.5 "Where we're building" — the interactive India map (`#reach`)
+
+Home section after the mission band. Left column is region cards (`#reachList`),
+right column is the map SVG (`#reachMap`); `js/india-map.js` builds both at load
+from `window.INDIA_MAP` (`js/india-map-data.js`). Styled to match the DRISTI band:
+deep indigo `#141732` background (same hex as `.collaborate`).
+
+- **DATA (`js/india-map-data.js`, generated, ~147KB).** State + district SVG
+  paths, centroids, per-region court dots, all projected from the **datta07
+  Indian shapefiles** (same source as the DRISTI district maps) through ONE
+  equirectangular projection (cos-lat corrected) so the national outline and the
+  district shapes share a coordinate space. viewBox **897×1000**. India carries
+  the **full official boundary** — J&K + Ladakh cover PoK, Gilgit-Baltistan and
+  Aksai Chin. Districts are HIGH-RESOLUTION (fine simplification eps ~0.12–0.28 +
+  DECIMAL coords) so they stay smooth when a tiny area (e.g. the Chandigarh
+  tri-city) is zoomed in; states stay coarse (eps ~1.5, integer). REGENERATE via
+  the browser pipeline: fetch the geojson in a CSP-free tab (jsdelivr, not raw
+  github), project+simplify in-page, then extract the compact result (a blob
+  download button, or gzip+base64 → get_page_text) and write the data file.
+- **Regions:** All India · Kerala (LIVE: Kollam live, Thrissur coming) · Punjab &
+  Haryana (Panchkula / Gurugram / Chandigarh / Mohali, coming) · Gujarat (SARAS
+  2.0: Ahmedabad / Rajkot / Vadodara / Surat, coming).
+- **Visuals (DRISTI language):** ghosted paper state silhouettes; green outline +
+  faint green fill on the active states and their court districts; **dark
+  green-gradient dot orbs** (rich core → near-black edge, drop-shadow, soft glow —
+  deliberately NOT a glossy/light-reflective bead) that all pulse; a subtle
+  traveling "beam of light" around active borders; dark green-bordered tooltip.
+- **Cards:** each carries a mini silhouette thumbnail of its state(s), a green
+  left accent rail + glow when active, and an **accordion** that opens on select
+  listing the region's courts with live/coming-soon status. Kerala's card has an
+  **"Explore Kerala in detail →"** link to `/dristi/#deployments`.
+- **Interaction:** region cards **activate ON HOVER** (130 ms intent delay, plus a
+  400 ms cooldown so the accordion's open/collapse layout shift can't bounce the
+  cursor onto a neighbouring card); click + keyboard focus also activate. On the
+  map, only the states we're in are clickable (they select their region). The
+  header flips to `body.nav-dark` while this section is under it (a scroll
+  detector in `js/india-map.js`, because the section sits BEFORE the story so the
+  story's `:has(.pin[data-beat])` nav-dark selectors don't fire here).
+- **NO panning (by decision).** A region's resting view frames ALL its courts at
+  once, so every dot — including Gurugram, far south of the tri-city — is visible
+  and the map never moves on hover. Dots + labels are sized in on-screen pixels so
+  they stay legible at any zoom and on phones. Multi-state regions (P&H) draw each
+  member's outline + name label (Punjab / Haryana / Chandigarh UT); Chandigarh's
+  label is nudged off the tri-city dots with a short leader line.
+- **Mobile:** the grid stacks, the map moves to the top and is sticky so tapping
+  the cards below updates it in view.
+
+## 4. The story (scrollytelling) — now on /litigant-journey/
+
+*(This section describes the 8-beat story + litigant figure. As of Jul 2026 it
+lives on the hand-authored `/litigant-journey/` page, not the home page — but the
+mechanics below are unchanged.)*
 
 - `#story` is `height: calc(var(--beats) * 100vh)` with `--beats:8` set
   inline; `.pin` inside is `position:sticky` and holds the whole viewport.
@@ -2263,9 +2368,32 @@ when shared in Slack, iMessage, WhatsApp, X, LinkedIn, etc.
   Netlify's `process.env.URL` is set at build time; there's no custom
   domain/CNAME in the repo as of this writing.
 
-## 7b. WHERE WE LEFT OFF (end of 6 Jul 2026 session) — read this first
+## 7b. WHERE WE LEFT OFF — read this first
 
-State of the site at handover:
+### Current (10 Jul 2026)
+
+- **HOME PAGE restructured** (§3.4): intro hero → mission band (§3.4) → the
+  interactive "Where we're building" India map (`#reach`, §3.5) → blog →
+  collaborate board. The **8-beat scrollytelling story moved to its own
+  `/litigant-journey/` page** (in nav as "The Journey").
+- **India map (`#reach`) built and in place** — hi-res district shapes,
+  hover-activate region cards, NO panning (all court dots shown at once), dark
+  green-gradient dots, deep-indigo band, Kerala "Explore Kerala in detail →" link
+  to `/dristi/#deployments`. Full detail in §3.5. Regenerate the map data via the
+  browser pipeline noted there.
+- **New `/cheque-journey/` page** — interactive §138 cheque-bounce process map
+  (React Flow + dagre) with an immersive fullscreen "canvas" mode. In the sitemap,
+  NOT in nav yet.
+- **`/careers/` is now IN NAV** — one v2.0 DRISTI developer JD (8 positions),
+  downloadable PDF, visual 4-step hiring process.
+- **`/dristi/` gained** "The 10 Unlocks" (`js/unlocks.js`) + "Who benefits"
+  (`js/benefits.js`) interactive sections; ON Courts dashboard stats refreshed.
+- **Git:** `main` == `origin/main` (all pushed); Netlify rebuilds generated files
+  on every deploy.
+
+### Earlier snapshot (6 Jul 2026)
+
+State of the site at that handover:
 
 - SITE URL: pucar.netlify.app (corrected 6 Jul from pucar-journey; SITE
   constant in the build script + hardcoded homepage meta block).
@@ -2338,8 +2466,14 @@ State of the site at handover:
 - Decap OAuth setup (section 6.6) not yet done.
 - Sample job dates are relative to July 2026; re-check expiry behaviour when
   updating.
-- /approach/ and /careers/ await user review before nav placement (see
-  7b). The seven content/careers/*.json listings are drafts.
+- /careers/ is now IN NAV (Jul 2026). /approach/ and /cheque-journey/ are still
+  NOT in nav (in the sitemap only) — awaiting review. content/careers/*.json
+  listings are drafts.
+- HOME INDIA MAP (#reach, §3.5): court/region data is baked into
+  js/india-map-data.js. When a court goes live or a new deployment is added,
+  update the region/court config in the regenerate pipeline (or edit the live/
+  coming-soon flags) and re-project. Kerala's card links to /dristi/#deployments;
+  P&H and Gujarat have no "explore in detail" link yet (no DRISTI section for them).
 - Kerala dashboard numbers were last read 6 Jul 2026 (hero stats,
   growth chart, stage medians, race). They're inline/static: re-read
   the public dashboard and update kstatsHtml + js/dristi.js data when
