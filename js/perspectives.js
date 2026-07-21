@@ -103,7 +103,7 @@
       var n = r && r.data && r.data.consultationProfile &&
         r.data.consultationProfile.consultationResponsesCount;
       if (typeof n === "number" && n > 0) {
-        el.textContent = n + (n === 1 ? " person has" : " people have") + " already responded on CIVIS";
+        el.textContent = n + (n === 1 ? " person" : " people") + " responded on CIVIS";
         el.hidden = false;
       }
     })

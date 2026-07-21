@@ -515,27 +515,21 @@ collabBoardHtml() +
 '<section class="policy-band" id="policy">\n' +
 '  <div class="policy-callout">\n' +
 '    <div class="policy-callout-text">\n' +
-'      <p class="policy-kicker">Public consultation</p>\n' +
-'      <h2 class="policy-title">The Supreme Court wants your views on AI in its courts.</h2>\n' +
-'      <p class="policy-sub">A draft framework for how courts can use AI -- assist, never adjudicate. The collective has been reading it closely: explainers, critiques, and formal submissions, all in one place.</p>\n' +
+'      <p class="policy-kicker">AI in courts</p>\n' +
+'      <h2 class="policy-title">Our comments on the SC&rsquo;s AI policy.</h2>\n' +
+'      <p class="policy-sub">A draft framework for how courts can use AI -- assist, never adjudicate. The collective read it closely and put its views on the record: explainers, critiques, and formal submissions, all in one place.</p>\n' +
 '      <div class="cta-row">\n' +
-'        <a class="btn btn-primary" href="/sc-ai-policy/">Explore the Supreme Court’s AI policy</a>\n' +
+'        <a class="btn btn-primary" href="/sc-ai-policy/">Our comments on the SC&rsquo;s AI policy</a>\n' +
 "      </div>\n" +
 "    </div>\n" +
-'    <div class="policy-countdown" id="policyCountdown" data-deadline="2026-07-15">\n' +
-'      <span class="policy-countdown-num" id="policyCountdownNum">—</span>\n' +
-'      <span class="policy-countdown-label" id="policyCountdownLabel">days left</span>\n' +
-'      <span class="policy-countdown-sub">to respond by 15 July 2026</span>\n' +
-"    </div>\n" +
 "  </div>\n" +
-"</section>\n" +
-'<script src="/js/policy-countdown.js"></script>\n\n' +
+"</section>\n\n" +
 
 contributorsSection() +
 "<main hidden>";
   return pageShell({
     title: "About Contributing | PUCAR",
-    desc: "Three ways into PUCAR's work: the DRISTI 2.0 platform, the Supreme Court's AI policy consultation, and the 100+ contributors who make up the collective.",
+    desc: "Three ways into PUCAR's work: the DRISTI 2.0 platform, the Supreme Court's AI policy, and the 100+ contributors who make up the collective.",
     url: "/contributors/",
     jsonLd: { "@context": "https://schema.org", "@type": "CollectionPage", name: "About contributing to PUCAR",
       about: "Ways to contribute to the PUCAR collective" },
@@ -1736,10 +1730,11 @@ function card(job) {
 /* ---------------- SC AI policy page ---------------------------------------
    /sc-ai-policy/ -- a research-backed page on the Supreme Court's draft
    "Regulations for Use of Artificial Intelligence (AI) in Courts, 2026"
-   (published 3 June 2026 by the SC's AI Committee; public feedback to
-   office.regcc@sci.nic.in extended to 15 July 2026). Perspectives come
-   from content/sc-perspectives/*.json (sourced from the tracking sheet),
-   events from content/sc-events/*.json. Cards reuse the collaborate-card
+   (published 3 June 2026 by the SC's AI Committee; the public feedback
+   window closed 15 July 2026, so the page is now retrospective -- our
+   comments and the public record, no send-feedback CTA). Perspectives come
+   from content/sc-perspectives/*.json (sourced from the tracking sheet).
+   Cards reuse the collaborate-card
    classes exactly; the modal is the same job-modal, driven by
    js/perspectives.js reading perspectives.json. */
 
@@ -1786,25 +1781,24 @@ function eventCard(ev) {
 
 function scPolicyPage() {
   const main =
-'  <p class="beat-eyebrow">PUCAR // Public consultation</p>\n' +
-'  <h1 class="job-title">The Supreme Court wants your views on AI in its courts.</h1>\n' +
+'  <p class="beat-eyebrow">PUCAR // AI in courts</p>\n' +
+'  <h1 class="job-title">Our comments on the SC&rsquo;s AI policy.</h1>\n' +
 '  <article class="job-body prose">\n' +
 "    <p>On 3 June 2026, the Supreme Court's Artificial Intelligence Committee published the draft Regulations for Use of Artificial Intelligence (AI) in Courts, 2026, a first-of-its-kind framework covering the Supreme Court, all High Courts, subordinate courts, tribunals, and statutory bodies performing adjudicatory roles.</p>\n" +
 "    <p>The draft rests on a simple hierarchy: AI may assist, but never adjudicate. It permits AI for research, summarisation, translation, transcription, scheduling, litigant-assistance chatbots, and court analytics, and absolutely prohibits AI-only decisions, AI-based risk scoring for bail or credibility, predictive profiling, surveillance of judges or lawyers, and undisclosed AI-generated evidence. Lawyers must disclose AI use in filings, and a permanent Apex Body at the Supreme Court would approve and supervise tools across the system.</p>\n" +
-'    <p>Citizen feedback is open until 15 July 2026 (extended from June 20). Anyone (lawyers, technologists, litigants, or curious citizens) can email comments to the Member Secretary, AI Committee, at <a href="mailto:office.regcc@sci.nic.in">office.regcc@sci.nic.in</a>.</p>\n' +
+'    <p>The Court&rsquo;s public feedback window has now closed. PUCAR and the wider collective read the draft closely and put our views on the record. What we and others made of it is collected below.</p>\n' +
 "  </article>\n" +
 '  <div class="cta-row">\n' +
-'    <a class="btn btn-primary" href="mailto:office.regcc@sci.nic.in?subject=Feedback%20on%20Draft%20AI%20Regulations%20for%20Courts%2C%202026">Send the Court your feedback</a>\n' +
-'    <a class="btn btn-outline" href="https://cdnbbsr.s3waas.gov.in/s3ec0490f1f4972d133619a60c30f3559e/uploads/2026/06/2026060342.pdf" target="_blank" rel="noopener">Read the Court’s notice</a>\n' +
+'    <a class="btn btn-outline" href="https://cdnbbsr.s3waas.gov.in/s3ec0490f1f4972d133619a60c30f3559e/uploads/2026/06/2026060342.pdf" target="_blank" rel="noopener">Read the Court&rsquo;s notice</a>\n' +
 "  </div>\n" +
 '  <aside class="civis-callout">\n' +
 '    <div class="civis-callout-text">\n' +
-'      <p class="civis-kicker">Respond in minutes</p>\n' +
-'      <h2 class="civis-title">Not sure where to start? Respond on CIVIS.</h2>\n' +
-'      <p class="civis-sub">CIVIS turns the draft into a short guided questionnaire, in English and four Indian languages, and delivers your views to the Court\u2019s AI Committee.</p>\n' +
+'      <p class="civis-kicker">The consultation has closed</p>\n' +
+'      <h2 class="civis-title">See how the draft was put to citizens on CIVIS.</h2>\n' +
+'      <p class="civis-sub">CIVIS turned the draft into a short guided questionnaire, in English and four Indian languages, and carried people&rsquo;s views to the Court&rsquo;s AI Committee. The response window is now closed, but the consultation is still worth reading.</p>\n' +
 "    </div>\n" +
 '    <div class="civis-callout-action">\n' +
-'      <a class="civis-btn" href="https://www.civis.vote/consultations/1575/read" target="_blank" rel="noopener">Respond on CIVIS<span class="civis-btn-arrow" aria-hidden="true">\u2192</span></a>\n' +
+'      <a class="civis-btn" href="https://www.civis.vote/consultations/1575/read" target="_blank" rel="noopener">View the CIVIS consultation<span class="civis-btn-arrow" aria-hidden="true">&rarr;</span></a>\n' +
 '      <p class="civis-count" id="civisCount" hidden></p>\n' +
 "    </div>\n" +
 "  </aside>\n" +
@@ -1819,15 +1813,6 @@ function scPolicyPage() {
 perspectives.map(function (p) { return perspCard(p, p.slug); }).join("\n") + "\n" +
 "  </div>\n" +
 "</section>\n" +
-'<section class="collaborate participate" id="participate">\n' +
-'  <div class="collab-head">\n' +
-'    <p class="beat-eyebrow">Ways to participate</p>\n' +
-'    <h2 class="participate-title">Say something before July 15.</h2>\n' +
-"  </div>\n" +
-'  <div class="participate-grid">\n' +
-scEvents.map(eventCard).join("\n") + "\n" +
-"  </div>\n" +
-'</section>\n' +
 '<div class="job-modal" id="jobModal" hidden>\n' +
 '  <div class="job-modal-backdrop" data-close></div>\n' +
 '  <div class="job-modal-panel" role="dialog" aria-modal="true" aria-labelledby="jobModalTitle">\n' +
@@ -1842,8 +1827,8 @@ scEvents.map(eventCard).join("\n") + "\n" +
 "    </div>\n  </div>\n</div>\n" +
 '<script src="/js/perspectives.js"></script>\n<script src="/js/view-toggle.js"></script>\n<main hidden>';
   return pageShell({
-    title: "The Supreme Court’s draft AI regulations | Have your say | PUCAR",
-    desc: "The Supreme Court of India is inviting public feedback on its draft Regulations for Use of AI in Courts, 2026, until July 15. Read what people are saying and add your voice.",
+    title: "Our comments on the SC’s AI policy | PUCAR",
+    desc: "PUCAR’s comments on the Supreme Court of India’s draft Regulations for Use of AI in Courts, 2026. The public feedback window has closed; read what we and others made of it.",
     url: "/sc-ai-policy/",
     backHref: "/", backLabel: "← pucar.org", main: main
   }).replace("<main hidden>\n</main>", ""); // close the shell's main early; sections above are full-bleed
