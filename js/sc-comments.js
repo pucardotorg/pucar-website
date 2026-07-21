@@ -11,6 +11,14 @@
   var links = Array.prototype.slice.call(toc.querySelectorAll(".sub-toc-link"));
   if (!links.length) return;
 
+  var dot = toc.querySelector(".sub-toc-dot");
+  function moveDot(a) {
+    if (!dot || !a) return;
+    var y = a.offsetTop + (a.offsetHeight / 2) - (dot.offsetHeight / 2);
+    dot.style.transform = "translateY(" + y + "px)";
+    dot.classList.add("is-on");
+  }
+
   var byId = {};
   var sections = [];
   links.forEach(function (a) {
@@ -24,9 +32,12 @@
   function setActive(a) {
     if (a === current) return;
     if (current) current.classList.remove("is-active");
-    if (a) a.classList.add("is-active");
+    if (a) { a.classList.add("is-active"); moveDot(a); }
     current = a;
   }
+
+  // keep the dot aligned if the layout reflows (resize / font load)
+  window.addEventListener("resize", function () { moveDot(current); });
 
   // Track the visibility of each section; the topmost one that's on screen wins.
   var visible = {};
