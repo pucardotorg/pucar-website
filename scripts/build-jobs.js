@@ -1632,15 +1632,24 @@ function careersPage() {
     if (!rows.length) return "";
     return '  <div class="career-group">\n' +
       '    <div class="career-group-head"><h3>' + esc(g[1]) + '</h3><p>' + esc(g[2]) + "</p></div>\n" +
+      '    <div class="career-cards">\n' +
       rows.map(function (r) {
-        return '    <a class="career-row" href="' + r.url + '" data-jd="' + esc(r.slug) + '">\n' +
-          '      <span class="career-row-main"><span class="career-row-title">' + esc(r.title) +
-          ' <span class="career-openings">' + openingsLabel(r) + '</span></span>' +
-          '<span class="career-row-sum">' + esc(r.summary) + "</span></span>\n" +
-          '      <span class="career-row-meta"><span>' + esc(r.commitment || "") + "</span><span>" + esc(r.location || "") + "</span></span>\n" +
-          '      <span class="career-row-arrow" aria-hidden="true">&rarr;</span>\n' +
-          "    </a>";
-      }).join("\n") + "\n  </div>";
+        var facts = [
+          r.experience ? '<span class="cc-chip cc-chip-key">' + esc(r.experience) + '</span>' : '',
+          r.commitment ? '<span class="cc-chip">' + esc(r.commitment) + '</span>' : '',
+          r.location ? '<span class="cc-chip">' + esc(r.location) + '</span>' : ''
+        ].filter(Boolean).join('');
+        var tags = (r.tags || []).map(function (t) { return '<span class="cc-tag">' + esc(t) + '</span>'; }).join('');
+        return '      <a class="career-card" href="' + r.url + '" data-jd="' + esc(r.slug) + '">\n' +
+          '        <span class="cc-head"><span class="cc-title">' + esc(r.title) + '</span>' +
+          '<span class="career-openings">' + esc(openingsLabel(r)) + '</span></span>\n' +
+          '        <span class="cc-sum">' + esc(r.summary) + '</span>\n' +
+          (facts ? '        <span class="cc-facts">' + facts + '</span>\n' : '') +
+          (tags ? '        <span class="cc-tags">' + tags + '</span>\n' : '') +
+          '        <span class="cc-cta">Read the full brief <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 8h8M8 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>\n' +
+          '      </a>';
+      }).join("\n") +
+      "\n    </div>\n  </div>";
   }).filter(Boolean).join("\n");
 
   const permanent = open.filter(function (r) { return r.type === "Permanent"; });

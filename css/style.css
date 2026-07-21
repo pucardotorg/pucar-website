@@ -4865,6 +4865,32 @@ button.circle-card{
   transition:transform .25s ease;
 }
 .career-row:hover .career-row-arrow{ transform:translateX(4px); }
+
+/* redesigned role cards: a responsive grid of proper cards that surface the
+   experience + tech tags, with an accent rail and hover lift */
+.career-cards{ display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%,380px),1fr)); gap:18px; }
+.career-card{ display:flex; flex-direction:column; gap:13px; padding:26px 26px 22px; border-radius:20px;
+  border:1px solid rgba(251,248,242,.12); position:relative; overflow:hidden; text-decoration:none; color:inherit;
+  background:linear-gradient(180deg, rgba(251,248,242,.055), rgba(251,248,242,.02));
+  transition:border-color .25s ease, transform .25s ease, box-shadow .25s ease, background .25s ease; }
+.career-card::before{ content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--green);
+  transform:scaleY(0); transform-origin:top; transition:transform .3s ease; }
+.career-card:hover{ border-color:rgba(48,207,140,.5); transform:translateY(-3px); box-shadow:0 16px 40px rgba(0,0,0,.32);
+  background:linear-gradient(180deg, rgba(48,207,140,.09), rgba(48,207,140,.03)); }
+.career-card:hover::before{ transform:scaleY(1); }
+.cc-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.cc-title{ font-family:var(--font-display); font-weight:600; font-size:1.3rem; line-height:1.14; color:var(--paper); }
+.cc-sum{ font-size:.92rem; line-height:1.55; color:rgba(251,248,242,.68); max-width:60ch; }
+.cc-facts{ display:flex; flex-wrap:wrap; gap:8px; margin-top:2px; }
+.cc-chip{ font-size:.75rem; font-weight:600; color:rgba(251,248,242,.72);
+  border:1px solid rgba(251,248,242,.16); border-radius:999px; padding:5px 11px; }
+.cc-chip-key{ color:var(--green); border-color:rgba(48,207,140,.5); background:rgba(48,207,140,.09); }
+.cc-tags{ display:flex; flex-wrap:wrap; gap:7px; }
+.cc-tag{ font-size:.72rem; font-weight:600; letter-spacing:.02em; color:rgba(251,248,242,.6);
+  background:rgba(251,248,242,.06); border-radius:8px; padding:4px 9px; }
+.cc-cta{ display:inline-flex; align-items:center; gap:7px; margin-top:6px; font-size:.85rem; font-weight:700; color:var(--green); }
+.cc-cta svg{ transition:transform .25s ease; }
+.career-card:hover .cc-cta svg{ transform:translateX(3px); }
 .careers-cta{ margin-top:34px; }
 @media (max-width: 700px){
   .career-row{ grid-template-columns:1fr 24px; }

@@ -4,7 +4,7 @@
 (function () {
   "use strict";
   var overlay = document.getElementById("jdModal");
-  var rows = document.querySelectorAll(".career-row[data-jd]");
+  var rows = document.querySelectorAll(".career-card[data-jd], .career-row[data-jd]");
   if (!overlay || !rows.length) return;
 
   var body = overlay.querySelector(".jdm-body");
