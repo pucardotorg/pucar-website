@@ -1822,12 +1822,12 @@ function scPolicyPage() {
 "    </div>\n" +
 '    <div class="civis-callout-action">\n' +
 '      <a class="civis-btn" href="https://www.civis.vote/consultations/1575/read" target="_blank" rel="noopener">View the CIVIS consultation<span class="civis-btn-arrow" aria-hidden="true">&rarr;</span></a>\n' +
-'      <p class="civis-count" id="civisCount" hidden></p>\n' +
+'      <p class="civis-count">11 people responded on CIVIS.</p>\n' +
 "    </div>\n" +
 "  </aside>\n" +
 "</main>\n" +
 scSubmissionHtml() + "\n" +
-'<script src="/js/perspectives.js"></script>\n<script src="/js/sc-comments.js"></script>\n<script src="/js/view-toggle.js"></script>\n<main hidden>';
+'<script src="/js/sc-comments.js"></script>\n<script src="/js/view-toggle.js"></script>\n<main hidden>';
   return pageShell({
     title: "Our comments on the SC’s AI policy | PUCAR",
     desc: "PUCAR’s comments on the Supreme Court of India’s draft Regulations for Use of AI in Courts, 2026. The public feedback window has closed; read what we and others made of it.",
