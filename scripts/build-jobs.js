@@ -1814,17 +1814,6 @@ function scPolicyPage() {
 '  <div class="cta-row">\n' +
 '    <a class="btn btn-outline" href="https://cdnbbsr.s3waas.gov.in/s3ec0490f1f4972d133619a60c30f3559e/uploads/2026/06/2026060342.pdf" target="_blank" rel="noopener">Read the Court&rsquo;s notice</a>\n' +
 "  </div>\n" +
-'  <aside class="civis-callout">\n' +
-'    <div class="civis-callout-text">\n' +
-'      <p class="civis-kicker">The consultation has closed</p>\n' +
-'      <h2 class="civis-title">See how the draft was put to citizens on CIVIS.</h2>\n' +
-'      <p class="civis-sub">CIVIS turned the draft into a short guided questionnaire, in English and four Indian languages, and carried people&rsquo;s views to the Court&rsquo;s AI Committee. The response window is now closed, but the consultation is still worth reading.</p>\n' +
-"    </div>\n" +
-'    <div class="civis-callout-action">\n' +
-'      <a class="civis-btn" href="https://www.civis.vote/consultations/1575/read" target="_blank" rel="noopener">View the CIVIS consultation<span class="civis-btn-arrow" aria-hidden="true">&rarr;</span></a>\n' +
-'      <p class="civis-count">11 people responded on CIVIS.</p>\n' +
-"    </div>\n" +
-"  </aside>\n" +
 "</main>\n" +
 scSubmissionHtml() + "\n" +
 '<script src="/js/sc-comments.js"></script>\n<script src="/js/view-toggle.js"></script>\n<main hidden>';
