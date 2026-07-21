@@ -528,7 +528,7 @@
      bands, or the footer) is under the header pill. Previously this only
      watched the map, so the nav stayed light (and unreadable) over the blog
      and collaborate sections. */
-  var darkSections = document.querySelectorAll(".reach, .collaborate, .site-footer");
+  var darkSections = document.querySelectorAll(".reach, .collaborate, .collab-strip, .site-footer");
   if (darkSections.length) {
     var navTick = false;
     var navUpdate = function () {
