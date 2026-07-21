@@ -245,6 +245,24 @@ properties, never `fill`, `stroke`, or `color`.
 - Beat eyebrows (`.beat-eyebrow` on beats 5 & 7, `.collab-head
   .beat-eyebrow`) — `var(--gold)` → `--pink`, unaffected by the green rule.
 
+### Hard visual rules (client-stated — do NOT break)
+
+- **No single-edge coloured accent borders. Ever.** The client dislikes the
+  "accent rail" look: a coloured line on ONE edge of an element (`border-left`,
+  `border-top`, etc.) used as decoration. This has been called out repeatedly
+  (career-card side line removed Jul 2026; the sc-ai-policy recommendation
+  cards, pull-quotes, body cards and TOC rail removed Jul 2026). Do not add
+  `border-left`/`border-top` accent stripes to cards, callouts, blockquotes,
+  list items, nav/TOC active states, or anything else. Use instead: a soft
+  filled background (`--green-soft`, `--cream`), a full uniform hairline
+  border (`--line`) all the way around, a soft box-shadow to lift a card, a
+  filled number/badge, or a decorative glyph (e.g. a large `“` for quotes).
+  Uniform all-round borders are fine; one-edge coloured lines are not.
+- **No em dashes in copy.** Use commas, colons, semicolons, parentheses, or
+  split the sentence. (Already noted for the story copy; applies site-wide,
+  including the /sc-ai-policy/ submission draft.) En dashes for number ranges
+  (`Regulations 26–30`) are fine.
+
 ---
 
 ## 3. Intro hero (before the story starts)
