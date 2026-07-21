@@ -1779,6 +1779,29 @@ function eventCard(ev) {
     "</a>";
 }
 
+/* The "What others said" reading list -- the links to other people's views,
+   folded into the submission section (the standalone card grid was removed).
+   Driven by the same content/sc-perspectives/*.json data. */
+function othersViewsHtml() {
+  return '<ul class="sub-others-list">\n' + perspectives.map(function (p) {
+    const by = [p.author, p.outlet].filter(Boolean).join(" · ");
+    return '  <li><a class="sub-other" href="' + esc(p.url || "#") + '"' +
+      (p.url ? ' target="_blank" rel="noopener"' : "") + '>\n' +
+      '    <span class="sub-other-title">' + esc(p.title) + "</span>\n" +
+      (by ? '    <span class="sub-other-by">' + esc(by) + "</span>\n" : "") +
+      (p.summary ? '    <span class="sub-other-sum">' + esc(p.summary) + "</span>\n" : "") +
+      "  </a></li>";
+  }).join("\n") + "\n</ul>";
+}
+
+/* The full submission section -- authored as a static partial
+   (content/sc-comments.html) with a {{OTHERS}} token where the reading list
+   of other people's views is injected. */
+function scSubmissionHtml() {
+  const partial = fs.readFileSync(path.join(ROOT, "content/sc-comments.html"), "utf8");
+  return partial.replace("{{OTHERS}}", othersViewsHtml());
+}
+
 function scPolicyPage() {
   const main =
 '  <p class="beat-eyebrow">PUCAR // AI in courts</p>\n' +
@@ -1803,29 +1826,8 @@ function scPolicyPage() {
 "    </div>\n" +
 "  </aside>\n" +
 "</main>\n" +
-'<section class="collaborate persp-section" id="perspectives">\n' +
-'  <div class="collab-head">\n' +
-'    <p class="beat-eyebrow">What people are saying</p>\n' +
-'    <h2 class="collab-title-main">The public record, so far.</h2>\n' +
-'    <p class="collab-sub">Explainers, critiques, and formal submissions on the draft regulations. Click any card for a summary of the viewpoint, or open the original.</p>\n' +
-"  </div>\n" +
-'  <div class="collab-grid" id="perspGrid">\n' +
-perspectives.map(function (p) { return perspCard(p, p.slug); }).join("\n") + "\n" +
-"  </div>\n" +
-"</section>\n" +
-'<div class="job-modal" id="jobModal" hidden>\n' +
-'  <div class="job-modal-backdrop" data-close></div>\n' +
-'  <div class="job-modal-panel" role="dialog" aria-modal="true" aria-labelledby="jobModalTitle">\n' +
-'    <button class="job-modal-close" type="button" data-close aria-label="Close">×</button>\n' +
-'    <p class="beat-eyebrow" id="jobModalType"></p>\n' +
-'    <h2 class="job-title" id="jobModalTitle"></h2>\n' +
-'    <div class="job-meta" id="jobModalMeta"></div>\n' +
-'    <ul class="job-chips" id="jobModalChips"></ul>\n' +
-'    <article class="job-body" id="jobModalBody"></article>\n' +
-'    <div class="cta-row">\n' +
-'      <a class="btn btn-primary" id="jobModalApply" href="#" target="_blank" rel="noopener">Read the original</a>\n' +
-"    </div>\n  </div>\n</div>\n" +
-'<script src="/js/perspectives.js"></script>\n<script src="/js/view-toggle.js"></script>\n<main hidden>';
+scSubmissionHtml() + "\n" +
+'<script src="/js/perspectives.js"></script>\n<script src="/js/sc-comments.js"></script>\n<script src="/js/view-toggle.js"></script>\n<main hidden>';
   return pageShell({
     title: "Our comments on the SC’s AI policy | PUCAR",
     desc: "PUCAR’s comments on the Supreme Court of India’s draft Regulations for Use of AI in Courts, 2026. The public feedback window has closed; read what we and others made of it.",
