@@ -522,17 +522,23 @@
   showMeta(null);
   setRowActive("all");
 
-  /* ---------- flip the header to its dark variant over this section ----------
-     The homepage nav goes dark via body.nav-dark OR the story's
-     :has(.pin[data-beat=4..9]) selectors. This section sits BEFORE the story
-     (data-beat still 0), so nothing else flips it — do it on scroll here. */
-  var section = host.closest(".reach") || document.getElementById("reach");
-  if (section) {
+  /* ---------- flip the header to its dark variant over dark sections ----------
+     The homepage has no nav.js dark-section watcher, so drive body.nav-dark
+     here: turn it on whenever ANY dark band (the map, the blog + collaborate
+     bands, or the footer) is under the header pill. Previously this only
+     watched the map, so the nav stayed light (and unreadable) over the blog
+     and collaborate sections. */
+  var darkSections = document.querySelectorAll(".reach, .collaborate, .site-footer");
+  if (darkSections.length) {
     var navTick = false;
     var navUpdate = function () {
       navTick = false;
-      var r = section.getBoundingClientRect();
-      document.body.classList.toggle("nav-dark", r.top <= 44 && r.bottom >= 44);
+      var mid = 44, dark = false;
+      for (var i = 0; i < darkSections.length; i++) {
+        var r = darkSections[i].getBoundingClientRect();
+        if (r.top <= mid && r.bottom >= mid) { dark = true; break; }
+      }
+      document.body.classList.toggle("nav-dark", dark);
     };
     window.addEventListener("scroll", function () {
       if (!navTick) { navTick = true; requestAnimationFrame(navUpdate); }
