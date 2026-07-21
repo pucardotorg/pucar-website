@@ -4873,11 +4873,8 @@ button.circle-card{
   border:1px solid rgba(251,248,242,.12); position:relative; overflow:hidden; text-decoration:none; color:inherit;
   background:linear-gradient(180deg, rgba(251,248,242,.055), rgba(251,248,242,.02));
   transition:border-color .25s ease, transform .25s ease, box-shadow .25s ease, background .25s ease; }
-.career-card::before{ content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--green);
-  transform:scaleY(0); transform-origin:top; transition:transform .3s ease; }
 .career-card:hover{ border-color:rgba(48,207,140,.5); transform:translateY(-3px); box-shadow:0 16px 40px rgba(0,0,0,.32);
   background:linear-gradient(180deg, rgba(48,207,140,.09), rgba(48,207,140,.03)); }
-.career-card:hover::before{ transform:scaleY(1); }
 .cc-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap; }
 .cc-title{ font-family:var(--font-display); font-weight:600; font-size:1.3rem; line-height:1.14; color:var(--paper); }
 .cc-sum{ font-size:.92rem; line-height:1.55; color:rgba(251,248,242,.68); max-width:60ch; }
