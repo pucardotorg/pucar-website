@@ -6279,7 +6279,8 @@ main.job-main.careers-lean{ padding:0; min-height:0; }
    js/nav.js includes .sc-hero in its dark-section list, so the header
    flips to its dark (white-logo, light-nav) treatment while over it.
    ===================================================================== */
-.job-main.sc-hero{
+.job-main.sc-hero,
+.job-main.sc-hero:has(.job-body.prose){ /* out-specify .job-main:has(.job-body.prose){max-width:880px} */
   position:relative;
   max-width:none; margin:0; padding:0;
   background:#08131a;
@@ -6298,9 +6299,10 @@ main.job-main.careers-lean{ padding:0; min-height:0; }
 }
 .sc-hero-inner{
   position:relative; z-index:1;
-  max-width:760px; margin:0 auto;
-  padding:clamp(126px,15vh,168px) clamp(20px,5vw,40px) clamp(58px,9vh,88px);
+  max-width:1080px; margin:0 auto;
+  padding:clamp(126px,15vh,168px) clamp(20px,5vw,64px) clamp(58px,9vh,88px);
 }
+.sc-hero-inner > *{ max-width:660px; } /* keep the copy to a readable measure, left-aligned over the darker side */
 .sc-hero .beat-eyebrow{ color:var(--green); }
 .sc-hero .job-title{ color:var(--paper); }
 .sc-hero .job-body.prose p{ color:rgba(251,248,242,.9); }
