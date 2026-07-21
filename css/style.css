@@ -6069,7 +6069,7 @@ main.job-main.careers-lean{ padding:0; min-height:0; }
   position:absolute; left:-5px; top:0; z-index:2; /* sits above the hover pill */
   width:9px; height:9px; border-radius:50%;
   background:var(--green);
-  box-shadow:0 0 0 3px var(--paper), 0 3px 6px rgba(17,31,38,.28);
+  box-shadow:0 0 0 3px var(--paper);
   opacity:0; transform:translateY(0);
   transition:transform .34s cubic-bezier(.34,.02,.24,1), opacity .2s ease;
   pointer-events:none;
