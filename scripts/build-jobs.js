@@ -1804,6 +1804,7 @@ function scSubmissionHtml() {
 
 function scPolicyPage() {
   const main =
+'  <div class="sc-hero-inner">\n' +
 '  <p class="beat-eyebrow">PUCAR // AI in courts</p>\n' +
 '  <h1 class="job-title">Our comments on the SC&rsquo;s AI policy.</h1>\n' +
 '  <article class="job-body prose">\n' +
@@ -1814,6 +1815,8 @@ function scPolicyPage() {
 '  <div class="cta-row">\n' +
 '    <a class="btn btn-outline" href="https://cdnbbsr.s3waas.gov.in/s3ec0490f1f4972d133619a60c30f3559e/uploads/2026/06/2026060342.pdf" target="_blank" rel="noopener">Read the Court&rsquo;s notice</a>\n' +
 "  </div>\n" +
+'  <p class="sc-hero-caption">From PUCAR&rsquo;s stakeholder consultation on the draft regulations.</p>\n' +
+'  </div>\n' +
 "</main>\n" +
 scSubmissionHtml() + "\n" +
 '<script src="/js/sc-comments.js"></script>\n<script src="/js/view-toggle.js"></script>\n<main hidden>';
@@ -1821,7 +1824,7 @@ scSubmissionHtml() + "\n" +
     title: "Our comments on the SC’s AI policy | PUCAR",
     desc: "PUCAR’s comments on the Supreme Court of India’s draft Regulations for Use of AI in Courts, 2026. The public feedback window has closed; read what we and others made of it.",
     url: "/sc-ai-policy/",
-    backHref: "/", backLabel: "← pucar.org", main: main
+    backHref: "/", backLabel: "← pucar.org", main: main, mainClass: "sc-hero"
   }).replace("<main hidden>\n</main>", ""); // close the shell's main early; sections above are full-bleed
 }
 

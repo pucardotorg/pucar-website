@@ -6271,3 +6271,45 @@ main.job-main.careers-lean{ padding:0; min-height:0; }
 @media (max-width:640px){
   .sub-rec{ flex-direction:column; gap:8px; }
 }
+
+/* =====================================================================
+   /sc-ai-policy/ hero — photo backdrop
+   The first section (the .job-main hero) sits on the stakeholder-
+   consultation photo with a dark scrim so the light text stays readable.
+   js/nav.js includes .sc-hero in its dark-section list, so the header
+   flips to its dark (white-logo, light-nav) treatment while over it.
+   ===================================================================== */
+.job-main.sc-hero{
+  position:relative;
+  max-width:none; margin:0; padding:0;
+  background:#08131a;
+  color:var(--paper);
+  overflow:hidden;
+  isolation:isolate;
+}
+.job-main.sc-hero::before{
+  content:""; position:absolute; inset:0; z-index:0;
+  background:
+    linear-gradient(180deg, rgba(6,14,18,.82) 0%, rgba(6,14,18,.60) 30%, rgba(6,14,18,.58) 66%, rgba(6,14,18,.76) 100%),
+    linear-gradient(96deg, rgba(6,14,18,.66) 0%, rgba(6,14,18,.12) 62%, rgba(6,14,18,0) 100%),
+    url(/assets/sc-consultation.jpg);
+  background-size:cover;
+  background-position:center 40%;
+}
+.sc-hero-inner{
+  position:relative; z-index:1;
+  max-width:760px; margin:0 auto;
+  padding:clamp(126px,15vh,168px) clamp(20px,5vw,40px) clamp(58px,9vh,88px);
+}
+.sc-hero .beat-eyebrow{ color:var(--green); }
+.sc-hero .job-title{ color:var(--paper); }
+.sc-hero .job-body.prose p{ color:rgba(251,248,242,.9); }
+.sc-hero .job-body.prose strong{ color:var(--paper); }
+.sc-hero .job-body.prose p:first-of-type::first-letter{ color:var(--green); }
+.sc-hero .btn-outline{ border-color:rgba(251,248,242,.5); color:var(--paper); }
+.sc-hero .btn-outline:hover{ background:rgba(251,248,242,.12); border-color:var(--paper); }
+.sc-hero-caption{
+  margin:26px 0 0;
+  font-size:.8rem; letter-spacing:.02em;
+  color:rgba(251,248,242,.66);
+}
