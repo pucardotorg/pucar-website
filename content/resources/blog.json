@@ -1,5 +1,73 @@
 [
  {
+  "slug": "new-age-courtroom-checklist",
+  "date": "22 Jul 2026",
+  "outlet": "The Indian Express",
+  "title": "A checklist for a new-age courtroom",
+  "summary": "The Supreme Court's draft AI regulations settle who approves court AI, but not what a system must prove to earn approval. Two foundations need fixing first: one permanent technology institution, and shared standards.",
+  "url": "https://indianexpress.com/article/opinion/columns/a-checklist-for-a-new-age-courtroom-10797368/",
+  "remote": "",
+  "tags": [
+   "Innovation",
+   "Reform"
+  ],
+  "thumb": "/assets/blog/new-age-courtroom-checklist.jpg"
+ },
+ {
+  "slug": "five-strategic-levers",
+  "date": "15 May 2026",
+  "outlet": "Bar & Bench",
+  "title": "Five strategic levers for court transformation",
+  "summary": "Five practical places to push if court processes are to change: payments collected upfront, court systems integrated with post and police, rules updated for digital work, and litigants told what they need earlier.",
+  "url": "https://www.barandbench.com/columns/five-strategic-levers-for-court-transformation",
+  "remote": "",
+  "tags": [
+   "Reform"
+  ],
+  "thumb": "/assets/blog/five-strategic-levers.jpg"
+ },
+ {
+  "slug": "dispute-resolution-myths",
+  "date": "8 May 2026",
+  "outlet": "Bar & Bench",
+  "title": "Dispute resolution myths: True or false?",
+  "summary": "Five things everyone assumes about dispute resolution, tested against what happens in court. Accused parties often do want a quick end, and lawyers often do want reform. Examining unstated beliefs is the cheapest reform tool there is.",
+  "url": "https://www.barandbench.com/columns/dispute-resolution-myths-true-or-false",
+  "remote": "",
+  "tags": [
+   "People Centric Courts",
+   "Reform"
+  ],
+  "thumb": "/assets/blog/dispute-resolution-myths.jpg"
+ },
+ {
+  "slug": "cheque-dishonour-archetypes",
+  "date": "1 May 2026",
+  "outlet": "Bar & Bench",
+  "title": "Understanding cheque dishonour disputes: Four archetypes for tailored resolution",
+  "summary": "A cheque bounce case is not one problem but four. The delayer, the honest closer, the coercive claimant and the evasive debtor each need a different fix, and treating them alike is why nothing moves.",
+  "url": "https://www.barandbench.com/columns/understanding-cheque-dishonour-disputes-four-archetypes-for-tailored-resolution",
+  "remote": "",
+  "tags": [
+   "People Centric Courts"
+  ],
+  "thumb": "/assets/blog/cheque-dishonour-archetypes.jpg"
+ },
+ {
+  "slug": "courts-like-a-lottery",
+  "date": "23 Mar 2026",
+  "outlet": "ThePrint",
+  "title": "Indian courts are operating like a lottery. They need smarter case scheduling",
+  "summary": "Nearly half of all listed matters are not heard on the day, and only one in five cases actually progresses. Airlines and hospitals schedule far better; courts could too, starting by measuring hearings in minutes.",
+  "url": "https://theprint.in/opinion/counting-on-law/indian-courts-lottery-case-scheduling/2885959/",
+  "remote": "",
+  "tags": [
+   "Innovation",
+   "People Centric Courts"
+  ],
+  "thumb": "/assets/blog/courts-like-a-lottery.png"
+ },
+ {
   "slug": "released-at-104",
   "date": "9 Jun 2025",
   "outlet": "The Indian Express",
