@@ -388,7 +388,7 @@ function contributorIndexCard(person) {
    drift out of sync. Ids are fixed; collaborate.js works by id. */
 function collabBoardHtml() {
   const cards = boardJobs.length ? boardJobs.map(card).join("\n")
-    : '<p class="collab-filter-empty">No open work right now -- check back soon, or write to us.</p>';
+    : '<p class="collab-filter-empty">Nothing open right now. Check back soon, or write to us anyway at collaborate@pucar.org.</p>';
   return '  <div class="collab-filters" id="collabFilters" hidden>\n' +
 '    <select data-filter="stream" aria-label="Filter by stream">\n' +
 '      <option value="">All streams</option>\n' +
@@ -840,6 +840,9 @@ blogSection() +
   });
 }
 
+/* master switch for the /about/#team anchors wall: see teamSection() */
+const TEAM_VISIBLE = false;
+
 function teamSection() {
   /* Real team (July 2026): content/team/team.json -- name, PUCAR role,
      3rd-person bio (LinkedIn-sourced), headshot in assets/team/ (all ten
@@ -851,7 +854,12 @@ function teamSection() {
      shared job-modal with the bio (js/team.js, data inlined in
      #teamData). The contributors strip lives HERE (it replaced the About
      page's old about-strip AND the "Meet the contributors" outline
-     button -- one contributors CTA on the page, not three). */
+     button -- one contributors CTA on the page, not three).
+
+     HIDDEN (Aug 2026, client request): the anchors wall, its bio modal and
+     the "Meet the Team" nav/footer links are all off. Flip TEAM_VISIBLE
+     back to true to restore the whole band; content/team/team.json and
+     js/team.js are untouched and still ship the photo strip below. */
   const team = JSON.parse(fs.readFileSync(path.join(ROOT, "content/team/team.json"), "utf8"));
 
   const cards = team.map(function (p) {
@@ -862,23 +870,17 @@ function teamSection() {
       "</article>";
   }).join("\n");
 
-  return '<section class="collaborate team-section" id="team">\n' +
+  const wall = !TEAM_VISIBLE ? "" :
+'<section class="collaborate team-section" id="team">\n' +
 '  <div class="collab-head">\n' +
 '    <p class="beat-eyebrow">Core team</p>\n' +
 '    <h2 class="collab-title-main">The anchors.</h2>\n' +
 '    <p class="collab-sub">A small team with an outsized brief: lawyers, product builders, designers and policy minds who lead the mission day to day. Tap any card for the longer story.</p>\n' +
 "  </div>\n" +
 '  <div class="team-grid" id="teamGrid">\n' + cards + "\n  </div>\n" +
-"</section>\n" +
-/* contributors bridge: same stylised strip as the homepage (heads filled
-   by js/team.js from /contributors/photos.json, waves on hover) */
-'<div class="collab-strip team-strip" id="collabStrip">\n' +
-'  <span class="strip-text">The anchor team leads the mission day to day, but none of it would be possible without <strong>100+ contributors</strong> across the ecosystem</span>\n' +
-'  <span class="strip-group">\n' +
-'    <span class="strip-stack" id="stripStack" aria-hidden="true"></span>\n' +
-'    <a class="strip-btn" href="/contributors/#contributors">Meet the contributors<span class="strip-arrow" aria-hidden="true">&rarr;</span></a>\n' +
-"  </span>\n" +
-"</div>\n" +
+"</section>\n";
+
+  const modal = !TEAM_VISIBLE ? "" :
 '<div class="job-modal" id="teamModal" hidden>\n' +
 '  <div class="job-modal-backdrop" data-close></div>\n' +
 '  <div class="job-modal-panel" role="dialog" aria-modal="true" aria-labelledby="tmName">\n' +
@@ -893,20 +895,40 @@ function teamSection() {
 '    <div class="cta-row" id="tmLinks"></div>\n' +
 "  </div>\n" +
 "</div>\n" +
-'<script type="application/json" id="teamData">' + JSON.stringify(team) + "</script>\n" +
+'<script type="application/json" id="teamData">' + JSON.stringify(team) + "</script>\n";
+
+  /* contributors bridge: same stylised strip as the homepage (heads filled
+     by js/team.js from /contributors/photos.json, waves on hover). Stays up
+     with the wall hidden, so the copy can no longer lean on "the anchor
+     team" as its subject. */
+  return wall +
+'<div class="collab-strip team-strip" id="collabStrip">\n' +
+'  <span class="strip-text">' +
+  (TEAM_VISIBLE
+    ? 'The anchor team leads the mission day to day, but none of it would be possible without <strong>100+ contributors</strong> across the ecosystem'
+    : 'None of this would be possible without <strong>100+ contributors</strong> across the ecosystem') +
+'</span>\n' +
+'  <span class="strip-group">\n' +
+'    <span class="strip-stack" id="stripStack" aria-hidden="true"></span>\n' +
+'    <a class="strip-btn" href="/contributors/#contributors">Meet the contributors<span class="strip-arrow" aria-hidden="true">&rarr;</span></a>\n' +
+"  </span>\n" +
+"</div>\n" +
+  modal +
 '<script src="/js/team.js"></script>\n';
 }
 
 function teamPage() {
-  /* /team/ is a REDIRECT STUB now: the team lives at /about/#team. Kept so
-     old links and the pushed nav keep working; excluded from sitemap. */
+  /* /team/ is a REDIRECT STUB now: the team lived at /about/#team. With the
+     wall hidden (TEAM_VISIBLE) the anchor no longer exists, so old links
+     land on /about/ itself; excluded from sitemap. */
+  const target = TEAM_VISIBLE ? "/about/#team" : "/about/";
   return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8" />\n' +
-    '<meta http-equiv="refresh" content="0; url=/about/#team" />\n' +
+    '<meta http-equiv="refresh" content="0; url=' + target + '" />\n' +
     '<link rel="canonical" href="' + SITE + '/about/" />\n' +
     '<meta name="robots" content="noindex" />\n' +
-    "<title>Meet the Team | PUCAR</title>\n</head>\n<body>\n" +
-    '<p>The team has moved to <a href="/about/#team">the About page</a>.</p>\n' +
-    '<script>location.replace("/about/#team");</script>\n' +
+    "<title>About PUCAR</title>\n</head>\n<body>\n" +
+    '<p>This page has moved to <a href="' + target + '">the About page</a>.</p>\n' +
+    '<script>location.replace("' + target + '");</script>\n' +
     "</body>\n</html>\n";
 }
 
@@ -1536,6 +1558,17 @@ function openingsLabel(r) {
   if (!n || n < 1) n = 1;
   return n + (n === 1 ? " position open" : " positions open");
 }
+/* a role is CLOSED when it is no longer taking applications. It still appears
+   on /careers/ and keeps its own page, so anyone holding a link sees why the
+   apply button is gone, rather than a 404 or a silently vanished listing. */
+function isClosed(r) { return r.status !== "Open"; }
+function closedNoticeHtml() {
+  return '<div class="jd-closed">' +
+    '<p class="jd-closed-title">Applications are closed</p>' +
+    '<p class="jd-closed-note">We are no longer accepting applications for this role. ' +
+    'The brief stays up for reference, and we will post here when hiring reopens.</p>' +
+  '</div>';
+}
 /* compact "how hiring works" block embedded INSIDE each role's JD (modal +
    role page) instead of a standalone section on /careers/ */
 function hiringInlineHtml() {
@@ -1558,7 +1591,10 @@ function hiringInlineHtml() {
 }
 
 function careerPage(role) {
-  const jsonLd = {
+  const closed = isClosed(role);
+  /* no JobPosting markup on a closed role: search engines should not keep
+     surfacing it as a live vacancy. */
+  const jsonLd = closed ? null : {
     "@context": "https://schema.org", "@type": "JobPosting",
     title: role.title, description: role.summary, datePosted: role.posted,
     employmentType: role.type === "Permanent" ? "FULL_TIME" : role.type === "Part-time" ? "PART_TIME" : "VOLUNTEER",
@@ -1569,20 +1605,25 @@ function careerPage(role) {
   const main =
     '  <p class="beat-eyebrow">' + esc(role.type) + " role</p>\n" +
     '  <h1 class="job-title">' + esc(role.title) + "</h1>\n" +
-    '  <p class="job-openings"><span class="career-openings">' + esc(openingsLabel(role)) + "</span></p>\n" +
+    '  <p class="job-openings">' +
+      (closed
+        ? '<span class="career-openings is-closed">Applications closed</span>'
+        : '<span class="career-openings">' + esc(openingsLabel(role)) + "</span>") +
+    "</p>\n" +
     '  <p class="job-summary">' + esc(role.summary) + "</p>\n" +
     '  <ul class="job-chips">' +
     [role.commitment, role.location, role.experience].concat(role.tags || []).filter(Boolean)
       .map(function (c) { return '<li title="' + esc(c) + '">' + esc(c) + "</li>"; }).join("") +
     "</ul>\n" +
+    (closed ? "  " + closedNoticeHtml() + "\n" : "") +
     '  <article class="job-body">\n' + mdToHtml(role.body || "") + "\n  </article>\n" +
-    hiringInlineHtml() + "\n" +
+    (closed ? "" : hiringInlineHtml() + "\n") +
     '  <div class="cta-row">\n' +
-    (role.status === "Open"
-      ? '    <a class="btn btn-primary" href="' + esc(applyMailto(role)) + '">Apply for this role</a>\n'
-      : '    <span class="btn btn-outline is-disabled">' + esc(role.status) + "</span>\n") +
+    (closed
+      ? '    <span class="btn btn-outline is-disabled">Applications closed</span>\n'
+      : '    <a class="btn btn-primary" href="' + esc(applyMailto(role)) + '">Apply for this role</a>\n') +
     (role.pdf ? '    <a class="btn btn-ghost" href="' + esc(role.pdf) + '" download>Download JD (PDF)</a>\n' : '') +
-    '    <a class="btn btn-outline" href="/careers/">All open roles</a>\n  </div>';
+    '    <a class="btn btn-outline" href="/careers/">All roles</a>\n  </div>';
   return pageShell({
     title: role.title + " | Careers at PUCAR",
     desc: role.summary, url: role.url, jsonLd: jsonLd,
@@ -1619,10 +1660,14 @@ function careersPage() {
   const GROUPS = [
     ["Permanent", "Permanent roles", "Full-time seats at the heart of the mission."]
   ];
-  const open = careerRoles.filter(function (r) { return r.status === "Open"; })
+  /* closed roles stay on the board, marked, so the page never looks empty and
+     candidates can still read the brief. */
+  const listed = careerRoles.filter(function (r) { return r.status === "Open" || r.status === "Closed"; })
     .sort(function (a, b) { return (a.order || 99) - (b.order || 99) || String(a.title).localeCompare(b.title); });
+  const allClosed = listed.length > 0 && listed.every(isClosed);
+  const noRoles = listed.length === 0;
   const groupsHtml = GROUPS.map(function (g) {
-    const rows = open.filter(function (r) { return r.type === g[0]; });
+    const rows = listed.filter(function (r) { return r.type === g[0]; });
     if (!rows.length) return "";
     return '  <div class="career-group">\n' +
       '    <div class="career-group-head"><h3>' + esc(g[1]) + '</h3><p>' + esc(g[2]) + "</p></div>\n" +
@@ -1634,9 +1679,11 @@ function careersPage() {
           r.location ? '<span class="cc-chip">' + esc(r.location) + '</span>' : ''
         ].filter(Boolean).join('');
         var tags = (r.tags || []).map(function (t) { return '<span class="cc-tag">' + esc(t) + '</span>'; }).join('');
-        return '      <a class="career-card" href="' + r.url + '" data-jd="' + esc(r.slug) + '">\n' +
+        return '      <a class="career-card' + (isClosed(r) ? ' career-card-closed' : '') + '" href="' + r.url + '" data-jd="' + esc(r.slug) + '">\n' +
           '        <span class="cc-head"><span class="cc-title">' + esc(r.title) + '</span>' +
-          '<span class="career-openings">' + esc(openingsLabel(r)) + '</span></span>\n' +
+          (isClosed(r)
+            ? '<span class="career-openings is-closed">Applications closed</span>'
+            : '<span class="career-openings">' + esc(openingsLabel(r)) + '</span>') + '</span>\n' +
           '        <span class="cc-sum">' + esc(r.summary) + '</span>\n' +
           (facts ? '        <span class="cc-facts">' + facts + '</span>\n' : '') +
           (tags ? '        <span class="cc-tags">' + tags + '</span>\n' : '') +
@@ -1646,21 +1693,27 @@ function careersPage() {
       "\n    </div>\n  </div>";
   }).filter(Boolean).join("\n");
 
-  const permanent = open.filter(function (r) { return r.type === "Permanent"; });
+  const permanent = listed.filter(function (r) { return r.type === "Permanent"; });
   function jdSource(r) {
+    const closed = isClosed(r);
     return '<div class="jd-src" id="jd-' + esc(r.slug) + '" hidden>' +
       '<p class="beat-eyebrow jdm-eyebrow">' + esc(r.type) + ' role</p>' +
       '<h2 class="jdm-title">' + esc(r.title) + '</h2>' +
-      '<p class="jdm-openings"><span class="career-openings">' + openingsLabel(r) + '</span></p>' +
+      '<p class="jdm-openings">' +
+        (closed
+          ? '<span class="career-openings is-closed">Applications closed</span>'
+          : '<span class="career-openings">' + openingsLabel(r) + '</span>') +
+      '</p>' +
       '<ul class="job-chips">' +
         [r.commitment, r.location, r.experience].concat(r.tags || []).filter(Boolean).map(function (c) { return '<li>' + esc(c) + '</li>'; }).join("") +
       '</ul>' +
+      (closed ? closedNoticeHtml() : '') +
       '<div class="job-body">' + mdToHtml(r.body || "") + '</div>' +
-      hiringInlineHtml() +
+      (closed ? '' : hiringInlineHtml()) +
       '<div class="cta-row jdm-cta">' +
-        (r.status === "Open"
-          ? '<a class="btn btn-primary" href="' + esc(applyMailto(r)) + '">Apply for this role</a>'
-          : '<span class="btn btn-outline is-disabled">' + esc(r.status) + '</span>') +
+        (closed
+          ? '<span class="btn btn-outline is-disabled">Applications closed</span>'
+          : '<a class="btn btn-primary" href="' + esc(applyMailto(r)) + '">Apply for this role</a>') +
         (r.pdf ? '<a class="btn btn-ghost" href="' + esc(r.pdf) + '" download>Download JD (PDF)</a>' : '') +
       '</div>' +
     '</div>';
@@ -1679,12 +1732,20 @@ function careersPage() {
 
 '<section class="collaborate careers-board careers-board-lead" id="roles">\n' +
 '  <div class="collab-head">\n' +
-'    <p class="beat-eyebrow">Open roles</p>\n' +
-'    <h2 class="collab-title-main">The bench is forming. Take your seat.</h2>\n' +
-'    <p class="collab-sub">Permanent roles across engineering, product, design, law and research. Every one of them exists to make courts work for the people who need them. Tap any role to read the full brief.</p>\n' +
+'    <p class="beat-eyebrow">' + (noRoles || allClosed ? 'Roles' : 'Open roles') + '</p>\n' +
+'    <h2 class="collab-title-main">' + (noRoles
+  ? 'No roles currently available.'
+  : allClosed
+    ? 'Applications are closed for now.'
+    : 'The bench is forming. Take your seat.') + '</h2>\n' +
+'    <p class="collab-sub">' + (noRoles
+  ? 'We are not hiring for any roles right now. Check back soon: when the next seats open, they will be posted here.'
+  : allClosed
+    ? 'We are no longer accepting applications for the roles below. The briefs stay up so you can see the kind of work this is, and we will post here the moment hiring reopens.'
+    : 'Permanent roles across engineering, product, design, law and research. Every one of them exists to make courts work for the people who need them. Tap any role to read the full brief.') + '</p>\n' +
 "  </div>\n" +
 (groupsHtml ||
-'  <p class="collab-empty">No open roles right now. Check back soon, or write to us anyway: the right person has a way of creating their own role.</p>\n') + "\n" +
+'  <p class="collab-empty">If you think you belong on this bench anyway, write to us: the right person has a way of creating their own role.</p>\n') + "\n" +
 jdSources + "\n" + jdModal + "\n" +
 "</section>\n" +
 '<script src="/js/careers-modal.js" defer></script>\n' +
@@ -1693,10 +1754,15 @@ jdSources + "\n" + jdModal + "\n" +
   return pageShell({
     title: "Careers | PUCAR",
     mainClass: "dristi-main careers-lean",
-    desc: "Help build the future of courts. Permanent roles at PUCAR, the collective behind India's 24x7 people-centric ON Courts.",
+    desc: noRoles
+      ? "No roles are currently available at PUCAR, the collective behind India's 24x7 people-centric ON Courts. New seats will be posted here when they open."
+      : allClosed
+        ? "Applications are currently closed for roles at PUCAR, the collective behind India's 24x7 people-centric ON Courts. The role briefs stay up, and we will post here when hiring reopens."
+        : "Help build the future of courts. Permanent roles at PUCAR, the collective behind India's 24x7 people-centric ON Courts.",
     url: "/careers/",
     jsonLd: { "@context": "https://schema.org", "@type": "CollectionPage", name: "Careers at PUCAR",
-      description: "Open permanent roles at PUCAR" },
+      description: noRoles ? "Roles at PUCAR, none currently available"
+        : allClosed ? "Roles at PUCAR, applications currently closed" : "Open permanent roles at PUCAR" },
     backHref: "/", backLabel: "← Home", main: main
   });
 }
@@ -1830,7 +1896,9 @@ scSubmissionHtml() + "\n" +
 
 /* ---------------- write everything ---------------- */
 
-["collaborate", "contributors", "sc-ai-policy", "about", "team", "resources"].forEach(function (d) {
+/* every one of these is FULLY generated below -- wiping first is what stops
+   an unpublished job/role leaving its old page behind at a live URL */
+["collaborate", "contributors", "sc-ai-policy", "about", "team", "resources", "careers"].forEach(function (d) {
   fs.rmSync(path.join(ROOT, d), { recursive: true, force: true });
 });
 fs.mkdirSync(path.join(ROOT, "collaborate"), { recursive: true });
@@ -1910,7 +1978,7 @@ if (s === -1 || e === -1) {
 }
 html = html.slice(0, s + START.length) + "\n" +
   (boardJobs.length ? boardJobs.map(card).join("\n")
-    : '<p class="collab-empty">No open work right now — check back soon, or write to us.</p>') +
+    : '<p class="collab-empty">Nothing open right now. Check back soon, or write to us anyway at collaborate@pucar.org.</p>') +
   "\n" + html.slice(e);
 
 /* mirror the /resources/ blog section on the homepage (below the map),

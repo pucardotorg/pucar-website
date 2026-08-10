@@ -5969,6 +5969,32 @@ body.jdm-open{ overflow:hidden; }
   font-size:.7rem; letter-spacing:.04em; text-transform:uppercase; color:#08281b; background:var(--green);
   padding:3px 10px; border-radius:999px; white-space:nowrap; }
 .career-row-title .career-openings{ margin-left:8px; position:relative; top:-1px; }
+/* closed roles: a muted badge instead of the green "positions open" pill, so
+   the listing reads as archive rather than invitation */
+.career-openings.is-closed{ color:var(--ink-soft); background:rgba(36,30,26,.09);
+  box-shadow:inset 0 0 0 1px rgba(36,30,26,.14); }
+/* cards sit on the dark board; the modal and the role page are light, so only
+   the card badge flips to the paper-on-dark treatment */
+.career-card .career-openings.is-closed{ color:rgba(251,248,242,.72); background:rgba(251,248,242,.1);
+  box-shadow:inset 0 0 0 1px rgba(251,248,242,.2); }
+.career-card-closed{ opacity:.82; }
+.career-card-closed .cc-chip-key{ color:rgba(251,248,242,.72); border-color:rgba(251,248,242,.16); background:none; }
+.career-card-closed .cc-cta{ color:rgba(251,248,242,.68); }
+.career-card-closed:hover{ border-color:rgba(251,248,242,.24); opacity:1;
+  background:linear-gradient(180deg, rgba(251,248,242,.075), rgba(251,248,242,.03)); }
+/* closed notice inside a role brief (modal + role page): soft filled panel,
+   uniform hairline, no single-edge accent rail */
+.jd-closed{ margin:0 0 22px; padding:18px 22px; border:1px solid rgba(36,30,26,.14); border-radius:16px;
+  background:rgba(36,30,26,.05); }
+.jd-closed-title{ font-family:var(--font-body); font-weight:700; font-size:.78rem; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink); margin:0 0 6px; }
+.jd-closed-note{ font-size:.95rem; line-height:1.55; color:var(--ink-soft); margin:0; }
+/* .btn-ghost is authored for dark sections; the role page and the JD modal are
+   both cream, where paper-on-cream is unreadable */
+.job-main:not(.dristi-main) .cta-row .btn-ghost,
+.jdm-cta .btn-ghost{ border-color:rgba(36,30,26,.32); color:var(--ink); }
+.job-main:not(.dristi-main) .cta-row .btn-ghost:hover,
+.jdm-cta .btn-ghost:hover{ background:rgba(36,30,26,.06); }
 .jdm-openings{ margin:0 0 12px; }
 .job-openings{ margin:0 0 14px; }
 /* compact "how hiring works" block embedded inside each role's JD (modal +

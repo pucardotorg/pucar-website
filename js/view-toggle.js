@@ -22,9 +22,22 @@
     list: '<svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><rect x="1" y="2" width="14" height="3" rx="1.5" fill="currentColor"/><rect x="1" y="6.5" width="14" height="3" rx="1.5" fill="currentColor"/><rect x="1" y="11" width="14" height="3" rx="1.5" fill="currentColor"/></svg>'
   };
 
+  /* an empty grid (nothing posted right now) shows only its "nothing here"
+     line -- no toggle, and crucially no forced-open filter bar below. */
+  function hasItems(grid) {
+    var kids = grid.children;
+    for (var i = 0; i < kids.length; i++) {
+      var el = kids[i];
+      if (el.hidden) continue;
+      if (/-empty(\s|$)/.test(el.className || "")) continue;
+      return true;
+    }
+    return false;
+  }
+
   GRIDS.forEach(function (cfg) {
     var grid = document.getElementById(cfg.id);
-    if (!grid) return;
+    if (!grid || !hasItems(grid)) return;
     var key = "pucar-view-" + cfg.id;
 
     var wrap = document.createElement("div");
