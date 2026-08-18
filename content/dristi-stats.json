@@ -1,10 +1,10 @@
 {
   "source": "https://oncourts.kerala.gov.in/dashboard",
-  "updated": "2026-08-17T02:42:17.696Z",
-  "filed": 2164,
+  "updated": "2026-08-18T02:36:39.693Z",
+  "filed": 2174,
   "timeToDisposalDays": 165,
   "hearingsToDisposal": 7,
   "hearingsHeldPct": 98,
-  "advocates": 927,
-  "litigants": 1945
+  "advocates": 930,
+  "litigants": 1952
 }
