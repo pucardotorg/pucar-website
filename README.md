@@ -61,7 +61,7 @@ js/dristi.js           /dristi/ page: deployments tabs (states/districts, glidin
 content/jobs/          One JSON per work item  ← source of truth, edited via Decap or hand.
 content/careers/       One JSON per HIRING role (separate from jobs/ by design; see the
                        /careers/ section). Seven DRAFT listings as of 6 Jul 2026.
-content/contributors/  One JSON per contributor ← source of truth (77 real + 3 unpublished samples).
+content/contributors/  One JSON per contributor ← source of truth (79 real + 2 unpublished samples).
 content/team/team.json 10 core-team members (rendered on /about/#team).
 content/resources/     blog.json / data.json / circles.json for /resources/.
 content/sc-perspectives/ + content/sc-events/  sc-ai-policy page content.
@@ -1848,7 +1848,10 @@ so the fanned heads never crowd the text. Designation notes (explicit, Jul 2026)
 "Curator" (NOT Co-lead), Atul is "Tech Consultant" (NOT CTO) -- team.json
 and his contributor entry both say so.
 varun-h's contributor entry was also upgraded from placeholder to real
-(published:true, so contributor pages count went 77 -> 78).
+(published:true, so contributor pages count went 77 -> 78). Ayushi Singhal was
+added as a contributor in Sept 2026 (role "Curator, PUCAR", org Agami, bio
+shared with her team.json entry, own photo at assets/contributors/), taking
+the count to 79.
 
 ### Ecosystem switcher (brand-switch) + Agami attribution
 
