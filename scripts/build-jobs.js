@@ -1552,6 +1552,13 @@ function applyMailto(role) {
   return "mailto:supriya@pucar.org?cc=varun@pucar.org&subject=" +
     encodeURIComponent("Role - " + (role.title || ""));
 }
+/* a role with its own web application form (apply_url: https://...) links
+   there in a new tab; everything else falls back to the mailto above. */
+function applyLinkHtml(role) {
+  var ext = /^https?:\/\//i.test(role.apply_url || "");
+  return '<a class="btn btn-primary" href="' + esc(ext ? role.apply_url : applyMailto(role)) + '"' +
+    (ext ? ' target="_blank" rel="noopener"' : '') + '>Apply for this role</a>';
+}
 function openingsLabel(r) {
   if (r.openings) return r.openings;   // explicit override, e.g. "3–4 roles available"
   var n = parseInt(r.positions, 10);
@@ -1574,7 +1581,7 @@ function closedNoticeHtml() {
 function hiringInlineHtml() {
   var STEPS = [
     { t: "Coding challenge", d: "A short, real-shaped task you complete in your own time." },
-    { t: "Pair coding", d: "Build something live with one of our engineers — your tools and AI welcome." },
+    { t: "Pair coding", d: "Build something live with one of our engineers. Your tools and AI are welcome." },
     { t: "Interview with the Tech Lead", d: "A deeper look at systems, trade-offs and how you work." },
     { t: "Interview with the PUCAR team", d: "Mission, collaboration, and working with courts and stakeholders." }
   ];
@@ -1621,7 +1628,7 @@ function careerPage(role) {
     '  <div class="cta-row">\n' +
     (closed
       ? '    <span class="btn btn-outline is-disabled">Applications closed</span>\n'
-      : '    <a class="btn btn-primary" href="' + esc(applyMailto(role)) + '">Apply for this role</a>\n') +
+      : '    ' + applyLinkHtml(role) + '\n') +
     (role.pdf ? '    <a class="btn btn-ghost" href="' + esc(role.pdf) + '" download>Download JD (PDF)</a>\n' : '') +
     '    <a class="btn btn-outline" href="/careers/">All roles</a>\n  </div>';
   return pageShell({
@@ -1635,7 +1642,7 @@ function careerPage(role) {
 function hiringProcessHtml() {
   var STEPS = [
     { t: "Coding challenge", d: "A short, real-shaped task you complete in your own time." },
-    { t: "Pair coding", d: "Build something live with one of our engineers — your tools and AI welcome." },
+    { t: "Pair coding", d: "Build something live with one of our engineers. Your tools and AI are welcome." },
     { t: "Interview with the Tech Lead", d: "A deeper look at systems, trade-offs and how you work." },
     { t: "Interview with the PUCAR team", d: "Mission, collaboration, and working with courts and stakeholders." }
   ];
@@ -1713,7 +1720,7 @@ function careersPage() {
       '<div class="cta-row jdm-cta">' +
         (closed
           ? '<span class="btn btn-outline is-disabled">Applications closed</span>'
-          : '<a class="btn btn-primary" href="' + esc(applyMailto(r)) + '">Apply for this role</a>') +
+          : applyLinkHtml(r)) +
         (r.pdf ? '<a class="btn btn-ghost" href="' + esc(r.pdf) + '" download>Download JD (PDF)</a>' : '') +
       '</div>' +
     '</div>';
