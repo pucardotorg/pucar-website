@@ -841,7 +841,7 @@ blogSection() +
 }
 
 /* master switch for the /about/#team anchors wall: see teamSection() */
-const TEAM_VISIBLE = false;
+const TEAM_VISIBLE = true;
 
 function teamSection() {
   /* Real team (July 2026): content/team/team.json -- name, PUCAR role,
