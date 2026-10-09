@@ -4868,7 +4868,7 @@ button.circle-card{
 
 /* redesigned role cards: a responsive grid of proper cards that surface the
    experience + tech tags, with an accent rail and hover lift */
-.career-cards{ display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%,380px),1fr)); gap:18px; }
+.career-cards{ display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%,400px),1fr)); gap:18px; }
 .career-card{ display:flex; flex-direction:column; gap:13px; padding:26px 26px 22px; border-radius:20px;
   border:1px solid rgba(251,248,242,.12); position:relative; overflow:hidden; text-decoration:none; color:inherit;
   background:linear-gradient(180deg, rgba(251,248,242,.055), rgba(251,248,242,.02));

@@ -1593,7 +1593,7 @@ function hiringInlineHtml() {
     '<p class="jd-hiring-eyebrow">How hiring works</p>' +
     '<h3 class="jd-hiring-title">A clear, four-step process.</h3>' +
     '<ol class="jd-hiring-steps">' + steps + '</ol>' +
-    '<p class="jd-hiring-note"><span class="jd-hiring-badge">≈ 2 weeks</span>from the first round to a final decision, for candidates who move through every round.</p>' +
+    '<p class="jd-hiring-note"><span class="jd-hiring-badge">Up to 4 weeks</span>from your first round to a final decision.</p>' +
   '</div>';
 }
 
@@ -1656,10 +1656,10 @@ function hiringProcessHtml() {
     '  <div class="hiring-head">\n' +
     '    <p class="beat-eyebrow">How hiring works</p>\n' +
     '    <h2 class="hiring-title">A clear, four-step process.</h2>\n' +
-    '    <p class="hiring-sub">We reach out to shortlisted candidates and let you know before it begins. You move through the steps one at a time, and from the first round to a final decision it usually takes about two weeks.</p>\n' +
+    '    <p class="hiring-sub">We reach out to shortlisted candidates and let you know before it begins. You move through the steps one at a time, and from the first round to a final decision it takes up to four weeks.</p>\n' +
     "  </div>\n" +
     '  <ol class="hiring-steps">\n' + steps + "\n  </ol>\n" +
-    '  <p class="hiring-note"><span class="hiring-badge">≈ 2 weeks</span>from first round to final decision, for candidates who move through every round.</p>\n' +
+    '  <p class="hiring-note"><span class="hiring-badge">Up to 4 weeks</span>from your first round to a final decision.</p>\n' +
     "</section>\n";
 }
 
@@ -1739,17 +1739,12 @@ function careersPage() {
 
 '<section class="collaborate careers-board careers-board-lead" id="roles">\n' +
 '  <div class="collab-head">\n' +
-'    <p class="beat-eyebrow">' + (noRoles || allClosed ? 'Roles' : 'Open roles') + '</p>\n' +
-'    <h2 class="collab-title-main">' + (noRoles
-  ? 'No roles currently available.'
+'    <h2 class="collab-title-main">Careers at PUCAR</h2>\n' +
+(noRoles
+  ? '    <p class="collab-sub">We are not hiring for any roles right now. Check back soon: when the next seats open, they will be posted here.</p>\n'
   : allClosed
-    ? 'Applications are closed for now.'
-    : 'The bench is forming. Take your seat.') + '</h2>\n' +
-'    <p class="collab-sub">' + (noRoles
-  ? 'We are not hiring for any roles right now. Check back soon: when the next seats open, they will be posted here.'
-  : allClosed
-    ? 'We are no longer accepting applications for the roles below. The briefs stay up so you can see the kind of work this is, and we will post here the moment hiring reopens.'
-    : 'Permanent roles across engineering, product, design, law and research. Every one of them exists to make courts work for the people who need them. Tap any role to read the full brief.') + '</p>\n' +
+    ? '    <p class="collab-sub">We are no longer accepting applications for the roles below. The briefs stay up so you can see the kind of work this is, and we will post here the moment hiring reopens.</p>\n'
+    : '') +
 "  </div>\n" +
 (groupsHtml ||
 '  <p class="collab-empty">If you think you belong on this bench anyway, write to us: the right person has a way of creating their own role.</p>\n') + "\n" +
