@@ -4888,6 +4888,8 @@ button.circle-card{
 .cc-cta{ display:inline-flex; align-items:center; gap:7px; margin-top:6px; font-size:.85rem; font-weight:700; color:var(--green); }
 .cc-cta svg{ transition:transform .25s ease; }
 .career-card:hover .cc-cta svg{ transform:translateX(3px); }
+.cc-cta-btn{ align-self:flex-start; margin-top:10px; padding:10px 18px; border-radius:999px; background:var(--green); color:var(--ink); font-size:.9rem; transition:background .2s ease, box-shadow .2s ease; }
+.career-card:hover .cc-cta-btn{ box-shadow:0 6px 18px rgba(48,207,140,.28); }
 .careers-cta{ margin-top:34px; }
 @media (max-width: 700px){
   .career-row{ grid-template-columns:1fr 24px; }

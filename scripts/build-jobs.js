@@ -1694,7 +1694,7 @@ function careersPage() {
           '        <span class="cc-sum">' + esc(r.summary) + '</span>\n' +
           (facts ? '        <span class="cc-facts">' + facts + '</span>\n' : '') +
           (tags ? '        <span class="cc-tags">' + tags + '</span>\n' : '') +
-          '        <span class="cc-cta">Read the full brief <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 8h8M8 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>\n' +
+          '        <span class="cc-cta' + (isClosed(r) ? '' : ' cc-cta-btn') + '">' + (isClosed(r) ? 'Read the full brief' : 'Review &amp; Apply') + ' <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 8h8M8 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>\n' +
           '      </a>';
       }).join("\n") +
       "\n    </div>\n  </div>";
