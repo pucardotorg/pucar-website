@@ -2080,7 +2080,7 @@ function modelRulesPage() {
 '  <div class="collab-head">\n' +
 '    <p class="beat-eyebrow">What changes</p>\n' +
 '    <h2 class="collab-title-main">' + changes.length + " changes for the people who use the court.</h2>\n" +
-'    <p class="collab-sub">From the Statement of Objects and Reasons that accompanies the draft: what the rules do differently from the courts we have today, and why, in the drafters&rsquo; own words.</p>\n' +
+'    <p class="collab-sub">What the rules do differently from the courts we have today, and why.</p>\n' +
 "  </div>\n" +
 '  <div class="mr-change-grid">\n' + changesHtml + "\n  </div>\n" +
 "</section>\n" +
@@ -2089,7 +2089,7 @@ function modelRulesPage() {
 '  <div class="mr-wrap">\n' +
 '    <p class="beat-eyebrow">How it was drafted</p>\n' +
 '    <h2 class="mr-h2">' + principles.length + " principles behind every rule.</h2>\n" +
-'    <p class="mr-sub">Beyond putting people at the centre of the court, the drafters held every rule to these tests.</p>\n' +
+'    <p class="mr-sub">Every rule in the draft is held to these tests.</p>\n' +
 '    <div class="mr-principle-grid">\n' + principlesHtml + "\n    </div>\n" +
 "  </div>\n" +
 "</section>\n" +
