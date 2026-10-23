@@ -1896,11 +1896,257 @@ scSubmissionHtml() + "\n" +
   }).replace("<main hidden>\n</main>", ""); // close the shell's main early; sections above are full-bleed
 }
 
+/* ---------------- Model Rules page (Oct 2026) ------------------------------
+   /model-rules/ -- the draft Criminal Rules of Practice for 24x7 ON Courts,
+   out for public inputs. Listed under Active Collaborations. The text lives
+   in content/model-rules/*.md (copied from the DRISTI domain model's
+   transcription; the header comment in each file says how it is written).
+   The rules render as native <details> per rule group so the page works
+   without JS; js/model-rules.js adds search, Part filters and open/close
+   all on top. Source numbering is printed as-is, never regenerated. */
+
+function mrInline(s) {
+  return inline(esc(s)).replace(/&lt;br&gt;/g, "<br>");
+}
+
+function parseRulesMd(file) {
+  const src = fs.readFileSync(path.join(ROOT, "content/model-rules", file), "utf8")
+    .replace(/\r\n/g, "\n").replace(/<!--[\s\S]*?-->/g, "");
+  const doc = { title: "", intro: [], parts: [] };
+  let part = null, group = null, stack = [], table = null;
+  function target() { return group ? group.blocks : doc.intro; }
+  function pushItem(blocks, item) {
+    const last = blocks[blocks.length - 1];
+    if (last && last.type === "list") last.items.push(item);
+    else blocks.push({ type: "list", items: [item] });
+  }
+  src.split("\n").forEach(function (line) {
+    if (!line.trim()) { table = null; return; }
+    let m;
+    if ((m = line.match(/^# (.*)$/))) { doc.title = m[1].trim(); return; }
+    if ((m = line.match(/^## (.*)$/))) {
+      part = { name: m[1].trim(), groups: [] }; doc.parts.push(part);
+      group = null; stack = []; return;
+    }
+    if ((m = line.match(/^### (.*)$/))) {
+      if (!part) { part = { name: "", groups: [] }; doc.parts.push(part); }
+      const num = m[1].match(/^([IVXLC]+)\.\s+(.*)$/);
+      group = { label: num ? num[1] : "", name: (num ? num[2] : m[1]).trim(), blocks: [] };
+      part.groups.push(group); stack = []; return;
+    }
+    if (/^\|/.test(line)) {
+      if (/^\|\s*-/.test(line)) return;
+      const cells = line.replace(/^\|/, "").replace(/\|\s*$/, "").split("|").map(function (c) { return c.trim(); });
+      if (table) { table.rows.push(cells); return; }
+      table = { type: "table", head: cells, rows: [] };
+      /* a table belongs to the rule that introduces it */
+      (stack[0] ? stack[0].blocks : target()).push(table);
+      return;
+    }
+    const indent = line.match(/^ */)[0].length;
+    const depth = Math.floor(indent / 2);
+    if ((m = line.match(/^ *(\d+|[a-z]+)\.\s+(.*)$/))) {
+      const d = Math.min(depth, stack.length);
+      const item = { marker: m[1], text: m[2].trim(), blocks: [] };
+      stack.length = d;
+      pushItem(d ? stack[d - 1].blocks : target(), item);
+      stack[d] = item;
+      return;
+    }
+    const p = { type: "p", text: line.trim() };
+    if (depth && stack[Math.min(depth, stack.length) - 1]) stack[Math.min(depth, stack.length) - 1].blocks.push(p);
+    else { target().push(p); stack = []; }
+  });
+  return doc;
+}
+
+function mrBlocks(blocks, depth, ruleIds) {
+  return blocks.map(function (b) {
+    if (b.type === "p") return '<p class="mr-p">' + mrInline(b.text) + "</p>";
+    if (b.type === "table") {
+      return '<div class="mr-table-wrap"><table class="mr-table"><thead><tr>' +
+        b.head.map(function (c) { return "<th>" + mrInline(c.replace(/\*\*/g, "").trim()) + "</th>"; }).join("") +
+        "</tr></thead><tbody>" +
+        b.rows.map(function (r) { return "<tr>" + r.map(function (c) { return "<td>" + mrInline(c) + "</td>"; }).join("") + "</tr>"; }).join("") +
+        "</tbody></table></div>";
+    }
+    return '<ol class="mr-list mr-d' + depth + '">' + b.items.map(function (it) {
+      const id = ruleIds && depth === 0 && /^\d+$/.test(it.marker) ? ' id="rule-' + it.marker + '"' : "";
+      return "<li" + id + '><span class="mr-mark">' + esc(it.marker) + '.</span><div class="mr-item"><p>' +
+        mrInline(it.text) + "</p>" + mrBlocks(it.blocks, depth + 1, ruleIds) + "</div></li>";
+    }).join("") + "</ol>";
+  }).join("");
+}
+
+/* the numbered rules a group holds, for its "Rules 21–23" caption.
+   Annexures (no numeral label) number their own lists from 1, so they
+   hold no rules in this sense. */
+function mrRuleNums(group) {
+  const nums = [];
+  if (!group.label) return nums;
+  group.blocks.forEach(function (b) {
+    if (b.type === "list") b.items.forEach(function (it) { if (/^\d+$/.test(it.marker)) nums.push(+it.marker); });
+  });
+  return nums;
+}
+
+function mrSlug(s) {
+  return String(s).toLowerCase().replace(/\[[^\]]*\]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+const MR_CHEVRON = '<svg class="mr-chev" viewBox="0 0 10 6" width="12" height="8" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const MR_DOC_ICON = '<svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 1.8h5.2L12.5 5v9.2H4z"/><path d="M9 1.8V5.2h3.5M6.2 8.3h4M6.2 10.8h4"/></svg>';
+const MR_SEARCH_ICON = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="7" cy="7" r="4.6"/><path d="m10.5 10.5 3.6 3.6"/></svg>';
+const MR_SOURCE_URL = "https://docs.google.com/document/d/1lxo4jpE2zk4wp_T0eKNrb9vNXJS-aVpjXeu-cmi8cMY/edit";
+const MR_INPUTS_URL = "mailto:collaborate@pucar.org?subject=" + encodeURIComponent("Inputs on the Model Rules for 24x7 ON Courts");
+
+function modelRulesPage() {
+  const rules = parseRulesMd("draft-rules.md");
+  const objects = parseRulesMd("objects-and-reasons.md");
+  const oGroups = objects.parts[0] ? objects.parts[0].groups : [];
+  const changes = oGroups[0] ? oGroups[0].blocks.filter(function (b) { return b.type === "list"; })[0].items : [];
+  const principles = oGroups[1] ? oGroups[1].blocks.filter(function (b) { return b.type === "list"; })[0].items : [];
+
+  const allGroups = [].concat.apply([], rules.parts.map(function (p) { return p.groups; }));
+  const ruleCount = Math.max.apply(null, allGroups.map(mrRuleNums).reduce(function (a, b) { return a.concat(b); }, [0]));
+  const annexPart = rules.parts.filter(function (p) { return /^annex/i.test(p.name); })[0];
+  const partCount = rules.parts.length - (annexPart ? 1 : 0);
+
+  const changesHtml = changes.map(function (it) {
+    const m = it.text.match(/^\*(.+?)\*\s*:?\s*(.*)$/);
+    const title = (m ? m[1] : it.text).trim().replace(/:$/, "");
+    const body = m ? m[2] : "";
+    return '    <article class="mr-change">\n' +
+      '      <span class="mr-badge" aria-hidden="true">' + esc(it.marker) + "</span>\n" +
+      '      <h3 class="mr-change-title">' + mrInline(title) + "</h3>\n" +
+      '      <p class="mr-change-body">' + mrInline(body) + "</p>\n" +
+      "    </article>";
+  }).join("\n");
+
+  const principlesHtml = principles.map(function (it) {
+    return '    <article class="mr-principle">\n' +
+      '      <span class="mr-badge" aria-hidden="true">' + esc(it.marker) + "</span>\n" +
+      '      <h3 class="mr-principle-title">' + esc(it.text.replace(/\*\*/g, "").trim()) + "</h3>\n" +
+      it.blocks.map(function (b) { return '      <p class="mr-principle-body">' + mrInline(b.text) + "</p>\n"; }).join("") +
+      "    </article>";
+  }).join("\n");
+
+  const chipsHtml = '<button class="mr-chip is-on" type="button" data-part="all" aria-pressed="true">All <span>' + allGroups.length + "</span></button>" +
+    rules.parts.map(function (p, i) {
+      return '<button class="mr-chip" type="button" data-part="p' + (i + 1) + '" aria-pressed="false">' + esc(p.name) + " <span>" + p.groups.length + "</span></button>";
+    }).join("");
+
+  const partsHtml = rules.parts.map(function (p, i) {
+    const pm = p.name.match(/^(Part \d+)\s*-\s*(.*)$/);
+    const head = pm
+      ? '<p class="mr-part-num">' + esc(pm[1]) + '</p><h3 class="mr-part-title">' + esc(pm[2]) + "</h3>"
+      : '<h3 class="mr-part-title">' + esc(p.name) + "</h3>";
+    return '  <section class="mr-part" data-part="p' + (i + 1) + '">\n    ' + head + "\n" +
+      p.groups.map(function (g) {
+        const nums = mrRuleNums(g);
+        const range = !nums.length ? "" : nums.length === 1 ? "Rule " + nums[0] : "Rules " + nums[0] + "–" + nums[nums.length - 1];
+        const id = g.label ? "part-" + g.label.toLowerCase() : "annexure-" + mrSlug(g.name.replace(/^Annexure\s*\[[^\]]*\]:\s*/, ""));
+        const data = nums.length ? ' data-rules="' + nums.join(" ") + '"' : "";
+        return '    <details class="mr-group" id="' + id + '"' + data + ">\n" +
+          '      <summary><span class="mr-num' + (g.label ? "" : " is-annex") + '" aria-hidden="true">' + (g.label ? esc(g.label) : MR_DOC_ICON) + "</span>" +
+          '<span class="mr-gname">' + mrInline(g.name) + "</span>" +
+          (range ? '<span class="mr-range">' + range + "</span>" : "") + MR_CHEVRON + "</summary>\n" +
+          '      <div class="mr-body">' + mrBlocks(g.blocks, 0, !!g.label) + "</div>\n" +
+          "    </details>";
+      }).join("\n") + "\n  </section>";
+  }).join("\n");
+
+  const main =
+'  <p class="beat-eyebrow">PUCAR // 24x7 ON Courts</p>\n' +
+'  <h1 class="job-title">Model Rules for 24x7 ON Courts.</h1>\n' +
+'  <article class="job-body prose no-cap">\n' +
+"    <p>A court that is open around the clock, digital by default and built around the people who use it needs rules written for it. These draft Criminal Rules of Practice are a model that any State&rsquo;s High Court could adopt to run a 24x7 ON Court, made under Article 227 of the Constitution and Section 523 of the Bharatiya Nagarik Suraksha Sanhita, 2023.</p>\n" +
+"    <p>Existing rules of practice were written for the existing court system, and in places they hold back what a digital court can do for litigants. These rules start from the ON Court instead. For now they cover cheque dishonour cases, the case type the ON Courts hear today, but they are written so a High Court can extend them to other criminal cases over time.</p>\n" +
+"    <p>The draft is open for public inputs. It is not law anywhere yet: the State, the High Court and every Annexure number are left blank on purpose, so a State can adopt it as its own. Read what it changes, then the rules themselves, and tell us what you think.</p>\n" +
+"  </article>\n" +
+'  <ul class="mr-facts">\n' +
+'    <li><span class="board-live" aria-hidden="true"></span>Open for public inputs</li>\n' +
+"    <li>" + ruleCount + " rules</li>\n" +
+"    <li>" + partCount + " Parts, " + (annexPart ? annexPart.groups.length : 0) + " Annexures</li>\n" +
+"    <li>Cheque dishonour cases, for now</li>\n" +
+"  </ul>\n" +
+'  <div class="cta-row">\n' +
+'    <a class="btn btn-primary" href="#inputs">Share your inputs</a>\n' +
+'    <a class="btn btn-outline" href="#rules">Read the rules</a>\n' +
+"  </div>\n" +
+"</main>\n" +
+
+'<section class="collaborate mr-changes" id="changes">\n' +
+'  <div class="collab-head">\n' +
+'    <p class="beat-eyebrow">What changes</p>\n' +
+'    <h2 class="collab-title-main">' + changes.length + " changes for the people who use the court.</h2>\n" +
+'    <p class="collab-sub">From the Statement of Objects and Reasons that accompanies the draft: what the rules do differently from the courts we have today, and why, in the drafters&rsquo; own words.</p>\n' +
+"  </div>\n" +
+'  <div class="mr-change-grid">\n' + changesHtml + "\n  </div>\n" +
+"</section>\n" +
+
+'<section class="mr-section mr-principles" id="principles">\n' +
+'  <div class="mr-wrap">\n' +
+'    <p class="beat-eyebrow">How it was drafted</p>\n' +
+'    <h2 class="mr-h2">' + principles.length + " principles behind every rule.</h2>\n" +
+'    <p class="mr-sub">Beyond putting people at the centre of the court, the drafters held every rule to these tests.</p>\n' +
+'    <div class="mr-principle-grid">\n' + principlesHtml + "\n    </div>\n" +
+"  </div>\n" +
+"</section>\n" +
+
+'<section class="mr-section mr-rules" id="rules">\n' +
+'  <div class="mr-wrap">\n' +
+'    <p class="beat-eyebrow">The draft</p>\n' +
+'    <h2 class="mr-h2 mr-doc-title">' + mrInline(rules.title) + "</h2>\n" +
+rules.intro.map(function (b) { return '    <p class="mr-enact">' + mrInline(b.text) + "</p>\n"; }).join("") +
+'    <div class="mr-note">\n' +
+'      <p><strong>About this text.</strong> This is the draft as circulated for public inputs, with its suggested edits shown. The numbering is the document&rsquo;s own: rules run from 1 to ' + ruleCount + " straight through the four Parts, and the blanks a State fills in when it adopts the rules, like [State Name] and Annexure [__], are kept as blanks.</p>\n" +
+'      <p><a href="' + MR_SOURCE_URL + '" target="_blank" rel="noopener">Read the source document</a></p>\n' +
+"    </div>\n" +
+'    <div class="mr-tools" id="mrTools" hidden>\n' +
+'      <label class="mr-search">' + MR_SEARCH_ICON + '<input type="search" id="mrSearch" placeholder="Search the rules: summons, bail, hearing, evidence, fees" aria-label="Search the rules" autocomplete="off" /></label>\n' +
+'      <div class="mr-chips" role="group" aria-label="Filter by Part">' + chipsHtml + "</div>\n" +
+'      <div class="mr-tools-foot"><span class="mr-count" id="mrCount" aria-live="polite"></span><button class="mr-toggle-all" id="mrToggleAll" type="button">Open all</button></div>\n' +
+"    </div>\n" +
+'    <p class="mr-empty" id="mrEmpty" hidden>No rule matches that search. Try a shorter word.</p>\n' +
+partsHtml + "\n" +
+"  </div>\n" +
+"</section>\n" +
+
+'<section class="collaborate mr-inputs" id="inputs">\n' +
+'  <div class="collab-head">\n' +
+'    <p class="beat-eyebrow">Public inputs</p>\n' +
+'    <h2 class="collab-title-main">Have something to add?</h2>\n' +
+'    <p class="collab-sub">These rules will only be as good as the people who test them. If you are a judge, lawyer, litigant, court official or simply someone who has been through a court, tell us what works, what is missing and what would break in practice. Quote the rule number so we can find it.</p>\n' +
+'    <div class="cta-row">\n' +
+'      <a class="btn btn-primary" href="' + esc(MR_INPUTS_URL) + '">Email your inputs</a>\n' +
+'      <a class="btn btn-ghost" href="' + MR_SOURCE_URL + '" target="_blank" rel="noopener">Open the source document</a>\n' +
+"    </div>\n" +
+"  </div>\n" +
+"</section>\n" +
+'<script src="/js/model-rules.js"></script>\n<main hidden>';
+
+  return pageShell({
+    title: "Model Rules for 24x7 ON Courts | PUCAR",
+    desc: "Draft Criminal Rules of Practice for 24x7 ON Courts: a model rule set any State's High Court could adopt, open for public inputs. Read what changes, the principles behind it, and all " + ruleCount + " rules.",
+    url: "/model-rules/",
+    jsonLd: { "@context": "https://schema.org", "@type": "WebPage", name: "Model Rules for 24x7 ON Courts",
+      description: "Draft Criminal Rules of Practice for 24x7 ON Courts, open for public inputs" },
+    backHref: "/", backLabel: "← Home", main: main,
+    subnav: [
+      { label: "What changes", href: "#changes" },
+      { label: "Principles", href: "#principles" },
+      { label: "The rules", href: "#rules" },
+      { label: "Share inputs", href: "#inputs" }
+    ]
+  }).replace("<main hidden>\n</main>", "");
+}
+
 /* ---------------- write everything ---------------- */
 
 /* every one of these is FULLY generated below -- wiping first is what stops
    an unpublished job/role leaving its old page behind at a live URL */
-["collaborate", "contributors", "sc-ai-policy", "about", "team", "resources", "careers"].forEach(function (d) {
+["collaborate", "contributors", "sc-ai-policy", "model-rules", "about", "team", "resources", "careers"].forEach(function (d) {
   fs.rmSync(path.join(ROOT, d), { recursive: true, force: true });
 });
 fs.mkdirSync(path.join(ROOT, "collaborate"), { recursive: true });
@@ -1948,6 +2194,8 @@ fs.mkdirSync(path.join(ROOT, "dristi"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, "dristi", "index.html"), dristiPage());
 fs.mkdirSync(path.join(ROOT, "approach"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, "approach", "index.html"), approachPage());
+fs.mkdirSync(path.join(ROOT, "model-rules"), { recursive: true });
+fs.writeFileSync(path.join(ROOT, "model-rules", "index.html"), modelRulesPage());
 fs.mkdirSync(path.join(ROOT, "careers"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, "careers", "index.html"), careersPage());
 careerRoles.forEach(function (r) {
@@ -1996,7 +2244,7 @@ if (bs === -1 || be === -1) {
 fs.writeFileSync(indexPath, bust(html));
 
 /* sitemap */
-const urls = [SITE + "/", SITE + "/litigant-journey/", SITE + "/sc-ai-policy/", SITE + "/contributors/", SITE + "/about/", SITE + "/dristi/", SITE + "/approach/", SITE + "/cheque-journey/", SITE + "/careers/", SITE + "/resources/"]
+const urls = [SITE + "/", SITE + "/litigant-journey/", SITE + "/sc-ai-policy/", SITE + "/model-rules/", SITE + "/contributors/", SITE + "/about/", SITE + "/dristi/", SITE + "/approach/", SITE + "/cheque-journey/", SITE + "/careers/", SITE + "/resources/"]
   .concat(jobs.map(function (j) { return SITE + j.url; }))
   .concat(careerRoles.map(function (r) { return SITE + r.url; }))
   .concat(contributors.map(function (c) { return SITE + c.url; }));

@@ -46,6 +46,7 @@ js/unlocks.js          /dristi/: "The 10 Unlocks" interactive section.
 js/benefits.js         /dristi/: "Who benefits" section.
 js/careers-modal.js    /careers/: job-description modal.
 js/policy-countdown.js /sc-ai-policy/ (and the map's policy references): live countdown.
+js/model-rules.js      /model-rules/: rule search, Part filter chips, open/close all, #rule-N deep links.
 js/team.js             /about/#team team-wall behaviour.
 js/collaborate.js      Board enhancement: filters, closes-in labels, modal + pushState.
 js/contact.js          Get-in-touch modal + Netlify form AJAX + themed validation.
@@ -90,6 +91,10 @@ cheque-journey/        HAND-AUTHORED (index.html, NOT build-generated): interact
                        Enter-Full-Screen button, navigation locked until fullscreen, bounded
                        panning (translateExtent) so the map can't drift off-screen, Esc/Exit
                        hint that fades. In the sitemap; NOT IN NAV YET.
+model-rules/           GENERATED (modelRulesPage): draft Criminal Rules of Practice for 24x7
+                       ON Courts, open for public inputs. Text in content/model-rules/*.md
+                       (copied from the DRISTI domain model; each file's header says how it
+                       is parsed). IN NAV under Community > Active Collaborations + footer.
 careers/               GENERATED (careersPage/careerPage): open-roles page + one page per
                        role. NOT IN NAV YET (awaiting user review); listings are DRAFTS.
 team/                  GENERATED redirect stub → /about/#team (teamPage() in build script).
